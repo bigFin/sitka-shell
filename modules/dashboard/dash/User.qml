@@ -19,67 +19,17 @@ Row {
         radius: Appearance.rounding.full
         color: Colours.palette.m3surfaceContainerHigh
 
+        MaterialIcon {
+            anchors.centerIn: parent
+
+            text: "person"
+            fill: 1
+            font.pointSize: (info.implicitHeight / 2) || 1
+        }
+
         CachingImage {
             anchors.fill: parent
             path: `${Paths.home}/.face`
-            fillMode: Image.PreserveAspectCrop
-            smooth: true
-        }
-
-        Rectangle {
-            id: overlay
-            anchors.fill: parent
-            radius: avatarRect.radius
-            color: Qt.rgba(0, 0, 0, 0.4)
-            opacity: mouseArea.containsMouse ? 1.0 : 0.0
-            visible: opacity > 0
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: 300
-                    easing.type: Easing.InOutQuad
-                }
-            }
-
-            MaterialIcon {
-                anchors.centerIn: parent
-                text: "photo_camera"
-                color: "white"
-                font.pointSize: info.implicitHeight / 4
-            }
-        }
-
-        MouseArea {
-            id: mouseArea
-            anchors.fill: parent
-            hoverEnabled: true
-            onClicked: avatarUpdateProc.running = true
-            cursorShape: Qt.PointingHandCursor
-        }
-
-        Process {
-            id: avatarUpdateProc
-            running: false
-            command: [`${Paths.home}/.local/share/caelestia/shell/scripts/caelestia-avatar-picker.sh`]
-
-            stdout: SplitParser {
-                onRead: {
-                    notifyProc.running = true
-                }
-            }
-        }
-
-        Process {
-            id: notifyProc
-            running: false
-            command: [
-                "notify-send",
-                "-u", "low",
-                "-i", "dialog-information-symbolic",
-                "Profile Updated",
-                "Your avatar has been successfully changed.",
-                "-a", "Shell",
-                "-A", "OK=Got it!"
-            ]
         }
     }
 

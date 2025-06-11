@@ -38,10 +38,10 @@ Item {
             text: qsTr("Performance")
         }
 
-        Tab {
-            iconName: "workspaces"
-            text: qsTr("Workspaces")
-        }
+        // Tab {
+        //     iconName: "workspaces"
+        //     text: qsTr("Workspaces")
+        // }
     }
 
     Item {

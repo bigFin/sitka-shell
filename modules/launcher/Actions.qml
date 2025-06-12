@@ -68,6 +68,36 @@ Singleton {
             }
         },
         Action {
+            name: qsTr("Shutdown")
+            desc: qsTr("Shutdown the system")
+            icon: "power_settings_new"
+
+            function onClicked(list: AppList): void {
+                list.visibilities.launcher = false;
+                shutdown.running = true;
+            }
+        },
+        Action {
+            name: qsTr("Reboot")
+            desc: qsTr("Reboot the system")
+            icon: "cached"
+
+            function onClicked(list: AppList): void {
+                list.visibilities.launcher = false;
+                reboot.running = true;
+            }
+        },
+        Action {
+            name: qsTr("Logout")
+            desc: qsTr("Logout of the current session")
+            icon: "logout"
+
+            function onClicked(list: AppList): void {
+                list.visibilities.launcher = false;
+                logout.running = true;
+            }
+        },
+        Action {
             name: qsTr("Lock")
             desc: qsTr("Lock the current session")
             icon: "lock"
@@ -106,6 +136,24 @@ Singleton {
     function autocomplete(list: AppList, text: string): void {
         list.search.text = `${LauncherConfig.actionPrefix}${text} `;
     }
+
+    Process {
+        id: shutdown
+
+        command: ["systemctl", "poweroff"]
+    }
+
+    Process {
+        id: reboot
+
+        command: ["systemctl", "reboot"]
+    }
+
+    Process {
+        id: logout
+
+        command: ["sh", "-c", "(uwsm stop | grep -q 'Compositor is not running' && loginctl terminate-user $USER) || uwsm stop"]
+    }  
 
     Process {
         id: lock

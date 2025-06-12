@@ -97,7 +97,7 @@ Singleton {
 
     Process {
         running: true
-        command: ["fd", ".", root.path, "-t", "f", "-e", "jpg", "-e", "jpeg", "-e", "png", "-e", "svg"]
+        command: ["fd", ".", root.path, "-t", "f", "-e", "jpg", "-e", "jpeg", "-e", "png", "-e", "webp", "-e", "tif", "-e", "tiff"]
         stdout: SplitParser {
             splitMarker: ""
             onRead: data => wallpapers.model = data.trim().split("\n")

@@ -170,7 +170,7 @@ Singleton {
     Process {
         id: logout
 
-        command: ["hyprctl", "dispatch", "exit", "1"]
+        command: ["sh", "-c", "(uwsm stop | grep -q 'Compositor is not running' && loginctl terminate-user $USER) || uwsm stop"]
     }   
 
     Process {

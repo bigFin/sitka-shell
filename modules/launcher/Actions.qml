@@ -71,30 +71,33 @@ Singleton {
             name: qsTr("Shutdown")
             desc: qsTr("Shutdown the system")
             icon: "power_settings_new"
+            disabled: !LauncherConfig.allowDangerousActions
+            disabledReason: qsTr("Enable dangerous actions in config/LauncherConfig.qml first")
 
             function onClicked(list: AppList): void {
-                list.visibilities.launcher = false;
-                shutdown.running = true;
+                root.handleDangerousAction(list, shutdown);
             }
         },
         Action {
             name: qsTr("Reboot")
             desc: qsTr("Reboot the system")
             icon: "cached"
+            disabled: !LauncherConfig.allowDangerousActions
+            disabledReason: qsTr("Enable dangerous actions in config/LauncherConfig.qml first")
 
             function onClicked(list: AppList): void {
-                list.visibilities.launcher = false;
-                reboot.running = true;
+                root.handleDangerousAction(list, reboot);
             }
         },
         Action {
             name: qsTr("Logout")
             desc: qsTr("Logout of the current session")
-            icon: "logout"
+            icon: "exit_to_app"
+            disabled: !LauncherConfig.allowDangerousActions
+            disabledReason: qsTr("Enable dangerous actions in config/LauncherConfig.qml first")
 
             function onClicked(list: AppList): void {
-                list.visibilities.launcher = false;
-                logout.running = true;
+                root.handleDangerousAction(list, logout);
             }
         },
         Action {
@@ -137,6 +140,21 @@ Singleton {
         list.search.text = `${LauncherConfig.actionPrefix}${text} `;
     }
 
+    function handleDangerousAction(list: AppList, process: QtObject): void {
+        list.visibilities.launcher = false;
+        if (!LauncherConfig.allowDangerousActions) {
+            dangerousActions.running = true;
+            return;
+        }
+        process.running = true;
+    }
+
+    Process {
+        id: dangerousActions
+
+        command: ["notify-send", "Quickshell", qsTr("Enable dangerous actions in config/LauncherConfig.qml to use this action."), "-i", "dialog-warning"]
+    }
+
     Process {
         id: shutdown
 
@@ -152,8 +170,8 @@ Singleton {
     Process {
         id: logout
 
-        command: ["sh", "-c", "(uwsm stop | grep -q 'Compositor is not running' && loginctl terminate-user $USER) || uwsm stop"]
-    }  
+        command: ["hyprctl", "dispatch", "exit", "1"]
+    }   
 
     Process {
         id: lock
@@ -171,6 +189,8 @@ Singleton {
         required property string name
         required property string desc
         required property string icon
+        property bool disabled
+        property string disabledReason
 
         function onClicked(list: AppList): void {
         }

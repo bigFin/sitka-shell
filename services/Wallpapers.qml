@@ -9,7 +9,7 @@ import QtQuick
 Singleton {
     id: root
 
-    readonly property string currentNamePath: `${Paths.state}/wallpaper/last.txt`.slice(7)
+    readonly property string currentNamePath: `${Paths.state}/wallpaper/path.txt`.slice(7)
     readonly property string path: `${Paths.pictures}/Wallpapers`.slice(7)
 
     readonly property list<Wallpaper> list: wallpapers.instances
@@ -97,7 +97,7 @@ Singleton {
 
     Process {
         running: true
-        command: ["fd", ".", root.path, "-t", "f", "-e", "jpg", "-e", "jpeg", "-e", "png", "-e", "svg"]
+        command: ["fd", ".", root.path, "-t", "f", "-e", "jpg", "-e", "jpeg", "-e", "png", "-e", "webp", "-e", "tif", "-e", "tiff"]
         stdout: SplitParser {
             splitMarker: ""
             onRead: data => wallpapers.model = data.trim().split("\n")

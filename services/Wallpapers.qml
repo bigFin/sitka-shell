@@ -77,7 +77,7 @@ Singleton {
     Process {
         id: getPreviewColoursProc
 
-        command: ["caelestia", "scheme", "print", root.previewPath]
+        command: ["caelestia", "wallpaper", "-p", root.previewPath]
         stdout: SplitParser {
             splitMarker: ""
             onRead: data => {

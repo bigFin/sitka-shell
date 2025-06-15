@@ -71,33 +71,33 @@ Singleton {
             name: qsTr("Shutdown")
             desc: qsTr("Shutdown the system")
             icon: "power_settings_new"
-            disabled: !LauncherConfig.allowDangerousActions
-            disabledReason: qsTr("Enable dangerous actions in config/LauncherConfig.qml first")
+            disabled: !Config.launcher.enableDangerousActions
 
             function onClicked(list: AppList): void {
-                root.handleDangerousAction(list, shutdown);
+                list.visibilities.launcher = false;
+                shutdown.running = true;
             }
         },
         Action {
             name: qsTr("Reboot")
             desc: qsTr("Reboot the system")
             icon: "cached"
-            disabled: !LauncherConfig.allowDangerousActions
-            disabledReason: qsTr("Enable dangerous actions in config/LauncherConfig.qml first")
+            disabled: !Config.launcher.enableDangerousActions
 
             function onClicked(list: AppList): void {
-                root.handleDangerousAction(list, reboot);
+                list.visibilities.launcher = false;
+                reboot.running = true;
             }
         },
         Action {
             name: qsTr("Logout")
-            desc: qsTr("Logout of the current session")
+            desc: qsTr("Log out of the current session")
             icon: "exit_to_app"
-            disabled: !LauncherConfig.allowDangerousActions
-            disabledReason: qsTr("Enable dangerous actions in config/LauncherConfig.qml first")
+            disabled: !Config.launcher.enableDangerousActions
 
             function onClicked(list: AppList): void {
-                root.handleDangerousAction(list, logout);
+                list.visibilities.launcher = false;
+                logout.running = true;
             }
         },
         Action {
@@ -122,7 +122,7 @@ Singleton {
         }
     ]
 
-    readonly property list<var> preppedActions: list.map(a => ({
+    readonly property list<var> preppedActions: list.filter(a => !a.disabled).map(a => ({
                 name: Fuzzy.prepare(a.name),
                 desc: Fuzzy.prepare(a.desc),
                 action: a
@@ -138,21 +138,6 @@ Singleton {
 
     function autocomplete(list: AppList, text: string): void {
         list.search.text = `${Config.launcher.actionPrefix}${text} `;
-    }
-
-    function handleDangerousAction(list: AppList, process: QtObject): void {
-        list.visibilities.launcher = false;
-        if (!LauncherConfig.allowDangerousActions) {
-            dangerousActions.running = true;
-            return;
-        }
-        process.running = true;
-    }
-
-    Process {
-        id: dangerousActions
-
-        command: ["notify-send", "Quickshell", qsTr("Enable dangerous actions in config/LauncherConfig.qml to use this action."), "-i", "dialog-warning"]
     }
 
     Process {
@@ -171,7 +156,7 @@ Singleton {
         id: logout
 
         command: ["sh", "-c", "(uwsm stop | grep -q 'Compositor is not running' && loginctl terminate-user $USER) || uwsm stop"]
-    }   
+    }
 
     Process {
         id: lock

@@ -10,7 +10,7 @@ Singleton {
 
     Process {
         running: true
-        command: [`${Quickshell.configDir}/assets/realtime-beat-detector.py`]
+        command: ["/usr/lib/caelestia/beat_detector"]
         stdout: SplitParser {
             onRead: data => root.bpm = parseFloat(data)
         }

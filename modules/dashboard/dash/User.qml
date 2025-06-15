@@ -36,6 +36,7 @@ Row {
     Column {
         id: info
 
+        anchors.verticalCenter: parent.verticalCenter
         spacing: Appearance.spacing.normal
 
         InfoLine {
@@ -70,7 +71,7 @@ Row {
                 running: true
                 command: ["uptime", "-p"]
                 stdout: StdioCollector {
-                    onStreamFinished: uptimeProc.uptime = text
+                    onStreamFinished: uptimeProc.uptime = text.trim()
                 }
             }
         }

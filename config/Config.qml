@@ -19,6 +19,7 @@ Singleton {
     FileView {
         path: `${Paths.config}/shell.json`
         watchChanges: true
+        onFileChanged: reload()
         onAdapterUpdated: writeAdapter()
 
         JsonAdapter {

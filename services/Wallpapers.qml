@@ -11,6 +11,7 @@ Singleton {
 
     readonly property string currentNamePath: `${Paths.state}/wallpaper/path.txt`.slice(7)
     readonly property string path: `${Paths.pictures}/Wallpapers`.slice(7)
+    readonly property list<string> extensions: ["jpg", "jpeg", "png", "webp", "tif", "tiff"]
 
     readonly property list<Wallpaper> list: wallpapers.instances
     property bool showPreview: false
@@ -96,9 +97,9 @@ Singleton {
 
     Process {
         running: true
-        command: ["fd", ".", root.path, "-t", "f", "-e", "jpg", "-e", "jpeg", "-e", "png", "-e", "webp", "-e", "tif", "-e", "tiff"]
+        command: ["find", root.path, "-type", "d", "-path", '*/.*', "-prune", "-o", "-not", "-name", '.*', "-type", "f", "-print"]
         stdout: StdioCollector {
-            onStreamFinished: wallpapers.model = text.trim().split("\n")
+            onStreamFinished: wallpapers.model = text.trim().split("\n").filter(w => root.extensions.includes(w.slice(w.lastIndexOf(".") + 1))).sort()
         }
     }
 

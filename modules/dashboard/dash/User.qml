@@ -69,8 +69,8 @@ Row {
 
                 running: true
                 command: ["uptime", "-p"]
-                stdout: SplitParser {
-                    onRead: data => uptimeProc.uptime = data
+                stdout: StdioCollector {
+                    onStreamFinished: uptimeProc.uptime = text
                 }
             }
         }

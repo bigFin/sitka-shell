@@ -78,10 +78,9 @@ Singleton {
         id: getPreviewColoursProc
 
         command: ["caelestia", "wallpaper", "-p", root.previewPath]
-        stdout: SplitParser {
-            splitMarker: ""
-            onRead: data => {
-                Colours.load(data, true);
+        stdout: StdioCollector {
+            onStreamFinished: {
+                Colours.load(text, true);
                 Colours.showPreview = true;
             }
         }
@@ -98,9 +97,8 @@ Singleton {
     Process {
         running: true
         command: ["fd", ".", root.path, "-t", "f", "-e", "jpg", "-e", "jpeg", "-e", "png", "-e", "webp", "-e", "tif", "-e", "tiff"]
-        stdout: SplitParser {
-            splitMarker: ""
-            onRead: data => wallpapers.model = data.trim().split("\n")
+        stdout: StdioCollector {
+            onStreamFinished: wallpapers.model = text.trim().split("\n")
         }
     }
 

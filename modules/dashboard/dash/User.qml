@@ -90,7 +90,7 @@ Row {
             id: icon
 
             anchors.left: parent.left
-            anchors.leftMargin: (DashboardConfig.sizes.infoIconSize - implicitWidth) / 2
+            anchors.leftMargin: (Config.dashboard.sizes.infoIconSize - implicitWidth) / 2
 
             text: line.icon
             color: line.colour
@@ -109,7 +109,7 @@ Row {
             text: `:  ${line.text}`
             font.pointSize: Appearance.font.size.normal
 
-            width: DashboardConfig.sizes.infoWidth
+            width: Config.dashboard.sizes.infoWidth
             elide: Text.ElideRight
         }
     }

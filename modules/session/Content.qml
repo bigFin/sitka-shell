@@ -48,8 +48,8 @@ Column {
     }
 
     AnimatedImage {
-        width: SessionConfig.sizes.button
-        height: SessionConfig.sizes.button
+        width: Config.session.sizes.button
+        height: Config.session.sizes.button
         sourceSize.width: width
         sourceSize.height: height
 
@@ -84,8 +84,8 @@ Column {
         required property string icon
         required property list<string> command
 
-        implicitWidth: SessionConfig.sizes.button
-        implicitHeight: SessionConfig.sizes.button
+        implicitWidth: Config.session.sizes.button
+        implicitHeight: Config.session.sizes.button
 
         radius: Appearance.rounding.large
         color: button.activeFocus ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainer

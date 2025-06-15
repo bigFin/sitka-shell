@@ -36,6 +36,7 @@ Row {
     Column {
         id: info
 
+        anchors.verticalCenter: parent.verticalCenter
         spacing: Appearance.spacing.normal
 
         InfoLine {
@@ -69,8 +70,8 @@ Row {
 
                 running: true
                 command: ["uptime", "-p"]
-                stdout: SplitParser {
-                    onRead: data => uptimeProc.uptime = data
+                stdout: StdioCollector {
+                    onStreamFinished: uptimeProc.uptime = text.trim()
                 }
             }
         }
@@ -90,7 +91,7 @@ Row {
             id: icon
 
             anchors.left: parent.left
-            anchors.leftMargin: (DashboardConfig.sizes.infoIconSize - implicitWidth) / 2
+            anchors.leftMargin: (Config.dashboard.sizes.infoIconSize - implicitWidth) / 2
 
             text: line.icon
             color: line.colour
@@ -109,7 +110,7 @@ Row {
             text: `:  ${line.text}`
             font.pointSize: Appearance.font.size.normal
 
-            width: DashboardConfig.sizes.infoWidth
+            width: Config.dashboard.sizes.infoWidth
             elide: Text.ElideRight
         }
     }

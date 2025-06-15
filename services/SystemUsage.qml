@@ -98,38 +98,40 @@ Singleton {
 
         running: true
         command: ["sh", "-c", "df | grep '^/dev/' | awk '{print $1, $3, $4}'"]
-        stdout: SplitParser {
-            splitMarker: ""
-            onRead: data => {
-              const deviceMap = new Map();
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const deviceMap = new Map();
 
-              for (const line of data.trim().split("\n")) {
-                  if (line.trim() === "") continue;
+                for (const line of text.trim().split("\n")) {
+                    if (line.trim() === "")
+                        continue;
 
-                  const parts = line.trim().split(/\s+/);
-                  if (parts.length >= 3) {
-                      const device = parts[0];
-                      const used = parseInt(parts[1], 10) || 0;
-                      const avail = parseInt(parts[2], 10) || 0;
-                      
-                      // only keep the entry with the largest total space for each device
-                      if (!deviceMap.has(device) || 
-                          (used + avail) > (deviceMap.get(device).used + deviceMap.get(device).avail)) {
-                          deviceMap.set(device, { used: used, avail: avail });
-                      }
-                  }
-              }
+                    const parts = line.trim().split(/\s+/);
+                    if (parts.length >= 3) {
+                        const device = parts[0];
+                        const used = parseInt(parts[1], 10) || 0;
+                        const avail = parseInt(parts[2], 10) || 0;
 
-              let totalUsed = 0;
-              let totalAvail = 0;
-  
-              for (const [device, stats] of deviceMap) {
-                  totalUsed += stats.used;
-                  totalAvail += stats.avail;
-              }
+                        // Only keep the entry with the largest total space for each device
+                        if (!deviceMap.has(device) || (used + avail) > (deviceMap.get(device).used + deviceMap.get(device).avail)) {
+                            deviceMap.set(device, {
+                                used: used,
+                                avail: avail
+                            });
+                        }
+                    }
+                }
 
-              root.storageUsed = totalUsed;
-              root.storageTotal = totalUsed + totalAvail;
+                let totalUsed = 0;
+                let totalAvail = 0;
+
+                for (const [device, stats] of deviceMap) {
+                    totalUsed += stats.used;
+                    totalAvail += stats.avail;
+                }
+
+                root.storageUsed = totalUsed;
+                root.storageTotal = totalUsed + totalAvail;
             }
         }
     }
@@ -138,10 +140,10 @@ Singleton {
         id: cpuTemp
 
         running: true
-        command: ["fish", "-c", "cat /sys/class/thermal/thermal_zone*/temp | string join ' '"]
-        stdout: SplitParser {
-            onRead: data => {
-                const temps = data.trim().split(" ");
+        command: ["sh", "-c", "cat /sys/class/thermal/thermal_zone*/temp"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const temps = text.trim().split(" ");
                 const sum = temps.reduce((acc, d) => acc + parseInt(d, 10), 0);
                 root.cpuTemp = sum / temps.length / 1000;
             }
@@ -153,10 +155,9 @@ Singleton {
 
         running: true
         command: ["sh", "-c", "cat /sys/class/drm/card*/device/gpu_busy_percent"]
-        stdout: SplitParser {
-            splitMarker: ""
-            onRead: data => {
-                const percs = data.trim().split("\n");
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const percs = text.trim().split("\n");
                 const sum = percs.reduce((acc, d) => acc + parseInt(d, 10), 0);
                 root.gpuPerc = sum / percs.length / 100;
             }
@@ -167,13 +168,14 @@ Singleton {
         id: gpuTemp
 
         running: true
-        command: ["sh", "-c", "sensors | jq -nRc '[inputs]'"]
-        stdout: SplitParser {
-            onRead: data => {
+        command: ["sensors"]
+        stdout: StdioCollector {
+            onStreamFinished: {
                 let eligible = false;
                 let sum = 0;
                 let count = 0;
-                for (const line of JSON.parse(data)) {
+
+                for (const line of text.trim().split("\n")) {
                     if (line === "Adapter: PCI adapter")
                         eligible = true;
                     else if (line === "")
@@ -186,6 +188,7 @@ Singleton {
                         }
                     }
                 }
+
                 root.gpuTemp = count > 0 ? sum / count : 0;
             }
         }

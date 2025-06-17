@@ -12,6 +12,8 @@ Singleton {
     readonly property list<string> colourNames: ["rosewater", "flamingo", "pink", "mauve", "red", "maroon", "peach", "yellow", "green", "teal", "sky", "sapphire", "blue", "lavender"]
 
     property bool showPreview
+    property string scheme
+    property string flavour
     property bool light
     readonly property Colours palette: showPreview ? preview : current
     readonly property Colours current: Colours {}
@@ -36,6 +38,11 @@ Singleton {
     function load(data: string, isPreview: bool): void {
         const colours = isPreview ? preview : current;
         const scheme = JSON.parse(data);
+
+        if (!isPreview) {
+            root.scheme = scheme.name;
+            flavour = scheme.flavour;
+        }
 
         light = scheme.mode === "light";
 

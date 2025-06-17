@@ -52,7 +52,7 @@ Item {
         }
     ]
 
-    transitions: Transition {
+    Behavior on state {
         SequentialAnimation {
             NumberAnimation {
                 target: root
@@ -63,27 +63,15 @@ Item {
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Appearance.anim.curves.standard
             }
-            PropertyAction {
-                targets: [appList, wallpaperList]
-                properties: "active"
-            }
-            ParallelAnimation {
-                NumberAnimation {
-                    target: root
-                    properties: "implicitWidth,implicitHeight"
-                    duration: Appearance.anim.durations.large
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.emphasized
-                }
-                NumberAnimation {
-                    target: root
-                    property: "opacity"
-                    from: 0
-                    to: 1
-                    duration: Appearance.anim.durations.large
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
-                }
+            PropertyAction {}
+            NumberAnimation {
+                target: root
+                property: "opacity"
+                from: 0
+                to: 1
+                duration: Appearance.anim.durations.small
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.anim.curves.standard
             }
         }
     }

@@ -60,8 +60,8 @@ Singleton {
         readonly property var colours: modelData.colours
 
         function onClicked(list: AppList): void {
-            Quickshell.execDetached(["caelestia", "scheme", "set", "-n", name, "-f", flavour]);
             list.visibilities.launcher = false;
+            Quickshell.execDetached(["caelestia", "scheme", "set", "-n", name, "-f", flavour]);
         }
     }
 }

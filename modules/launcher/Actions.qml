@@ -175,7 +175,6 @@ Singleton {
         required property string desc
         required property string icon
         property bool disabled
-        property string disabledReason
 
         function onClicked(list: AppList): void {
         }

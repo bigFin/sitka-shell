@@ -15,11 +15,14 @@ ListView {
 
     property bool isAction: search.text.startsWith(Config.launcher.actionPrefix)
     property bool isScheme: search.text.startsWith(`${Config.launcher.actionPrefix}scheme `)
+    property bool isVariant: search.text.startsWith(`${Config.launcher.actionPrefix}variant `)
 
     function getModelValues() {
         let text = search.text;
         if (isScheme)
             return Schemes.fuzzyQuery(text);
+        if (isVariant)
+            return M3Variants.fuzzyQuery(text);
         if (isAction)
             return Actions.fuzzyQuery(text);
         if (text.startsWith(Config.launcher.actionPrefix))
@@ -48,6 +51,8 @@ ListView {
     delegate: {
         if (isScheme)
             return schemeItem;
+        if (isVariant)
+            return variantItem;
         if (isAction)
             return actionItem;
         return appItem;
@@ -122,7 +127,15 @@ ListView {
         id: schemeItem
 
         SchemeItem {
-            visibilities: root.visibilities
+            list: root
+        }
+    }
+
+    Component {
+        id: variantItem
+
+        VariantItem {
+            list: root
         }
     }
 
@@ -131,6 +144,10 @@ ListView {
     }
 
     Behavior on isScheme {
+        ChangeAnim {}
+    }
+
+    Behavior on isVariant {
         ChangeAnim {}
     }
 

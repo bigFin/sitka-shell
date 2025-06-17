@@ -8,8 +8,8 @@ import QtQuick
 Item {
     id: root
 
-    required property var modelData
-    required property PersistentProperties visibilities
+    required property Schemes.Scheme modelData
+    required property var list
 
     implicitHeight: Config.launcher.sizes.itemHeight
 
@@ -20,8 +20,7 @@ Item {
         radius: Appearance.rounding.full
 
         function onClicked(): void {
-            Apps.launch(root.modelData);
-            root.visibilities.launcher = false;
+            root.modelData?.onClicked(root.list);
         }
     }
 

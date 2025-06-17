@@ -9,14 +9,14 @@ import QtQuick
 Singleton {
     id: root
 
-    readonly property list<var> preppedActions: schemes.instances.map(s => ({
+    readonly property list<var> preppedSchemes: schemes.instances.map(s => ({
                 name: Fuzzy.prepare(s.name),
                 flavour: Fuzzy.prepare(s.flavour),
                 scheme: s
             }))
 
     function fuzzyQuery(search: string): var {
-        return Fuzzy.go(search.slice(`${Config.launcher.actionPrefix}scheme `.length), preppedActions, {
+        return Fuzzy.go(search.slice(`${Config.launcher.actionPrefix}scheme `.length), preppedSchemes, {
             all: true,
             keys: ["name", "flavour"],
             scoreFn: r => r[0].score > 0 ? r[0].score * 0.9 + r[1].score * 0.1 : 0

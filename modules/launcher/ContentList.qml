@@ -160,6 +160,8 @@ Item {
     }
 
     Behavior on implicitWidth {
+        enabled: root.visibilities.launcher
+
         NumberAnimation {
             duration: Appearance.anim.durations.large
             easing.type: Easing.BezierSpline
@@ -168,6 +170,8 @@ Item {
     }
 
     Behavior on implicitHeight {
+        enabled: root.visibilities.launcher
+
         NumberAnimation {
             duration: Appearance.anim.durations.large
             easing.type: Easing.BezierSpline

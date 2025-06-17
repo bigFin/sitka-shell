@@ -53,7 +53,7 @@ Singleton {
     }
 
     function setMode(mode: string): void {
-        setModeProc.command = ["caelestia", "scheme", "-m", mode];
+        setModeProc.command = ["caelestia", "scheme", "set", "--notify", "-m", mode];
         setModeProc.startDetached();
     }
 

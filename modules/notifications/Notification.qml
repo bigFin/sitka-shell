@@ -177,6 +177,8 @@ StyledRect {
                     active: !root.hasAppIcon
                     asynchronous: true
                     anchors.centerIn: parent
+                    anchors.horizontalCenterOffset: -Appearance.font.size.large * 0.02
+                    anchors.verticalCenterOffset: Appearance.font.size.large * 0.02
 
                     sourceComponent: MaterialIcon {
                         text: {
@@ -210,6 +212,9 @@ StyledRect {
 
                         color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
                         font.pointSize: Appearance.font.size.large
+                        font.variableAxes: ({
+                                opsz: Appearance.font.size.large
+                            })
                     }
                 }
             }

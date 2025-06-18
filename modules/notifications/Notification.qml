@@ -197,10 +197,12 @@ StyledRect {
                                 return "download";
                             if (summary.includes("update"))
                                 return "update";
-                            if (summary.startsWith("file"))
-                                return "folder_copy";
-                            if (summary.startsWith("unable to"))
+                            if (summary.includes("unable to"))
                                 return "deployed_code_alert";
+                            if (summary.includes("profile"))
+                                return "person";
+                            if (summary.includes("file"))
+                                return "folder_copy";
                             if (root.modelData.urgency === NotificationUrgency.Critical)
                                 return "release_alert";
                             return "chat";

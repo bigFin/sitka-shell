@@ -36,7 +36,7 @@ StyledRect {
 
         anchors.fill: parent
         hoverEnabled: true
-        cursorShape: pressed ? Qt.ClosedHandCursor : undefined
+        cursorShape: body.hoveredLink ? Qt.PointingHandCursor : pressed ? Qt.ClosedHandCursor : undefined
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton
         preventStealing: true
 
@@ -413,6 +413,11 @@ StyledRect {
             color: Colours.palette.m3onSurfaceVariant
             font.pointSize: Appearance.font.size.small
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+
+            onLinkActivated: link => {
+                Qt.openUrlExternally(link);
+                root.modelData.popup = false;
+            }
 
             opacity: root.expanded ? 1 : 0
 

@@ -98,7 +98,7 @@ Singleton {
 
             function onClicked(list: AppList): void {
                 list.visibilities.launcher = false;
-                Quickshell.execDetached(["sh", "-c", "(uwsm stop | grep -q 'Compositor is not running' && loginctl terminate-user $USER) || uwsm stop"]);
+                Quickshell.execDetached(["loginctl", "terminate-user", ""]);
             }
         },
         Action {

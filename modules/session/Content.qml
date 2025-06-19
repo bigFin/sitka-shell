@@ -23,7 +23,7 @@ Column {
         id: logout
 
         icon: "logout"
-        command: ["sh", "-c", "(uwsm stop | grep -q 'Compositor is not running' && loginctl terminate-user $USER) || uwsm stop"]
+        command: ["loginctl", "terminate-user", ""]
 
         KeyNavigation.down: shutdown
 

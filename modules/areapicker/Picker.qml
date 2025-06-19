@@ -94,6 +94,11 @@ MouseArea {
     SequentialAnimation {
         id: closeAnim
 
+        PropertyAction {
+            target: root.loader
+            property: "closing"
+            value: true
+        }
         ParallelAnimation {
             Anim {
                 target: root

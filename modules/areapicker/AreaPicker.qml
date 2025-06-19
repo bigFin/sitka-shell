@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import "root:/widgets"
 import Quickshell
 import Quickshell.Wayland
@@ -8,6 +10,7 @@ Scope {
         id: root
 
         property bool freeze
+        property bool closing
 
         Variants {
             model: Quickshell.screens
@@ -21,12 +24,17 @@ Scope {
                 name: "area-picker"
                 WlrLayershell.exclusionMode: ExclusionMode.Ignore
                 WlrLayershell.layer: WlrLayer.Overlay
-                WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+                WlrLayershell.keyboardFocus: root.closing ? WlrKeyboardFocus.None : WlrKeyboardFocus.Exclusive
+                mask: root.closing ? empty : null
 
                 anchors.top: true
                 anchors.bottom: true
                 anchors.left: true
                 anchors.right: true
+
+                Region {
+                    id: empty
+                }
 
                 Picker {
                     loader: root
@@ -41,11 +49,13 @@ Scope {
 
         function open(): void {
             root.freeze = false;
+            root.closing = false;
             root.activeAsync = true;
         }
 
         function openFreeze(): void {
             root.freeze = true;
+            root.closing = false;
             root.activeAsync = true;
         }
     }
@@ -55,6 +65,7 @@ Scope {
         description: "Open screenshot tool"
         onPressed: {
             root.freeze = false;
+            root.closing = false;
             root.activeAsync = true;
         }
     }
@@ -64,6 +75,7 @@ Scope {
         description: "Open screenshot tool (freeze mode)"
         onPressed: {
             root.freeze = true;
+            root.closing = false;
             root.activeAsync = true;
         }
     }

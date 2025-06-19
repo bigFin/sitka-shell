@@ -55,7 +55,7 @@ Item {
 
         x: {
             const tab = bar.currentItem;
-            const width = (root.nonAnimWidth - Config.dashboard.sizes.tabIndicatorSpacing * (bar.count - 1) * 2) / bar.count;
+            const width = (root.nonAnimWidth - bar.spacing * (bar.count - 1)) / bar.count;
             return width * tab.TabBar.index + (width - tab.implicitWidth) / 2;
         }
 

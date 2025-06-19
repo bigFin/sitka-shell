@@ -542,7 +542,6 @@ Item {
         TextMetrics {
             id: metrics
 
-            text: (Players.active?.trackTitle ?? qsTr("No media")) || qsTr("Unknown title")
             font.family: elideText.font.family
             font.pointSize: elideText.font.pointSize
             elide: Text.ElideRight

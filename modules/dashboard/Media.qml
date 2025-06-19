@@ -155,51 +155,30 @@ Item {
 
         spacing: Appearance.spacing.small
 
-        StyledText {
+        ElideText {
             id: title
 
-            Layout.alignment: Qt.AlignHCenter
-
-            animate: true
-            horizontalAlignment: Text.AlignHCenter
-            text: (Players.active?.trackTitle ?? qsTr("No media")) || qsTr("Unknown title")
+            label: (Players.active?.trackTitle ?? qsTr("No media")) || qsTr("Unknown title")
             color: Colours.palette.m3primary
             font.pointSize: Appearance.font.size.normal
-
-            width: parent.implicitWidth
-            elide: Text.ElideRight
         }
 
-        StyledText {
+        ElideText {
             id: album
 
-            Layout.alignment: Qt.AlignHCenter
-
-            animate: true
-            horizontalAlignment: Text.AlignHCenter
-            text: (Players.active?.trackAlbum ?? qsTr("No media")) || qsTr("Unknown album")
+            label: (Players.active?.trackAlbum ?? qsTr("No media")) || qsTr("Unknown album")
             color: Colours.palette.m3outline
             font.pointSize: Appearance.font.size.small
-
-            width: parent.implicitWidth
-            elide: Text.ElideRight
         }
 
-        StyledText {
+        ElideText {
             id: artist
 
-            Layout.alignment: Qt.AlignHCenter
-
-            animate: true
-            horizontalAlignment: Text.AlignHCenter
-            text: (Players.active?.trackArtist ?? qsTr("No media")) || qsTr("Unknown artist")
+            label: (Players.active?.trackArtist ?? qsTr("No media")) || qsTr("Unknown artist")
             color: Colours.palette.m3secondary
-
-            width: parent.implicitWidth
-            elide: Text.ElideRight
         }
 
-        Row {
+        RowLayout {
             id: controls
 
             Layout.alignment: Qt.AlignHCenter
@@ -548,6 +527,29 @@ Item {
             fillMode: AnimatedImage.PreserveAspectFit
         }
     }
+
+    component ElideText: StyledText {
+        id: elideText
+
+        property alias label: metrics.text
+
+        Layout.fillWidth: true
+
+        animate: true
+        horizontalAlignment: Text.AlignHCenter
+        text: metrics.elidedText
+
+        TextMetrics {
+            id: metrics
+
+            text: (Players.active?.trackTitle ?? qsTr("No media")) || qsTr("Unknown title")
+            font.family: elideText.font.family
+            font.pointSize: elideText.font.pointSize
+            elide: Text.ElideRight
+            elideWidth: elideText.width
+        }
+    }
+
     component Control: StyledRect {
         id: control
 
@@ -580,7 +582,8 @@ Item {
             id: icon
 
             anchors.centerIn: parent
-            anchors.verticalCenterOffset: font.pointSize * 0.05
+            anchors.horizontalCenterOffset: -font.pointSize * 0.02
+            anchors.verticalCenterOffset: font.pointSize * 0.02
 
             animate: true
             fill: control.fill ? 1 : 0

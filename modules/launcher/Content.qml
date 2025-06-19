@@ -128,7 +128,7 @@ Item {
                     return 0;
                 if (mouse.pressed)
                     return 0.7;
-                if (mouse.hovered)
+                if (mouse.containsMouse)
                     return 0.8;
                 return 1;
             }
@@ -139,14 +139,10 @@ Item {
             MouseArea {
                 id: mouse
 
-                property bool hovered
-
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: search.text ? Qt.PointingHandCursor : undefined
 
-                onEntered: hovered = true
-                onExited: hovered = false
                 onClicked: search.text = ""
             }
 

@@ -48,6 +48,7 @@ MouseArea {
     anchors.fill: parent
     opacity: 0
     hoverEnabled: true
+    cursorShape: Qt.CrossCursor
 
     Component.onCompleted: {
         // Break binding if frozen

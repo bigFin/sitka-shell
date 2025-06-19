@@ -10,6 +10,7 @@ import Quickshell.Services.Mpris
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
+import QtQuick.Layouts
 
 Item {
     id: root
@@ -145,7 +146,7 @@ Item {
         }
     }
 
-    Column {
+    ColumnLayout {
         id: details
 
         anchors.verticalCenter: parent.verticalCenter
@@ -157,7 +158,7 @@ Item {
         StyledText {
             id: title
 
-            anchors.horizontalCenter: parent.horizontalCenter
+            Layout.alignment: Qt.AlignHCenter
 
             animate: true
             horizontalAlignment: Text.AlignHCenter
@@ -172,7 +173,7 @@ Item {
         StyledText {
             id: album
 
-            anchors.horizontalCenter: parent.horizontalCenter
+            Layout.alignment: Qt.AlignHCenter
 
             animate: true
             horizontalAlignment: Text.AlignHCenter
@@ -187,7 +188,7 @@ Item {
         StyledText {
             id: artist
 
-            anchors.horizontalCenter: parent.horizontalCenter
+            Layout.alignment: Qt.AlignHCenter
 
             animate: true
             horizontalAlignment: Text.AlignHCenter
@@ -201,7 +202,7 @@ Item {
         Row {
             id: controls
 
-            anchors.horizontalCenter: parent.horizontalCenter
+            Layout.alignment: Qt.AlignHCenter
 
             spacing: Appearance.spacing.small
 
@@ -299,9 +300,7 @@ Item {
         }
 
         Item {
-            anchors.left: parent.left
-            anchors.right: parent.right
-
+            Layout.fillWidth: true
             implicitHeight: Math.max(position.implicitHeight, length.implicitHeight)
 
             StyledText {
@@ -325,9 +324,8 @@ Item {
             }
         }
 
-        Row {
-            anchors.horizontalCenter: parent.horizontalCenter
-
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter
             spacing: Appearance.spacing.small
 
             Control {
@@ -349,7 +347,7 @@ Item {
 
                 property bool expanded
 
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.alignment: Qt.AlignVCenter
 
                 implicitWidth: slider.implicitWidth / 2
                 implicitHeight: currentPlayer.implicitHeight + Appearance.padding.small * 2

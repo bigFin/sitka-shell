@@ -16,7 +16,12 @@ MouseArea {
     required property ShellScreen screen
 
     property int borderWidth
-    property real rounding
+    property int rounding
+
+    property bool onClient
+
+    property real realBorderWidth: onClient ? borderWidth : 2
+    property real realRounding: onClient ? rounding : 0
 
     property real ssx
     property real ssy
@@ -36,6 +41,7 @@ MouseArea {
     function checkClientRects(x: real, y: real): void {
         for (const c of clients) {
             if (c.x <= x && c.y <= y && c.x + c.width >= x && c.y + c.height >= y) {
+                onClient = true;
                 sx = c.x;
                 sy = c.y;
                 ex = c.x + c.width;
@@ -80,6 +86,7 @@ MouseArea {
         const y = event.y;
 
         if (pressed) {
+            onClient = false;
             sx = ssx;
             sy = ssy;
             ex = x;
@@ -183,7 +190,7 @@ MouseArea {
         Rectangle {
             id: selectionRect
 
-            radius: root.rounding
+            radius: root.realRounding
             x: root.rsx
             y: root.rsy
             implicitWidth: root.sw
@@ -204,14 +211,14 @@ MouseArea {
 
     Rectangle {
         color: "transparent"
-        radius: root.rounding > 0 ? root.rounding + root.borderWidth : 0
-        border.width: root.borderWidth
+        radius: root.realRounding > 0 ? root.realRounding + root.realBorderWidth : 0
+        border.width: root.realBorderWidth
         border.color: Colours.palette.m3primary
 
-        x: selectionRect.x - root.borderWidth
-        y: selectionRect.y - root.borderWidth
-        implicitWidth: selectionRect.implicitWidth + root.borderWidth * 2
-        implicitHeight: selectionRect.implicitHeight + root.borderWidth * 2
+        x: selectionRect.x - root.realBorderWidth
+        y: selectionRect.y - root.realBorderWidth
+        implicitWidth: selectionRect.implicitWidth + root.realBorderWidth * 2
+        implicitHeight: selectionRect.implicitHeight + root.realBorderWidth * 2
 
         Behavior on border.color {
             ColorAnimation {

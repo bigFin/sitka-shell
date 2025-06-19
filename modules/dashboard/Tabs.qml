@@ -107,15 +107,12 @@ Item {
 
             cursorShape: Qt.PointingHandCursor
 
-            onPressed: ({
-                    x,
-                    y
-                }) => {
+            onPressed: event => {
                 tab.TabBar.tabBar.setCurrentIndex(tab.TabBar.index);
 
                 const stateY = stateWrapper.y;
-                rippleAnim.x = x;
-                rippleAnim.y = y - stateY;
+                rippleAnim.x = event.x;
+                rippleAnim.y = event.y - stateY;
 
                 const dist = (ox, oy) => ox * ox + oy * oy;
                 const stateEndY = stateY + stateWrapper.height;

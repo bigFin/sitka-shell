@@ -92,10 +92,20 @@ Singleton {
     }
 
     Process {
+        id: getWallsProc
+
         running: true
         command: ["find", Config.paths.wallpaperDir, "-type", "d", "-path", '*/.*', "-prune", "-o", "-not", "-name", '.*', "-type", "f", "-print"]
         stdout: StdioCollector {
             onStreamFinished: wallpapers.model = text.trim().split("\n").filter(w => root.extensions.includes(w.slice(w.lastIndexOf(".") + 1))).sort()
+        }
+    }
+
+    Connections {
+        target: Config.paths
+
+        function onWallpaperDirChanged(): void {
+            getWallsProc.running = true;
         }
     }
 

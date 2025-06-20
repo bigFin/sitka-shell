@@ -32,7 +32,7 @@ Item {
             PropertyChanges {
                 root.currentList: appList.item
                 root.implicitWidth: Config.launcher.sizes.itemWidth
-                root.implicitHeight: Math.max(empty.implicitHeight, appList.implicitHeight)
+                root.implicitHeight: appList.implicitHeight > 0 ? appList.implicitHeight : empty.implicitHeight
                 appList.active: true
             }
 

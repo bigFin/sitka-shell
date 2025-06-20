@@ -10,7 +10,18 @@ import QtQuick
 Singleton {
     id: root
 
+    property string qalcResult
+
     readonly property list<Action> list: [
+        Action {
+            name: qsTr("Calculator")
+            desc: qsTr("Do simple math equations (powered by Qalc)")
+            icon: "calculate"
+
+            function onClicked(list: AppList): void {
+                root.autocomplete(list, "calc");
+            }
+        },
         Action {
             name: qsTr("Scheme")
             desc: qsTr("Change the current colour scheme")

@@ -140,7 +140,7 @@ ColumnLayout {
         Button {
             color: Colours.palette.m3errorContainer
             onColor: Colours.palette.m3onErrorContainer
-            text: qsTr("Close")
+            text: qsTr("Kill")
 
             function onClicked(): void {
                 Hyprland.dispatch(`movetoworkspace ${wsId},address:${Hyprland.activeClient?.address}`);

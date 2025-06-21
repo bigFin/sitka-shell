@@ -10,6 +10,8 @@ import QtQuick.Layouts
 Item {
     id: root
 
+    required property Item wrapper
+
     implicitWidth: Hyprland.activeClient ? child.implicitWidth : -Appearance.padding.large * 2
     implicitHeight: child.implicitHeight
 
@@ -65,7 +67,7 @@ Item {
                     radius: Appearance.rounding.normal
 
                     function onClicked(): void {
-                    // TODO
+                        root.wrapper.detach("winfo");
                     }
                 }
 

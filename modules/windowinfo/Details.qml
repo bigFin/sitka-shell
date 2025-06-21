@@ -100,7 +100,7 @@ ColumnLayout {
 
     Detail {
         icon: "keep"
-        text: qsTr("Pinned: %1").arg(Hyprland.activeClient.pinned ? "yes" : "no")
+        text: qsTr("Pinned: %1").arg(Hyprland.activeClient.lastIpcObject.pinned ? "yes" : "no")
         color: Colours.palette.m3secondary
     }
 

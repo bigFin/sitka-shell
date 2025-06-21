@@ -145,7 +145,7 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: Appearance.padding.normal
 
-                text: "exit_to_app"
+                text: "open_in_new"
                 color: Colours.palette.m3onTertiary
                 font.pointSize: Appearance.font.size.large
             }

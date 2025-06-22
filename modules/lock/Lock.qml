@@ -6,18 +6,29 @@ import Quickshell.Io
 import Quickshell.Wayland
 
 Scope {
-    WlSessionLock {
-        id: lock
+    LazyLoader {
+        id: loader
 
-        LockSurface {
-            lock: lock
+        WlSessionLock {
+            id: lock
+
+            locked: true
+
+            onLockedChanged: {
+                if (!locked)
+                    loader.active = false;
+            }
+
+            LockSurface {
+                lock: lock
+            }
         }
     }
 
     CustomShortcut {
         name: "lock"
         description: "Lock the current session"
-        onPressed: lock.locked = true
+        onPressed: loader.activeAsync = true
     }
 
     CustomShortcut {
@@ -30,7 +41,7 @@ Scope {
         target: "lock"
 
         function lock(): void {
-            lock.locked = true;
+            loader.activeAsync = true;
         }
     }
 }

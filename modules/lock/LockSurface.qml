@@ -62,6 +62,7 @@ WlSessionLockSurface {
         id: backgrounds
 
         locked: root.locked
+        weatherWidth: weather.implicitWidth
         visible: false
     }
 
@@ -87,6 +88,15 @@ WlSessionLockSurface {
         anchors.topMargin: -backgrounds.inputTop
 
         lock: root
+    }
+
+    WeatherInfo {
+        id: weather
+
+        anchors.top: parent.bottom
+        anchors.right: parent.left
+        anchors.topMargin: -backgrounds.weatherTop
+        anchors.rightMargin: -backgrounds.weatherRight
     }
 
     component Anim: NumberAnimation {

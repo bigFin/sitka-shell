@@ -9,9 +9,12 @@ Item {
     id: root
 
     required property bool locked
+    required property real weatherWidth
 
     readonly property real clockBottom: innerMask.anchors.margins + clockPath.height
     readonly property real inputTop: innerMask.anchors.margins + inputPath.height
+    readonly property real weatherTop: innerMask.anchors.margins + weatherPath.height
+    readonly property real weatherRight: innerMask.anchors.margins + weatherPath.width
 
     anchors.fill: parent
 
@@ -34,19 +37,10 @@ Item {
             id: innerMask
 
             anchors.fill: parent
-            anchors.margins: root.locked ? Config.lock.sizes.border : 0
-
+            anchors.margins: root.locked ? Config.lock.sizes.border : -radius / 2
             radius: Appearance.rounding.large * 2
 
             Behavior on anchors.margins {
-                Anim {}
-            }
-
-            Behavior on anchors.leftMargin {
-                Anim {}
-            }
-
-            Behavior on anchors.rightMargin {
                 Anim {}
             }
         }
@@ -188,6 +182,71 @@ Item {
                 radiusX: inputPath.rounding
                 radiusY: Math.min(inputPath.rounding, inputPath.height)
                 direction: PathArc.Counterclockwise
+            }
+
+            Behavior on height {
+                Anim {}
+            }
+
+            Behavior on fillColor {
+                ColorAnimation {
+                    duration: Appearance.anim.durations.normal
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.anim.curves.standard
+                }
+            }
+        }
+
+        ShapePath {
+            id: weatherPath
+
+            property int width: root.locked ? root.weatherWidth - Config.lock.sizes.border / 4 : 0
+            property real height: root.locked ? Config.lock.sizes.weatherHeight : 0
+
+            readonly property real rounding: Appearance.rounding.large * 2
+            readonly property real roundingX: width < rounding * 2 ? width / 2 : rounding
+            readonly property real roundingY: height < rounding * 2 ? height / 2 : rounding
+
+            strokeWidth: -1
+            fillColor: Config.border.colour
+
+            startY: Math.ceil(innerMask.height) - height - roundingY
+
+            PathArc {
+                relativeX: weatherPath.roundingX
+                relativeY: weatherPath.roundingY
+                radiusX: Math.min(weatherPath.rounding, weatherPath.width)
+                radiusY: Math.min(weatherPath.rounding, weatherPath.height)
+                direction: PathArc.Counterclockwise
+            }
+            PathLine {
+                relativeX: weatherPath.width - weatherPath.roundingX * 2
+                relativeY: 0
+            }
+            PathArc {
+                relativeX: weatherPath.roundingX
+                relativeY: weatherPath.roundingY
+                radiusX: Math.min(weatherPath.rounding, weatherPath.width)
+                radiusY: Math.min(weatherPath.rounding, weatherPath.height)
+            }
+            PathLine {
+                relativeX: 0
+                relativeY: weatherPath.height - weatherPath.roundingY * 2
+            }
+            PathArc {
+                relativeX: weatherPath.roundingX
+                relativeY: weatherPath.roundingY
+                radiusX: Math.min(weatherPath.rounding, weatherPath.width)
+                radiusY: Math.min(weatherPath.rounding, weatherPath.height)
+                direction: PathArc.Counterclockwise
+            }
+            PathLine {
+                relativeX: -weatherPath.width - weatherPath.roundingX
+                relativeY: 0
+            }
+
+            Behavior on width {
+                Anim {}
             }
 
             Behavior on height {

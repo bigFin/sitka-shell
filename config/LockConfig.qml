@@ -8,5 +8,7 @@ JsonObject {
         property int inputWidth: 600
         property int inputHeight: 200
         property int faceSize: 100
+        property int weatherWidth: 400
+        property int weatherHeight: 100
     }
 }

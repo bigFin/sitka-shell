@@ -25,8 +25,8 @@ Singleton {
         running: true
         command: ["nmcli", "-g", "ACTIVE,SIGNAL,FREQ,SSID,BSSID", "d", "w"]
         environment: ({
-                LANG: "C.UTF-8",
-                LC_ALL: "C.UTF-8"
+                LANG: "C",
+                LC_ALL: "C"
             })
         stdout: StdioCollector {
             onStreamFinished: {

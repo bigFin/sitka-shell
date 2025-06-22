@@ -2,7 +2,7 @@ import Quickshell.Io
 
 JsonObject {
     property JsonObject sizes: JsonObject {
-        property real border: 0.1
+        property int border: 100
         property int clockWidth: 800
         property int clockHeight: 200
         property int inputWidth: 600

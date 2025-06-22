@@ -34,9 +34,7 @@ Item {
             id: innerMask
 
             anchors.fill: parent
-            anchors.margins: root.locked ? root.height * Config.lock.sizes.border : 0
-            anchors.leftMargin: root.locked ? root.width * Config.lock.sizes.border : 0
-            anchors.rightMargin: root.locked ? root.width * Config.lock.sizes.border : 0
+            anchors.margins: root.locked ? Config.lock.sizes.border : 0
 
             radius: Appearance.rounding.large * 2
 
@@ -67,8 +65,6 @@ Item {
     Shape {
         anchors.fill: parent
         anchors.margins: Math.floor(innerMask.anchors.margins)
-        anchors.leftMargin: innerMask.anchors.leftMargin
-        anchors.rightMargin: innerMask.anchors.rightMargin
 
         preferredRendererType: Shape.CurveRenderer
 

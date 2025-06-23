@@ -34,7 +34,7 @@ Scope {
     CustomShortcut {
         name: "unlock"
         description: "Unlock the current session"
-        onPressed: lock.locked = false
+        onPressed: loader.item.locked = false
     }
 
     IpcHandler {

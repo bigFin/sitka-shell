@@ -79,6 +79,11 @@ ColumnLayout {
         radius: Appearance.rounding.small
         clip: true
 
+        onFocusChanged: {
+            if (!focus)
+                focus = true;
+        }
+
         Keys.onPressed: event => {
             if (pam.active)
                 return;

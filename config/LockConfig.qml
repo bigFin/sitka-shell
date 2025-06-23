@@ -10,5 +10,9 @@ JsonObject {
         property int faceSize: 100
         property int weatherWidth: 400
         property int weatherHeight: 100
+        property int mediaWidth: 600
+        property int mediaHeight: 170
+        property int mediaCoverSize: 150
+        property int mediaCoverBorder: 3
     }
 }

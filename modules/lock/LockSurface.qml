@@ -99,6 +99,13 @@ WlSessionLockSurface {
         anchors.rightMargin: -backgrounds.weatherRight
     }
 
+    MediaPlaying {
+        anchors.bottom: parent.top
+        anchors.right: parent.left
+        anchors.bottomMargin: -backgrounds.mediaBottom
+        anchors.rightMargin: -backgrounds.mediaRight
+    }
+
     component Anim: NumberAnimation {
         duration: Appearance.anim.durations.large
         easing.type: Easing.BezierSpline

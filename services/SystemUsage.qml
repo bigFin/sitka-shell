@@ -184,10 +184,10 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: {
                 let cpuTemp = text.match(/(?:Package id [0-9]+|Tdie):\s+((\+|-)[0-9.]+)(°| )C/);
-                if (!cpuTemp) {
+                if (!cpuTemp)
                     // If AMD Tdie pattern failed, try fallback on Tctl
                     cpuTemp = text.match(/Tctl:\s+((\+|-)[0-9.]+)(°| )C/);
-                }
+
                 if (cpuTemp)
                     root.cpuTemp = parseFloat(cpuTemp[1]);
 
@@ -204,7 +204,11 @@ Singleton {
                     else if (line === "")
                         eligible = false;
                     else if (eligible) {
-                        const match = line.match(/^(temp[0-9]+|GPU core|edge)+:\s+\+([0-9]+\.[0-9]+)(°| )C/);
+                        let match = line.match(/^(temp[0-9]+|GPU core|edge)+:\s+\+([0-9]+\.[0-9]+)(°| )C/);
+                        if (!match)
+                            // Fall back to junction/mem if GPU doesn't have edge temp (for AMD GPUs)
+                            match = line.match(/^(junction|mem)+:\s+\+([0-9]+\.[0-9]+)(°| )C/);
+
                         if (match) {
                             sum += parseFloat(match[2]);
                             count++;

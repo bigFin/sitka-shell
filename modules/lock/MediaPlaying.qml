@@ -9,6 +9,8 @@ import QtQuick.Controls
 RowLayout {
     id: root
 
+    required property bool isLarge
+
     spacing: Appearance.spacing.large * 2
     width: Config.lock.sizes.mediaWidth
 
@@ -34,7 +36,9 @@ RowLayout {
     }
 
     Item {
-        Layout.bottomMargin: Config.lock.sizes.border / 2
+        Layout.topMargin: root.isLarge ? 0 : Config.lock.sizes.border / 2
+        Layout.bottomMargin: root.isLarge ? Config.lock.sizes.border / 2 : 0
+        Layout.leftMargin: root.isLarge ? 0 : Config.lock.sizes.border / 2
 
         implicitWidth: Config.lock.sizes.mediaCoverSize
         implicitHeight: Config.lock.sizes.mediaCoverSize
@@ -114,8 +118,9 @@ RowLayout {
 
     ColumnLayout {
         Layout.alignment: Qt.AlignVCenter
-        Layout.bottomMargin: Config.lock.sizes.border / 2
-        Layout.rightMargin: Config.lock.sizes.border / 2
+        Layout.topMargin: root.isLarge ? 0 : Config.lock.sizes.border / 2
+        Layout.bottomMargin: root.isLarge ? Config.lock.sizes.border / 2 : 0
+        Layout.rightMargin: root.isLarge ? Config.lock.sizes.border / 2 : 0
         Layout.fillWidth: true
 
         spacing: Appearance.spacing.small

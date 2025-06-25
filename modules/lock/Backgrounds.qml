@@ -10,13 +10,15 @@ Item {
 
     required property bool locked
     required property real weatherWidth
+    required property bool isLarge
 
     readonly property real clockBottom: innerMask.anchors.margins + clockPath.height
     readonly property real inputTop: innerMask.anchors.margins + inputPath.height
     readonly property real weatherTop: innerMask.anchors.margins + weatherPath.height
     readonly property real weatherRight: innerMask.anchors.margins + weatherPath.width
-    readonly property real mediaBottom: innerMask.anchors.margins + mediaPath.height
-    readonly property real mediaRight: innerMask.anchors.margins + mediaPath.width
+
+    readonly property real mediaX: innerMask.anchors.margins + mediaPath.width
+    readonly property real mediaY: innerMask.anchors.margins + mediaPath.height
 
     anchors.fill: parent
 
@@ -277,37 +279,38 @@ Item {
             strokeWidth: -1
             fillColor: Config.border.colour
 
-            startY: height + roundingY
+            startX: root.isLarge ? 0 : Math.ceil(innerMask.width)
+            startY: root.isLarge ? height + roundingY : Math.ceil(innerMask.height) - height - roundingY
 
             PathArc {
-                relativeX: mediaPath.roundingX
-                relativeY: -mediaPath.roundingY
+                relativeX: mediaPath.roundingX * (root.isLarge ? 1 : -1)
+                relativeY: mediaPath.roundingY * (root.isLarge ? -1 : 1)
                 radiusX: Math.min(mediaPath.rounding, mediaPath.width)
                 radiusY: Math.min(mediaPath.rounding, mediaPath.height)
             }
             PathLine {
-                relativeX: mediaPath.width - mediaPath.roundingX * 2
+                relativeX: (mediaPath.width - mediaPath.roundingX * 2) * (root.isLarge ? 1 : -1)
                 relativeY: 0
             }
             PathArc {
-                relativeX: mediaPath.roundingX
-                relativeY: -mediaPath.roundingY
+                relativeX: mediaPath.roundingX * (root.isLarge ? 1 : -1)
+                relativeY: mediaPath.roundingY * (root.isLarge ? -1 : 1)
                 radiusX: Math.min(mediaPath.rounding, mediaPath.width)
                 radiusY: Math.min(mediaPath.rounding, mediaPath.height)
                 direction: PathArc.Counterclockwise
             }
             PathLine {
                 relativeX: 0
-                relativeY: -(mediaPath.height - mediaPath.roundingY * 2)
+                relativeY: (mediaPath.height - mediaPath.roundingY * 2) * (root.isLarge ? -1 : 1)
             }
             PathArc {
-                relativeX: mediaPath.roundingX
-                relativeY: -mediaPath.roundingY
+                relativeX: mediaPath.roundingX * (root.isLarge ? 1 : -1)
+                relativeY: mediaPath.roundingY * (root.isLarge ? -1 : 1)
                 radiusX: Math.min(mediaPath.rounding, mediaPath.width)
                 radiusY: Math.min(mediaPath.rounding, mediaPath.height)
             }
             PathLine {
-                relativeX: -mediaPath.width - mediaPath.roundingX
+                relativeX: (-mediaPath.width - mediaPath.roundingX) * (root.isLarge ? 1 : -1)
                 relativeY: 0
             }
 

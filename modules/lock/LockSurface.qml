@@ -71,6 +71,7 @@ WlSessionLockSurface {
 
         locked: root.locked
         weatherWidth: weather.implicitWidth
+        isLarge: root.screen.width > 1920
         visible: false
     }
 
@@ -108,10 +109,41 @@ WlSessionLockSurface {
     }
 
     MediaPlaying {
-        anchors.bottom: parent.top
-        anchors.right: parent.left
-        anchors.bottomMargin: -backgrounds.mediaBottom
-        anchors.rightMargin: -backgrounds.mediaRight
+        id: media
+
+        isLarge: root.screen.width > 1920
+
+        state: isLarge ? "tl" : "br"
+        states: [
+            State {
+                name: "tl"
+
+                AnchorChanges {
+                    target: media
+                    anchors.bottom: media.parent.top
+                    anchors.right: media.parent.left
+                }
+
+                PropertyChanges {
+                    media.anchors.bottomMargin: -backgrounds.mediaY
+                    media.anchors.rightMargin: -backgrounds.mediaX
+                }
+            },
+            State {
+                name: "br"
+
+                AnchorChanges {
+                    target: media
+                    anchors.top: media.parent.bottom
+                    anchors.left: media.parent.right
+                }
+
+                PropertyChanges {
+                    media.anchors.topMargin: -backgrounds.mediaY
+                    media.anchors.leftMargin: -backgrounds.mediaX
+                }
+            }
+        ]
     }
 
     component Anim: NumberAnimation {

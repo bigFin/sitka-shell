@@ -10,15 +10,15 @@ WlSessionLockSurface {
 
     required property WlSessionLock lock
 
-    property bool locked
+    property bool thisLocked
+    readonly property bool locked: thisLocked && !lock.unlocked
 
     function unlock(): void {
-        locked = false;
-        background.opacity = 0;
+        lock.unlocked = true;
         animDelay.start();
     }
 
-    Component.onCompleted: locked = true
+    Component.onCompleted: thisLocked = true
 
     color: "transparent"
 
@@ -27,6 +27,14 @@ WlSessionLockSurface {
 
         interval: Appearance.anim.durations.large
         onTriggered: root.lock.locked = false
+    }
+
+    Connections {
+        target: root.lock
+
+        function onUnlockedChanged(): void {
+            background.opacity = 0;
+        }
     }
 
     ScreencopyView {

@@ -354,13 +354,13 @@ Item {
             fillColor: root.isLarge ? Config.border.colour : "transparent"
 
             startX: Math.ceil(innerMask.width)
-            startY: Math.ceil(innerMask.height) - height - roundingY
+            startY: Math.ceil(innerMask.height) - height - rounding
 
             PathArc {
                 relativeX: -buttonsPath.roundingX
-                relativeY: buttonsPath.roundingY
+                relativeY: buttonsPath.rounding
                 radiusX: Math.min(buttonsPath.rounding, buttonsPath.width)
-                radiusY: Math.min(buttonsPath.rounding, buttonsPath.height)
+                radiusY: buttonsPath.rounding, buttonsPath.height
             }
             PathLine {
                 relativeX: -(buttonsPath.width - buttonsPath.roundingX * 2)
@@ -419,13 +419,13 @@ Item {
             fillColor: root.isLarge ? Config.border.colour : "transparent"
 
             startX: Math.ceil(innerMask.width)
-            startY: height + roundingY
+            startY: height + rounding
 
             PathArc {
                 relativeX: -statusPath.roundingX
-                relativeY: -statusPath.roundingY
+                relativeY: -statusPath.rounding
                 radiusX: Math.min(statusPath.rounding, statusPath.width)
-                radiusY: Math.min(statusPath.rounding, statusPath.height)
+                radiusY: statusPath.rounding
                 direction: PathArc.Counterclockwise
             }
             PathLine {

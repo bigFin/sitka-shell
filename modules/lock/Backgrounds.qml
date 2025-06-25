@@ -10,6 +10,7 @@ Item {
 
     required property bool locked
     required property real weatherWidth
+    required property bool isNormal
     required property bool isLarge
 
     readonly property real clockBottom: innerMask.anchors.margins + clockPath.height
@@ -277,7 +278,7 @@ Item {
             readonly property real roundingY: height < rounding * 2 ? height / 2 : rounding
 
             strokeWidth: -1
-            fillColor: Config.border.colour
+            fillColor: root.isNormal ? Config.border.colour : "transparent"
 
             startX: root.isLarge ? 0 : Math.ceil(innerMask.width)
             startY: root.isLarge ? height + roundingY : Math.ceil(innerMask.height) - height - roundingY

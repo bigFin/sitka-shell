@@ -60,7 +60,7 @@ Column {
         playing: visible
         asynchronous: true
         speed: 0.7
-        source: "root:/assets/kurukuru.gif"
+        source: Config.paths.sessionGif
     }
 
     SessionButton {

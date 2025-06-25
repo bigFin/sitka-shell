@@ -90,8 +90,6 @@ WlSessionLockSurface {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.top
         anchors.bottomMargin: -backgrounds.clockBottom
-
-        locked: root.locked
     }
 
     Input {
@@ -112,46 +110,53 @@ WlSessionLockSurface {
     }
 
     Loader {
+        id: media
+
         active: root.screen.width > Config.lock.sizes.smallScreenWidth
         asynchronous: true
 
-        sourceComponent: MediaPlaying {
-            id: media
+        state: root.screen.width > Config.lock.sizes.largeScreenWidth ? "tl" : "br"
+        states: [
+            State {
+                name: "tl"
 
-            isLarge: root.screen.width > Config.lock.sizes.largeScreenWidth
-
-            state: isLarge ? "tl" : "br"
-            states: [
-                State {
-                    name: "tl"
-
-                    AnchorChanges {
-                        target: media
-                        anchors.bottom: media.parent.top
-                        anchors.right: media.parent.left
-                    }
-
-                    PropertyChanges {
-                        media.anchors.bottomMargin: -backgrounds.mediaY
-                        media.anchors.rightMargin: -backgrounds.mediaX
-                    }
-                },
-                State {
-                    name: "br"
-
-                    AnchorChanges {
-                        target: media
-                        anchors.top: media.parent.bottom
-                        anchors.left: media.parent.right
-                    }
-
-                    PropertyChanges {
-                        media.anchors.topMargin: -backgrounds.mediaY
-                        media.anchors.leftMargin: -backgrounds.mediaX
-                    }
+                AnchorChanges {
+                    target: media
+                    anchors.bottom: media.parent.top
+                    anchors.right: media.parent.left
                 }
-            ]
+
+                PropertyChanges {
+                    media.anchors.bottomMargin: -backgrounds.mediaY
+                    media.anchors.rightMargin: -backgrounds.mediaX
+                }
+            },
+            State {
+                name: "br"
+
+                AnchorChanges {
+                    target: media
+                    anchors.top: media.parent.bottom
+                    anchors.left: media.parent.right
+                }
+
+                PropertyChanges {
+                    media.anchors.topMargin: -backgrounds.mediaY
+                    media.anchors.leftMargin: -backgrounds.mediaX
+                }
+            }
+        ]
+
+        sourceComponent: MediaPlaying {
+            isLarge: root.screen.width > Config.lock.sizes.largeScreenWidth
         }
+    }
+
+    Loader {
+        active: root.screen.width > Config.lock.sizes.largeScreenWidth
+        asynchronous: true
+
+        sourceComponent: Buttons {}
     }
 
     component Anim: NumberAnimation {

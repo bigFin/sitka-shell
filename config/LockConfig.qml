@@ -1,6 +1,8 @@
 import Quickshell.Io
 
 JsonObject {
+    property int maxNotifs: 5
+
     property JsonObject sizes: JsonObject {
         property int border: 100
         property int clockWidth: 800

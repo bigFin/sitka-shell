@@ -75,6 +75,8 @@ WlSessionLockSurface {
         weatherWidth: weather.implicitWidth
         buttonsWidth: buttons.item?.nonAnimWidth ?? 0
         buttonsHeight: buttons.item?.nonAnimHeight ?? 0
+        statusWidth: status.item?.nonAnimWidth ?? 0
+        statusHeight: status.item?.nonAnimHeight ?? 0
         isNormal: root.screen.width > Config.lock.sizes.smallScreenWidth
         isLarge: root.screen.width > Config.lock.sizes.largeScreenWidth
         visible: false
@@ -166,6 +168,19 @@ WlSessionLockSurface {
         anchors.leftMargin: -backgrounds.buttonsLeft
 
         sourceComponent: Buttons {}
+    }
+
+    Loader {
+        id: status
+
+        active: root.screen.width > Config.lock.sizes.largeScreenWidth
+
+        anchors.bottom: parent.top
+        anchors.left: parent.right
+        anchors.bottomMargin: -backgrounds.statusBottom
+        anchors.leftMargin: -backgrounds.statusLeft
+
+        sourceComponent: Status {}
     }
 
     component Anim: NumberAnimation {

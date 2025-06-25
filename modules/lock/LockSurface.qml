@@ -71,7 +71,7 @@ WlSessionLockSurface {
 
         locked: root.locked
         weatherWidth: weather.implicitWidth
-        isLarge: root.screen.width > 1920
+        isLarge: root.screen.width > Config.lock.sizes.largeScreenWidth
         visible: false
     }
 
@@ -111,7 +111,7 @@ WlSessionLockSurface {
     MediaPlaying {
         id: media
 
-        isLarge: root.screen.width > 1920
+        isLarge: root.screen.width > Config.lock.sizes.largeScreenWidth
 
         state: isLarge ? "tl" : "br"
         states: [

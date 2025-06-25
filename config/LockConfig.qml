@@ -17,5 +17,6 @@ JsonObject {
         property int mediaCoverSize: 150
         property int mediaCoverSizeSmall: 120
         property int mediaCoverBorder: 3
+        property int largeScreenWidth: 2560
     }
 }

@@ -269,8 +269,8 @@ Item {
         ShapePath {
             id: mediaPath
 
-            property int width: root.locked ? Config.lock.sizes.mediaWidth - Config.lock.sizes.border / 4 : 0
-            property real height: root.locked ? Config.lock.sizes.mediaHeight : 0
+            property int width: root.locked ? (root.isLarge ? Config.lock.sizes.mediaWidth : Config.lock.sizes.mediaWidthSmall) - Config.lock.sizes.border / 4 : 0
+            property real height: root.locked ? (root.isLarge ? Config.lock.sizes.mediaHeight : Config.lock.sizes.mediaHeightSmall) : 0
 
             readonly property real rounding: Appearance.rounding.large * 2
             readonly property real roundingX: width < rounding * 2 ? width / 2 : rounding

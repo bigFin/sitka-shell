@@ -73,6 +73,8 @@ WlSessionLockSurface {
 
         locked: root.locked
         weatherWidth: weather.implicitWidth
+        buttonsWidth: buttons.item?.nonAnimWidth ?? 0
+        buttonsHeight: buttons.item?.nonAnimHeight ?? 0
         isNormal: root.screen.width > Config.lock.sizes.smallScreenWidth
         isLarge: root.screen.width > Config.lock.sizes.largeScreenWidth
         visible: false
@@ -153,8 +155,15 @@ WlSessionLockSurface {
     }
 
     Loader {
+        id: buttons
+
         active: root.screen.width > Config.lock.sizes.largeScreenWidth
         asynchronous: true
+
+        anchors.top: parent.bottom
+        anchors.left: parent.right
+        anchors.topMargin: -backgrounds.buttonsTop
+        anchors.leftMargin: -backgrounds.buttonsLeft
 
         sourceComponent: Buttons {}
     }

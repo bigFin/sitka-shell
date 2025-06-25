@@ -10,6 +10,8 @@ Item {
 
     required property bool locked
     required property real weatherWidth
+    required property real buttonsWidth
+    required property real buttonsHeight
     required property bool isNormal
     required property bool isLarge
 
@@ -17,6 +19,8 @@ Item {
     readonly property real inputTop: innerMask.anchors.margins + inputPath.height
     readonly property real weatherTop: innerMask.anchors.margins + weatherPath.height
     readonly property real weatherRight: innerMask.anchors.margins + weatherPath.width
+    readonly property real buttonsTop: innerMask.anchors.margins + buttonsPath.height
+    readonly property real buttonsLeft: innerMask.anchors.margins + buttonsPath.width
 
     readonly property real mediaX: innerMask.anchors.margins + mediaPath.width
     readonly property real mediaY: innerMask.anchors.margins + mediaPath.height
@@ -312,6 +316,71 @@ Item {
             }
             PathLine {
                 relativeX: (-mediaPath.width - mediaPath.roundingX) * (root.isLarge ? 1 : -1)
+                relativeY: 0
+            }
+
+            Behavior on width {
+                Anim {}
+            }
+
+            Behavior on height {
+                Anim {}
+            }
+
+            Behavior on fillColor {
+                ColorAnimation {
+                    duration: Appearance.anim.durations.normal
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.anim.curves.standard
+                }
+            }
+        }
+
+        ShapePath {
+            id: buttonsPath
+
+            property int width: root.locked ? root.buttonsWidth - Config.lock.sizes.border / 4 : 0
+            property real height: root.locked ? root.buttonsHeight - Config.lock.sizes.border / 4 : 0
+
+            readonly property real rounding: Appearance.rounding.large * 2
+            readonly property real roundingX: width < rounding * 2 ? width / 2 : rounding
+            readonly property real roundingY: height < rounding * 2 ? height / 2 : rounding
+
+            strokeWidth: -1
+            fillColor: root.isLarge ? Config.border.colour : "transparent"
+
+            startX: Math.ceil(innerMask.width)
+            startY: Math.ceil(innerMask.height) - height - roundingY
+
+            PathArc {
+                relativeX: -buttonsPath.roundingX
+                relativeY: buttonsPath.roundingY
+                radiusX: Math.min(buttonsPath.rounding, buttonsPath.width)
+                radiusY: Math.min(buttonsPath.rounding, buttonsPath.height)
+            }
+            PathLine {
+                relativeX: -(buttonsPath.width - buttonsPath.roundingX * 2)
+                relativeY: 0
+            }
+            PathArc {
+                relativeX: -buttonsPath.roundingX
+                relativeY: buttonsPath.roundingY
+                radiusX: Math.min(buttonsPath.rounding, buttonsPath.width)
+                radiusY: Math.min(buttonsPath.rounding, buttonsPath.height)
+                direction: PathArc.Counterclockwise
+            }
+            PathLine {
+                relativeX: 0
+                relativeY: buttonsPath.height - buttonsPath.roundingY * 2
+            }
+            PathArc {
+                relativeX: -buttonsPath.roundingX
+                relativeY: buttonsPath.roundingY
+                radiusX: Math.min(buttonsPath.rounding, buttonsPath.width)
+                radiusY: Math.min(buttonsPath.rounding, buttonsPath.height)
+            }
+            PathLine {
+                relativeX: buttonsPath.width + buttonsPath.roundingX
                 relativeY: 0
             }
 

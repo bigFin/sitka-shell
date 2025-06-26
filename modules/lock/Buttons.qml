@@ -1,6 +1,7 @@
 import "root:/widgets"
 import "root:/services"
 import "root:/config"
+import Quickshell
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts

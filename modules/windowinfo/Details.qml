@@ -14,7 +14,7 @@ ColumnLayout {
     Label {
         Layout.topMargin: Appearance.padding.large * 2
 
-        text: Hyprland.activeClient?.title ?? "No active client"
+        text: Hyprland.activeClient?.title ?? qsTr("No active client")
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
         font.pointSize: Appearance.font.size.large
@@ -22,7 +22,7 @@ ColumnLayout {
     }
 
     Label {
-        text: Hyprland.activeClient?.wmClass ?? "No active client"
+        text: Hyprland.activeClient?.wmClass ?? qsTr("No active client")
         color: Colours.palette.m3tertiary
 
         font.pointSize: Appearance.font.size.larger
@@ -132,7 +132,7 @@ ColumnLayout {
         Layout.rightMargin: Appearance.padding.large
         Layout.fillWidth: true
 
-        spacing: Appearance.spacing.normal
+        spacing: Appearance.spacing.smaller
 
         MaterialIcon {
             id: icon

@@ -113,6 +113,7 @@ Column {
             text: button.icon
             color: button.activeFocus ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
             font.pointSize: Appearance.font.size.extraLarge
+            font.weight: 500
         }
     }
 }

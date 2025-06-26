@@ -80,9 +80,6 @@ Item {
                     text: "chevron_right"
 
                     font.pointSize: Appearance.font.size.large
-                    font.variableAxes: ({
-                            opsz: Appearance.font.size.large
-                        })
                 }
             }
         }

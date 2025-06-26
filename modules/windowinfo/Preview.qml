@@ -45,9 +45,6 @@ Item {
                     text: "web_asset_off"
                     color: Colours.palette.m3outline
                     font.pointSize: Appearance.font.size.extraLarge * 3
-                    font.variableAxes: ({
-                            opsz: Appearance.font.size.extraLarge * 3
-                        })
                 }
 
                 StyledText {

@@ -78,7 +78,7 @@ ColumnLayout {
                 Button {
                     required property int index
                     readonly property int wsId: Math.floor((Hyprland.activeWsId - 1) / 10) * 10 + index + 1
-                    readonly property bool isCurrent: Hyprland.activeClient.workspace.id === wsId
+                    readonly property bool isCurrent: Hyprland.activeToplevel?.workspace.id === wsId
 
                     color: isCurrent ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
                     onColor: isCurrent ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
@@ -86,7 +86,7 @@ ColumnLayout {
                     disabled: isCurrent
 
                     function onClicked(): void {
-                        Hyprland.dispatch(`movetoworkspace ${wsId},address:${Hyprland.activeClient?.address}`);
+                        Hyprland.dispatch(`movetoworkspace ${wsId},address:0x${Hyprland.activeToplevel?.address}`);
                     }
                 }
             }
@@ -107,20 +107,20 @@ ColumnLayout {
         Layout.rightMargin: Appearance.padding.large
         Layout.bottomMargin: Appearance.padding.large
 
-        spacing: Hyprland.activeClient?.floating ? Appearance.spacing.normal : Appearance.spacing.small
+        spacing: Hyprland.activeToplevel?.lastIpcObject.floating ? Appearance.spacing.normal : Appearance.spacing.small
 
         Button {
             color: Colours.palette.m3secondaryContainer
             onColor: Colours.palette.m3onSecondaryContainer
-            text: Hyprland.activeClient?.floating ? qsTr("Tile") : qsTr("Float")
+            text: Hyprland.activeToplevel?.lastIpcObject.floating ? qsTr("Tile") : qsTr("Float")
 
             function onClicked(): void {
-                Hyprland.dispatch(`togglefloating address:${Hyprland.activeClient?.address}`);
+                Hyprland.dispatch(`togglefloating address:0x${Hyprland.activeToplevel?.address}`);
             }
         }
 
         Loader {
-            active: Hyprland.activeClient?.floating
+            active: Hyprland.activeToplevel?.lastIpcObject.floating
             asynchronous: true
             Layout.fillWidth: active
             Layout.leftMargin: active ? 0 : -parent.spacing
@@ -129,10 +129,10 @@ ColumnLayout {
             sourceComponent: Button {
                 color: Colours.palette.m3secondaryContainer
                 onColor: Colours.palette.m3onSecondaryContainer
-                text: Hyprland.activeClient?.lastIpcObject.pinned ? qsTr("Unpin") : qsTr("Pin")
+                text: Hyprland.activeToplevel?.lastIpcObject.pinned ? qsTr("Unpin") : qsTr("Pin")
 
                 function onClicked(): void {
-                    Hyprland.dispatch(`pin address:${Hyprland.activeClient?.address}`);
+                    Hyprland.dispatch(`pin address:0x${Hyprland.activeToplevel?.address}`);
                 }
             }
         }
@@ -143,7 +143,7 @@ ColumnLayout {
             text: qsTr("Kill")
 
             function onClicked(): void {
-                Hyprland.dispatch(`movetoworkspace ${wsId},address:${Hyprland.activeClient?.address}`);
+                Hyprland.dispatch(`movetoworkspace ${wsId},address:0x${Hyprland.activeToplevel?.address}`);
             }
         }
     }

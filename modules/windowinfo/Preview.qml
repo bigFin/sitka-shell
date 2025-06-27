@@ -34,7 +34,7 @@ Item {
 
         Loader {
             anchors.centerIn: parent
-            active: !Hyprland.activeClient
+            active: !Hyprland.activeToplevel
             asynchronous: true
 
             sourceComponent: ColumnLayout {
@@ -69,10 +69,10 @@ Item {
 
             anchors.centerIn: parent
 
-            captureSource: Hyprland.activeClient ? ToplevelManager.activeToplevel : null
+            captureSource: Hyprland.activeToplevel?.wayland ?? null
             live: true
 
-            constraintSize.width: parent.height * Math.min(screen.width / screen.height, Hyprland.activeClient.width / Hyprland.activeClient.height)
+            constraintSize.width: parent.height * Math.min(root.screen.width / root.screen.height, Hyprland.activeToplevel?.lastIpcObject.size[0] / Hyprland.activeToplevel?.lastIpcObject.size[1])
             constraintSize.height: parent.height
         }
     }
@@ -86,11 +86,11 @@ Item {
 
         animate: true
         text: {
-            const client = Hyprland.activeClient;
+            const client = Hyprland.activeToplevel;
             if (!client)
                 return qsTr("No active client");
 
-            const mon = Hyprland.monitors.values[Hyprland.activeClient.lastIpcObject.monitor];
+            const mon = client.monitor;
             return qsTr("%1 on monitor %2 at %3, %4").arg(client.title).arg(mon.name).arg(client.x).arg(client.y);
         }
     }

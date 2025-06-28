@@ -1,9 +1,7 @@
 import "root:/widgets"
 import "root:/services"
 import "root:/config"
-import Quickshell
-import Quickshell.Io
-import Quickshell.Widgets
+import "root:/utils"
 import QtQuick
 import QtQuick.Shapes
 
@@ -223,7 +221,7 @@ Item {
 
         playing: root.shouldUpdate && (Players.active?.isPlaying ?? false)
         speed: BeatDetector.bpm / 300
-        source: Config.paths.mediaGif
+        source: Paths.expandTilde(Config.paths.mediaGif)
         asynchronous: true
         fillMode: AnimatedImage.PreserveAspectFit
     }

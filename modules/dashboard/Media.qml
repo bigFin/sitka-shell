@@ -525,7 +525,7 @@ Item {
 
             playing: root.shouldUpdate && (Players.active?.isPlaying ?? false)
             speed: BeatDetector.bpm / 300
-            source: Config.paths.mediaGif
+            source: Paths.expandTilde(Config.paths.mediaGif)
             asynchronous: true
             fillMode: AnimatedImage.PreserveAspectFit
         }

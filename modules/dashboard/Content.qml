@@ -4,6 +4,7 @@ import "root:/config"
 import Quickshell
 import Quickshell.Widgets
 import QtQuick
+import QtQuick.Layouts
 
 Item {
     id: root
@@ -78,20 +79,24 @@ Item {
                     contentX = Qt.binding(() => currentItem.x);
             }
 
-            Row {
+            RowLayout {
                 id: row
 
                 Dash {
+                    Layout.alignment: Qt.AlignTop
                     shouldUpdate: visible && this === view.currentItem
                     visibilities: root.visibilities
                 }
 
                 Media {
+                    Layout.alignment: Qt.AlignTop
                     shouldUpdate: visible && this === view.currentItem
                     visibilities: root.visibilities
                 }
 
-                Performance {}
+                Performance {
+                    Layout.alignment: Qt.AlignTop
+                }
             }
 
             Behavior on contentX {

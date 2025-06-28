@@ -9,10 +9,8 @@ Item {
     id: root
 
     required property PersistentProperties visibilities
+    required property PersistentProperties state
     readonly property real nonAnimWidth: view.implicitWidth + viewWrapper.anchors.margins * 2
-
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.bottom: parent.bottom
 
     implicitWidth: nonAnimWidth
     implicitHeight: tabs.implicitHeight + tabs.anchors.topMargin + view.implicitHeight + viewWrapper.anchors.margins * 2
@@ -27,7 +25,7 @@ Item {
         anchors.margins: Appearance.padding.large
 
         nonAnimWidth: root.nonAnimWidth - anchors.margins * 2
-        currentIndex: view.currentIndex
+        state: root.state
     }
 
     ClippingRectangle {
@@ -45,7 +43,7 @@ Item {
         Flickable {
             id: view
 
-            readonly property int currentIndex: tabs.currentIndex
+            readonly property int currentIndex: root.state.currentTab
             readonly property Item currentItem: row.children[currentIndex]
 
             anchors.fill: parent
@@ -65,17 +63,17 @@ Item {
 
                 const x = contentX - currentItem.x;
                 if (x > currentItem.implicitWidth / 2)
-                    tabs.bar.incrementCurrentIndex();
+                    root.state.currentTab = Math.min(root.state.currentTab + 1, tabs.count - 1);
                 else if (x < -currentItem.implicitWidth / 2)
-                    tabs.bar.decrementCurrentIndex();
+                    root.state.currentTab = Math.max(root.state.currentTab - 1, 0);
             }
 
             onDragEnded: {
                 const x = contentX - currentItem.x;
                 if (x > currentItem.implicitWidth / 10)
-                    tabs.bar.incrementCurrentIndex();
+                    root.state.currentTab = Math.min(root.state.currentTab + 1, tabs.count - 1);
                 else if (x < -currentItem.implicitWidth / 10)
-                    tabs.bar.decrementCurrentIndex();
+                    root.state.currentTab = Math.max(root.state.currentTab - 1, 0);
                 else
                     contentX = Qt.binding(() => currentItem.x);
             }

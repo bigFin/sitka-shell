@@ -145,7 +145,7 @@ All configuration options are in `~/.config/caelestia/shell.json`.
 
 <details><summary>Example configuration</summary>
 
-```
+```json
 {
     "bar": {
         "workspaces": {
@@ -199,7 +199,7 @@ All configuration options are in `~/.config/caelestia/shell.json`.
 }
 ```
 
-</summary>
+</details>
 
 ## Credits
 

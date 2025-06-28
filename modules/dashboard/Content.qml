@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import "root:/widgets"
 import "root:/services"
 import "root:/config"
@@ -82,20 +84,20 @@ Item {
             RowLayout {
                 id: row
 
-                Dash {
-                    Layout.alignment: Qt.AlignTop
-                    shouldUpdate: visible && this === view.currentItem
-                    visibilities: root.visibilities
+                Pane {
+                    sourceComponent: Dash {
+                        visibilities: root.visibilities
+                    }
                 }
 
-                Media {
-                    Layout.alignment: Qt.AlignTop
-                    shouldUpdate: visible && this === view.currentItem
-                    visibilities: root.visibilities
+                Pane {
+                    sourceComponent: Media {
+                        visibilities: root.visibilities
+                    }
                 }
 
-                Performance {
-                    Layout.alignment: Qt.AlignTop
+                Pane {
+                    sourceComponent: Performance {}
                 }
             }
 
@@ -123,5 +125,15 @@ Item {
             easing.type: Easing.BezierSpline
             easing.bezierCurve: Appearance.anim.curves.emphasized
         }
+    }
+
+    component Pane: Loader {
+        Layout.alignment: Qt.AlignTop
+
+        Component.onCompleted: active = Qt.binding(() => {
+            const vx = Math.floor(view.visibleArea.xPosition * view.contentWidth);
+            const vex = Math.floor(vx + view.visibleArea.widthRatio * view.contentWidth);
+            return (vx >= x && vx <= x + implicitWidth) || (vex >= x && vex <= x + implicitWidth);
+        })
     }
 }

@@ -8,8 +8,6 @@ import QtQuick.Shapes
 Item {
     id: root
 
-    required property bool shouldUpdate
-
     property real playerProgress: {
         const active = Players.active;
         return active?.length ? active.position / active.length : 0;
@@ -28,7 +26,7 @@ Item {
     }
 
     Timer {
-        running: root.shouldUpdate && (Players.active?.isPlaying ?? false)
+        running: Players.active?.isPlaying ?? false
         interval: Config.dashboard.mediaUpdateInterval
         triggeredOnStart: true
         repeat: true
@@ -219,7 +217,7 @@ Item {
         anchors.bottomMargin: Appearance.padding.large
         anchors.margins: Appearance.padding.large * 2
 
-        playing: root.shouldUpdate && (Players.active?.isPlaying ?? false)
+        playing: Players.active?.isPlaying ?? false
         speed: BeatDetector.bpm / 300
         source: Paths.expandTilde(Config.paths.mediaGif)
         asynchronous: true

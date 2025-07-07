@@ -43,7 +43,7 @@ ColumnLayout {
 
             CachingImage {
                 anchors.fill: parent
-                path: `${Paths.home}/.face`
+                path: `${Paths.stringify(Paths.home)}/.face`
             }
         }
 

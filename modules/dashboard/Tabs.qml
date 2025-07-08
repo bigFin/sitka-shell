@@ -119,8 +119,7 @@ Item {
                 rippleAnim.y = event.y - stateY;
 
                 const dist = (ox, oy) => ox * ox + oy * oy;
-                const stateEndY = stateY + stateWrapper.height;
-                rippleAnim.radius = Math.sqrt(Math.max(dist(0, stateY), dist(0, stateEndY), dist(width, stateY), dist(width, stateEndY)));
+                rippleAnim.radius = Math.sqrt(Math.max(dist(event.x, event.y + stateY), dist(event.x, stateWrapper.height - event.y), dist(width - event.x, event.y + stateY), dist(width - event.x, stateWrapper.height - event.y)));
 
                 rippleAnim.restart();
             }
@@ -151,25 +150,23 @@ Item {
                 PropertyAction {
                     target: ripple
                     property: "opacity"
-                    value: 0.1
+                    value: 0.08
                 }
-                ParallelAnimation {
-                    Anim {
-                        target: ripple
-                        properties: "implicitWidth,implicitHeight"
-                        from: 0
-                        to: rippleAnim.radius * 2
-                        duration: Appearance.anim.durations.large
-                        easing.bezierCurve: Appearance.anim.curves.standardDecel
-                    }
-                    Anim {
-                        target: ripple
-                        property: "opacity"
-                        to: 0
-                        duration: Appearance.anim.durations.large
-                        easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Appearance.anim.curves.standardDecel
-                    }
+                Anim {
+                    target: ripple
+                    properties: "implicitWidth,implicitHeight"
+                    from: 0
+                    to: rippleAnim.radius * 2
+                    duration: Appearance.anim.durations.normal
+                    easing.bezierCurve: Appearance.anim.curves.standardDecel
+                }
+                Anim {
+                    target: ripple
+                    property: "opacity"
+                    to: 0
+                    duration: Appearance.anim.durations.normal
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.anim.curves.standard
                 }
             }
 

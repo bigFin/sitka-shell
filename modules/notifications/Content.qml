@@ -8,6 +8,8 @@ import QtQuick
 Item {
     id: root
 
+    required property PersistentProperties visibilities
+    required property Item panel
     readonly property int padding: Appearance.padding.large
 
     anchors.top: parent.top
@@ -24,9 +26,6 @@ Item {
         for (let i = 0; i < count; i++)
             height += list.itemAtIndex(i)?.nonAnimHeight ?? 0;
 
-        const screen = QsWindow.window?.screen;
-        const visibilities = Visibilities.screens[screen];
-        const panel = Visibilities.panels[screen];
         if (visibilities && panel) {
             if (visibilities.osd) {
                 const h = panel.osd.y - Config.border.rounding * 2;
@@ -41,7 +40,7 @@ Item {
             }
         }
 
-        return Math.min((screen?.height ?? 0) - Config.border.thickness * 2, height + padding * 2);
+        return Math.min((QsWindow.window?.screen?.height ?? 0) - Config.border.thickness * 2, height + padding * 2);
     }
 
     ClippingWrapperRectangle {

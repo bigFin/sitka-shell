@@ -11,6 +11,7 @@ Item {
     id: root
 
     required property ShellScreen screen
+    required property PersistentProperties visibilities
     required property BarPopouts.Wrapper popouts
 
     function checkPopout(y: real): void {
@@ -169,6 +170,8 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: Appearance.padding.large
+
+            visibilities: root.visibilities
         }
     }
 }

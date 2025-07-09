@@ -201,12 +201,16 @@ WrapperItem {
             move: Transition {
                 Anim {
                     property: "y"
+                    duration: Appearance.anim.durations.large
+                    easing.bezierCurve: Appearance.anim.curves.emphasized
                 }
             }
 
             displaced: Transition {
                 Anim {
                     property: "y"
+                    duration: Appearance.anim.durations.large
+                    easing.bezierCurve: Appearance.anim.curves.emphasized
                 }
             }
 
@@ -221,14 +225,22 @@ WrapperItem {
                 implicitWidth: count.implicitWidth + Appearance.padding.normal * 2
                 implicitHeight: count.implicitHeight + Appearance.padding.small * 2
 
-                scale: Notifs.popups.length > Config.lock.maxNotifs ? 1 : 0
+                opacity: Notifs.list.length > Config.lock.maxNotifs ? 1 : 0
+                scale: Notifs.list.length > Config.lock.maxNotifs ? 1 : 0.8
 
                 StyledText {
                     id: count
 
                     anchors.centerIn: parent
-                    text: qsTr("+%1").arg(Notifs.popups.length - Config.lock.maxNotifs)
+                    text: qsTr("+%1").arg(Notifs.list.length - Config.lock.maxNotifs)
                     color: Colours.palette.m3onTertiaryContainer
+                }
+
+                Behavior on opacity {
+                    Anim {
+                        duration: Appearance.anim.durations.expressiveFastSpatial
+                        easing.bezierCurve: Appearance.anim.curves.standard
+                    }
                 }
 
                 Behavior on scale {

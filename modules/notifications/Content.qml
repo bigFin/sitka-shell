@@ -28,13 +28,13 @@ Item {
 
         if (visibilities && panel) {
             if (visibilities.osd) {
-                const h = panel.osd.y - Config.border.rounding * 2;
+                const h = panel.osd.y - Config.border.rounding * 2 - padding * 2;
                 if (height > h)
                     height = h;
             }
 
             if (visibilities.session) {
-                const h = panel.session.y - Config.border.rounding * 2;
+                const h = panel.session.y - Config.border.rounding * 2 - padding * 2;
                 if (height > h)
                     height = h;
             }

@@ -50,7 +50,7 @@ Item {
         color: "transparent"
         radius: Appearance.rounding.normal
 
-        ListView {
+        StyledListView {
             id: list
 
             model: ScriptModel {

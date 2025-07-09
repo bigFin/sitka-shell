@@ -29,6 +29,12 @@ WrapperItem {
     rightMargin: 0
     topMargin: 0
 
+    Timer {
+        running: true
+        interval: 10
+        onTriggered: notifs.countChanged()
+    }
+
     Behavior on implicitWidth {
         Anim {
             duration: Appearance.anim.durations.large

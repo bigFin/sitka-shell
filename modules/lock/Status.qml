@@ -220,41 +220,9 @@ WrapperItem {
                 }
             }
 
-            StyledRect {
+            ExtraIndicator {
                 anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                anchors.margins: Appearance.padding.normal
-
-                color: Colours.palette.m3tertiaryContainer
-                radius: Appearance.rounding.small
-
-                implicitWidth: count.implicitWidth + Appearance.padding.normal * 2
-                implicitHeight: count.implicitHeight + Appearance.padding.small * 2
-
-                opacity: Notifs.list.length > Config.lock.maxNotifs ? 1 : 0
-                scale: Notifs.list.length > Config.lock.maxNotifs ? 1 : 0.8
-
-                StyledText {
-                    id: count
-
-                    anchors.centerIn: parent
-                    text: qsTr("+%1").arg(Notifs.list.length - Config.lock.maxNotifs)
-                    color: Colours.palette.m3onTertiaryContainer
-                }
-
-                Behavior on opacity {
-                    Anim {
-                        duration: Appearance.anim.durations.expressiveFastSpatial
-                        easing.bezierCurve: Appearance.anim.curves.standard
-                    }
-                }
-
-                Behavior on scale {
-                    Anim {
-                        duration: Appearance.anim.durations.expressiveFastSpatial
-                        easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
-                    }
-                }
+                extra: Notifs.list.length - Config.lock.maxNotifs
             }
         }
     }

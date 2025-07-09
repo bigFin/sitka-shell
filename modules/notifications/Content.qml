@@ -147,6 +147,48 @@ Item {
                     property: "y"
                 }
             }
+
+            ExtraIndicator {
+                anchors.top: parent.top
+                extra: {
+                    const count = list.count;
+                    if (count === 0)
+                        return 0;
+
+                    const scrollY = list.contentY;
+
+                    let height = 0;
+                    for (let i = 0; i < count; i++) {
+                        height += (list.itemAtIndex(i)?.nonAnimHeight ?? 0) + Appearance.spacing.smaller;
+
+                        if (height - Appearance.spacing.smaller >= scrollY)
+                            return i;
+                    }
+
+                    return count;
+                }
+            }
+
+            ExtraIndicator {
+                anchors.bottom: parent.bottom
+                extra: {
+                    const count = list.count;
+                    if (count === 0)
+                        return 0;
+
+                    const scrollY = list.contentHeight - (list.contentY + list.height);
+
+                    let height = 0;
+                    for (let i = count - 1; i >= 0; i--) {
+                        height += (list.itemAtIndex(i)?.nonAnimHeight ?? 0) + Appearance.spacing.smaller;
+
+                        if (height - Appearance.spacing.smaller >= scrollY)
+                            return count - i - 1;
+                    }
+
+                    return 0;
+                }
+            }
         }
     }
 

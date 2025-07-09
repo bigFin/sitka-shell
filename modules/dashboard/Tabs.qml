@@ -103,7 +103,7 @@ Item {
 
         background: null
 
-        contentItem: MouseArea {
+        contentItem: CustomMouseArea {
             id: mouse
 
             implicitWidth: Math.max(icon.width, label.width)
@@ -123,7 +123,8 @@ Item {
 
                 rippleAnim.restart();
             }
-            onWheel: event => {
+
+            function onWheel(event: WheelEvent): void {
                 if (event.angleDelta.y < 0)
                     root.state.currentTab = Math.min(root.state.currentTab + 1, bar.count - 1);
                 else if (event.angleDelta.y > 0)

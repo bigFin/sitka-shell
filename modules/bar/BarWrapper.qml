@@ -13,7 +13,7 @@ Item {
     required property PersistentProperties visibilities
     required property BarPopouts.Wrapper popouts
 
-    readonly property int exclusiveZone: Config.bar.persistent || (visibilities.bar && !isHovered) ? content.implicitWidth : Config.border.thickness
+    readonly property int exclusiveZone: Config.bar.persistent || visibilities.bar ? content.implicitWidth : Config.border.thickness
     property bool isHovered
 
     function checkPopout(y: real): void {
@@ -26,7 +26,7 @@ Item {
 
     states: State {
         name: "visible"
-        when: Config.bar.persistent || root.visibilities.bar
+        when: Config.bar.persistent || root.visibilities.bar || root.isHovered
 
         PropertyChanges {
             root.implicitWidth: content.implicitWidth
@@ -63,7 +63,7 @@ Item {
     Loader {
         id: content
 
-        Component.onCompleted: active = Qt.binding(() => root.visibilities.bar || root.visible)
+        Component.onCompleted: active = Qt.binding(() => Config.bar.persistent || root.visibilities.bar || root.isHovered || root.visible)
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom

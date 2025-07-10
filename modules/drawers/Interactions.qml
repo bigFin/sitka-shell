@@ -61,8 +61,8 @@ MouseArea {
             }
             popouts.hasCurrent = false;
 
-            if (bar.isHovered && Config.bar.showOnHover)
-                visibilities.bar = false;
+            if (Config.bar.showOnHover)
+                bar.isHovered = false;
         }
     }
 
@@ -72,7 +72,6 @@ MouseArea {
 
         // Show bar in non-exclusive mode on hover
         if (!visibilities.bar && Config.bar.showOnHover && x < bar.implicitWidth) {
-            visibilities.bar = true;
             bar.isHovered = true;
         }
 
@@ -81,8 +80,7 @@ MouseArea {
             const dragX = x - dragStart.x;
             if (dragX > Config.bar.dragThreshold) {
                 visibilities.bar = true;
-                bar.isHovered = false;
-            } else if (!bar.isHovered && dragX < -Config.bar.dragThreshold) {
+            } else if (dragX < -Config.bar.dragThreshold) {
                 visibilities.bar = false;
             }
         }

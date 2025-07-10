@@ -107,6 +107,7 @@ Variants {
             PersistentProperties {
                 id: visibilities
 
+                property bool bar
                 property bool osd
                 property bool session
                 property bool launcher
@@ -132,8 +133,11 @@ Variants {
                 }
             }
 
-            Bar {
+            BarWrapper {
                 id: bar
+
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
 
                 screen: scope.modelData
                 visibilities: visibilities

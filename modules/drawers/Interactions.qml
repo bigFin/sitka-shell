@@ -60,12 +60,32 @@ MouseArea {
                 visibilities.utilities = false;
             }
             popouts.hasCurrent = false;
+
+            if (bar.isHovered && Config.bar.showOnHover)
+                visibilities.bar = false;
         }
     }
 
     onPositionChanged: event => {
         const x = event.x;
         const y = event.y;
+
+        // Show bar in non-exclusive mode on hover
+        if (!visibilities.bar && Config.bar.showOnHover && x < bar.implicitWidth) {
+            visibilities.bar = true;
+            bar.isHovered = true;
+        }
+
+        // Show/hide bar on drag
+        if (pressed && dragStart.x < bar.implicitWidth) {
+            const dragX = x - dragStart.x;
+            if (dragX > Config.bar.dragThreshold) {
+                visibilities.bar = true;
+                bar.isHovered = false;
+            } else if (!bar.isHovered && dragX < -Config.bar.dragThreshold) {
+                visibilities.bar = false;
+            }
+        }
 
         // Show osd on hover
         const showOsd = inRightPanel(panels.osd, x, y);

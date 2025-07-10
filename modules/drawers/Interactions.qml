@@ -81,12 +81,21 @@ MouseArea {
         }
 
         // Show/hide session on drag
-        if (pressed && withinPanelHeight(panels.session, x, y)) {
+        if (pressed && inRightPanel(panels.session, dragStart.x, dragStart.y) && withinPanelHeight(panels.session, x, y)) {
             const dragX = x - dragStart.x;
             if (dragX < -Config.session.dragThreshold)
                 visibilities.session = true;
             else if (dragX > Config.session.dragThreshold)
                 visibilities.session = false;
+        }
+
+        // Show/hide launcher on drag
+        if (pressed && inBottomPanel(panels.launcher, dragStart.x, dragStart.y) && withinPanelWidth(panels.launcher, x, y)) {
+            const dragY = y - dragStart.y;
+            if (dragY < -Config.launcher.dragThreshold)
+                visibilities.launcher = true;
+            else if (dragY > Config.launcher.dragThreshold)
+                visibilities.launcher = false;
         }
 
         // Show dashboard on hover

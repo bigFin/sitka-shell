@@ -57,10 +57,6 @@ Singleton {
         }
     }
 
-    Process {
-        id: setProc
-    }
-
     CustomShortcut {
         name: "brightnessUp"
         description: "Increase brightness"
@@ -96,8 +92,7 @@ Singleton {
             if (Math.round(brightness * 100) === rounded)
                 return;
             brightness = value;
-            setProc.command = isDdc ? ["ddcutil", "-b", busNum, "setvcp", "10", rounded] : ["brightnessctl", "s", `${rounded}%`];
-            setProc.startDetached();
+            Quickshell.execDetached(isDdc ? ["ddcutil", "-b", busNum, "setvcp", "10", rounded] : ["brightnessctl", "s", `${rounded}%`]);
         }
 
         onBusNumChanged: {

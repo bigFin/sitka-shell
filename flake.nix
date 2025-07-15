@@ -38,30 +38,5 @@
       };
       default = caelestia-shell;
     });
-
-    # devShells = forAllSystems (pkgs: {
-    #   default = let
-    #     qtDeps = with pkgs.kdePackages; [
-    #       inputs.quickshell.packages.${pkgs.system}.default
-    #       qtbase
-    #       qtdeclarative
-    #     ];
-    #     qmlPath = pkgs.lib.makeSearchPath "lib/qt-6/qml" qtDeps;
-    #   in
-    #     pkgs.mkShellNoCC {
-    #       inputsFrom = [self.packages.${pkgs.system}.caelestia-shell];
-    #       packages =
-    #         qtDeps
-    #         ++ [
-    #           (inputs.caelestia-cli.packages.${pkgs.system}.default.override {
-    #             discordBin = "equibop";
-    #             qtctStyle = "Breeze";
-    #           })
-    #         ];
-    #       shellHook = ''
-    #         export QML2_IMPORT_PATH="$QML2_IMPORT_PATH:${qmlPath}"
-    #       '';
-    #     };
-    # });
   };
 }

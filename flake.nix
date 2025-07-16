@@ -45,5 +45,18 @@
       };
       default = caelestia-shell;
     });
+
+    devShells = forAllSystems (pkgs: {
+      default = let
+        shell = self.packages.${pkgs.system}.caelestia-shell;
+      in
+        pkgs.mkShellNoCC {
+          inputsFrom = [shell];
+          packages = [pkgs.material-symbols];
+          shellHook = ''
+            export CAELESTIA_BD_PATH=${shell}/bin/beat_detector
+          '';
+        };
+    });
   };
 }

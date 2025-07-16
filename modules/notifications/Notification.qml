@@ -391,6 +391,7 @@ StyledRect {
                 color: Colours.palette.m3onSurfaceVariant
                 font.pointSize: Appearance.font.size.small
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                height: text ? implicitHeight : 0
 
                 onLinkActivated: link => {
                     if (!root.expanded)

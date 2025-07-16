@@ -19,6 +19,8 @@
   bluez,
   bash,
   hyprland,
+  coreutils,
+  findutils,
   material-symbols,
   gcc,
   quickshell,
@@ -44,6 +46,8 @@
       bluez
       bash
       hyprland
+      coreutils
+      findutils
     ]
     ++ lib.optional withCli caelestia-cli;
 

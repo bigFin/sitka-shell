@@ -1,6 +1,6 @@
 pragma Singleton
 
-import "root:/utils"
+import qs.utils
 import Quickshell
 import Quickshell.Io
 

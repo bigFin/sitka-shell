@@ -53,9 +53,14 @@
         pkgs.mkShellNoCC {
           inputsFrom = [shell];
           packages = [pkgs.material-symbols];
-          shellHook = ''
-            export CAELESTIA_BD_PATH=${shell}/bin/beat_detector
-          '';
+          CAELESTIA_BD_PATH = "${shell}/bin/beat_detector";
+          QT_LOGGING_RULES = builtins.concatStringsSep ";" [
+            "quickshell.dbus.properties.warning=false"
+            "quickshell.dbus.dbusmenu.warning=false"
+            "quickshell.service.notifications.warning=false"
+            "quickshell.service.sni.host.warning=false"
+            "qt.qpa.wayland.textinput.warning=false"
+          ];
         };
     });
   };

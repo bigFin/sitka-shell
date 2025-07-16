@@ -413,53 +413,66 @@ StyledRect {
                 Anim {}
             }
 
+            Action {
+                modelData: QtObject {
+                    readonly property string text: qsTr("Close")
+                    function invoke(): void {
+                        root.modelData.notification.dismiss();
+                    }
+                }
+            }
+
             Repeater {
                 model: root.modelData.actions
 
-                delegate: StyledRect {
-                    id: action
-
-                    required property NotificationAction modelData
-
-                    radius: Appearance.rounding.full
-                    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.palette.m3surfaceContainerHigh
-
-                    Layout.preferredWidth: actionText.width + Appearance.padding.normal * 2
-                    Layout.preferredHeight: actionText.height + Appearance.padding.small * 2
-                    implicitWidth: actionText.width + Appearance.padding.normal * 2
-                    implicitHeight: actionText.height + Appearance.padding.small * 2
-
-                    StateLayer {
-                        radius: Appearance.rounding.full
-                        color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurface
-
-                        function onClicked(): void {
-                            action.modelData.invoke();
-                        }
-                    }
-
-                    StyledText {
-                        id: actionText
-
-                        anchors.centerIn: parent
-                        text: actionTextMetrics.elidedText
-                        color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
-                        font.pointSize: Appearance.font.size.small
-                    }
-
-                    TextMetrics {
-                        id: actionTextMetrics
-
-                        text: modelData.text
-                        font.family: actionText.font.family
-                        font.pointSize: actionText.font.pointSize
-                        elide: Text.ElideRight
-                        elideWidth: {
-                            const numActions = root.modelData.actions.length;
-                            return (inner.width - actions.spacing * (numActions - 1)) / numActions - Appearance.padding.normal * 2;
-                        }
-                    }
+                delegate: Component {
+                    Action {}
                 }
+            }
+        }
+    }
+
+    component Action: StyledRect {
+        id: action
+
+        required property var modelData
+
+        radius: Appearance.rounding.full
+        color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.palette.m3surfaceContainerHigh
+
+        Layout.preferredWidth: actionText.width + Appearance.padding.normal * 2
+        Layout.preferredHeight: actionText.height + Appearance.padding.small * 2
+        implicitWidth: actionText.width + Appearance.padding.normal * 2
+        implicitHeight: actionText.height + Appearance.padding.small * 2
+
+        StateLayer {
+            radius: Appearance.rounding.full
+            color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurface
+
+            function onClicked(): void {
+                action.modelData.invoke();
+            }
+        }
+
+        StyledText {
+            id: actionText
+
+            anchors.centerIn: parent
+            text: actionTextMetrics.elidedText
+            color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
+            font.pointSize: Appearance.font.size.small
+        }
+
+        TextMetrics {
+            id: actionTextMetrics
+
+            text: action.modelData.text
+            font.family: actionText.font.family
+            font.pointSize: actionText.font.pointSize
+            elide: Text.ElideRight
+            elideWidth: {
+                const numActions = root.modelData.actions.length + 1;
+                return (inner.width - actions.spacing * (numActions - 1)) / numActions - Appearance.padding.normal * 2;
             }
         }
     }

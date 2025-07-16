@@ -53,7 +53,7 @@ in
 
     nativeBuildInputs = [gcc makeWrapper];
     buildInputs = [quickshell aubio pipewire];
-    propogatedBuildInputs = runtimeDeps;
+    propagatedBuildInputs = runtimeDeps;
 
     buildPhase = ''
       mkdir -p bin

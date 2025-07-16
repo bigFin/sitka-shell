@@ -24,24 +24,29 @@
   quickshell,
   aubio,
   pipewire,
+  caelestia-cli,
+  withCli ? false,
 }: let
-  runtimeDeps = [
-    fish
-    ddcutil
-    brightnessctl
-    app2unit
-    cava
-    networkmanager
-    lm_sensors
-    grim
-    swappy
-    wl-clipboard
-    libqalculate
-    inotify-tools
-    bluez
-    bash
-    hyprland
-  ];
+  runtimeDeps =
+    [
+      fish
+      ddcutil
+      brightnessctl
+      app2unit
+      cava
+      networkmanager
+      lm_sensors
+      grim
+      swappy
+      wl-clipboard
+      libqalculate
+      inotify-tools
+      bluez
+      bash
+      hyprland
+    ]
+    ++ lib.optional withCli caelestia-cli;
+
   fontconfig = makeFontsConf {
     fontDirectories = [material-symbols];
   };

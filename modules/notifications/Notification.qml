@@ -37,7 +37,7 @@ StyledRect {
 
         anchors.fill: parent
         hoverEnabled: true
-        cursorShape: body.hoveredLink ? Qt.PointingHandCursor : pressed ? Qt.ClosedHandCursor : undefined
+        cursorShape: root.expanded && body.hoveredLink ? Qt.PointingHandCursor : pressed ? Qt.ClosedHandCursor : undefined
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton
         preventStealing: true
 
@@ -387,7 +387,10 @@ StyledRect {
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
             onLinkActivated: link => {
-                Qt.openUrlExternally(link);
+                if (!root.expanded)
+                    return;
+
+                Quickshell.execDetached(["app2unit", "-O", "--", link]);
                 root.modelData.notification.dismiss(); // TODO: change back to popup when notif dock impled
             }
 

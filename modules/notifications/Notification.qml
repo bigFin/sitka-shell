@@ -50,17 +50,24 @@ StyledRect {
         preventStealing: true
 
         onEntered: root.modelData.timer.stop()
-        onExited: root.modelData.timer.start()
+        onExited: {
+            if (!pressed)
+                root.modelData.timer.start();
+        }
 
         drag.target: parent
         drag.axis: Drag.XAxis
 
         onPressed: event => {
+            root.modelData.timer.stop();
             startY = event.y;
             if (event.button === Qt.MiddleButton)
                 root.modelData.notification.dismiss();
         }
         onReleased: event => {
+            if (!containsMouse)
+                root.modelData.timer.start();
+
             if (Math.abs(root.x) < Config.notifs.sizes.width * Config.notifs.clearThreshold)
                 root.x = 0;
             else

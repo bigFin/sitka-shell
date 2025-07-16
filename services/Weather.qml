@@ -15,8 +15,8 @@ Singleton {
     property string tempF: "0°F"
 
     function reload(): void {
-        if (Config.dashboard.weatherLocation)
-            loc = Config.dashboard.weatherLocation;
+        if (Config.services.weatherLocation)
+            loc = Config.services.weatherLocation;
         else if (!loc || timer.elapsed() > 900)
             Requests.get("https://ipinfo.io/json", text => {
                 loc = JSON.parse(text).loc ?? "";

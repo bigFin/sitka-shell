@@ -38,7 +38,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
 
             animate: true
-            text: Config.dashboard.useFahrenheit ? Weather.tempF : Weather.tempC
+            text: Config.services.useFahrenheit ? Weather.tempF : Weather.tempC
             color: Colours.palette.m3primary
             font.pointSize: Appearance.font.size.extraLarge
             font.weight: 500

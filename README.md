@@ -168,9 +168,7 @@ All configuration options are in `~/.config/caelestia/shell.json`.
     },
     "dashboard": {
         "mediaUpdateInterval": 500,
-        "visualiserBars": 45,
-        "weatherLocation": "10,10",
-        "useFahrenheit": false,
+        "visualiserBars": 45
     },
     "launcher": {
         "actionPrefix": ">",
@@ -196,6 +194,10 @@ All configuration options are in `~/.config/caelestia/shell.json`.
         "mediaGif": "root:/assets/bongocat.gif",
         "sessionGif": "root:/assets/kurukuru.gif",
         "wallpaperDir": "~/Pictures/Wallpapers"
+    },
+    "services": {
+      "weatherLocation": "10,10",
+      "useFahrenheit": false
     },
     "session": {
         "dragThreshold": 30

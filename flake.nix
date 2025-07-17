@@ -18,6 +18,7 @@
       url = "github:caelestia-dots/cli";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.app2unit.follows = "app2unit";
+      inputs.caelestia-shell.follows = "";
     };
   };
 

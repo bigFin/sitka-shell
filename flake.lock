@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1752557494,
-        "narHash": "sha256-GIcH+k321WBUl//gBypaJkLRMrKDemcSpzADJoyUdec=",
+        "lastModified": 1752640923,
+        "narHash": "sha256-jcoNgqOaD7wuoYg6y+BXuCHueDzJ7gjR7RdFKHBNg2A=",
         "owner": "soramanew",
         "repo": "app2unit",
-        "rev": "574d764446997e30218a29a6b9871fb1b9c6554d",
+        "rev": "d0159c1d7090f8563db6bedd153cb8168628b06d",
         "type": "github"
       },
       "original": {
@@ -25,16 +25,17 @@
         "app2unit": [
           "app2unit"
         ],
+        "caelestia-shell": [],
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1752566000,
-        "narHash": "sha256-xaSDZXvZtuM+88PsmfTDWv6+VxN5cOsT/5/czsk3xgI=",
+        "lastModified": 1752664028,
+        "narHash": "sha256-6TSfY7OacmN072Zr0vSxdVqbBN7s8RRMvGU/1vLO2sQ=",
         "owner": "caelestia-dots",
         "repo": "cli",
-        "rev": "b1019d11924d1bc9440f457ddf94fc0d8a230ff4",
+        "rev": "daf7e190777f7e1fbb17c91eae3edc62df7803f5",
         "type": "github"
       },
       "original": {
@@ -66,11 +67,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1752631407,
-        "narHash": "sha256-dLDtKxh1VabwLxv5xbjI+oRkDyqWEKGITU+0dEaaW28=",
+        "lastModified": 1752713248,
+        "narHash": "sha256-BJz3A3PCGfAUAOya0flZjiS7TxoPt/mbBnhkzwE4Ad8=",
         "ref": "refs/heads/master",
-        "rev": "4d8055f1cd9924bcace59405894b8879633eb83d",
-        "revCount": 638,
+        "rev": "78e3874ac67a570abf9c800bdac3250b44dd3844",
+        "revCount": 640,
         "type": "git",
         "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
       },

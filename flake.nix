@@ -42,7 +42,7 @@
           withI3 = false;
         };
         app2unit = inputs.app2unit.packages.${pkgs.system}.default;
-        caelestia-cli = inputs.caelestia-cli.packages.${pkgs.system}.default.override;
+        caelestia-cli = inputs.caelestia-cli.packages.${pkgs.system}.default;
       };
       default = caelestia-shell;
     });

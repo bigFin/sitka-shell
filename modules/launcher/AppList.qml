@@ -23,14 +23,14 @@ StyledListView {
         if (isCalc)
             return [0];
         if (isScheme)
-            return Schemes.fuzzyQuery(text);
+            return Schemes.query(text);
         if (isVariant)
-            return M3Variants.fuzzyQuery(text);
+            return M3Variants.query(text);
         if (isAction)
-            return Actions.fuzzyQuery(text);
+            return Actions.query(text);
         if (text.startsWith(Config.launcher.actionPrefix))
             text = search.text.slice(Config.launcher.actionPrefix.length);
-        return Apps.fuzzyQuery(text);
+        return Apps.query(text);
     }
 
     model: ScriptModel {

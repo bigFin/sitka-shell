@@ -9,12 +9,18 @@ import QtQuick
 Searcher {
     id: root
 
-    function transformSearch(search: string): var {
+    function transformSearch(search: string): string {
         return search.slice(`${Config.launcher.actionPrefix}scheme `.length);
+    }
+
+    function selector(item: var): string {
+        return `${item.name} ${item.flavour}`;
     }
 
     list: schemes.instances
     useFuzzy: Config.launcher.useFuzzy.schemes
+    keys: ["name", "flavour"]
+    weights: [0.9, 0.1]
 
     Variants {
         id: schemes

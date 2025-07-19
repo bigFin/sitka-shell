@@ -6,7 +6,9 @@ import QtQuick.Layouts
 FloatingWindow {
     id: root
 
-    property list<string> cwd: ["Home", "Downloads"]
+    property list<string> cwd: ["Home"]
+
+    signal accepted(path: string)
 
     implicitWidth: 1000
     implicitHeight: 600
@@ -26,14 +28,13 @@ FloatingWindow {
 
             HeaderBar {
                 Layout.fillWidth: true
-                cwd: root.cwd
+                dialog: root
             }
 
             FolderContents {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
-                cwd: root.cwd
+                dialog: root
             }
         }
     }

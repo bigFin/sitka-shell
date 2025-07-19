@@ -13,7 +13,7 @@ import Qt.labs.folderlistmodel
 GridView {
     id: root
 
-    required property list<string> cwd
+    required property var dialog
 
     property var mimes: ({})
 
@@ -24,12 +24,13 @@ GridView {
     model: FolderListModel {
         folder: {
             let url = "file://";
-            if (root.cwd[0] === "Home")
-                url += `${Paths.strip(Paths.home)}/${root.cwd.slice(1).join("/")}`;
+            if (root.dialog.cwd[0] === "Home")
+                url += `${Paths.strip(Paths.home)}/${root.dialog.cwd.slice(1).join("/")}`;
             else
-                url += root.cwd.join("/");
+                url += root.dialog.cwd.join("/");
             return url;
         }
+        onFolderChanged: root.currentIndex = -1
     }
 
     delegate: StyledRect {
@@ -37,6 +38,7 @@ GridView {
 
         required property int index
         required property string fileName
+        required property string filePath
         required property url fileUrl
         required property string fileSuffix
         required property bool fileIsDir
@@ -53,7 +55,13 @@ GridView {
 
         StateLayer {
             color: root.currentItem === item ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
-            onDoubleClicked: console.log("double clicked", item)
+
+            onDoubleClicked: {
+                if (item.fileIsDir)
+                    root.dialog.cwd.push(item.fileName);
+                else
+                    root.dialog.accepted(item.filePath);
+            }
 
             function onClicked(): void {
                 root.currentIndex = item.index;

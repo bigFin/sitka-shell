@@ -9,7 +9,7 @@ import QtQuick.Layouts
 RowLayout {
     id: root
 
-    required property list<string> cwd
+    required property var dialog
 
     spacing: Appearance.spacing.small
 
@@ -21,7 +21,7 @@ RowLayout {
             radius: Appearance.rounding.small
 
             function onClicked(): void {
-                root.cwd.pop();
+                root.dialog.cwd.pop();
             }
         }
 
@@ -51,7 +51,7 @@ RowLayout {
             spacing: Appearance.spacing.small
 
             Repeater {
-                model: root.cwd
+                model: root.dialog.cwd
 
                 RowLayout {
                     id: folder
@@ -78,13 +78,13 @@ RowLayout {
 
                         Loader {
                             anchors.fill: parent
-                            active: folder.index < root.cwd.length - 1
+                            active: folder.index < root.dialog.cwd.length - 1
                             asynchronous: true
                             sourceComponent: StateLayer {
                                 radius: Appearance.rounding.small
 
                                 function onClicked(): void {
-                                    root.cwd = root.cwd.slice(0, folder.index);
+                                    root.dialog.cwd = root.dialog.cwd.slice(0, folder.index + 1);
                                 }
                             }
                         }
@@ -100,7 +100,7 @@ RowLayout {
                             asynchronous: true
                             sourceComponent: MaterialIcon {
                                 text: "home"
-                                color: root.cwd.length === 1 ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
+                                color: root.dialog.cwd.length === 1 ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
                                 fill: 1
                             }
                         }
@@ -113,7 +113,7 @@ RowLayout {
                             anchors.leftMargin: homeIcon.active ? Appearance.padding.small : 0
 
                             text: folder.modelData
-                            color: folder.index < root.cwd.length - 1 ? Colours.palette.m3onSurfaceVariant : Colours.palette.m3onSurface
+                            color: folder.index < root.dialog.cwd.length - 1 ? Colours.palette.m3onSurfaceVariant : Colours.palette.m3onSurface
                             font.bold: true
                         }
                     }

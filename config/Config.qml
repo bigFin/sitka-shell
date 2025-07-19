@@ -28,17 +28,17 @@ Singleton {
         JsonAdapter {
             id: adapter
 
-            property JsonObject bar: BarConfig {}
-            property JsonObject border: BorderConfig {}
-            property JsonObject dashboard: DashboardConfig {}
-            property JsonObject launcher: LauncherConfig {}
-            property JsonObject notifs: NotifsConfig {}
-            property JsonObject osd: OsdConfig {}
-            property JsonObject session: SessionConfig {}
-            property JsonObject winfo: WInfoConfig {}
-            property JsonObject lock: LockConfig {}
-            property JsonObject services: ServiceConfig {}
-            property JsonObject paths: UserPaths {}
+            property BarConfig bar: BarConfig {}
+            property BorderConfig border: BorderConfig {}
+            property DashboardConfig dashboard: DashboardConfig {}
+            property LauncherConfig launcher: LauncherConfig {}
+            property NotifsConfig notifs: NotifsConfig {}
+            property OsdConfig osd: OsdConfig {}
+            property SessionConfig session: SessionConfig {}
+            property WInfoConfig winfo: WInfoConfig {}
+            property LockConfig lock: LockConfig {}
+            property ServiceConfig services: ServiceConfig {}
+            property UserPaths paths: UserPaths {}
         }
     }
 }

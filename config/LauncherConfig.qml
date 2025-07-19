@@ -6,8 +6,10 @@ JsonObject {
     property string actionPrefix: ">"
     property bool enableDangerousActions: false // Allow actions that can cause losing data, like shutdown, reboot and logout
     property int dragThreshold: 50
+    property UseFuzzy useFuzzy: UseFuzzy {}
+    property Sizes sizes: Sizes {}
 
-    property JsonObject useFuzzy: JsonObject {
+    component UseFuzzy: JsonObject {
         property bool apps: false
         property bool actions: false
         property bool schemes: false
@@ -15,7 +17,7 @@ JsonObject {
         property bool wallpapers: false
     }
 
-    property JsonObject sizes: JsonObject {
+    component Sizes: JsonObject {
         property int itemWidth: 600
         property int itemHeight: 57
         property int wallpaperWidth: 280

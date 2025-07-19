@@ -12,10 +12,14 @@ Searcher {
 
     function launch(entry: DesktopEntry): void {
         if (entry.runInTerminal)
-            Quickshell.execDetached(["app2unit", "--", "foot", "fish", "-C", entry.execString]);
-        else if (entry.execString.startsWith("sh -c"))
-            Quickshell.execDetached(["sh", "-c", `app2unit -- ${entry.execString}`]);
+            Quickshell.execDetached({
+                command: ["app2unit", "--", "foot", `${Quickshell.configDir}/assets/wrap_term_launch.sh`, ...entry.command],
+                workingDirectory: entry.workingDirectory
+            });
         else
-            Quickshell.execDetached(["sh", "-c", `app2unit -- '${entry.id}.desktop' || app2unit -- ${entry.execString}`]);
+            Quickshell.execDetached({
+                command: ["app2unit", "--", ...entry.command],
+                workingDirectory: entry.workingDirectory
+            });
     }
 }

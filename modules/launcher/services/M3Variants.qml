@@ -1,5 +1,6 @@
 pragma Singleton
 
+import ".."
 import qs.config
 import qs.utils
 import Quickshell

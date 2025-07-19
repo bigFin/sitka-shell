@@ -1,5 +1,6 @@
 pragma Singleton
 
+import ".."
 import qs.services
 import qs.config
 import qs.utils
@@ -8,8 +9,6 @@ import QtQuick
 
 Searcher {
     id: root
-
-    property string qalcResult
 
     readonly property list<Action> actions: [
         Action {

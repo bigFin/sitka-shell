@@ -1,5 +1,7 @@
 pragma ComponentBehavior: Bound
 
+import "items"
+import "services"
 import qs.widgets
 import qs.services
 import qs.config

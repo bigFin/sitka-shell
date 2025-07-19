@@ -1,4 +1,4 @@
-import qs.widgets
+import "items"
 import qs.services
 import qs.config
 import Quickshell

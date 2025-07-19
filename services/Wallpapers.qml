@@ -40,7 +40,6 @@ Searcher {
     reloadableId: "wallpapers"
 
     list: wallpapers.instances
-    key: "path"
     useFuzzy: Config.launcher.useFuzzy.wallpapers
     extraOpts: useFuzzy ? ({}) : ({
             forward: false
@@ -126,6 +125,6 @@ Searcher {
     component Wallpaper: QtObject {
         required property string modelData
         readonly property string path: modelData
-        readonly property string name: path.slice(path.lastIndexOf("/") + 1, path.lastIndexOf("."))
+        readonly property string name: path.slice(Paths.expandTilde(Config.paths.wallpaperDir).length + 1, path.lastIndexOf("."))
     }
 }

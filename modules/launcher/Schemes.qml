@@ -1,5 +1,6 @@
 pragma Singleton
 
+import qs.config
 import qs.utils
 import Quickshell
 import Quickshell.Io
@@ -13,6 +14,7 @@ Searcher {
     }
 
     list: schemes.instances
+    useFuzzy: Config.launcher.useFuzzy.schemes
 
     Variants {
         id: schemes

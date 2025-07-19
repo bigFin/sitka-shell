@@ -142,6 +142,7 @@ Searcher {
     }
 
     list: actions.filter(a => !a.disabled)
+    useFuzzy: Config.launcher.useFuzzy.actions
 
     component Action: QtObject {
         required property string name

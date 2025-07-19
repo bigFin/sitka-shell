@@ -1,5 +1,6 @@
 pragma Singleton
 
+import qs.config
 import qs.utils
 import Quickshell
 import QtQuick
@@ -7,7 +8,7 @@ import QtQuick
 Searcher {
     id: root
 
-    function transformSearch(search: string): var {
+    function transformSearch(search: string): string {
         return search.slice(`${Config.launcher.actionPrefix}variant `.length);
     }
 
@@ -67,6 +68,7 @@ Searcher {
             description: "All colours are grayscale, no chroma."
         }
     ]
+    useFuzzy: Config.launcher.useFuzzy.variants
 
     component Variant: QtObject {
         required property string variant

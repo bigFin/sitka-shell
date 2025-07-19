@@ -175,7 +175,14 @@ All configuration options are in `~/.config/caelestia/shell.json`.
         "dragThreshold": 50,
         "enableDangerousActions": false,
         "maxShown": 8,
-        "maxWallpapers": 9
+        "maxWallpapers": 9,
+        "useFuzzy": {
+            "apps": false,
+            "actions": false,
+            "schemes": false,
+            "variants": false,
+            "wallpapers": false
+        }
     },
     "lock": {
         "maxNotifs": 5

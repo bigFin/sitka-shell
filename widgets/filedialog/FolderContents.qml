@@ -15,6 +15,9 @@ GridView {
 
     required property var dialog
 
+    cellWidth: Sizes.itemWidth + Appearance.spacing.small
+    cellHeight: Sizes.itemWidth + Appearance.spacing.small * 2 + Appearance.padding.normal * 2 + 1
+
     clip: true
     focus: true
     currentIndex: -1
@@ -73,7 +76,7 @@ GridView {
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
-            anchors.topMargin: Appearance.spacing.normal
+            anchors.topMargin: Appearance.padding.normal
 
             asynchronous: true
             implicitSize: Sizes.itemWidth - Appearance.padding.normal * 2

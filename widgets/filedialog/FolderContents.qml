@@ -8,6 +8,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Effects
 import Qt.labs.folderlistmodel
 
@@ -41,6 +42,28 @@ Item {
             anchors.fill: parent
             anchors.margins: Appearance.padding.small
             radius: Appearance.rounding.small
+        }
+    }
+
+    Loader {
+        anchors.centerIn: parent
+        active: view.count === 0
+        asynchronous: true
+        sourceComponent: ColumnLayout {
+            MaterialIcon {
+                Layout.alignment: Qt.AlignHCenter
+                text: "scan_delete"
+                color: Colours.palette.m3outline
+                font.pointSize: Appearance.font.size.extraLarge * 2
+                font.weight: 500
+            }
+
+            StyledText {
+                text: qsTr("This folder is empty")
+                color: Colours.palette.m3outline
+                font.pointSize: Appearance.font.size.large
+                font.weight: 500
+            }
         }
     }
 
@@ -166,12 +189,23 @@ Item {
             }
 
             Behavior on implicitHeight {
-                NumberAnimation {
-                    duration: Appearance.anim.durations.normal
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
-                }
+                Anim {}
             }
         }
+
+        populate: Transition {
+            Anim {
+                property: "scale"
+                from: 0.7
+                to: 1
+                easing.bezierCurve: Appearance.anim.curves.standardDecel
+            }
+        }
+    }
+
+    component Anim: NumberAnimation {
+        duration: Appearance.anim.durations.normal
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: Appearance.anim.curves.standard
     }
 }

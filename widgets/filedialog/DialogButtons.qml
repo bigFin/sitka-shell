@@ -37,7 +37,7 @@ StyledRect {
                 anchors.fill: parent
                 anchors.margins: Appearance.padding.normal
 
-                text: `${root.dialog.filterLabel} (${root.dialog.filters})`
+                text: `${root.dialog.filterLabel} (${root.dialog.filters.map(f => `*.${f}`).join(", ")})`
             }
         }
 

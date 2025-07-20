@@ -1,73 +1,101 @@
+pragma ComponentBehavior: Bound
+
 import qs.services
 import qs.config
 import Quickshell
 import QtQuick
 import QtQuick.Layouts
 
-FloatingWindow {
-    id: root
+LazyLoader {
+    id: loader
 
     property list<string> cwd: ["Home"]
     property string filterLabel: "All files"
     property list<string> filters: ["*"]
-
-    readonly property bool selectionValid: {
-        const item = folderContents.currentItem;
-        return item && !item.fileIsDir && (filters.includes("*") || filters.includes(item.fileSuffix));
-    }
+    property string title: qsTr("Select a file")
 
     signal accepted(path: string)
     signal rejected
 
-    implicitWidth: 1000
-    implicitHeight: 600
-    color: Colours.palette.m3surface
+    function open(): void {
+        activeAsync = true;
+    }
 
-    onAccepted: visible = false
-    onRejected: visible = false
+    function close(): void {
+        rejected();
+    }
 
-    RowLayout {
-        anchors.fill: parent
+    onAccepted: activeAsync = false
+    onRejected: activeAsync = false
 
-        spacing: 0
+    FloatingWindow {
+        id: root
 
-        Sidebar {
-            Layout.fillHeight: true
-            dialog: root
+        property list<string> cwd: loader.cwd
+        property string filterLabel: loader.filterLabel
+        property list<string> filters: loader.filters
+
+        readonly property bool selectionValid: {
+            const item = folderContents.currentItem;
+            return item && !item.fileIsDir && (filters.includes("*") || filters.includes(item.fileSuffix));
         }
 
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+        function accepted(path: string): void {
+            loader.accepted(path);
+        }
+
+        function rejected(): void {
+            loader.rejected();
+        }
+
+        implicitWidth: 1000
+        implicitHeight: 600
+        color: Colours.palette.m3surface
+        title: loader.title
+
+        RowLayout {
+            anchors.fill: parent
 
             spacing: 0
 
-            HeaderBar {
-                Layout.fillWidth: true
-                dialog: root
-            }
-
-            FolderContents {
-                id: folderContents
-
-                Layout.fillWidth: true
+            Sidebar {
                 Layout.fillHeight: true
                 dialog: root
             }
 
-            DialogButtons {
+            ColumnLayout {
                 Layout.fillWidth: true
-                dialog: root
-                folder: folderContents
+                Layout.fillHeight: true
+
+                spacing: 0
+
+                HeaderBar {
+                    Layout.fillWidth: true
+                    dialog: root
+                }
+
+                FolderContents {
+                    id: folderContents
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    dialog: root
+                }
+
+                DialogButtons {
+                    Layout.fillWidth: true
+                    dialog: root
+                    folder: folderContents
+                }
             }
         }
-    }
 
-    Behavior on color {
-        ColorAnimation {
-            duration: Appearance.anim.durations.normal
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.standard
+        Behavior on color {
+            ColorAnimation {
+                duration: Appearance.anim.durations.normal
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.anim.curves.standard
+            }
         }
     }
 }

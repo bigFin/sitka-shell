@@ -8,117 +8,153 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
 import QtQuick
+import QtQuick.Effects
 import Qt.labs.folderlistmodel
 
-GridView {
+Item {
     id: root
 
     required property var dialog
 
-    cellWidth: Sizes.itemWidth + Appearance.spacing.small
-    cellHeight: Sizes.itemWidth + Appearance.spacing.small * 2 + Appearance.padding.normal * 2 + 1
+    StyledRect {
+        anchors.fill: parent
+        color: Colours.palette.m3surfaceContainer
 
-    clip: true
-    focus: true
-    currentIndex: -1
-    Keys.onEscapePressed: root.currentIndex = -1
-
-    model: FolderListModel {
-        showDirsFirst: true
-        folder: {
-            let url = "file://";
-            if (root.dialog.cwd[0] === "Home")
-                url += `${Paths.strip(Paths.home)}/${root.dialog.cwd.slice(1).join("/")}`;
-            else
-                url += root.dialog.cwd.join("/");
-            return url;
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            maskSource: mask
+            maskEnabled: true
+            maskInverted: true
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 1
         }
-        onFolderChanged: root.currentIndex = -1
     }
 
-    delegate: StyledRect {
-        id: item
+    Item {
+        id: mask
 
-        required property int index
-        required property string fileName
-        required property string filePath
-        required property url fileUrl
-        required property string fileSuffix
-        required property bool fileIsDir
+        anchors.fill: parent
+        layer.enabled: true
+        visible: false
 
-        readonly property real nonAnimHeight: icon.implicitHeight + name.anchors.topMargin + name.implicitHeight + Appearance.padding.normal * 2
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: Appearance.padding.small
+            radius: Appearance.rounding.small
+        }
+    }
 
-        implicitWidth: Sizes.itemWidth
-        implicitHeight: nonAnimHeight
+    GridView {
+        id: view
 
-        radius: Appearance.rounding.normal
-        color: root.currentItem === item ? Colours.palette.m3primary : "transparent"
-        z: root.currentItem === item || implicitHeight !== nonAnimHeight ? 1 : 0
+        anchors.fill: parent
+        anchors.margins: Appearance.padding.small + Appearance.padding.normal
+
+        cellWidth: Sizes.itemWidth + Appearance.spacing.small
+        cellHeight: Sizes.itemWidth + Appearance.spacing.small * 2 + Appearance.padding.normal * 2 + 1
+
         clip: true
+        focus: true
+        currentIndex: -1
+        Keys.onEscapePressed: view.currentIndex = -1
 
-        StateLayer {
-            color: root.currentItem === item ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
-
-            onDoubleClicked: {
-                if (item.fileIsDir)
-                    root.dialog.cwd.push(item.fileName);
+        model: FolderListModel {
+            showDirsFirst: true
+            folder: {
+                let url = "file://";
+                if (root.dialog.cwd[0] === "Home")
+                    url += `${Paths.strip(Paths.home)}/${root.dialog.cwd.slice(1).join("/")}`;
                 else
-                    root.dialog.accepted(item.filePath);
+                    url += root.dialog.cwd.join("/");
+                return url;
             }
-
-            function onClicked(): void {
-                root.currentIndex = item.index;
-            }
+            onFolderChanged: view.currentIndex = -1
         }
 
-        IconImage {
-            id: icon
+        delegate: StyledRect {
+            id: item
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: Appearance.padding.normal
+            required property int index
+            required property string fileName
+            required property string filePath
+            required property url fileUrl
+            required property string fileSuffix
+            required property bool fileIsDir
 
-            asynchronous: true
-            implicitSize: Sizes.itemWidth - Appearance.padding.normal * 2
-            source: Quickshell.iconPath(item.fileIsDir ? "inode-directory" : "application-x-zerosize")
-            onStatusChanged: {
-                if (status === Image.Error)
-                    source = Quickshell.iconPath("error");
+            readonly property real nonAnimHeight: icon.implicitHeight + name.anchors.topMargin + name.implicitHeight + Appearance.padding.normal * 2
+
+            implicitWidth: Sizes.itemWidth
+            implicitHeight: nonAnimHeight
+
+            radius: Appearance.rounding.normal
+            color: view.currentItem === item ? Colours.palette.m3primary : "transparent"
+            z: view.currentItem === item || implicitHeight !== nonAnimHeight ? 1 : 0
+            clip: true
+
+            StateLayer {
+                color: view.currentItem === item ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+
+                onDoubleClicked: {
+                    if (item.fileIsDir)
+                        root.dialog.cwd.push(item.fileName);
+                    else
+                        root.dialog.accepted(item.filePath);
+                }
+
+                function onClicked(): void {
+                    view.currentIndex = item.index;
+                }
             }
 
-            Process {
-                running: !item.fileIsDir
-                command: ["file", "--mime", "-b", item.filePath]
-                stdout: StdioCollector {
-                    onStreamFinished: {
-                        const mime = text.split(";")[0].replace("/", "-");
-                        icon.source = mime.startsWith("image-") ? item.fileUrl : Quickshell.iconPath(mime, "image-missing");
+            IconImage {
+                id: icon
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: Appearance.padding.normal
+
+                asynchronous: true
+                implicitSize: Sizes.itemWidth - Appearance.padding.normal * 2
+                source: Quickshell.iconPath(item.fileIsDir ? "inode-directory" : "application-x-zerosize")
+                onStatusChanged: {
+                    if (status === Image.Error)
+                        source = Quickshell.iconPath("error");
+                }
+
+                Process {
+                    running: !item.fileIsDir
+                    command: ["file", "--mime", "-b", item.filePath]
+                    stdout: StdioCollector {
+                        onStreamFinished: {
+                            const mime = text.split(";")[0].replace("/", "-");
+                            icon.source = mime.startsWith("image-") ? item.fileUrl : Quickshell.iconPath(mime, "image-missing");
+                        }
                     }
                 }
             }
-        }
 
-        StyledText {
-            id: name
+            StyledText {
+                id: name
 
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: icon.bottom
-            anchors.topMargin: Appearance.spacing.small
-            anchors.margins: Appearance.padding.normal
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: icon.bottom
+                anchors.topMargin: Appearance.spacing.small
+                anchors.margins: Appearance.padding.normal
 
-            horizontalAlignment: Text.AlignHCenter
-            text: item.fileName
-            color: root.currentItem === item ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
-            elide: root.currentItem === item ? Text.ElideNone : Text.ElideRight
-            wrapMode: root.currentItem === item ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
-        }
+                horizontalAlignment: Text.AlignHCenter
+                text: item.fileName
+                color: view.currentItem === item ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                elide: view.currentItem === item ? Text.ElideNone : Text.ElideRight
+                wrapMode: view.currentItem === item ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
+            }
 
-        Behavior on implicitHeight {
-            NumberAnimation {
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
+            Behavior on implicitHeight {
+                NumberAnimation {
+                    duration: Appearance.anim.durations.normal
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.anim.curves.standard
+                }
             }
         }
     }

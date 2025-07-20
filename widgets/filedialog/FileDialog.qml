@@ -18,13 +18,18 @@ FloatingWindow {
     RowLayout {
         anchors.fill: parent
 
-        spacing: Appearance.spacing.normal
+        spacing: 0
+
+        Sidebar {
+            Layout.fillHeight: true
+            dialog: root
+        }
 
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            spacing: Appearance.spacing.small
+            spacing: 0
 
             HeaderBar {
                 Layout.fillWidth: true

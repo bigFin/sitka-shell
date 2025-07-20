@@ -146,6 +146,9 @@ All configuration options are in `~/.config/caelestia/shell.json`.
 
 ```json
 {
+    "background": {
+        "enabled": true
+    },
     "bar": {
         "dragThreshold": 20,
         "persistent": true,

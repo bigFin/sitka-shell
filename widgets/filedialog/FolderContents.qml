@@ -203,6 +203,14 @@ Item {
         }
     }
 
+    CurrentItem {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: Appearance.padding.small
+
+        currentItem: view.currentItem
+    }
+
     component Anim: NumberAnimation {
         duration: Appearance.anim.durations.normal
         easing.type: Easing.BezierSpline

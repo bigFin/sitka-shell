@@ -46,8 +46,7 @@ StyledRect {
                 required property string modelData
                 readonly property bool selected: modelData === root.dialog.cwd[root.dialog.cwd.length - 1]
 
-                anchors.left: parent.left
-                anchors.right: parent.right
+                Layout.fillWidth: true
                 implicitHeight: placeInner.implicitHeight + Appearance.padding.normal * 2
 
                 radius: Appearance.rounding.full

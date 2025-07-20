@@ -15,6 +15,8 @@ FloatingWindow {
     implicitHeight: 600
     color: Colours.palette.m3surface
 
+    onAccepted: visible = false
+
     RowLayout {
         anchors.fill: parent
 

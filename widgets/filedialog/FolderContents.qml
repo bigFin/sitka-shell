@@ -56,7 +56,16 @@ Item {
         clip: true
         focus: true
         currentIndex: -1
-        Keys.onEscapePressed: view.currentIndex = -1
+        Keys.onEscapePressed: currentIndex = -1
+
+        Keys.onReturnPressed: {
+            if (currentItem)
+                root.dialog.accepted(currentItem.filePath);
+        }
+        Keys.onEnterPressed: {
+            if (currentItem)
+                root.dialog.accepted(currentItem.filePath);
+        }
 
         model: FolderListModel {
             showDirsFirst: true
@@ -87,13 +96,11 @@ Item {
             implicitHeight: nonAnimHeight
 
             radius: Appearance.rounding.normal
-            color: view.currentItem === item ? Colours.palette.m3primary : "transparent"
-            z: view.currentItem === item || implicitHeight !== nonAnimHeight ? 1 : 0
+            color: GridView.isCurrentItem ? Colours.palette.m3surfaceContainerHighest : "transparent"
+            z: GridView.isCurrentItem || implicitHeight !== nonAnimHeight ? 1 : 0
             clip: true
 
             StateLayer {
-                color: view.currentItem === item ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
-
                 onDoubleClicked: {
                     if (item.fileIsDir)
                         root.dialog.cwd.push(item.fileName);
@@ -115,7 +122,17 @@ Item {
 
                 asynchronous: true
                 implicitSize: Sizes.itemWidth - Appearance.padding.normal * 2
-                source: Quickshell.iconPath(item.fileIsDir ? "inode-directory" : "application-x-zerosize")
+                source: {
+                    if (!item.fileIsDir)
+                        return Quickshell.iconPath("application-x-zerosize");
+
+                    const name = item.fileName;
+                    if (root.dialog.cwd.length === 1 && ["Desktop", "Documents", "Downloads", "Music", "Pictures", "Public", "Templates", "Videos"].includes(name))
+                        return Quickshell.iconPath(`folder-${name.toLowerCase()}`);
+
+                    return Quickshell.iconPath("inode-directory");
+                }
+
                 onStatusChanged: {
                     if (status === Image.Error)
                         source = Quickshell.iconPath("error");
@@ -144,9 +161,8 @@ Item {
 
                 horizontalAlignment: Text.AlignHCenter
                 text: item.fileName
-                color: view.currentItem === item ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
-                elide: view.currentItem === item ? Text.ElideNone : Text.ElideRight
-                wrapMode: view.currentItem === item ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
+                elide: item.GridView.isCurrentItem ? Text.ElideNone : Text.ElideRight
+                wrapMode: item.GridView.isCurrentItem ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
             }
 
             Behavior on implicitHeight {

@@ -15,13 +15,13 @@ GridView {
 
     required property var dialog
 
-    property var mimes: ({})
-
     clip: true
     focus: true
+    currentIndex: -1
     Keys.onEscapePressed: root.currentIndex = -1
 
     model: FolderListModel {
+        showDirsFirst: true
         folder: {
             let url = "file://";
             if (root.dialog.cwd[0] === "Home")
@@ -77,17 +77,21 @@ GridView {
 
             asynchronous: true
             implicitSize: Sizes.itemWidth - Appearance.padding.normal * 2
-            source: {
-                const mime = root.mimes[item.fileSuffix];
-
-                if (mime?.startsWith("image-"))
-                    return item.fileUrl;
-
-                return Quickshell.iconPath(item.fileIsDir ? "inode-directory" : root.mimes[item.fileSuffix] ?? "application-x-zerosize", "image-missing");
-            }
+            source: Quickshell.iconPath(item.fileIsDir ? "inode-directory" : "application-x-zerosize")
             onStatusChanged: {
                 if (status === Image.Error)
                     source = Quickshell.iconPath("error");
+            }
+
+            Process {
+                running: !item.fileIsDir
+                command: ["file", "--mime", "-b", item.filePath]
+                stdout: StdioCollector {
+                    onStreamFinished: {
+                        const mime = text.split(";")[0].replace("/", "-");
+                        icon.source = mime.startsWith("image-") ? item.fileUrl : Quickshell.iconPath(mime, "image-missing");
+                    }
+                }
             }
         }
 
@@ -113,18 +117,6 @@ GridView {
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Appearance.anim.curves.standard
             }
-        }
-    }
-
-    FileView {
-        path: "/etc/mime.types"
-        onLoaded: {
-            root.mimes = text().split("\n").filter(l => !l.startsWith("#")).reduce((mimes, line) => {
-                const [type, ext] = line.split(/\s+/);
-                if (ext)
-                    mimes[ext] = type.replace("/", "-");
-                return mimes;
-            }, {});
         }
     }
 }

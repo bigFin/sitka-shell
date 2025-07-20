@@ -21,6 +21,7 @@
   hyprland,
   coreutils,
   findutils,
+  file,
   material-symbols,
   gcc,
   quickshell,
@@ -48,6 +49,7 @@
       hyprland
       coreutils
       findutils
+      file
     ]
     ++ lib.optional withCli caelestia-cli;
 

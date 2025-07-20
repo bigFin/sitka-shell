@@ -1,6 +1,7 @@
 import qs.services
 import qs.config
 import Quickshell
+import QtQuick
 import QtQuick.Layouts
 
 FloatingWindow {
@@ -16,7 +17,6 @@ FloatingWindow {
 
     RowLayout {
         anchors.fill: parent
-        anchors.margins: Appearance.padding.normal
 
         spacing: Appearance.spacing.normal
 
@@ -36,6 +36,14 @@ FloatingWindow {
                 Layout.fillHeight: true
                 dialog: root
             }
+        }
+    }
+
+    Behavior on color {
+        ColorAnimation {
+            duration: Appearance.anim.durations.normal
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Appearance.anim.curves.standard
         }
     }
 }

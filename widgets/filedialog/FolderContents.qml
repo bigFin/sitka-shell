@@ -16,6 +16,7 @@ Item {
     id: root
 
     required property var dialog
+    property alias currentItem: view.currentItem
 
     StyledRect {
         anchors.fill: parent
@@ -82,11 +83,11 @@ Item {
         Keys.onEscapePressed: currentIndex = -1
 
         Keys.onReturnPressed: {
-            if (currentItem)
+            if (root.dialog.selectionValid)
                 root.dialog.accepted(currentItem.filePath);
         }
         Keys.onEnterPressed: {
-            if (currentItem)
+            if (root.dialog.selectionValid)
                 root.dialog.accepted(currentItem.filePath);
         }
 
@@ -127,7 +128,7 @@ Item {
                 onDoubleClicked: {
                     if (item.fileIsDir)
                         root.dialog.cwd.push(item.fileName);
-                    else
+                    else if (root.dialog.selectionValid)
                         root.dialog.accepted(item.filePath);
                 }
 

@@ -2,6 +2,7 @@ import qs.widgets
 import qs.config
 import Quickshell
 import Quickshell.Wayland
+import QtQuick
 
 LazyLoader {
     activeAsync: Config.background.enabled
@@ -27,11 +28,15 @@ LazyLoader {
 
             Wallpaper {}
 
-            DesktopClock {
-                visible: Config.background.desktopClock.enabled
+            Loader {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: Appearance.padding.large
+
+                active: Config.background.desktopClock.enabled
+                asynchronous: true
+
+                source: "DesktopClock.qml"
             }
         }
     }

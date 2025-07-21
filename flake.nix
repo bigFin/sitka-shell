@@ -53,7 +53,7 @@
       in
         pkgs.mkShellNoCC {
           inputsFrom = [shell];
-          packages = [pkgs.material-symbols];
+          packages = with pkgs; [material-symbols nerd-fonts.jetbrains-mono];
           CAELESTIA_BD_PATH = "${shell}/bin/beat_detector";
           QT_LOGGING_RULES = builtins.concatStringsSep ";" [
             "quickshell.dbus.properties.warning=false"

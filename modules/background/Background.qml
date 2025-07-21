@@ -5,7 +5,7 @@ import Quickshell.Wayland
 import QtQuick
 
 LazyLoader {
-    activeAsync: Config.background.enabled
+    active: Config.background.enabled
 
     Variants {
         model: Quickshell.screens

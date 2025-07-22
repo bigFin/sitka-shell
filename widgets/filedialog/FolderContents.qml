@@ -10,6 +10,7 @@ import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
+import QtQuick.Controls
 import Qt.labs.folderlistmodel
 
 Item {
@@ -90,6 +91,8 @@ Item {
             if (root.dialog.selectionValid)
                 root.dialog.accepted(currentItem.filePath);
         }
+
+        ScrollBar.vertical: StyledScrollBar {}
 
         model: FolderListModel {
             showDirsFirst: true

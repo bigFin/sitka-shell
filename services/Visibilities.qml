@@ -1,16 +1,16 @@
 pragma Singleton
 
 import Quickshell
+import Quickshell.Hyprland
 
 Singleton {
     property var screens: new Map()
 
     function load(screen: ShellScreen, visibilities: var): void {
-        screens.set(screen.model + screen.name, visibilities);
+        screens.set(Hyprland.monitorFor(screen), visibilities);
     }
 
     function getForActive(): PersistentProperties {
-        const mon = Hyprland.focusedMonitor;
-        return screens.get(mon.lastIpcObject.model + mon.name);
+        return screens.get(Hyprland.focusedMonitor);
     }
 }

@@ -3,9 +3,14 @@ pragma Singleton
 import Quickshell
 
 Singleton {
-    property var screens: ({})
+    property var screens: new Map()
+
+    function load(screen: ShellScreen, visibilities: var): void {
+        screens.set(screen.model + screen.name, visibilities);
+    }
 
     function getForActive(): PersistentProperties {
-        return Object.entries(screens).find(s => s[0].slice(s[0].indexOf('"') + 1, s[0].lastIndexOf('"')) === Hyprland.focusedMonitor.name)[1];
+        const mon = Hyprland.focusedMonitor;
+        return screens.get(mon.lastIpcObject.model + mon.name);
     }
 }

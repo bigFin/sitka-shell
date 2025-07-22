@@ -171,7 +171,7 @@ Item {
                     stdout: StdioCollector {
                         onStreamFinished: {
                             const mime = text.split(";")[0].replace("/", "-");
-                            icon.source = mime.startsWith("image-") ? item.fileUrl : Quickshell.iconPath(mime, "image-missing");
+                            icon.source = Images.validImageTypes.some(t => mime === `image-${t}`) ? item.fileUrl : Quickshell.iconPath(mime, "image-missing");
                         }
                     }
                 }

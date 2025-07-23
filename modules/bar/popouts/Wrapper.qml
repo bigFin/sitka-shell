@@ -72,10 +72,6 @@ Item {
 
         sourceComponent: Content {
             wrapper: root
-            screen: root.screen
-            currentName: root.currentName
-            currentCenter: root.currentCenter
-            hasCurrent: root.hasCurrent
         }
     }
 

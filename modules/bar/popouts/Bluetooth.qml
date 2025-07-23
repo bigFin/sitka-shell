@@ -15,7 +15,7 @@ ColumnLayout {
 
     StyledText {
         Layout.bottomMargin: Appearance.spacing.small
-        text: qsTr("Bluetooth %1").arg(BluetoothAdapterState.toString(Bluetooth.defaultAdapter.state).toLowerCase())
+        text: qsTr("Bluetooth %1").arg(BluetoothAdapterState.toString(Bluetooth.defaultAdapter?.state).toLowerCase())
     }
 
     StyledText {

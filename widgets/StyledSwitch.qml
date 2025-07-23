@@ -28,6 +28,18 @@ Switch {
             implicitHeight: parent.implicitHeight - Appearance.padding.small
             anchors.verticalCenter: parent.verticalCenter
 
+            StyledRect {
+                anchors.fill: parent
+                radius: parent.radius
+
+                color: root.checked ? Colours.palette.m3primary : Colours.palette.m3onSurface
+                opacity: root.pressed ? 0.1 : root.hovered ? 0.08 : 0
+
+                Behavior on opacity {
+                    NumberAnim {}
+                }
+            }
+
             Shape {
                 id: icon
 
@@ -73,7 +85,7 @@ Switch {
 
                 ShapePath {
                     strokeWidth: Appearance.font.size.larger * 0.15
-                    strokeColor: root.checked ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3surfaceContainerHighest
+                    strokeColor: root.checked ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHighest
                     fillColor: "transparent"
                     capStyle: ShapePath.RoundCap
 
@@ -103,38 +115,42 @@ Switch {
                 }
 
                 Behavior on start1 {
-                    Anim {}
+                    PropAnim {}
                 }
                 Behavior on end1 {
-                    Anim {}
+                    PropAnim {}
                 }
                 Behavior on start2 {
-                    Anim {}
+                    PropAnim {}
                 }
                 Behavior on end2 {
-                    Anim {}
+                    PropAnim {}
                 }
             }
 
             Behavior on x {
-                NumberAnimation {
-                    duration: Appearance.anim.durations.normal
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
-                }
+                NumberAnim {}
             }
 
             Behavior on implicitWidth {
-                NumberAnimation {
-                    duration: Appearance.anim.durations.normal
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
-                }
+                NumberAnim {}
             }
         }
     }
 
-    component Anim: PropertyAnimation {
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        enabled: false
+    }
+
+    component NumberAnim: NumberAnimation {
+        duration: Appearance.anim.durations.normal
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: Appearance.anim.curves.standard
+    }
+
+    component PropAnim: PropertyAnimation {
         duration: Appearance.anim.durations.normal
         easing.type: Easing.BezierSpline
         easing.bezierCurve: Appearance.anim.curves.standard

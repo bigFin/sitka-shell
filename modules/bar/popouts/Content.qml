@@ -35,7 +35,9 @@ Item {
 
         Popout {
             name: "bluetooth"
-            source: "Bluetooth.qml"
+            sourceComponent: Bluetooth {
+                wrapper: root.wrapper
+            }
         }
 
         Popout {

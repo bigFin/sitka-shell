@@ -24,3 +24,4 @@ JsonObject {
         property int wallpaperHeight: 200
     }
 }
+

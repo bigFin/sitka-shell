@@ -12,41 +12,41 @@ Singleton {
     readonly property MprisPlayer active: manualActive ?? list.find(p => p.identity === "Spotify") ?? list[0] ?? null
     property MprisPlayer manualActive
 
-    CustomShortcut {
-        name: "mediaToggle"
-        description: "Toggle media playback"
-        onPressed: {
-            const active = root.active;
-            if (active && active.canTogglePlaying)
-                active.togglePlaying();
-        }
-    }
-
-    CustomShortcut {
-        name: "mediaPrev"
-        description: "Previous track"
-        onPressed: {
-            const active = root.active;
-            if (active && active.canGoPrevious)
-                active.previous();
-        }
-    }
-
-    CustomShortcut {
-        name: "mediaNext"
-        description: "Next track"
-        onPressed: {
-            const active = root.active;
-            if (active && active.canGoNext)
-                active.next();
-        }
-    }
-
-    CustomShortcut {
-        name: "mediaStop"
-        description: "Stop media playback"
-        onPressed: root.active?.stop()
-    }
+    // CustomShortcut {
+    //     name: "mediaToggle"
+    //     description: "Toggle media playback"
+    //     onPressed: {
+    //         const active = root.active;
+    //         if (active && active.canTogglePlaying)
+    //             active.togglePlaying();
+    //     }
+    // }
+    //
+    // CustomShortcut {
+    //     name: "mediaPrev"
+    //     description: "Previous track"
+    //     onPressed: {
+    //         const active = root.active;
+    //         if (active && active.canGoPrevious)
+    //             active.previous();
+    //     }
+    // }
+    //
+    // CustomShortcut {
+    //     name: "mediaNext"
+    //     description: "Next track"
+    //     onPressed: {
+    //         const active = root.active;
+    //         if (active && active.canGoNext)
+    //             active.next();
+    //     }
+    // }
+    //
+    // CustomShortcut {
+    //     name: "mediaStop"
+    //     description: "Stop media playback"
+    //     onPressed: root.active?.stop()
+    // }
 
     IpcHandler {
         target: "mpris"

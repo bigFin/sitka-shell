@@ -13,7 +13,7 @@ StyledRect {
     required property real maskHeight
     required property int groupOffset
 
-    readonly property int currentWsIdx: Hyprland.activeWsId - 1 - groupOffset
+    readonly property int currentWsIdx: Niri.focusedWorkspaceIndex - groupOffset
     property real leading: getWsY(currentWsIdx)
     property real trailing: getWsY(currentWsIdx)
     property real currentSize: workspaces[currentWsIdx]?.size ?? 0

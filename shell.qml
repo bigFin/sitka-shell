@@ -6,13 +6,24 @@ import "modules/drawers"
 import "modules/background"
 import "modules/areapicker"
 import "modules/lock"
+
+
+// import "./modules/sidebarLeft/"
+// import "./modules/sidebarRight/"
+
 import Quickshell
 
 ShellRoot {
+    // property bool enableSidebarLeft: true
+    // property bool enableSidebarRight: false
     Background {}
     Drawers {}
     AreaPicker {}
     Lock {}
 
     Shortcuts {}
+
+
+    // LazyLoader { active: enableSidebarLeft; component: SidebarLeft {} }
+    // LazyLoader { active: enableSidebarRight; component: SidebarRight {} }
 }

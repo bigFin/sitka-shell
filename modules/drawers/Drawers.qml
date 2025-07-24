@@ -29,7 +29,7 @@ Variants {
             screen: scope.modelData
             name: "drawers"
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
-            WlrLayershell.keyboardFocus: visibilities.launcher || visibilities.session ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+            WlrLayershell.keyboardFocus: visibilities.launcher || visibilities.session ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
             mask: Region {
                 x: bar.implicitWidth
@@ -62,14 +62,14 @@ Variants {
                 }
             }
 
-            HyprlandFocusGrab {
-                active: visibilities.launcher || visibilities.session
-                windows: [win]
-                onCleared: {
-                    visibilities.launcher = false;
-                    visibilities.session = false;
-                }
-            }
+            // HyprlandFocusGrab {
+            //     active: visibilities.launcher || visibilities.session
+            //     windows: [win]
+            //     onCleared: {
+            //         visibilities.launcher = false;
+            //         visibilities.session = false;
+            //     }
+            // }
 
             StyledRect {
                 anchors.fill: parent

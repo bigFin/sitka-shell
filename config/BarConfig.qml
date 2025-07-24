@@ -1,22 +1,22 @@
 import Quickshell.Io
 
 JsonObject {
-    property bool persistent: true
+    property bool persistent: false
     property bool showOnHover: true
     property int dragThreshold: 20
     property Workspaces workspaces: Workspaces {}
     property Sizes sizes: Sizes {}
 
     component Workspaces: JsonObject {
-        property int shown: 5
+        property int shown: 4
         property bool rounded: true
         property bool activeIndicator: true
-        property bool occupiedBg: false
+        property bool occupiedBg: true
         property bool showWindows: true
         property bool activeTrail: false
-        property string label: "  "
-        property string occupiedLabel: "󰮯 "
-        property string activeLabel: "󰮯 "
+        property string label: ""
+        property string occupiedLabel: "󰮯"
+        property string activeLabel: "󰮯" //Handled in workspace.qml
     }
 
     component Sizes: JsonObject {

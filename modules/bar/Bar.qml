@@ -102,11 +102,12 @@ Item {
                 anchors.rightMargin: -Config.border.thickness
 
                 function onWheel(event: WheelEvent): void {
-                    const activeWs = Hyprland.activeToplevel?.workspace?.name;
-                    if (activeWs?.startsWith("special:"))
-                        Hyprland.dispatch(`togglespecialworkspace ${activeWs.slice(8)}`);
-                    else if (event.angleDelta.y < 0 || Hyprland.activeWsId > 1)
-                        Hyprland.dispatch(`workspace r${event.angleDelta.y > 0 ? "-" : "+"}1`);
+                    // TODO Special workspaces in Niri?
+                    // const activeWs = Niri.focusedWorkspace?.name;
+                    // if (activeWs?.startsWith("special:"))
+                        // Niri.dispatch(`togglespecialworkspace ${activeWs.slice(8)}`);
+                    // else if (event.angleDelta.y < 0 || Niri.activeWsId > 1)
+                        Niri.switchToWorkspaceUpDown(event.angleDelta.y > 0 ? "up" : "down");
                 }
             }
 

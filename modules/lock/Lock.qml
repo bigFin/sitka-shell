@@ -27,17 +27,17 @@ Scope {
         }
     }
 
-    CustomShortcut {
-        name: "lock"
-        description: "Lock the current session"
-        onPressed: loader.activeAsync = true
-    }
-
-    CustomShortcut {
-        name: "unlock"
-        description: "Unlock the current session"
-        onPressed: loader.item.locked = false
-    }
+    // CustomShortcut {
+    //     name: "lock"
+    //     description: "Lock the current session"
+    //     onPressed: loader.activeAsync = true
+    // }
+    //
+    // CustomShortcut {
+    //     name: "unlock"
+    //     description: "Unlock the current session"
+    //     onPressed: loader.item.locked = false
+    // }
 
     IpcHandler {
         target: "lock"

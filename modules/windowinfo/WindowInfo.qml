@@ -23,10 +23,10 @@ Item {
 
         spacing: Appearance.spacing.normal
 
-        Preview {
-            screen: root.screen
-            client: root.client
-        }
+        // Preview {
+        //     screen: root.screen
+        //     client: root.client
+        // }
 
         ColumnLayout {
             spacing: Appearance.spacing.normal

@@ -78,7 +78,7 @@ ColumnLayout {
 
                 Button {
                     required property int index
-                    readonly property int wsId: Math.floor((Hyprland.activeWsId - 1) / 10) * 10 + index + 1
+                    readonly property int wsId: Math.floor((Niri.focusedWorkspaceId) / 10) * 10 + index + 1
                     readonly property bool isCurrent: root.client?.workspace.id === wsId
 
                     color: isCurrent ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
@@ -87,7 +87,7 @@ ColumnLayout {
                     disabled: isCurrent
 
                     function onClicked(): void {
-                        Hyprland.dispatch(`movetoworkspace ${wsId},address:0x${root.client?.address}`);
+                        Niri.dispatch(`movetoworkspace ${wsId},address:0x${root.client?.address}`);
                     }
                 }
             }
@@ -116,7 +116,7 @@ ColumnLayout {
             text: root.client?.lastIpcObject.floating ? qsTr("Tile") : qsTr("Float")
 
             function onClicked(): void {
-                Hyprland.dispatch(`togglefloating address:0x${root.client?.address}`);
+                Niri.dispatch(`togglefloating address:0x${root.client?.address}`);
             }
         }
 
@@ -133,7 +133,7 @@ ColumnLayout {
                 text: root.client?.lastIpcObject.pinned ? qsTr("Unpin") : qsTr("Pin")
 
                 function onClicked(): void {
-                    Hyprland.dispatch(`pin address:0x${root.client?.address}`);
+                    Niri.dispatch(`pin address:0x${root.client?.address}`);
                 }
             }
         }
@@ -144,7 +144,7 @@ ColumnLayout {
             text: qsTr("Kill")
 
             function onClicked(): void {
-                Hyprland.dispatch(`killwindow address:0x${root.client?.address}`);
+                Niri.dispatch(`killwindow address:0x${root.client?.address}`);
             }
         }
     }

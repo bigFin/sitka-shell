@@ -29,11 +29,11 @@ Item {
 
         readonly property string label: Config.bar.workspaces.label || root.ws
         readonly property string occupiedLabel: Config.bar.workspaces.occupiedLabel || label
-        readonly property string activeLabel: Config.bar.workspaces.activeLabel || (root.isOccupied ? occupiedLabel : label)
+        readonly property string activeLabel: /*Config.bar.workspaces.activeLabel*/ Niri.focusedWorkspaceIndex + 1 || (root.isOccupied ? occupiedLabel : label)
 
         animate: true
-        text: Hyprland.activeWsId === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label
-        color: Config.bar.workspaces.occupiedBg || root.isOccupied || Hyprland.activeWsId === root.ws ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant
+        text: Niri.focusedWorkspaceIndex + 1 === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label
+        color: Config.bar.workspaces.occupiedBg || root.isOccupied || Niri.focusedWorkspaceIndex + 1 === root.ws ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant
         horizontalAlignment: StyledText.AlignHCenter
         verticalAlignment: StyledText.AlignVCenter
 
@@ -76,14 +76,25 @@ Item {
 
             Repeater {
                 model: ScriptModel {
-                    values: Hyprland.toplevels.values.filter(c => c.workspace?.id === root.ws)
+                    // WARNING DEFAULT:
+                    // values: Niri.toplevels.filter(c => c.workspace_id === root.ws)
+
+                    // New Niri implementation:
+                    readonly property int targetWorkspaceId: {
+                        const niriWorkspace = Niri.allWorkspaces[root.index + root.groupOffset];
+                        // Return its ID
+                        return niriWorkspace.id;
+                    }
+
+                    values: Niri.windows.filter(c => c.workspace_id === targetWorkspaceId)
                 }
+
 
                 MaterialIcon {
                     required property var modelData
 
                     grade: 0
-                    text: Icons.getAppCategoryIcon(modelData.lastIpcObject.class, "terminal")
+                    text: Icons.getAppCategoryIcon(modelData.app_id, "terminal")
                     color: Colours.palette.m3onSurfaceVariant
                 }
             }

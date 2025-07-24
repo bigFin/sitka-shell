@@ -36,17 +36,19 @@ MouseArea {
     property real sw: Math.abs(sx - ex)
     property real sh: Math.abs(sy - ey)
 
-    property list<var> clients: Hyprland.toplevels.values.filter(c => c.workspace?.id === Hyprland.activeWsId).sort((a, b) => {
+    property list<var> clients: Niri.toplevels.filter(c => c.workspace_id === Niri.activeWsId).sort((a, b) => {
         // Pinned first, then floating, then any other
-        if (a.lastIpcObject.pinned === b.lastIpcObject.pinned)
-            return a.lastIpcObject.floating === b.lastIpcObject.floating ? 0 : a.lastIpcObject.floating ? -1 : 1;
-        if (a.lastIpcObject.pinned)
+        if (a.is_urgent === b.is_urgent)
+            return a.is_floating === b.is_floating ? 0 : a.is_floating ? -1 : 1;
+        if (a.is_urgent)
             return -1;
         return 1;
     })
 
     function checkClientRects(x: real, y: real): void {
         for (const client of clients) {
+            console.log("client: ", client);
+
             const {
                 at: [cx, cy],
                 size: [cw, ch]
@@ -59,7 +61,7 @@ MouseArea {
                 ey = cy + ch;
                 break;
             }
-        }
+       }
     }
 
     anchors.fill: parent
@@ -147,12 +149,14 @@ MouseArea {
             value: false
         }
     }
-
+    // TODO
     Connections {
-        target: Hyprland
+        target: Niri
 
         function onActiveWsIdChanged(): void {
+            console.log("checked!");
             root.checkClientRects(root.mouseX, root.mouseY);
+
         }
     }
 

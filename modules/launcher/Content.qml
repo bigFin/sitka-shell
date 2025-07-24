@@ -100,7 +100,6 @@ Item {
 
             Keys.onUpPressed: list.currentList?.decrementCurrentIndex()
             Keys.onDownPressed: list.currentList?.incrementCurrentIndex()
-
             Keys.onEscapePressed: root.visibilities.launcher = false
 
             Connections {

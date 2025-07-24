@@ -10,11 +10,8 @@ Item {
     id: root
 
     readonly property list<Workspace> workspaces: layout.children.filter(c => c.isWorkspace).sort((w1, w2) => w1.ws - w2.ws)
-    readonly property var occupied: Hyprland.workspaces.values.reduce((acc, curr) => {
-        acc[curr.id] = curr.lastIpcObject.windows > 0;
-        return acc;
-    }, {})
-    readonly property int groupOffset: Math.floor((Hyprland.activeWsId - 1) / Config.bar.workspaces.shown) * Config.bar.workspaces.shown
+    readonly property var occupied: Niri.workspaceHasWindows
+    readonly property int groupOffset: Math.floor((Niri.focusedWorkspaceIndex) / Config.bar.workspaces.shown) * Config.bar.workspaces.shown
 
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
@@ -68,8 +65,8 @@ Item {
 
         onPressed: event => {
             const ws = layout.childAt(event.x, event.y).index + root.groupOffset + 1;
-            if (Hyprland.activeWsId !== ws)
-                Hyprland.dispatch(`workspace ${ws}`);
+            if (Niri.focusedWorkspaceId + 1 !== ws)
+                Niri.switchToWorkspace(ws);
         }
     }
 }

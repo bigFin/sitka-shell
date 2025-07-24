@@ -7,12 +7,14 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 
+import qs.modules.windowinfo // TODO Niri for details.
+
 Item {
     id: root
 
     required property Item wrapper
 
-    implicitWidth: Hyprland.activeToplevel ? child.implicitWidth : -Appearance.padding.large * 2
+    implicitWidth: Niri.focusedWindowTitle /*Niri.activeToplevel*/ ? child.implicitWidth : -Appearance.padding.large * 2
     implicitHeight: child.implicitHeight
 
     Column {
@@ -33,7 +35,7 @@ Item {
 
                 Layout.alignment: Qt.AlignVCenter
                 implicitSize: details.implicitHeight
-                source: Icons.getAppIcon(Hyprland.activeToplevel?.lastIpcObject.class ?? "", "image-missing")
+                source: Icons.getAppIcon(Niri.focusedWindowClass ?? "", "image-missing")
             }
 
             ColumnLayout {
@@ -44,14 +46,14 @@ Item {
 
                 StyledText {
                     Layout.fillWidth: true
-                    text: Hyprland.activeToplevel?.title ?? ""
+                    text: Niri.focusedWindowTitle ?? ""
                     font.pointSize: Appearance.font.size.normal
                     elide: Text.ElideRight
                 }
 
                 StyledText {
                     Layout.fillWidth: true
-                    text: Hyprland.activeToplevel?.lastIpcObject.class ?? ""
+                    text: Niri.focusedWindowClass ?? ""
                     color: Colours.palette.m3onSurfaceVariant
                     elide: Text.ElideRight
                 }
@@ -84,19 +86,37 @@ Item {
             }
         }
 
-        ClippingWrapperRectangle {
-            color: "transparent"
-            radius: Appearance.rounding.small
+        StyledRect {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.preferredHeight: buttons.implicitHeight
 
-            ScreencopyView {
-                id: preview
+            width: Config.bar.sizes.windowPreviewSize
+            height : 200
+            color: Colours.palette.m3surfaceContainer
+            radius: Appearance.rounding.normal
 
-                captureSource: Hyprland.activeToplevel?.wayland ?? null
-                live: visible
+            Buttons {
+                id: buttons
 
-                constraintSize.width: Config.bar.sizes.windowPreviewSize
-                constraintSize.height: Config.bar.sizes.windowPreviewSize
+                client: root.client
             }
         }
+
+        // ClippingWrapperRectangle {
+        //     color: "transparent"
+        //     radius: Appearance.rounding.small
+        //
+        //     ScreencopyView {
+        //         id: preview
+        //
+        //         // captureSource: Niri.activeToplevel ?? null
+        //         captureSource: Quickshell.Wayland.findClientByPid(Niri.focusedWindow.pid) ?? null
+        //         live: visible
+        //
+        //         constraintSize.width: Config.bar.sizes.windowPreviewSize
+        //         constraintSize.height: Config.bar.sizes.windowPreviewSize
+        //     }
+        // }
     }
 }

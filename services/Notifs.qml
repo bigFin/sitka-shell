@@ -34,14 +34,14 @@ Singleton {
         }
     }
 
-    CustomShortcut {
-        name: "clearNotifs"
-        description: "Clear all notifications"
-        onPressed: {
-            for (const notif of root.list)
-                notif.popup = false;
-        }
-    }
+    // CustomShortcut {
+    //     name: "clearNotifs"
+    //     description: "Clear all notifications"
+    //     onPressed: {
+    //         for (const notif of root.list)
+    //             notif.popup = false;
+    //     }
+    // }
 
     IpcHandler {
         target: "notifs"

@@ -48,11 +48,11 @@ Item {
 
     Keys.onEscapePressed: close()
 
-    HyprlandFocusGrab {
-        active: root.isDetached
-        windows: [QsWindow.window]
-        onCleared: root.close()
-    }
+    // HyprlandFocusGrab {
+    //     active: root.isDetached
+    //     windows: [QsWindow.window]
+    //     onCleared: root.close()
+    // }
 
     Binding {
         when: root.isDetached
@@ -86,7 +86,7 @@ Item {
 
         sourceComponent: WindowInfo {
             screen: root.screen
-            client: Hyprland.activeToplevel
+            client: Niri.activeToplevel
         }
     }
 

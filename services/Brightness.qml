@@ -66,17 +66,17 @@ Singleton {
         }
     }
 
-    CustomShortcut {
-        name: "brightnessUp"
-        description: "Increase brightness"
-        onPressed: root.increaseBrightness()
-    }
-
-    CustomShortcut {
-        name: "brightnessDown"
-        description: "Decrease brightness"
-        onPressed: root.decreaseBrightness()
-    }
+    // CustomShortcut {
+    //     name: "brightnessUp"
+    //     description: "Increase brightness"
+    //     onPressed: root.increaseBrightness()
+    // }
+    //
+    // CustomShortcut {
+    //     name: "brightnessDown"
+    //     description: "Decrease brightness"
+    //     onPressed: root.decreaseBrightness()
+    // }
 
     component Monitor: QtObject {
         id: monitor

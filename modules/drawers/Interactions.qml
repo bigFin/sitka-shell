@@ -69,6 +69,9 @@ MouseArea {
     }
 
     onPositionChanged: event => {
+        if (popouts.isDetached)
+            return;
+
         const x = event.x;
         const y = event.y;
 

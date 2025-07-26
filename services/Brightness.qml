@@ -127,7 +127,8 @@ Singleton {
             else
                 Quickshell.execDetached(["brightnessctl", "s", `${rounded}%`]);
 
-            timer.restart();
+            if (isDdc)
+                timer.restart();
         }
 
         function initBrightness(): void {

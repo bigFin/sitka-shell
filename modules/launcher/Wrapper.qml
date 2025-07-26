@@ -13,7 +13,7 @@ Item {
 
     states: State {
         name: "visible"
-        when: root.visibilities.launcher
+        when: root.visibilities.launcher && Config.launcher.enabled
 
         PropertyChanges {
             root.implicitHeight: content.implicitHeight

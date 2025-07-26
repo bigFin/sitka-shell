@@ -15,7 +15,7 @@ Item {
 
     states: State {
         name: "visible"
-        when: root.visibility
+        when: root.visibility && Config.osd.enabled
 
         PropertyChanges {
             root.implicitWidth: content.implicitWidth

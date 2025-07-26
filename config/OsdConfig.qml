@@ -1,6 +1,7 @@
 import Quickshell.Io
 
 JsonObject {
+    property bool enabled: true
     property int hideDelay: 2000
     property Sizes sizes: Sizes {}
 

@@ -1,12 +1,12 @@
 pragma ComponentBehavior: Bound
 
+import "bluetooth"
 import qs.widgets
 import qs.services
 import qs.config
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Effects
 
 ClippingRectangle {
     id: root
@@ -24,23 +24,21 @@ ClippingRectangle {
         y: -root.session.activeIndex * root.height
 
         Pane {
-            StyledText {
-                anchors.centerIn: parent
-                text: qsTr("Work in progress")
-                color: Colours.palette.m3outline
-                font.pointSize: Appearance.font.size.extraLarge
-                font.weight: 500
+            index: 0
+            sourceComponent: Item {
+                StyledText {
+                    anchors.centerIn: parent
+                    text: qsTr("Work in progress")
+                    color: Colours.palette.m3outline
+                    font.pointSize: Appearance.font.size.extraLarge
+                    font.weight: 500
+                }
             }
         }
 
         Pane {
-            StyledText {
-                anchors.centerIn: parent
-                text: qsTr("Work in progress")
-                color: Colours.palette.m3outline
-                font.pointSize: Appearance.font.size.extraLarge
-                font.weight: 500
-            }
+            index: 1
+            sourceComponent: BtPane {}
         }
 
         Behavior on y {
@@ -52,71 +50,31 @@ ClippingRectangle {
         }
     }
 
-    StyledRect {
-        anchors.fill: parent
-        color: Colours.palette.m3surfaceContainer
-
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            maskSource: mask
-            maskEnabled: true
-            maskInverted: true
-            maskThresholdMin: 0.5
-            maskSpreadAtMin: 1
-        }
+    InnerBorder {
+        leftThickness: 0
     }
 
-    Item {
-        id: mask
-
-        anchors.fill: parent
-        layer.enabled: true
-        visible: false
-
-        Rectangle {
-            anchors.fill: parent
-            anchors.margins: Appearance.padding.normal
-            anchors.leftMargin: 0
-            radius: Appearance.rounding.small
-        }
-    }
-
-    component Pane: Loader {
+    component Pane: Item {
         id: pane
 
-        default property Item child
+        required property int index
+        property alias sourceComponent: loader.sourceComponent
 
-        asynchronous: true
-        active: {
-            const ly = -layout.y;
-            const ty = layout.children.indexOf(this) * root.height;
-            return ly + root.height > ty && ly < ty + root.height;
-        }
+        implicitWidth: root.width
+        implicitHeight: root.height
 
-        sourceComponent: Item {
-            implicitWidth: root.width
-            implicitHeight: root.height
+        Loader {
+            id: loader
 
-            Item {
-                anchors.fill: parent
-                anchors.margins: Appearance.padding.normal
-                anchors.leftMargin: 0
+            anchors.fill: parent
+            asynchronous: true
+            active: {
+                if (root.session.activeIndex === pane.index)
+                    return true;
 
-                children: [pane.child]
-            }
-
-            StyledRect {
-                anchors.fill: parent
-                color: Colours.palette.m3surfaceContainer
-
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    maskSource: mask
-                    maskEnabled: true
-                    maskInverted: true
-                    maskThresholdMin: 0.5
-                    maskSpreadAtMin: 1
-                }
+                const ly = -layout.y;
+                const ty = pane.index * root.height;
+                return ly + root.height > ty && ly < ty + root.height;
             }
         }
     }

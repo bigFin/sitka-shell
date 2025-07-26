@@ -67,7 +67,7 @@ ColumnLayout {
             id: device
 
             required property BluetoothDevice modelData
-            readonly property bool loading: device.modelData.state === BluetoothDeviceState.Connecting || device.modelData.state === BluetoothDeviceState.Disconnecting
+            readonly property bool loading: modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting
 
             Layout.fillWidth: true
             Layout.rightMargin: Appearance.padding.small

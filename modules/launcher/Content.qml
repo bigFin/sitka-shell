@@ -76,7 +76,6 @@ Item {
             bottomPadding: Appearance.padding.larger
 
             placeholderText: qsTr("Type \"%1\" for commands").arg(Config.launcher.actionPrefix)
-            background: null
 
             onAccepted: {
                 const currentItem = list.currentList?.currentItem;

@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import qs.widgets.filedialog
-import qs.services
 import qs.config
 import qs.utils
 import Quickshell
@@ -31,7 +30,7 @@ Item {
 
     states: State {
         name: "visible"
-        when: root.visibilities.dashboard
+        when: root.visibilities.dashboard && Config.dashboard.enabled
 
         PropertyChanges {
             root.implicitHeight: content.implicitHeight
@@ -68,7 +67,7 @@ Item {
     Loader {
         id: content
 
-        Component.onCompleted: active = Qt.binding(() => root.visibilities.dashboard || root.visible)
+        Component.onCompleted: active = Qt.binding(() => (root.visibilities.dashboard && Config.dashboard.enabled) || root.visible)
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom

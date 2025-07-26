@@ -1,6 +1,7 @@
 import Quickshell.Io
 
 JsonObject {
+    property bool enabled: true
     property int maxShown: 8
     property int maxWallpapers: 9 // Warning: even numbers look bad
     property string actionPrefix: ">"

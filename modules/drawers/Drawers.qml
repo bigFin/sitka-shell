@@ -63,7 +63,7 @@ Variants {
             }
 
             // HyprlandFocusGrab {
-            //     active: visibilities.launcher || visibilities.session
+            //     active: (visibilities.launcher && Config.launcher.enabled) || (visibilities.session && Config.session.enabled)
             //     windows: [win]
             //     onCleared: {
             //         visibilities.launcher = false;
@@ -73,7 +73,7 @@ Variants {
 
             StyledRect {
                 anchors.fill: parent
-                opacity: visibilities.session ? 0.5 : 0
+                opacity: visibilities.session && Config.session.enabled ? 0.5 : 0
                 color: Colours.palette.m3scrim
 
                 Behavior on opacity {

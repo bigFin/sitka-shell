@@ -1,6 +1,7 @@
 import Quickshell.Io
 
 JsonObject {
+    property bool enabled: true
     property int dragThreshold: 30
     property Sizes sizes: Sizes {}
 

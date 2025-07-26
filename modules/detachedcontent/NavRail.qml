@@ -26,7 +26,7 @@ Item {
             when: root.expanded
 
             PropertyChanges {
-                layout.spacing: Appearance.spacing.small / 2
+                layout.spacing: Appearance.spacing.small
                 menuIcon.opacity: 0
                 menuIconExpanded.opacity: 1
                 menuIcon.rotation: 180
@@ -50,7 +50,7 @@ Item {
 
         Item {
             Layout.fillWidth: true
-            Layout.bottomMargin: Appearance.spacing.small / 2
+            Layout.bottomMargin: Appearance.spacing.large * 2
             implicitHeight: Math.max(menuIcon.implicitHeight, menuIconExpanded.implicitHeight) + Appearance.padding.normal * 2
 
             StateLayer {
@@ -80,6 +80,11 @@ Item {
                 opacity: 0
                 rotation: -180
             }
+        }
+
+        NavItem {
+            icon: "network_manage"
+            label: "network"
         }
 
         NavItem {

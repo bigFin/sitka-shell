@@ -20,17 +20,13 @@ Item {
     implicitWidth: implicitHeight * Config.dcontent.sizes.ratio
     implicitHeight: screen.height * Config.dcontent.sizes.heightMult
 
-    GridLayout {
+    RowLayout {
         anchors.fill: parent
 
-        rows: 2
-        columns: 2
-        rowSpacing: 0
-        columnSpacing: 0
+        spacing: 0
 
         StyledRect {
             Layout.fillHeight: true
-            Layout.rowSpan: 2
 
             topLeftRadius: Appearance.rounding.normal
             bottomLeftRadius: Appearance.rounding.normal
@@ -42,13 +38,6 @@ Item {
 
                 session: root.session
             }
-        }
-
-        StyledRect {
-            Layout.fillWidth: true
-            implicitHeight: 50
-            topRightRadius: Appearance.rounding.normal
-            color: Colours.palette.m3surfaceContainer
         }
 
         Item {
@@ -66,6 +55,7 @@ Item {
             StyledRect {
                 anchors.fill: parent
                 color: Colours.palette.m3surfaceContainer
+                topRightRadius: Appearance.rounding.normal
                 bottomRightRadius: Appearance.rounding.normal
 
                 layer.enabled: true
@@ -88,7 +78,6 @@ Item {
                 Rectangle {
                     anchors.fill: parent
                     anchors.margins: Appearance.padding.normal
-                    anchors.topMargin: 0
                     anchors.leftMargin: 0
                     radius: Appearance.rounding.small
                 }

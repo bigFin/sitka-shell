@@ -45,6 +45,11 @@ Item {
             source: "Battery.qml"
         }
 
+        Popout {
+            name: "audio"
+            source: "Audio.qml"
+        }
+
         Repeater {
             model: ScriptModel {
                 values: [...SystemTray.items.values]

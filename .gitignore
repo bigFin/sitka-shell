@@ -1,2 +1,4 @@
 /result
 /.qmlls.ini
+.vscode
+.vscode/settings.json

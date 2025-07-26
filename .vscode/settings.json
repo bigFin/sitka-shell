@@ -1,3 +1,4 @@
 {
-    "editor.defaultFormatter": "theqtcompany.qt-qml"
+    "editor.defaultFormatter": "theqtcompany.qt-qml",
+    "qt-qml.qmlls.useQmlImportPathEnvVar": false
 }

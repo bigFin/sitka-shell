@@ -172,12 +172,13 @@ ColumnLayout {
             spacing: Appearance.spacing.small
 
             MaterialIcon {
+                id: scanIcon
+
                 animate: true
                 text: Network.scanning ? "refresh" : "wifi_find"
                 color: Network.scanning ? Colours.palette.m3onSurface : Colours.palette.m3onPrimaryContainer
 
                 RotationAnimation on rotation {
-                    alwaysRunToEnd: true
                     running: Network.scanning
                     loops: Animation.Infinite
                     from: 0
@@ -201,6 +202,11 @@ ColumnLayout {
             if (Network.active && root.connectingToSsid === Network.active.ssid) {
                 root.connectingToSsid = "";
             }
+        }
+
+        function onScanningChanged(): void {
+            if (!Network.scanning)
+                scanIcon.rotation = 0;
         }
     }
 

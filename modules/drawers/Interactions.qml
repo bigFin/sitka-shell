@@ -132,6 +132,15 @@ MouseArea {
             dashboardShortcutActive = false;
         }
 
+        // Show/hide dashboard on drag (for touchscreen devices)
+        if (pressed && inTopPanel(panels.dashboard, dragStart.x, dragStart.y) && withinPanelWidth(panels.dashboard, x, y)) {
+            const dragY = y - dragStart.y;
+            if (dragY > Config.dashboard.dragThreshold)
+                visibilities.dashboard = true;
+            else if (dragY < -Config.dashboard.dragThreshold)
+                visibilities.dashboard = false;
+        }
+
         // Show utilities on hover
         const showUtilities = inBottomPanel(panels.utilities, x, y);
 

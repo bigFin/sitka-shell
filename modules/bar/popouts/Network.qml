@@ -19,7 +19,7 @@ ColumnLayout {
     StyledText {
         Layout.topMargin: Appearance.padding.normal
         Layout.rightMargin: Appearance.padding.small
-        text: qsTr("WiFi %1").arg(Network.wifiEnabled ? "enabled" : "disabled")
+        text: qsTr("Wifi %1").arg(Network.wifiEnabled ? "enabled" : "disabled")
         font.weight: 500
     }
 
@@ -159,7 +159,7 @@ ColumnLayout {
 
         StateLayer {
             color: Network.scanning ? Colours.palette.m3onSurface : Colours.palette.m3onPrimaryContainer
-            enabled: !Network.scanning && Network.wifiEnabled
+            disabled: Network.scanning || !Network.wifiEnabled
 
             function onClicked(): void {
                 Network.rescanWifi();
@@ -172,10 +172,12 @@ ColumnLayout {
             spacing: Appearance.spacing.small
 
             MaterialIcon {
+                animate: true
                 text: Network.scanning ? "refresh" : "wifi_find"
                 color: Network.scanning ? Colours.palette.m3onSurface : Colours.palette.m3onPrimaryContainer
 
                 RotationAnimation on rotation {
+                    alwaysRunToEnd: true
                     running: Network.scanning
                     loops: Animation.Infinite
                     from: 0

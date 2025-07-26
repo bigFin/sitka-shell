@@ -13,6 +13,8 @@ TextField {
     font.family: Appearance.font.family.sans
     font.pointSize: Appearance.font.size.smaller
 
+    background: null
+
     cursorDelegate: StyledRect {
         id: cursor
 

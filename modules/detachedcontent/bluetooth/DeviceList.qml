@@ -1,3 +1,6 @@
+pragma ComponentBehavior: Bound
+
+import ".."
 import qs.widgets
 import qs.services
 import qs.config
@@ -10,6 +13,8 @@ import QtQuick.Controls
 
 ColumnLayout {
     id: root
+
+    required property Session session
 
     anchors.fill: parent
     spacing: Appearance.spacing.small
@@ -32,7 +37,11 @@ ColumnLayout {
         radius: Appearance.rounding.normal
         color: Colours.palette.m3surfaceContainer
 
-        StateLayer {}
+        StateLayer {
+            function onClicked(): void {
+                root.session.bt.active = null;
+            }
+        }
 
         StyledText {
             id: settingsText
@@ -65,7 +74,7 @@ ColumnLayout {
 
         ScrollBar.vertical: StyledScrollBar {}
 
-        delegate: StyledRect {
+        delegate: Item {
             id: device
 
             required property BluetoothDevice modelData
@@ -79,7 +88,10 @@ ColumnLayout {
             StateLayer {
                 id: stateLayer
 
+                radius: Appearance.rounding.small
+
                 function onClicked(): void {
+                    root.session.bt.active = device.modelData;
                 }
             }
 
@@ -88,8 +100,6 @@ ColumnLayout {
 
                 anchors.fill: parent
                 anchors.margins: Appearance.padding.normal
-                anchors.leftMargin: Appearance.padding.large
-                anchors.rightMargin: Appearance.padding.large
 
                 spacing: Appearance.spacing.normal
 
@@ -97,7 +107,7 @@ ColumnLayout {
                     implicitWidth: implicitHeight
                     implicitHeight: icon.implicitHeight + Appearance.padding.normal * 2
 
-                    radius: Appearance.rounding.full
+                    radius: Appearance.rounding.normal
                     color: device.connected ? Colours.palette.m3primaryContainer : device.modelData.bonded ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainerHigh
 
                     StyledRect {

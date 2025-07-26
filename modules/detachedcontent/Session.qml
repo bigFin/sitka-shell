@@ -1,3 +1,4 @@
+import Quickshell.Bluetooth
 import QtQuick
 
 QtObject {
@@ -6,6 +7,13 @@ QtObject {
     property string active
     property int activeIndex
 
+    readonly property Bt bt: Bt {}
+
     onActiveChanged: activeIndex = panes.indexOf(active)
     onActiveIndexChanged: active = panes[activeIndex]
+
+    component Bt: QtObject {
+        property BluetoothDevice active
+        property BluetoothAdapter currentAdapter: Bluetooth.defaultAdapter
+    }
 }

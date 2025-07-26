@@ -38,7 +38,9 @@ ClippingRectangle {
 
         Pane {
             index: 1
-            sourceComponent: BtPane {}
+            sourceComponent: BtPane {
+                session: root.session
+            }
         }
 
         Behavior on y {

@@ -26,7 +26,8 @@ Item {
         // Check status icons hover areas
         let statusIconFound = false;
         for (const area of statusIconsInner.hoverAreas) {
-            if (!area.enabled) continue;
+            if (!area.enabled)
+                continue;
 
             const item = area.item;
             const itemY = statusIcons.y + statusIconsInner.y + item.y - spacing / 2;

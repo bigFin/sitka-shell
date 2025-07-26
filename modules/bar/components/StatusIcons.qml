@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import qs.widgets
 import qs.services
 import qs.utils
@@ -6,37 +8,33 @@ import Quickshell
 import Quickshell.Bluetooth
 import Quickshell.Services.UPower
 import QtQuick
+import QtQuick.Layouts
 
 Item {
     id: root
 
     property color colour: Colours.palette.m3secondary
 
-    property bool showAudio: true
-    property bool showNetwork: true
-    property bool showBluetooth: true
-    property bool showBattery: true
-
-    readonly property var hoverAreas: [
+    readonly property list<var> hoverAreas: [
         {
             name: "audio",
             item: audioIcon,
-            enabled: showAudio && audioIcon.visible
+            enabled: Config.bar.status.showAudio
         },
         {
-            name: "network", 
+            name: "network",
             item: networkIcon,
-            enabled: showNetwork && networkIcon.visible
+            enabled: Config.bar.status.showNetwork
         },
         {
             name: "bluetooth",
             item: bluetoothGroup,
-            enabled: showBluetooth && (bluetoothIcon.visible || bluetoothDevices.visible)
+            enabled: Config.bar.status.showBluetooth
         },
         {
             name: "battery",
             item: batteryIcon,
-            enabled: showBattery && batteryIcon.visible
+            enabled: Config.bar.status.showBattery
         }
     ]
 
@@ -44,104 +42,128 @@ Item {
     implicitWidth: iconColumn.implicitWidth
     implicitHeight: iconColumn.implicitHeight
 
-    Column {
+    ColumnLayout {
         id: iconColumn
-        
+
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: Appearance.spacing.smaller / 2
 
         // Audio icon
-        MaterialIcon {
+        Loader {
             id: audioIcon
-            objectName: "audio"
-            visible: root.showAudio
-            animate: true
-            text: Audio.muted ? "volume_off" :
-                Audio.volume >= 0.66 ? "volume_up" :
-                Audio.volume >= 0.33 ? "volume_down" : "volume_mute"
-            color: root.colour
+
+            asynchronous: true
+            active: Config.bar.status.showAudio
+            visible: active
+
+            sourceComponent: MaterialIcon {
+                animate: true
+                text: Audio.muted ? "volume_off" : Audio.volume >= 0.66 ? "volume_up" : Audio.volume >= 0.33 ? "volume_down" : "volume_mute"
+                color: root.colour
+            }
         }
 
         // Network icon
-        MaterialIcon {
+        Loader {
             id: networkIcon
-            objectName: "network"
-            visible: root.showNetwork
-            animate: true
-            text: Network.active ? Icons.getNetworkIcon(Network.active.strength ?? 0) : "wifi_off"
-            color: root.colour
+
+            asynchronous: true
+            active: Config.bar.status.showNetwork
+            visible: active
+
+            sourceComponent: MaterialIcon {
+                animate: true
+                text: Network.active ? Icons.getNetworkIcon(Network.active.strength ?? 0) : "wifi_off"
+                color: root.colour
+            }
         }
 
         // Bluetooth section (grouped for hover area)
-        Item {
+        Loader {
             id: bluetoothGroup
-            visible: root.showBluetooth
-            implicitWidth: Math.max(bluetoothIcon.implicitWidth, bluetoothDevices.implicitWidth)
-            implicitHeight: bluetoothIcon.implicitHeight + (bluetoothDevices.visible ? bluetoothDevices.implicitHeight + bluetoothDevices.anchors.topMargin : 0)
 
-            // Bluetooth icon
-            MaterialIcon {
-                id: bluetoothIcon
-                objectName: "bluetooth"
-                visible: root.showBluetooth
-                animate: true
-                // text: Bluetooth.powered ? "bluetooth" : "bluetooth_disabled"
-                text: Bluetooth.defaultAdapter?.enabled ? "bluetooth" : "bluetooth_disabled"
-                color: root.colour
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
+            asynchronous: true
+            active: Config.bar.status.showBluetooth
+            visible: active
 
-            // Connected bluetooth devices
-            Column {
-                id: bluetoothDevices
-                objectName: "bluetoothDevices"
+            sourceComponent: ColumnLayout {
                 spacing: Appearance.spacing.smaller / 2
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: bluetoothIcon.bottom
-                anchors.topMargin: Appearance.spacing.smaller / 2
 
+                // Bluetooth icon
+                MaterialIcon {
+                    animate: true
+                    text: Bluetooth.defaultAdapter?.enabled ? "bluetooth" : "bluetooth_disabled"
+                    color: root.colour
+                }
+
+                // Connected bluetooth devices
                 Repeater {
                     model: ScriptModel {
-                        values: Bluetooth.devices.filter(d => d.connected)
+                        values: Bluetooth.devices.values.filter(d => d.state !== BluetoothDeviceState.Disconnected)
                     }
 
                     MaterialIcon {
-                        required property Bluetooth.Device modelData
+                        id: device
+
+                        required property BluetoothDevice modelData
+
                         animate: true
                         text: Icons.getBluetoothIcon(modelData.icon)
                         color: root.colour
                         fill: 1
+
+                        SequentialAnimation on opacity {
+                            running: device.modelData.state !== BluetoothDeviceState.Connected
+                            alwaysRunToEnd: true
+                            loops: Animation.Infinite
+
+                            Anim {
+                                from: 1
+                                to: 0
+                                easing.bezierCurve: Appearance.anim.curves.standardAccel
+                            }
+                            Anim {
+                                from: 0
+                                to: 1
+                                easing.bezierCurve: Appearance.anim.curves.standardDecel
+                            }
+                        }
                     }
                 }
             }
         }
 
         // Battery icon
-        MaterialIcon {
+        Loader {
             id: batteryIcon
-            objectName: "battery"
-            visible: root.showBattery
-            animate: true
-            text: {
-                if (!UPower.displayDevice.isLaptopBattery) {
-                    if (PowerProfiles.profile === PowerProfile.PowerSaver)
-                        return "energy_savings_leaf";
-                    if (PowerProfiles.profile === PowerProfile.Performance)
-                        return "rocket_launch";
-                    return "balance";
-                }
 
-                const perc = UPower.displayDevice.percentage;
-                const charging = !UPower.onBattery;
-                if (perc === 1)
-                    return charging ? "battery_charging_full" : "battery_full";
-                let level = Math.floor(perc * 7);
-                if (charging && (level === 4 || level === 1))
-                    level--;
-                return charging ? `battery_charging_${(level + 3) * 10}` : `battery_${level}_bar`;
+            asynchronous: true
+            active: Config.bar.status.showBattery
+            visible: active
+
+            sourceComponent: MaterialIcon {
+                animate: true
+                text: {
+                    if (!UPower.displayDevice.isLaptopBattery) {
+                        if (PowerProfiles.profile === PowerProfile.PowerSaver)
+                            return "energy_savings_leaf";
+                        if (PowerProfiles.profile === PowerProfile.Performance)
+                            return "rocket_launch";
+                        return "balance";
+                    }
+
+                    const perc = UPower.displayDevice.percentage;
+                    const charging = !UPower.onBattery;
+                    if (perc === 1)
+                        return charging ? "battery_charging_full" : "battery_full";
+                    let level = Math.floor(perc * 7);
+                    if (charging && (level === 4 || level === 1))
+                        level--;
+                    return charging ? `battery_charging_${(level + 3) * 10}` : `battery_${level}_bar`;
+                }
+                color: !UPower.onBattery || UPower.displayDevice.percentage > 0.2 ? root.colour : Colours.palette.m3error
+                fill: 1
             }
-            color: !UPower.onBattery || UPower.displayDevice.percentage > 0.2 ? root.colour : Colours.palette.m3error
-            fill: 1
         }
     }
 

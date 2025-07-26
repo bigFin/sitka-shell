@@ -4,6 +4,7 @@ JsonObject {
     property bool enabled: true
     property int mediaUpdateInterval: 500
     property int visualiserBars: 45
+    property int dragThreshold: 50
     property Sizes sizes: Sizes {}
 
     component Sizes: JsonObject {

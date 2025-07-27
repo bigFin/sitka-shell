@@ -1,0 +1,144 @@
+import qs.widgets
+import qs.services
+import qs.config
+import Quickshell.Widgets
+import QtQuick
+import QtQuick.Layouts
+
+ColumnLayout {
+    id: root
+
+    default property alias contentComponent: contentLoader.sourceComponent
+
+    property string title: qsTr("Dropdown Title")
+    property bool expanded: false
+    property color backgroundColor: Colours.palette.m3surfaceContainerLow
+
+    // Margin properties: if backgroundMargins >= 0, use it for all sides; otherwise, use individual margins
+    property real backgroundMarginLeft: 10
+    property real backgroundMarginRight: 10
+    property real backgroundMarginTop: 10
+    property real backgroundMarginBottom: 0
+    property real backgroundMargins: -1 // -1 means "not set"
+
+    signal collapsed()
+
+    // Header height constant
+    readonly property int headerHeight: 56 // Typical Material header height
+
+    Rectangle {
+        id: backgroundRect
+        Layout.fillWidth: true
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
+        anchors.leftMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginLeft
+        anchors.rightMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginRight
+        anchors.topMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginTop
+        anchors.bottomMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginBottom
+
+        color: root.backgroundColor
+        radius: Appearance.rounding.small
+
+        // Height is header + content (if expanded) + margins
+        Layout.preferredHeight: root.headerHeight +
+                               (root.expanded ? contentWrapper.implicitHeight : 0) +
+                               (anchors.topMargin + anchors.bottomMargin)
+
+        Behavior on Layout.preferredHeight {
+            NumberAnimation {
+                duration: Appearance.anim.durations.normal
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.anim.curves.standard
+            }
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+
+            // Header
+            RowLayout {
+                id: headerRow
+                Layout.topMargin: Appearance.padding.small
+                Layout.leftMargin: Appearance.padding.large
+                Layout.rightMargin: Appearance.padding.large
+                Layout.bottomMargin: Appearance.padding.small
+
+                spacing: Appearance.spacing.normal
+                height: root.headerHeight
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: root.title
+                    elide: Text.ElideRight
+                }
+
+                StyledRect {
+                    color: Colours.palette.m3primary
+                    radius: Appearance.rounding.small
+
+                    implicitWidth: expandIcon.implicitWidth + Appearance.padding.small * 2
+                    implicitHeight: expandIcon.implicitHeight + Appearance.padding.small
+
+                    StateLayer {
+                        color: Colours.palette.m3onPrimary
+                        function onClicked(): void { root.expanded = !root.expanded; }
+                    }
+
+                    MaterialIcon {
+                        id: expandIcon
+                        anchors.centerIn: parent
+                        animate: true
+                        text: root.expanded ? "expand_more" : "keyboard_arrow_right"
+                        color: Colours.palette.m3onPrimary
+                        font.pointSize: Appearance.font.size.large
+                    }
+                }
+            }
+
+            // Collapsible content
+            WrapperItem {
+                id: contentWrapper
+                Layout.fillWidth: true
+                Layout.leftMargin: Appearance.padding.large * 2
+                Layout.rightMargin: Appearance.padding.large * 2
+
+                // Animate height for smooth expand/collapse
+                Layout.preferredHeight: root.expanded ? contentLoader.implicitHeight + topMargin + bottomMargin : 0
+                clip: true
+
+                topMargin: Appearance.spacing.smaller
+                bottomMargin: Appearance.spacing.smaller
+
+                Loader {
+                    id: contentLoader
+                    Layout.fillWidth: true
+                    active: true
+                }
+
+                Behavior on Layout.preferredHeight {
+                    NumberAnimation {
+                        duration: Appearance.anim.durations.normal
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Appearance.anim.curves.standard
+                    }
+                }
+            }
+        }
+    }
+
+    function collapse(): void {
+        if (expanded) {
+            expanded = false;
+        }
+    }
+
+    onExpandedChanged: {
+        if (!expanded) {
+            collapsed();
+        }
+    }
+}

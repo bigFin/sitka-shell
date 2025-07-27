@@ -6,7 +6,8 @@ import Quickshell.Widgets
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
-
+import QtQuick.Controls
+// import qs.widgets
 import qs.modules.windowinfo // TODO Niri for details.
 
 Item {
@@ -86,21 +87,36 @@ Item {
             }
         }
 
+
         StyledRect {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            // Layout.fillWidth: true
+            // Layout.fillHeight: true
+            // clip: true
+
             Layout.preferredHeight: buttons.implicitHeight
+            height : 250
 
             width: Config.bar.sizes.windowPreviewSize
-            height : 200
-            color: Colours.palette.m3surfaceContainer
+            // color: Colours.palette.m3surfaceContainer
             radius: Appearance.rounding.normal
 
-            Buttons {
-                id: buttons
+            Flickable {
+                id: flick
+                anchors.fill: parent
+                contentHeight: buttons.implicitHeight
 
-                client: root.client
+                interactive: true
+                clip: true
+
+                Buttons {
+                    id: buttons
+                    // Your buttons content here
+                }
+
+                ScrollBar.vertical: StyledScrollBar {}
             }
+
+
         }
 
         // ClippingWrapperRectangle {

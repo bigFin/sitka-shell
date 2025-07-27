@@ -357,6 +357,70 @@ Singleton {
 
     }
 
+    function toggleWindowFloating() {
+        if (!niriAvailable) return false
+
+            Quickshell.execDetached(["niri", "msg", "action", `toggle-window-floating`])
+            return true
+
+    }
+
+    function closeFocusedWindow() {
+        if (!niriAvailable) return false
+            Quickshell.execDetached(["niri", "msg", "action", `close-window`])
+            return true
+    }
+
+    function toggleWindowOpacity() {
+        if (!niriAvailable) return false
+            Quickshell.execDetached(["niri", "msg", "action", `toggle-window-rule-opacity`])
+            return true
+    }
+    function expandColumnToAvailable() {
+        if (!niriAvailable) return false
+            Quickshell.execDetached(["niri", "msg", "action", `expand-column-to-available-width`])
+            return true
+    }
+    function centerWindow() {
+        if (!niriAvailable) return false
+            Quickshell.execDetached(["niri", "msg", "action", `center-window`])
+            return true
+    }
+    function screenshotWindow() {
+        if (!niriAvailable) return false
+            Quickshell.execDetached(["niri", "msg", "action", `screenshot-window`])
+            return true
+    }
+    function keyboardShortcutsInhibitWindow() {
+        if (!niriAvailable) return false
+            Quickshell.execDetached(["niri", "msg", "action", `toggle-keyboard-shortcuts-inhibit`])
+            return true
+    }
+    function toggleWindowedFullscreen() {
+        if (!niriAvailable) return false
+            Quickshell.execDetached(["niri", "msg", "action", `toggle-windowed-fullscreen`])
+            return true
+    }
+    function toggleFullscreen() {
+        if (!niriAvailable) return false
+            Quickshell.execDetached(["niri", "msg", "action", `fullscreen-window`])
+            return true
+    }
+    function toggleMaximize() {
+        if (!niriAvailable) return false
+            Quickshell.execDetached(["niri", "msg", "action", `maximize-column`])
+            return true
+    }
+
+    function moveWindowToWorkspace(workspaceId) {
+        if (!niriAvailable) return false
+
+            Quickshell.execDetached(["niri", "msg", "action", `move-window-to-workspace`, workspaceId.toString()])
+            return true
+
+    }
+
+
     function switchToWorkspaceByIndex(index) {
         if (!niriAvailable || index < 0 || index >= allWorkspaces.length) return false
 
@@ -391,6 +455,10 @@ Singleton {
             return allWorkspaces[index]
         }
         return null
+    }
+
+    function getWorkspaceCount() {
+        return allWorkspaces.length;
     }
 
     function getCurrentOutputWorkspaceNumbers() {

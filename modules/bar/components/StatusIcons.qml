@@ -63,6 +63,23 @@ Item {
             }
         }
 
+        // Keyboard layout icon
+        Loader {
+            id: kbLayout
+
+            Layout.alignment: Qt.AlignHCenter
+            asynchronous: true
+            active: Config.bar.status.showKbLayout
+            visible: active
+
+            sourceComponent: StyledText {
+                animate: true
+                text: Hyprland.kbLayout
+                color: root.colour
+                font.family: Appearance.font.family.mono
+            }
+        }
+
         // Network icon
         Loader {
             id: networkIcon

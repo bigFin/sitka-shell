@@ -22,6 +22,7 @@ JsonObject {
 
     component Status: JsonObject {
         property bool showAudio: true
+        property bool showKbLayout: false
         property bool showNetwork: true
         property bool showBluetooth: true
         property bool showBattery: true

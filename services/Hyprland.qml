@@ -2,6 +2,7 @@ pragma Singleton
 
 import Quickshell
 import Quickshell.Hyprland
+import Quickshell.Io
 import QtQuick
 
 Singleton {
@@ -14,6 +15,7 @@ Singleton {
     readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
     readonly property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
     readonly property int activeWsId: focusedWorkspace?.id ?? 1
+    property string kbLayout: "?"
 
     function dispatch(request: string): void {
         Hyprland.dispatch(request);
@@ -27,7 +29,9 @@ Singleton {
             if (n.endsWith("v2"))
                 return;
 
-            if (["workspace", "moveworkspace", "activespecial", "focusedmon"].includes(n)) {
+            if (n === "activelayout") {
+                root.kbLayout = event.parse(2)[1];
+            } else if (["workspace", "moveworkspace", "activespecial", "focusedmon"].includes(n)) {
                 Hyprland.refreshWorkspaces();
                 Hyprland.refreshMonitors();
             } else if (["openwindow", "closewindow", "movewindow"].includes(n)) {
@@ -40,6 +44,14 @@ Singleton {
             } else if (n.includes("window") || n.includes("group") || ["pin", "fullscreen", "changefloatingmode", "minimize"].includes(n)) {
                 Hyprland.refreshToplevels();
             }
+        }
+    }
+
+    Process {
+        running: true
+        command: ["hyprctl", "-j", "devices"]
+        stdout: StdioCollector {
+            onStreamFinished: root.kbLayout = JSON.parse(text).keyboards.find(k => k.main).layout
         }
     }
 }

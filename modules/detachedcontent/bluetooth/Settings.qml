@@ -274,7 +274,7 @@ ColumnLayout {
                 CustomSpinBox {
                     min: 0
                     value: root.session.bt.currentAdapter.discoverableTimeout
-                    onValueModified: root.session.bt.currentAdapter.discoverableTimeout = value
+                    onValueModified: value => root.session.bt.currentAdapter.discoverableTimeout = value
                 }
             }
         }

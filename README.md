@@ -158,6 +158,13 @@ All configuration options are in `~/.config/caelestia/shell.json`.
         "dragThreshold": 20,
         "persistent": true,
         "showOnHover": true,
+        "status": {
+            "showAudio": false,
+            "showBattery": true,
+            "showBluetooth": true,
+            "showKbLayout": false,
+            "showNetwork": true
+        },
         "workspaces": {
             "activeIndicator": true,
             "activeLabel": "󰮯 ",

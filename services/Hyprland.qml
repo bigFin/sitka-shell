@@ -30,7 +30,7 @@ Singleton {
                 return;
 
             if (n === "activelayout") {
-                root.kbLayout = event.parse(2)[1];
+                kbProc.running = true;
             } else if (["workspace", "moveworkspace", "activespecial", "focusedmon"].includes(n)) {
                 Hyprland.refreshWorkspaces();
                 Hyprland.refreshMonitors();
@@ -48,6 +48,8 @@ Singleton {
     }
 
     Process {
+        id: kbProc
+
         running: true
         command: ["hyprctl", "-j", "devices"]
         stdout: StdioCollector {

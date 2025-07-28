@@ -34,8 +34,8 @@ ColumnLayout {
         GridLayout {
             id: wsGrid
 
-            rowSpacing: Appearance.spacing.smaller
-            columnSpacing: Appearance.spacing.smaller
+            // rowSpacing: Appearance.spacing.smaller
+            // columnSpacing: Appearance.spacing.smaller
             columns: 5
 
             Repeater {
@@ -77,8 +77,8 @@ ColumnLayout {
         //  toggleMaximize
         RowLayout {
                 Layout.fillWidth: true
-                Layout.leftMargin: Appearance.padding.large
-                Layout.rightMargin: Appearance.padding.large
+                // Layout.leftMargin: Appearance.padding.large
+                // Layout.rightMargin: Appearance.padding.large
 
                 Button {
                     color: Colours.palette.m3secondaryContainer
@@ -117,18 +117,23 @@ ColumnLayout {
 
     // ***************************************************
 
-    ColumnLayout {
 
-        RowLayout {
-                Layout.fillWidth: true
-                Layout.leftMargin: Appearance.padding.large
-                Layout.rightMargin: Appearance.padding.large
-                Layout.bottomMargin: Appearance.padding.large
+    Loader {
 
+        active: wrapper.isDetached
+        asynchronous: true
+        Layout.fillWidth: active
+        visible: active
+        Layout.leftMargin: Appearance.padding.large
+        Layout.rightMargin: Appearance.padding.large
+        Layout.bottomMargin: Appearance.padding.large
+
+        sourceComponent: RowLayout {
+                // Layout.fillWidth: true
 
                 Button {
-                    color: Colours.palette.m3secondaryContainer
-                    onColor: Colours.palette.m3onSecondaryContainer
+                    color: Niri.focusedWindow.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
+                    onColor: Niri.focusedWindow.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
                     text: root.client?.is_floating ? qsTr("Tile") : qsTr("Float")
                     icon: root.client?.is_floating ? "grid_view" : "picture_in_picture"
 
@@ -162,7 +167,7 @@ ColumnLayout {
                     color: Colours.palette.m3secondaryContainer
                     onColor: Colours.palette.m3onSecondaryContainer
                     icon: "fullscreen"
-                    text: qsTr("Toggle Fullscreen")
+                    text: qsTr("Fullscreen")
 
                     function onClicked(): void {
                         Niri.toggleMaximize();
@@ -176,7 +181,7 @@ ColumnLayout {
                     icon: "close"
 
                     function onClicked(): void {
-                        Niri.closeFocusedWindow;
+                        Niri.closeFocusedWindow();
                     }
                 }
             }
@@ -199,15 +204,12 @@ ColumnLayout {
         implicitHeight: (icon.implicitHeight + Appearance.padding.small * 2)
         implicitWidth: (52 + Appearance.padding.small * 2)
 
-
         MaterialIcon {
             id: icon
-            color: Colours.palette.m3onSurfaceVariant
+            color: parent.onColor
             font.pointSize: Appearance.font.size.large
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            Layout.alignment: parent.center
-
 
             opacity: icon.text ? !stateLayer.containsMouse : true
             Behavior on opacity {
@@ -226,7 +228,6 @@ ColumnLayout {
             font.pointSize: Appearance.font.size.small
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            Layout.alignment: parent.center
             
             opacity: icon.text ? stateLayer.containsMouse : true
             Behavior on opacity {

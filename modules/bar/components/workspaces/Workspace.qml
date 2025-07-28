@@ -88,14 +88,45 @@ Item {
 
                     values: Niri.windows.filter(c => c.workspace_id === targetWorkspaceId)
                 }
-
-
+                
+                
                 MaterialIcon {
                     required property var modelData
 
                     grade: 0
                     text: Icons.getAppCategoryIcon(modelData.app_id, "terminal")
-                    color: Colours.palette.m3onSurfaceVariant
+                    color: Niri.focusedWindow.id === modelData.id ? Colours.palette.m3tertiary : Colours.palette.m3onSurfaceVariant 
+                    
+                    // Behavior on font.pointSize {
+                    // }
+
+                    MouseArea {
+                        anchors.fill: parent // Make the MouseArea cover the entire icon area
+                        acceptedButtons: Qt.LeftButton // | Qt.LeftButton Accept both left and right clicks
+                        cursorShape: Qt.PointingHandCursor
+
+                        onClicked: (mouse) => {
+                            if (mouse.button === Qt.LeftButton) {
+                                
+                                console.log("Right-clicked on window:", modelData.title, "ID:", modelData.id);
+                                if (modelData && Niri.focusWindow) {
+                                    Niri.focusWindow(modelData.id); 
+                                }
+                            }
+                            //  else if (mouse.button === Qt.LeftButton) {
+                            //     // Optional: Handle left-click, e.g., move to window's workspace if not focused
+                            //     console.log("Left-clicked on window:", modelData.title, "ID:", modelData.id);
+                            //     // Example: if not focused, switch to its workspace
+                            //     if (modelData && modelData.workspace_id !== Niri.focusedWorkspaceIndex + 1) {
+                            //         // You might need a Niri function to switch to a specific workspace ID,
+                            //         // or iterate Niri.allWorkspaces to find the index.
+                            //         // Assuming Niri has a way to switch by workspace_id or focus a window to switch.
+                            //         Niri.focusWindow(modelData); // Focusing the window usually switches to its workspace.
+                            //     }
+                            // }
+                        }
+                    }
+
                 }
             }
         }

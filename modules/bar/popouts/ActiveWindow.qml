@@ -17,7 +17,7 @@ Item {
 
     implicitWidth: Niri.focusedWindowTitle /*Niri.activeToplevel*/ ? child.implicitWidth : -Appearance.padding.large * 2
     implicitHeight: child.implicitHeight
-
+    
     Column {
         id: child
 
@@ -85,6 +85,10 @@ Item {
                     font.pointSize: Appearance.font.size.large
                 }
             }
+
+
+
+
         }
 
 
@@ -93,8 +97,10 @@ Item {
             // Layout.fillHeight: true
             // clip: true
 
-            Layout.preferredHeight: buttons.implicitHeight
-            height : 250
+            // Layout.preferredHeight: buttons.implicitHeight
+            // height : 250
+            
+            height : 200
 
             width: Config.bar.sizes.windowPreviewSize
             // color: Colours.palette.m3surfaceContainer
@@ -115,8 +121,6 @@ Item {
 
                 ScrollBar.vertical: StyledScrollBar {}
             }
-
-
         }
 
         // ClippingWrapperRectangle {
@@ -134,5 +138,102 @@ Item {
         //         constraintSize.height: Config.bar.sizes.windowPreviewSize
         //     }
         // }
+
+    RowLayout {
+            id: windowdecorations
+            anchors.right: parent.right
+
+            Loader {
+                active: Niri.focusedWindow.is_floating
+                asynchronous: true
+                Layout.fillWidth: active
+                visible: active
+                // Layout.leftMargin: active ? 0 : -parent.spacing * 2
+                // Layout.rightMargin: active ? 0 : -parent.spacing * 2
+
+                sourceComponent: DecorationButton {
+                    color: Colours.palette.m3secondaryContainer
+                    onColor: Colours.palette.m3onSecondaryContainer
+
+                    icon: "push_pin"
+                    function onClicked(): void {
+                        Niri.dispatch(`pin address:0x${root.client?.address}`);
+                    }
+                }
+            }
+
+            DecorationButton {
+
+                color: Niri.focusedWindow.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
+                onColor: Niri.focusedWindow.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
+
+                icon: Niri.focusedWindow.is_floating ? "grid_view" : "picture_in_picture"
+                function onClicked(): void {
+                    Niri.toggleWindowFloating();
+                }
+            }
+
+            DecorationButton {
+                color: Colours.palette.m3tertiary
+                onColor: Colours.palette.m3onTertiary
+
+                icon: "fullscreen"
+                function onClicked(): void {
+                    Niri.toggleMaximize();
+                }
+            }
+            DecorationButton {
+                color: Colours.palette.m3errorContainer
+                onColor: Colours.palette.m3onErrorContainer
+
+                icon: "close"
+                function onClicked(): void {
+                    Niri.closeFocusedWindow();
+                }
+            }
+        }
+
+
     }
+
+
+
+    component DecorationButton: StyledRect {
+        property color onColor: Colours.palette.m3onSurface
+        property alias disabled: stateLayer.disabled
+        property alias icon: icon.text
+
+        function onClicked(): void {}
+
+        radius: Appearance.rounding.normal
+        implicitHeight: 20
+        implicitWidth: 20
+
+        MaterialIcon {
+            id: icon
+            color: parent.onColor
+            font.pointSize: Appearance.font.size.normal
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+
+            opacity: icon.text ? stateLayer.containsMouse : true
+            Behavior on opacity {
+            PropertyAnimation { 
+                property: "opacity"; 
+                duration: Appearance.anim.durations.normal
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.anim.curves.standard
+                }
+            }
+        }
+
+    StateLayer {
+        id: stateLayer
+        color: parent.onColor
+        function onClicked(): void { parent.onClicked(); }
+    }
+
+
+    }
+
 }

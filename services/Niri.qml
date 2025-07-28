@@ -365,6 +365,12 @@ Singleton {
 
     }
 
+    function focusWindow(windowID) {
+        if (!niriAvailable) return false
+            Quickshell.execDetached(["niri", "msg", "action", `focus-window`, `--id`, windowID.toString() ])
+            return true
+    }
+
     function closeFocusedWindow() {
         if (!niriAvailable) return false
             Quickshell.execDetached(["niri", "msg", "action", `close-window`])

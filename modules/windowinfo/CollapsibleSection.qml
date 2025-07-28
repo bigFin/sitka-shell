@@ -12,7 +12,7 @@ ColumnLayout {
 
     property string title: qsTr("Dropdown Title")
     property bool expanded: false
-    property color backgroundColor: Colours.palette.m3surfaceContainerLow
+    property color backgroundColor: expanded ? Colours.palette.m3surfaceContainer : Colours.palette.m3surfaceContainerLow 
 
     // Margin properties: if backgroundMargins >= 0, use it for all sides; otherwise, use individual margins
     property real backgroundMarginLeft: 10
@@ -24,7 +24,7 @@ ColumnLayout {
     signal collapsed()
 
     // Header height constant
-    readonly property int headerHeight: 56 // Typical Material header height
+    readonly property int headerHeight: headerRow.implicitHeight + Appearance.padding.small * 2  // Typical Material header height
 
     Rectangle {
         id: backgroundRect
@@ -48,6 +48,14 @@ ColumnLayout {
                                (root.expanded ? contentWrapper.implicitHeight : 0) +
                                (anchors.topMargin + anchors.bottomMargin)
 
+        // Behavior on color {
+        //     NumberAnimation {
+        //         duration: Appearance.anim.durations.normal
+        //         easing.type: Easing.BezierSpline
+        //         easing.bezierCurve: Appearance.anim.curves.standard
+        //     }
+        // }
+
         Behavior on Layout.preferredHeight {
             NumberAnimation {
                 duration: Appearance.anim.durations.normal
@@ -64,7 +72,7 @@ ColumnLayout {
                 id: headerRow
                 Layout.topMargin: Appearance.padding.small
                 Layout.leftMargin: Appearance.padding.large
-                Layout.rightMargin: Appearance.padding.large
+                Layout.rightMargin: Appearance.padding.small
                 Layout.bottomMargin: Appearance.padding.small
 
                 spacing: Appearance.spacing.normal
@@ -77,14 +85,15 @@ ColumnLayout {
                 }
 
                 StyledRect {
-                    color: Colours.palette.m3primary
+                    // color: Colours.palette.m3primary
+                    color: root.expanded ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
+
                     radius: Appearance.rounding.small
 
                     implicitWidth: expandIcon.implicitWidth + Appearance.padding.small * 2
                     implicitHeight: expandIcon.implicitHeight + Appearance.padding.small
 
                     StateLayer {
-                        color: Colours.palette.m3onPrimary
                         function onClicked(): void { root.expanded = !root.expanded; }
                     }
 
@@ -93,7 +102,8 @@ ColumnLayout {
                         anchors.centerIn: parent
                         animate: true
                         text: root.expanded ? "expand_more" : "keyboard_arrow_right"
-                        color: Colours.palette.m3onPrimary
+                        color: root.expanded ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
+
                         font.pointSize: Appearance.font.size.large
                     }
                 }
@@ -103,20 +113,20 @@ ColumnLayout {
             WrapperItem {
                 id: contentWrapper
                 Layout.fillWidth: true
-                Layout.leftMargin: Appearance.padding.large * 2
-                Layout.rightMargin: Appearance.padding.large * 2
+                Layout.leftMargin: Appearance.padding.smaller
+                Layout.rightMargin: Appearance.padding.smaller
 
                 // Animate height for smooth expand/collapse
                 Layout.preferredHeight: root.expanded ? contentLoader.implicitHeight + topMargin + bottomMargin : 0
                 clip: true
 
-                topMargin: Appearance.spacing.smaller
+                // topMargin: Appearance.spacing.smaller
                 bottomMargin: Appearance.spacing.smaller
 
                 Loader {
                     id: contentLoader
                     Layout.fillWidth: true
-                    active: true
+                    active: root.expanded
                 }
 
                 Behavior on Layout.preferredHeight {

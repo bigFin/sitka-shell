@@ -24,13 +24,71 @@ Item {
         layer.smooth: true
 
         Repeater {
-            model: Config.bar.workspaces.shown
+            model: Config.bar.workspaces.shown > Niri.getWorkspaceCount() ? Niri.getWorkspaceCount() : Config.bar.workspaces.shown
 
             Workspace {
                 occupied: root.occupied
                 groupOffset: root.groupOffset
             }
         }
+    }
+
+
+    Loader {
+        id: pager
+        active: Config.bar.workspaces.shown < Niri.getWorkspaceCount()
+        y: layout.implicitHeight
+
+        sourceComponent: ColumnLayout {
+            id: pagerContent
+            // Start hidden and below, animate in when loaded
+            property bool entered: false
+
+            // Animate both y and opacity for a smooth effect
+            y: entered ? 0 : 40
+            opacity: entered ? 1 : 0
+
+            // Animate when 'entered' changes
+            Behavior on y {
+                NumberAnimation {
+                    duration: Appearance.anim.durations.normal
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.anim.curves.standard
+                }
+            }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: Appearance.anim.durations.normal
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.anim.curves.standard
+                }
+            }
+
+            // Trigger animation when loaded
+            Component.onCompleted: entered = true
+            
+            StyledRect {
+                id: rectt
+
+                color: Colours.palette.m3surfaceContainer
+                Layout.alignment : Qt.AlignHCenter
+
+                radius: Appearance.rounding.large
+                implicitHeight: 30
+                implicitWidth: root.width
+                    
+                StyledText {
+                    // Layout.alignment : Qt.AlignHCenter
+                    readonly property int pageNumber: Math.floor(groupOffset / Config.bar.workspaces.shown) + 1
+                    readonly property int totalPages: Math.ceil(Niri.getWorkspaceCount() / Config.bar.workspaces.shown)
+                    text: qsTr(`${pageNumber} / ${totalPages}`)
+                    // font.pointSize : 10
+
+                }
+            }
+        }
+        
+
     }
 
     Loader {
@@ -60,13 +118,13 @@ Item {
         }
     }
 
-    MouseArea {
-        anchors.fill: parent
+    // MouseArea {
+    //     anchors.fill: parent
 
-        onPressed: event => {
-            const ws = layout.childAt(event.x, event.y).index + root.groupOffset + 1;
-            if (Niri.focusedWorkspaceId + 1 !== ws)
-                Niri.switchToWorkspace(ws);
-        }
-    }
+    //     onPressed: event => {
+    //         const ws = layout.childAt(event.x, event.y).index + root.groupOffset + 1;
+    //         if (Niri.focusedWorkspaceId + 1 !== ws)
+    //             Niri.switchToWorkspace(ws);
+    //     }
+    // }
 }

@@ -46,20 +46,26 @@ Singleton {
 
         // Initialize all known workspaces to false
         for (const ws of root.allWorkspaces) { // Use allWorkspaces here
-            newWorkspaceHasWindows[ws.id] = false;
+            newWorkspaceHasWindows[ws.idx] = false;
         }
 
         // Iterate through all windows and mark their workspace as having windows
         for (const window of root.windows) {
             if (window.workspace_id !== undefined && window.workspace_id !== null) {
-                newWorkspaceHasWindows[window.workspace_id] = true;
+                newWorkspaceHasWindows[getWorkspaceIdxById(window.workspace_id)] = true;
             }
         }
         // Only update if there's an actual change to avoid unnecessary property change signals
         if (JSON.stringify(root.workspaceHasWindows) !== JSON.stringify(newWorkspaceHasWindows)) {
             root.workspaceHasWindows = newWorkspaceHasWindows;
-            // console.log("NiriService: updateWorkspaceHasWindows() called. Current state:", JSON.stringify(root.workspaceHasWindows));
+            console.log("NiriService: updateWorkspaceHasWindows() called. Current state:", JSON.stringify(root.workspaceHasWindows));
         }
+    }
+
+
+    function getWorkspaceIdxById(workspaceId) {
+        const ws = allWorkspaces.find(w => w.id === workspaceId)
+        return ws ? ws.idx : -1
     }
 
     // Call updateWorkspaceHasWindows when relevant properties change

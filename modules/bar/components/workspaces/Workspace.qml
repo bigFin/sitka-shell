@@ -24,6 +24,14 @@ Item {
     Layout.preferredWidth: childrenRect.width
     Layout.preferredHeight: size
 
+
+    // To make the windows repopulate.
+
+    onGroupOffsetChanged: {
+        windows.active = false;
+        windows.active = true;
+    }
+
     StyledText {
         id: indicator
 
@@ -44,7 +52,8 @@ Item {
     Loader {
         id: windows
 
-        active: Config.bar.workspaces.showWindows
+
+        active: Config.bar.workspaces.showWindows 
         asynchronous: true
 
         anchors.horizontalCenter: indicator.horizontalCenter
@@ -79,30 +88,27 @@ Item {
                     // WARNING DEFAULT:
                     // values: Niri.toplevels.filter(c => c.workspace_id === root.ws)
 
-                    // New Niri implementation:
                     readonly property int targetWorkspaceId: {
                         const niriWorkspace = Niri.allWorkspaces[root.index + root.groupOffset];
-                        // Return its ID
                         return niriWorkspace.id;
                     }
 
-                    values: Niri.windows.filter(c => c.workspace_id === targetWorkspaceId)
+                    values: Niri.windows
+                        .filter(c => c.workspace_id === targetWorkspaceId)
+                        // .slice(0, Config.bar.workspaces.shown) //max windows shown
                 }
-                
                 
                 MaterialIcon {
                     required property var modelData
+                    id: icon
 
                     grade: 0
                     text: Icons.getAppCategoryIcon(modelData.app_id, "terminal")
-                    color: Niri.focusedWindow.id === modelData.id ? Colours.palette.m3tertiary : Colours.palette.m3onSurfaceVariant 
+                    color: Niri.focusedWindow.id === modelData.id ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant 
                     
-                    // Behavior on font.pointSize {
-                    // }
-
                     MouseArea {
-                        anchors.fill: parent // Make the MouseArea cover the entire icon area
-                        acceptedButtons: Qt.LeftButton // | Qt.LeftButton Accept both left and right clicks
+                        anchors.fill: parent 
+                        acceptedButtons: Qt.LeftButton 
                         cursorShape: Qt.PointingHandCursor
 
                         onClicked: (mouse) => {
@@ -113,17 +119,6 @@ Item {
                                     Niri.focusWindow(modelData.id); 
                                 }
                             }
-                            //  else if (mouse.button === Qt.LeftButton) {
-                            //     // Optional: Handle left-click, e.g., move to window's workspace if not focused
-                            //     console.log("Left-clicked on window:", modelData.title, "ID:", modelData.id);
-                            //     // Example: if not focused, switch to its workspace
-                            //     if (modelData && modelData.workspace_id !== Niri.focusedWorkspaceIndex + 1) {
-                            //         // You might need a Niri function to switch to a specific workspace ID,
-                            //         // or iterate Niri.allWorkspaces to find the index.
-                            //         // Assuming Niri has a way to switch by workspace_id or focus a window to switch.
-                            //         Niri.focusWindow(modelData); // Focusing the window usually switches to its workspace.
-                            //     }
-                            // }
                         }
                     }
 

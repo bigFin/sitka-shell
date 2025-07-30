@@ -156,6 +156,7 @@ All configuration options are in `~/.config/caelestia/shell.json`.
     },
     "bar": {
         "dragThreshold": 20,
+        "externalAudioProgram": ["pavucontrol"],
         "persistent": true,
         "showOnHover": true,
         "status": {

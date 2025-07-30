@@ -15,9 +15,9 @@ Item {
 
     required property Item wrapper
 
-    implicitWidth: Niri.focusedWindowTitle /*Niri.activeToplevel*/ ? child.implicitWidth : -Appearance.padding.large * 2
+    implicitWidth: Niri.focusedWindowTitle /*Niri.activeToplevel*/  ? child.implicitWidth : -Appearance.padding.large * 2
     implicitHeight: child.implicitHeight
-    
+
     Column {
         id: child
 
@@ -85,12 +85,7 @@ Item {
                     font.pointSize: Appearance.font.size.large
                 }
             }
-
-
-
-
         }
-
 
         StyledRect {
             // Layout.fillWidth: true
@@ -99,8 +94,8 @@ Item {
 
             // Layout.preferredHeight: buttons.implicitHeight
             // height : 250
-            
-            height : 200
+
+            height: 200
 
             width: Config.bar.sizes.windowPreviewSize
             // color: Colours.palette.m3surfaceContainer
@@ -139,61 +134,58 @@ Item {
         //     }
         // }
 
-    RowLayout {
-            id: windowdecorations
-            anchors.right: parent.right
+        // RowLayout {
+        //     id: windowdecorations
+        //     anchors.right: parent.right
 
-            Loader {
-                active: Niri.focusedWindow.is_floating
-                asynchronous: true
-                Layout.fillWidth: active
-                visible: active
-                // Layout.leftMargin: active ? 0 : -parent.spacing * 2
-                // Layout.rightMargin: active ? 0 : -parent.spacing * 2
+        //     Loader {
+        //         active: Niri.focusedWindow.is_floating
+        //         asynchronous: true
+        //         Layout.fillWidth: active
+        //         visible: active
+        //         // Layout.leftMargin: active ? 0 : -parent.spacing * 2
+        //         // Layout.rightMargin: active ? 0 : -parent.spacing * 2
 
-                sourceComponent: WindowDecorations {
-                    color: Colours.palette.m3secondaryContainer
-                    onColor: Colours.palette.m3onSecondaryContainer
+        //         sourceComponent: WindowDecorations {
+        //             color: Colours.palette.m3secondaryContainer
+        //             onColor: Colours.palette.m3onSecondaryContainer
 
-                    icon: "push_pin"
-                    function onClicked(): void {
-                        Niri.dispatch(`pin address:0x${root.client?.address}`);
-                    }
-                }
-            }
+        //             icon: "push_pin"
+        //             function onClicked(): void {
+        //                 Niri.dispatch(`pin address:0x${root.client?.address}`);
+        //             }
+        //         }
+        //     }
 
-            WindowDecorations {
+        //     WindowDecorations {
 
-                color: Niri.focusedWindow.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
-                onColor: Niri.focusedWindow.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
+        //         color: Niri.focusedWindow.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
+        //         onColor: Niri.focusedWindow.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
 
-                icon: Niri.focusedWindow.is_floating ? "grid_view" : "picture_in_picture"
-                function onClicked(): void {
-                    Niri.toggleWindowFloating();
-                }
-            }
+        //         icon: Niri.focusedWindow.is_floating ? "grid_view" : "picture_in_picture"
+        //         function onClicked(): void {
+        //             Niri.toggleWindowFloating();
+        //         }
+        //     }
 
-            WindowDecorations {
-                color: Colours.palette.m3tertiary
-                onColor: Colours.palette.m3onTertiary
+        //     WindowDecorations {
+        //         color: Colours.palette.m3tertiary
+        //         onColor: Colours.palette.m3onTertiary
 
-                icon: "fullscreen"
-                function onClicked(): void {
-                    Niri.toggleMaximize();
-                }
-            }
-            WindowDecorations {
-                color: Colours.palette.m3errorContainer
-                onColor: Colours.palette.m3onErrorContainer
+        //         icon: "fullscreen"
+        //         function onClicked(): void {
+        //             Niri.toggleMaximize();
+        //         }
+        //     }
+        //     WindowDecorations {
+        //         color: Colours.palette.m3errorContainer
+        //         onColor: Colours.palette.m3onErrorContainer
 
-                icon: "close"
-                function onClicked(): void {
-                    Niri.closeFocusedWindow();
-                }
-            }
-        }
-
-
+        //         icon: "close"
+        //         function onClicked(): void {
+        //             Niri.closeFocusedWindow();
+        //         }
+        //     }
+        // }
     }
-
 }

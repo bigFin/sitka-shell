@@ -6,6 +6,10 @@ import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
 
+//later additions
+import qs.widgets
+import qs.services
+
 Item {
     id: root
 
@@ -14,7 +18,7 @@ Item {
     readonly property real nonAnimWidth: view.implicitWidth + viewWrapper.anchors.margins * 2
 
     implicitWidth: nonAnimWidth
-    implicitHeight: tabs.implicitHeight + tabs.anchors.topMargin + view.implicitHeight + viewWrapper.anchors.margins * 2
+    implicitHeight: tabs.implicitHeight + tabs.anchors.topMargin + column.implicitHeight + viewWrapper.anchors.margins * 2
 
     Tabs {
         id: tabs
@@ -41,73 +45,153 @@ Item {
         radius: Appearance.rounding.normal
         color: "transparent"
 
-        Flickable {
-            id: view
+        ColumnLayout {
+            id: column
+            // anchors.fill: parent
 
-            readonly property int currentIndex: root.state.currentTab
-            readonly property Item currentItem: row.children[currentIndex]
+            Flickable {
+                id: view
 
-            anchors.fill: parent
+                readonly property int currentIndex: root.state.currentTab
+                readonly property Item currentItem: row.children[currentIndex]
 
-            flickableDirection: Flickable.HorizontalFlick
+                // anchors.fill: parent
 
-            implicitWidth: currentItem.implicitWidth
-            implicitHeight: currentItem.implicitHeight
+                flickableDirection: Flickable.HorizontalFlick
 
-            contentX: currentItem.x
-            contentWidth: row.implicitWidth
-            contentHeight: row.implicitHeight
+                implicitWidth: currentItem.implicitWidth
+                implicitHeight: currentItem.implicitHeight
 
-            onContentXChanged: {
-                if (!moving)
-                    return;
+                contentX: currentItem.x
+                contentWidth: row.implicitWidth
+                contentHeight: row.implicitHeight
 
-                const x = contentX - currentItem.x;
-                if (x > currentItem.implicitWidth / 2)
-                    root.state.currentTab = Math.min(root.state.currentTab + 1, tabs.count - 1);
-                else if (x < -currentItem.implicitWidth / 2)
-                    root.state.currentTab = Math.max(root.state.currentTab - 1, 0);
-            }
+                onContentXChanged: {
+                    if (!moving)
+                        return;
 
-            onDragEnded: {
-                const x = contentX - currentItem.x;
-                if (x > currentItem.implicitWidth / 10)
-                    root.state.currentTab = Math.min(root.state.currentTab + 1, tabs.count - 1);
-                else if (x < -currentItem.implicitWidth / 10)
-                    root.state.currentTab = Math.max(root.state.currentTab - 1, 0);
-                else
-                    contentX = Qt.binding(() => currentItem.x);
-            }
+                    const x = contentX - currentItem.x;
+                    if (x > currentItem.implicitWidth / 2)
+                        root.state.currentTab = Math.min(root.state.currentTab + 1, tabs.count - 1);
+                    else if (x < -currentItem.implicitWidth / 2)
+                        root.state.currentTab = Math.max(root.state.currentTab - 1, 0);
+                }
 
-            RowLayout {
-                id: row
+                onDragEnded: {
+                    const x = contentX - currentItem.x;
+                    if (x > currentItem.implicitWidth / 10)
+                        root.state.currentTab = Math.min(root.state.currentTab + 1, tabs.count - 1);
+                    else if (x < -currentItem.implicitWidth / 10)
+                        root.state.currentTab = Math.max(root.state.currentTab - 1, 0);
+                    else
+                        contentX = Qt.binding(() => currentItem.x);
+                }
 
-                Pane {
-                    sourceComponent: Dash {
-                        visibilities: root.visibilities
-                        state: root.state
+                RowLayout {
+                    id: row
+
+                    Pane {
+                        sourceComponent: Dash {
+                            visibilities: root.visibilities
+                            state: root.state
+                        }
+                    }
+
+                    Pane {
+                        sourceComponent: Media {
+                            visibilities: root.visibilities
+                        }
+                    }
+
+                    Pane {
+                        sourceComponent: Performance {}
                     }
                 }
 
-                Pane {
-                    sourceComponent: Media {
-                        visibilities: root.visibilities
+
+                Behavior on contentX {
+                    NumberAnimation {
+                        duration: Appearance.anim.durations.normal
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Appearance.anim.curves.standard
                     }
                 }
+                
+            }
 
-                Pane {
-                    sourceComponent: Performance {}
+        RowLayout {
+            id: windowdecorations
+            Layout.alignment: Qt.AlignHCenter
+            Layout.topMargin: Appearance.spacing.small
+            Layout.leftMargin: Appearance.spacing.small
+            Layout.rightMargin: Appearance.spacing.small
+
+
+            ActiveWindow {
+                id: activeWindow
+                // Layout.alignment: Qt.AlignHCenter
+                // anchors.horizontalCenter: parent.horizontalCenter
+                // anchors.verticalCenter: parent.verticalCenter
+
+                anchors.margins: Appearance.spacing.large
+
+                monitor: Brightness.getMonitorForScreen(root.screen)
+            }
+            Item {
+                Layout.fillWidth : true
+            }
+            
+            Loader {
+                active: Niri.focusedWindow && Niri.focusedWindow.is_floating
+                asynchronous: true
+                visible: active
+
+                sourceComponent: WindowDecorations {
+                    basecolor: Colours.palette.m3secondaryContainer
+                    onColor: Colours.palette.m3onSecondaryContainer
+                    disabled: !Niri.focusedWindow
+
+                    icon: "push_pin"
+                    function onClicked(): void {
+                        Niri.dispatch(`pin address:0x${root.client?.address}`);
+                    }
                 }
             }
 
-            Behavior on contentX {
-                NumberAnimation {
-                    duration: Appearance.anim.durations.normal
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
+            WindowDecorations {
+                disabled: !Niri.focusedWindow
+                basecolor: Niri.focusedWindow.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
+                onColor: Niri.focusedWindow.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
+
+                icon: Niri.focusedWindow.is_floating ? "grid_view" : "picture_in_picture"
+                function onClicked(): void {
+                    Niri.toggleWindowFloating();
+                }
+            }
+
+            WindowDecorations {
+                disabled: !Niri.focusedWindow
+                basecolor: Colours.palette.m3tertiary
+                onColor: Colours.palette.m3onTertiary
+
+                icon: "fullscreen"
+                function onClicked(): void {
+                    Niri.toggleMaximize();
+                }
+            }
+            WindowDecorations {
+                disabled: !Niri.focusedWindow
+                basecolor: Colours.palette.m3errorContainer
+                onColor: Colours.palette.m3onErrorContainer
+                icon: "close"
+                function onClicked(): void {
+                    Niri.closeFocusedWindow();
                 }
             }
         }
+
+        }
+
     }
 
     Behavior on implicitWidth {
@@ -135,4 +219,5 @@ Item {
             return (vx >= x && vx <= x + implicitWidth) || (vex >= x && vex <= x + implicitWidth);
         })
     }
+
 }

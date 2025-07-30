@@ -6,6 +6,8 @@ import QtQuick
 import QtQuick.Layouts
 
 StyledRect {
+    property color basecolor: Colours.palette.m3secondaryContainer
+    color: disabled ? Colours.palette.m3surfaceContainerLow : basecolor
     property color onColor: Colours.palette.m3onSurface
     property alias disabled: stateLayer.disabled
     property alias icon: icon.text

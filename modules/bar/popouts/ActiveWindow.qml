@@ -151,7 +151,7 @@ Item {
                 // Layout.leftMargin: active ? 0 : -parent.spacing * 2
                 // Layout.rightMargin: active ? 0 : -parent.spacing * 2
 
-                sourceComponent: DecorationButton {
+                sourceComponent: WindowDecorations {
                     color: Colours.palette.m3secondaryContainer
                     onColor: Colours.palette.m3onSecondaryContainer
 
@@ -162,7 +162,7 @@ Item {
                 }
             }
 
-            DecorationButton {
+            WindowDecorations {
 
                 color: Niri.focusedWindow.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
                 onColor: Niri.focusedWindow.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
@@ -173,7 +173,7 @@ Item {
                 }
             }
 
-            DecorationButton {
+            WindowDecorations {
                 color: Colours.palette.m3tertiary
                 onColor: Colours.palette.m3onTertiary
 
@@ -182,7 +182,7 @@ Item {
                     Niri.toggleMaximize();
                 }
             }
-            DecorationButton {
+            WindowDecorations {
                 color: Colours.palette.m3errorContainer
                 onColor: Colours.palette.m3onErrorContainer
 
@@ -192,46 +192,6 @@ Item {
                 }
             }
         }
-
-
-    }
-
-
-
-    component DecorationButton: StyledRect {
-        property color onColor: Colours.palette.m3onSurface
-        property alias disabled: stateLayer.disabled
-        property alias icon: icon.text
-
-        function onClicked(): void {}
-
-        radius: Appearance.rounding.normal
-        implicitHeight: 20
-        implicitWidth: 20
-
-        MaterialIcon {
-            id: icon
-            color: parent.onColor
-            font.pointSize: Appearance.font.size.normal
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-
-            opacity: icon.text ? stateLayer.containsMouse : true
-            Behavior on opacity {
-            PropertyAnimation { 
-                property: "opacity"; 
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
-                }
-            }
-        }
-
-    StateLayer {
-        id: stateLayer
-        color: parent.onColor
-        function onClicked(): void { parent.onClicked(); }
-    }
 
 
     }

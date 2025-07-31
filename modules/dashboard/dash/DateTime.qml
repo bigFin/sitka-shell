@@ -20,6 +20,7 @@ Item {
         spacing: 0
 
         StyledText {
+            Layout.bottomMargin: -(font.pointSize * 0.4)
             Layout.alignment: Qt.AlignHCenter
             text: root.timeComponents[0]
             color: Colours.palette.m3secondary
@@ -28,7 +29,7 @@ Item {
         }
 
         StyledText {
-            Layout.topMargin: -(font.pointSize * 0.2)
+            Layout.topMargin: -(font.pointSize * 0.1)
             Layout.alignment: Qt.AlignHCenter
             text: "•••"
             color: Colours.palette.m3primary
@@ -36,6 +37,7 @@ Item {
         }
 
         StyledText {
+            Layout.topMargin: -(font.pointSize * 0.4)
             Layout.alignment: Qt.AlignHCenter
             text: root.timeComponents[1]
             color: Colours.palette.m3secondary
@@ -45,7 +47,6 @@ Item {
 
         StyledText {
             visible: Config.services.useTwelveHourClock
-            Layout.topMargin: Appearance.spacing.small
             Layout.alignment: Qt.AlignHCenter
 
             text: root.timeComponents[2]

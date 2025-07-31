@@ -380,6 +380,8 @@ Item {
                 color: Colours.palette.m3surfaceContainer
 
                 StateLayer {
+                    disabled: Players.list.length <= 1
+
                     function onClicked(): void {
                         playerSelector.expanded = !playerSelector.expanded;
                     }
@@ -453,7 +455,7 @@ Item {
                                 implicitHeight: playerInner.implicitHeight + Appearance.padding.small * 2
 
                                 StateLayer {
-                                    enabled: playerSelector.expanded
+                                    disabled: !playerSelector.expanded
 
                                     function onClicked(): void {
                                         playerSelector.expanded = false;

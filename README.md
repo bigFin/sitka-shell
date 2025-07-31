@@ -221,7 +221,8 @@ All configuration options are in `~/.config/caelestia/shell.json`.
     },
     "services": {
       "weatherLocation": "10,10",
-      "useFahrenheit": false
+      "useFahrenheit": false,
+      "useTwelveHourClock": false
     },
     "session": {
         "dragThreshold": 30,

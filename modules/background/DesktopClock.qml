@@ -11,7 +11,7 @@ Item {
         id: timeText
 
         anchors.centerIn: parent
-        text: Time.format("hh:mm:ss")
+        text: Time.format(Config.services.useTwelveHourClock ? "hh:mm:ss A" : "hh:mm:ss")
         font.pointSize: Appearance.font.size.extraLarge
         font.bold: true
     }

@@ -367,7 +367,7 @@ Item {
                 }
             }
 
-            MouseArea {
+            StyledRect {
                 id: playerSelector
 
                 property bool expanded
@@ -376,154 +376,124 @@ Item {
 
                 implicitWidth: slider.implicitWidth / 2
                 implicitHeight: currentPlayer.implicitHeight + Appearance.padding.small * 2
+                radius: Appearance.rounding.small
+                color: Colours.palette.m3surfaceContainer
 
-                cursorShape: Qt.PointingHandCursor
-                onClicked: expanded = !expanded
+                StateLayer {
+                    function onClicked(): void {
+                        playerSelector.expanded = !playerSelector.expanded;
+                    }
+                }
+
+                RowLayout {
+                    id: currentPlayer
+
+                    anchors.centerIn: parent
+                    spacing: Appearance.spacing.small
+
+                    IconImage {
+                        Layout.fillHeight: true
+                        implicitWidth: height
+                        source: Players.active ? Icons.getAppIcon(Players.active.identity, "image-missing") : "image-missing"
+                    }
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        text: Players.active?.identity ?? "No players"
+                        color: Colours.palette.m3onSecondaryContainer
+                        elide: Text.ElideRight
+                    }
+                }
 
                 RectangularShadow {
                     anchors.fill: playerSelectorBg
-
-                    opacity: playerSelector.expanded ? 1 : 0
                     radius: playerSelectorBg.radius
-                    color: Colours.palette.m3shadow
+                    color: Qt.alpha(Colours.palette.m3shadow, 0.7)
+                    opacity: playerSelector.expanded ? 1 : 0
                     blur: 5
                     spread: 0
 
                     Behavior on opacity {
-                        Anim {}
+                        Anim {
+                            duration: Appearance.anim.durations.expressiveDefaultSpatial
+                        }
                     }
                 }
 
-                StyledRect {
+                StyledClippingRect {
                     id: playerSelectorBg
 
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
-
-                    implicitHeight: playersWrapper.implicitHeight + Appearance.padding.small * 2
+                    implicitHeight: playerSelector.expanded ? playerList.implicitHeight : playerSelector.implicitHeight
 
                     color: Colours.palette.m3secondaryContainer
-                    radius: Appearance.rounding.normal
+                    radius: Appearance.rounding.small
+                    opacity: playerSelector.expanded ? 1 : 0
 
-                    Item {
-                        id: playersWrapper
+                    ColumnLayout {
+                        id: playerList
 
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.bottom: parent.bottom
-                        anchors.margins: Appearance.padding.small
 
-                        clip: true
-                        implicitHeight: playerSelector.expanded && Players.list.length > 1 ? players.implicitHeight : currentPlayer.implicitHeight
+                        spacing: 0
 
-                        Column {
-                            id: players
+                        Repeater {
+                            model: [...Players.list].sort((a, b) => (a === Players.active) - (b === Players.active))
 
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
+                            Item {
+                                id: player
 
-                            spacing: Appearance.spacing.small
+                                required property MprisPlayer modelData
 
-                            Repeater {
-                                model: Players.list.filter(p => p !== Players.active)
+                                Layout.fillWidth: true
+                                implicitHeight: playerInner.implicitHeight + Appearance.padding.small * 2
 
-                                Row {
-                                    id: player
+                                StateLayer {
+                                    enabled: playerSelector.expanded
 
-                                    required property MprisPlayer modelData
+                                    function onClicked(): void {
+                                        playerSelector.expanded = false;
+                                        Players.manualActive = player.modelData;
+                                    }
+                                }
 
-                                    anchors.horizontalCenter: parent.horizontalCenter
+                                RowLayout {
+                                    id: playerInner
+
+                                    anchors.centerIn: parent
                                     spacing: Appearance.spacing.small
 
                                     IconImage {
-                                        id: playerIcon
-
+                                        Layout.fillHeight: true
+                                        implicitWidth: height
                                         source: Icons.getAppIcon(player.modelData.identity, "image-missing")
-                                        implicitSize: Math.round(identity.implicitHeight * 0.9)
                                     }
 
                                     StyledText {
-                                        id: identity
-
-                                        text: identityMetrics.elidedText
+                                        Layout.fillWidth: true
+                                        text: player.modelData.identity
                                         color: Colours.palette.m3onSecondaryContainer
-
-                                        TextMetrics {
-                                            id: identityMetrics
-
-                                            text: player.modelData.identity
-                                            font.family: identity.font.family
-                                            font.pointSize: identity.font.pointSize
-                                            elide: Text.ElideRight
-                                            elideWidth: playerSelector.implicitWidth - playerIcon.implicitWidth - player.spacing - Appearance.padding.smaller * 2
-                                        }
-
-                                        MouseArea {
-
-                                            anchors.fill: parent
-
-                                            cursorShape: Qt.PointingHandCursor
-                                            onClicked: {
-                                                Players.manualActive = player.modelData;
-                                                playerSelector.expanded = false;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Item {
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                implicitHeight: 1
-
-                                StyledRect {
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.margins: -Appearance.padding.normal
-                                    color: Colours.palette.m3secondary
-                                    implicitHeight: 1
-                                }
-                            }
-
-                            Row {
-                                id: currentPlayer
-
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                spacing: Appearance.spacing.small
-
-                                IconImage {
-                                    id: currentIcon
-
-                                    source: Icons.getAppIcon(Players.active?.identity ?? "", "multimedia-player")
-                                    implicitSize: Math.round(currentIdentity.implicitHeight * 0.9)
-                                }
-
-                                StyledText {
-                                    id: currentIdentity
-
-                                    animate: true
-                                    text: currentIdentityMetrics.elidedText
-                                    color: Colours.palette.m3onSecondaryContainer
-
-                                    TextMetrics {
-                                        id: currentIdentityMetrics
-
-                                        text: Players.active?.identity ?? "No players"
-                                        font.family: currentIdentity.font.family
-                                        font.pointSize: currentIdentity.font.pointSize
                                         elide: Text.ElideRight
-                                        elideWidth: playerSelector.implicitWidth - currentIcon.implicitWidth - currentPlayer.spacing - Appearance.padding.smaller * 2
                                     }
                                 }
                             }
                         }
+                    }
 
-                        Behavior on implicitHeight {
-                            Anim {
-                                easing.bezierCurve: Appearance.anim.curves.emphasized
-                            }
+                    Behavior on opacity {
+                        Anim {
+                            duration: Appearance.anim.durations.expressiveDefaultSpatial
+                        }
+                    }
+
+                    Behavior on implicitHeight {
+                        Anim {
+                            duration: Appearance.anim.durations.expressiveDefaultSpatial
+                            easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
                         }
                     }
                 }

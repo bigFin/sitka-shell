@@ -40,10 +40,8 @@ Item {
     implicitHeight: Math.max(cover.implicitHeight + Config.dashboard.sizes.mediaVisualiserSize * 2, details.implicitHeight, bongocat.implicitHeight) + Appearance.padding.large * 2
 
     Behavior on playerProgress {
-        NumberAnimation {
+        Anim {
             duration: Appearance.anim.durations.large
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.standard
         }
     }
 
@@ -191,7 +189,7 @@ Item {
 
             spacing: Appearance.spacing.small
 
-            Control {
+            PlayerControl {
                 icon: "skip_previous"
                 canUse: Players.active?.canGoPrevious ?? false
 
@@ -200,17 +198,59 @@ Item {
                 }
             }
 
-            Control {
-                icon: Players.active?.isPlaying ? "pause" : "play_arrow"
-                canUse: Players.active?.canTogglePlaying ?? false
-                primary: true
+            StyledRect {
+                id: playBtn
 
+                property int fontSize: Appearance.font.size.extraLarge
+                property int padding
+                property bool fill: true
+                property bool primary
                 function onClicked(): void {
-                    Players.active?.togglePlaying();
+                }
+
+                implicitWidth: Math.max(playIcon.implicitWidth, playIcon.implicitHeight) + padding * 2
+                implicitHeight: implicitWidth
+
+                radius: Players.active?.isPlaying ? Appearance.rounding.small : implicitHeight / 2
+                color: {
+                    if (!Players.active?.canTogglePlaying)
+                        return Qt.alpha(Colours.palette.m3onSurface, 0.1);
+                    return Players.active?.isPlaying ? Colours.palette.m3primary : Colours.palette.m3primaryContainer;
+                }
+
+                StateLayer {
+                    disabled: !Players.active?.canTogglePlaying
+                    color: Players.active?.isPlaying ? Colours.palette.m3onPrimary : Colours.palette.m3onPrimaryContainer
+
+                    function onClicked(): void {
+                        Players.active?.togglePlaying();
+                    }
+                }
+
+                MaterialIcon {
+                    id: playIcon
+
+                    anchors.centerIn: parent
+                    anchors.horizontalCenterOffset: -font.pointSize * 0.02
+                    anchors.verticalCenterOffset: font.pointSize * 0.02
+
+                    animate: true
+                    fill: 1
+                    text: Players.active?.isPlaying ? "pause" : "play_arrow"
+                    color: {
+                        if (!Players.active?.canTogglePlaying)
+                            return Qt.alpha(Colours.palette.m3onSurface, 0.38);
+                        return Players.active?.isPlaying ? Colours.palette.m3onPrimary : Colours.palette.m3onPrimaryContainer;
+                    }
+                    font.pointSize: Appearance.font.size.extraLarge
+                }
+
+                Behavior on radius {
+                    Anim {}
                 }
             }
 
-            Control {
+            PlayerControl {
                 icon: "skip_next"
                 canUse: Players.active?.canGoNext ?? false
 
@@ -313,7 +353,7 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             spacing: Appearance.spacing.small
 
-            Control {
+            PlayerControl {
                 icon: "flip_to_front"
                 canUse: Players.active?.canRaise ?? false
                 fontSize: Appearance.font.size.larger
@@ -350,11 +390,7 @@ Item {
                     spread: 0
 
                     Behavior on opacity {
-                        NumberAnimation {
-                            duration: Appearance.anim.durations.normal
-                            easing.type: Easing.BezierSpline
-                            easing.bezierCurve: Appearance.anim.curves.standard
-                        }
+                        Anim {}
                     }
                 }
 
@@ -485,9 +521,7 @@ Item {
                         }
 
                         Behavior on implicitHeight {
-                            NumberAnimation {
-                                duration: Appearance.anim.durations.normal
-                                easing.type: Easing.BezierSpline
+                            Anim {
                                 easing.bezierCurve: Appearance.anim.curves.emphasized
                             }
                         }
@@ -495,7 +529,7 @@ Item {
                 }
             }
 
-            Control {
+            PlayerControl {
                 icon: "delete"
                 canUse: Players.active?.canQuit ?? false
                 fontSize: Appearance.font.size.larger
@@ -555,7 +589,7 @@ Item {
         }
     }
 
-    component Control: StyledRect {
+    component PlayerControl: StyledRect {
         id: control
 
         required property string icon
@@ -563,20 +597,16 @@ Item {
         property int fontSize: Appearance.font.size.extraLarge
         property int padding
         property bool fill: true
-        property bool primary
         function onClicked(): void {
         }
 
         implicitWidth: Math.max(icon.implicitWidth, icon.implicitHeight) + padding * 2
         implicitHeight: implicitWidth
-
         radius: Appearance.rounding.full
-        color: primary && canUse ? Colours.palette.m3primary : "transparent"
 
         StateLayer {
             disabled: !control.canUse
-            radius: parent.radius
-            color: control.primary ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+            color: Colours.palette.m3onSurface
 
             function onClicked(): void {
                 control.onClicked();
@@ -593,8 +623,14 @@ Item {
             animate: true
             fill: control.fill ? 1 : 0
             text: control.icon
-            color: control.canUse ? control.primary ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface : Colours.palette.m3outline
+            color: control.canUse ? Colours.palette.m3onSurface : Colours.palette.m3outline
             font.pointSize: control.fontSize
         }
+    }
+
+    component Anim: NumberAnimation {
+        duration: Appearance.anim.durations.normal
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: Appearance.anim.curves.standard
     }
 }

@@ -339,10 +339,10 @@ Singleton {
         if (focusedWindowIndex >= 0 && focusedWindowIndex < windows.length) {
             var focusedWin = windows[focusedWindowIndex]
             focusedWindowTitle = focusedWin.title || "(Unnamed window)"
-            focusedWindowClass = focusedWin.app_id || "(None)"
+            focusedWindowClass = focusedWin.app_id || ""
         } else {
-            focusedWindowTitle = "Desktop"
-            focusedWindowClass = "(None)"
+            focusedWindowTitle = ""
+            focusedWindowClass = "Desktop"
 
         }
     }

@@ -3,11 +3,15 @@ pragma ComponentBehavior: Bound
 import qs.widgets.filedialog
 import qs.config
 import qs.utils
+import qs.services
 import Quickshell
 import QtQuick
 
 Item {
     id: root
+
+    property bool expanded : false
+    property bool isvisible : false
 
     required property PersistentProperties visibilities
     readonly property PersistentProperties state: PersistentProperties {
@@ -24,16 +28,67 @@ Item {
         }
     }
 
+    // Timer to control temporary visibility
+    Timer {
+        id: flashTimer
+        interval: 500 // 0.5 second
+        running: false
+        repeat: false
+        onTriggered: {
+            root.isvisible = false
+        }
+    }
+
+    Connections {
+        target: Niri
+        onFocusedWindowIdChanged: {
+            // Show dashboard for 1 second
+            if ((!root.visibilities.dashboard && !root.expanded) && Niri.focusedWindowId) {
+                root.isvisible = true
+                flashTimer.restart()
+            }
+        }
+    }
+
     visible: height > 0
     implicitHeight: 0
     implicitWidth: content.implicitWidth
 
-    states: State {
-        name: "visible"
-        when: root.visibilities.dashboard && Config.dashboard.enabled
 
-        PropertyChanges {
-            root.implicitHeight: content.implicitHeight
+    states: [
+        State {
+            name: "visible"
+            when: root.isvisible || ((root.visibilities.dashboard && Config.dashboard.enabled) && !root.expanded)
+            PropertyChanges {
+                target: root
+                implicitHeight: 45
+            }
+        },
+        State {
+            name: "expanded"
+            when: (root.visibilities.dashboard && Config.dashboard.enabled) && root.expanded
+            PropertyChanges {
+                target: root
+                implicitHeight: content.implicitHeight
+            }
+        }
+    ]
+    
+
+    // --- MouseArea for hover/click detection ---
+    MouseArea {
+        id: hoverArea
+        anchors.fill: parent
+        // hoverEnabled: true
+        preventStealing: true
+        // z: 1000
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+            if (!root.expanded) {
+                root.expanded = true
+            } else if (root.expanded) {
+                root.expanded = false
+            }
         }
     }
 
@@ -58,6 +113,18 @@ Item {
                 target: root
                 property: "implicitHeight"
                 duration: Appearance.anim.durations.normal
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
+        },
+        Transition {
+            from: "*"
+            to: "*"
+
+            NumberAnimation {
+                target: root
+                property: "implicitHeight"
+                duration: Appearance.anim.durations.expressiveDefaultSpatial
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Appearance.anim.curves.emphasized
             }

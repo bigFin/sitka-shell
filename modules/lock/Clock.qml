@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import qs.widgets
 import qs.services
 import qs.config
@@ -42,15 +44,20 @@ ColumnLayout {
             font.weight: 800
         }
 
-        StyledText {
-            visible: Config.services.useTwelveHourClock
+        Loader {
             Layout.leftMargin: Appearance.spacing.normal
             Layout.alignment: Qt.AlignVCenter
 
-            text: root.timeComponents[2]
-            color: Colours.palette.m3primary
-            font.pointSize: Appearance.font.size.extraLarge * 3
-            font.weight: 700
+            asynchronous: true
+            active: Config.services.useTwelveHourClock
+            visible: active
+
+            sourceComponent: StyledText {
+                text: root.timeComponents[2] ?? ""
+                color: Colours.palette.m3primary
+                font.pointSize: Appearance.font.size.extraLarge * 3
+                font.weight: 700
+            }
         }
     }
 

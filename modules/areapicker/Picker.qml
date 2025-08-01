@@ -47,7 +47,7 @@ MouseArea {
 
     function checkClientRects(x: real, y: real): void {
         for (const client of clients) {
-            console.log("client: ", client);
+            // console.log("client: ", client);
 
             const {
                 at: [cx, cy],
@@ -154,7 +154,7 @@ MouseArea {
         target: Niri
 
         function onActiveWsIdChanged(): void {
-            console.log("checked!");
+            // console.log("checked!");
             root.checkClientRects(root.mouseX, root.mouseY);
 
         }

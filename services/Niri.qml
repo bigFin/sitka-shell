@@ -461,6 +461,7 @@ Singleton {
             console.warn("NiriService: No workspace", number, "found on output", targetOutput)
             return false
     }
+    
 
     function getWorkspaceByIndex(index) {
         if (index >= 0 && index < allWorkspaces.length) {
@@ -482,18 +483,5 @@ Singleton {
             return allWorkspaces[focusedWorkspaceIndex].idx + 1
         }
         return 1
-    }
-
-    function isWorkspaceActive(workspaceNumber) {
-        return workspaceNumber === getCurrentWorkspaceNumber()
-    }
-
-    // For compatibility with existing components
-    function getCurrentWorkspace() {
-        return getCurrentWorkspaceNumber()
-    }
-
-    function getWorkspaceList() {
-        return getCurrentOutputWorkspaceNumbers()
     }
 }

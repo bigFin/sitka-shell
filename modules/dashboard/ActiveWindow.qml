@@ -9,9 +9,6 @@ import QtQuick
 Item {
     id: root
 
-
-
-    required property Brightness.Monitor monitor
     property color classColour: Colours.palette.m3primary
     property color titleColour: Colours.palette.m3secondary // Pick a suitable palette color
     readonly property Item child: child

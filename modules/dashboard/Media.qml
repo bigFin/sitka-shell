@@ -374,10 +374,11 @@ Item {
 
                 Layout.alignment: Qt.AlignVCenter
 
-                implicitWidth: slider.implicitWidth / 2
-                implicitHeight: currentPlayer.implicitHeight + Appearance.padding.small * 2
-                radius: Appearance.rounding.small
+                implicitWidth: slider.implicitWidth * 0.6
+                implicitHeight: currentPlayer.implicitHeight + Appearance.padding.smaller * 2
+                radius: Appearance.rounding.normal
                 color: Colours.palette.m3surfaceContainer
+                z: 1
 
                 StateLayer {
                     disabled: Players.list.length <= 1
@@ -393,14 +394,13 @@ Item {
                     anchors.centerIn: parent
                     spacing: Appearance.spacing.small
 
-                    IconImage {
-                        Layout.fillHeight: true
-                        implicitWidth: height
-                        source: Players.active ? Icons.getAppIcon(Players.active.identity, "image-missing") : "image-missing"
+                    PlayerIcon {
+                        identity: Players.active?.identity ?? ""
                     }
 
                     StyledText {
                         Layout.fillWidth: true
+                        Layout.maximumWidth: playerSelector.implicitWidth - implicitHeight - parent.spacing - Appearance.padding.normal * 2
                         text: Players.active?.identity ?? "No players"
                         color: Colours.palette.m3onSecondaryContainer
                         elide: Text.ElideRight
@@ -425,20 +425,19 @@ Item {
                 StyledClippingRect {
                     id: playerSelectorBg
 
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
+                    implicitWidth: playerSelector.expanded ? playerList.implicitWidth : playerSelector.implicitWidth
                     implicitHeight: playerSelector.expanded ? playerList.implicitHeight : playerSelector.implicitHeight
 
                     color: Colours.palette.m3secondaryContainer
-                    radius: Appearance.rounding.small
+                    radius: Appearance.rounding.normal
                     opacity: playerSelector.expanded ? 1 : 0
 
                     ColumnLayout {
                         id: playerList
 
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                        anchors.horizontalCenter: parent.horizontalCenter
                         anchors.bottom: parent.bottom
 
                         spacing: 0
@@ -452,7 +451,8 @@ Item {
                                 required property MprisPlayer modelData
 
                                 Layout.fillWidth: true
-                                implicitHeight: playerInner.implicitHeight + Appearance.padding.small * 2
+                                implicitWidth: playerInner.implicitWidth + Appearance.padding.normal * 2
+                                implicitHeight: playerInner.implicitHeight + Appearance.padding.smaller * 2
 
                                 StateLayer {
                                     disabled: !playerSelector.expanded
@@ -469,17 +469,13 @@ Item {
                                     anchors.centerIn: parent
                                     spacing: Appearance.spacing.small
 
-                                    IconImage {
-                                        Layout.fillHeight: true
-                                        implicitWidth: height
-                                        source: Icons.getAppIcon(player.modelData.identity, "image-missing")
+                                    PlayerIcon {
+                                        identity: player.modelData.identity
                                     }
 
                                     StyledText {
-                                        Layout.fillWidth: true
                                         text: player.modelData.identity
                                         color: Colours.palette.m3onSecondaryContainer
-                                        elide: Text.ElideRight
                                     }
                                 }
                             }
@@ -489,6 +485,13 @@ Item {
                     Behavior on opacity {
                         Anim {
                             duration: Appearance.anim.durations.expressiveDefaultSpatial
+                        }
+                    }
+
+                    Behavior on implicitWidth {
+                        Anim {
+                            duration: Appearance.anim.durations.expressiveDefaultSpatial
+                            easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
                         }
                     }
 
@@ -537,6 +540,34 @@ Item {
             source: Paths.expandTilde(Config.paths.mediaGif)
             asynchronous: true
             fillMode: AnimatedImage.PreserveAspectFit
+        }
+    }
+
+    component PlayerIcon: Loader {
+        id: loader
+
+        required property string identity
+        readonly property string icon: Icons.getAppIcon(identity)
+
+        Layout.fillHeight: true
+        asynchronous: true
+        sourceComponent: icon === "image://icon/" ? fallbackIcon : playerImage
+
+        Component {
+            id: playerImage
+
+            IconImage {
+                implicitWidth: height
+                source: loader.icon
+            }
+        }
+
+        Component {
+            id: fallbackIcon
+
+            MaterialIcon {
+                text: loader.identity ? "animated_images" : "music_off"
+            }
         }
     }
 

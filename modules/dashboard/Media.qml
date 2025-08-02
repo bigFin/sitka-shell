@@ -395,7 +395,7 @@ Item {
                     spacing: Appearance.spacing.small
 
                     PlayerIcon {
-                        identity: Players.active?.identity ?? ""
+                        player: Players.active
                     }
 
                     StyledText {
@@ -451,6 +451,7 @@ Item {
                                 required property MprisPlayer modelData
 
                                 Layout.fillWidth: true
+                                Layout.minimumWidth: playerSelector.implicitWidth
                                 implicitWidth: playerInner.implicitWidth + Appearance.padding.normal * 2
                                 implicitHeight: playerInner.implicitHeight + Appearance.padding.smaller * 2
 
@@ -470,7 +471,7 @@ Item {
                                     spacing: Appearance.spacing.small
 
                                     PlayerIcon {
-                                        identity: player.modelData.identity
+                                        player: player.modelData
                                     }
 
                                     StyledText {
@@ -546,12 +547,12 @@ Item {
     component PlayerIcon: Loader {
         id: loader
 
-        required property string identity
-        readonly property string icon: Icons.getAppIcon(identity)
+        required property MprisPlayer player
+        readonly property string icon: Icons.getAppIcon(player?.identity)
 
         Layout.fillHeight: true
         asynchronous: true
-        sourceComponent: icon === "image://icon/" ? fallbackIcon : playerImage
+        sourceComponent: !player || icon === "image://icon/" ? fallbackIcon : playerImage
 
         Component {
             id: playerImage
@@ -566,7 +567,7 @@ Item {
             id: fallbackIcon
 
             MaterialIcon {
-                text: loader.identity ? "animated_images" : "music_off"
+                text: loader.player ? "animated_images" : "music_off"
             }
         }
     }

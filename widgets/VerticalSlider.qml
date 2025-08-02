@@ -11,8 +11,6 @@ Slider {
     required property string icon
     property real oldValue
 
-    wheelEnabled: true
-
     orientation: Qt.Vertical
 
     background: StyledRect {
@@ -59,7 +57,7 @@ Slider {
             MouseArea {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-                onPressed: event => event.accepted = false
+                acceptedButtons: Qt.NoButton
             }
 
             MaterialIcon {

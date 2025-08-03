@@ -304,10 +304,6 @@ Item {
                 font.pointSize: Appearance.font.size.large
                 fill: 1
             }
-
-            Behavior on radius {
-                Anim {}
-            }
         }
     }
 

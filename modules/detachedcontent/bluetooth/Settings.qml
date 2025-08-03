@@ -7,7 +7,6 @@ import qs.config
 import Quickshell.Bluetooth
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Effects
 
 ColumnLayout {
     id: root
@@ -154,14 +153,12 @@ ColumnLayout {
                         }
                     }
 
-                    RectangularShadow {
+                    Elevation {
                         anchors.fill: adapterListBg
                         radius: adapterListBg.radius
-                        color: Qt.alpha(Colours.palette.m3shadow, 0.7)
                         opacity: adapterPickerButton.expanded ? 1 : 0
                         scale: adapterPickerButton.expanded ? 1 : 0.7
-                        blur: 5
-                        spread: 0
+                        level: 2
 
                         Behavior on opacity {
                             Anim {}

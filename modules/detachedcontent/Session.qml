@@ -16,5 +16,6 @@ QtObject {
         property BluetoothDevice active
         property BluetoothAdapter currentAdapter: Bluetooth.defaultAdapter
         property bool editingAdapterName
+        property bool fabMenuOpen
     }
 }

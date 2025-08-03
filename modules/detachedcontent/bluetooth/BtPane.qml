@@ -54,11 +54,17 @@ RowLayout {
         Component {
             id: settings
 
-            Settings {
-                anchors.margins: Appearance.padding.normal
-                anchors.leftMargin: Appearance.padding.normal / 2
+            StyledFlickable {
+                flickableDirection: Flickable.VerticalFlick
+                contentHeight: settingsInner.height
 
-                session: root.session
+                Settings {
+                    id: settingsInner
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    session: root.session
+                }
             }
         }
 

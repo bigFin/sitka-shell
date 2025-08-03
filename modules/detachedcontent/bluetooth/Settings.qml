@@ -448,8 +448,67 @@ ColumnLayout {
         }
     }
 
-    Item {
-        Layout.fillHeight: true
+    StyledText {
+        Layout.topMargin: Appearance.spacing.large
+        text: qsTr("Adapter information")
+        font.pointSize: Appearance.font.size.larger
+        font.weight: 500
+    }
+
+    StyledText {
+        text: qsTr("Information about the default adapter")
+        color: Colours.palette.m3outline
+    }
+
+    StyledRect {
+        Layout.fillWidth: true
+        implicitHeight: adapterInfo.implicitHeight + Appearance.padding.large * 2
+
+        radius: Appearance.rounding.normal
+        color: Colours.palette.m3surfaceContainer
+
+        ColumnLayout {
+            id: adapterInfo
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.margins: Appearance.padding.large
+
+            spacing: Appearance.spacing.small / 2
+
+            StyledText {
+                text: qsTr("Adapter state")
+            }
+
+            StyledText {
+                text: Bluetooth.defaultAdapter ? BluetoothAdapterState.toString(Bluetooth.defaultAdapter.state) : qsTr("Unknown")
+                color: Colours.palette.m3outline
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                Layout.topMargin: Appearance.spacing.normal
+                text: qsTr("Dbus path")
+            }
+
+            StyledText {
+                text: Bluetooth.defaultAdapter?.dbusPath ?? ""
+                color: Colours.palette.m3outline
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                Layout.topMargin: Appearance.spacing.normal
+                text: qsTr("Adapter id")
+            }
+
+            StyledText {
+                text: Bluetooth.defaultAdapter?.adapterId ?? ""
+                color: Colours.palette.m3outline
+                font.pointSize: Appearance.font.size.small
+            }
+        }
     }
 
     component Toggle: RowLayout {

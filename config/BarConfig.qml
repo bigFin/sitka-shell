@@ -28,14 +28,6 @@ JsonObject {
         property bool showBattery: true
     }
 
-    component Status: JsonObject {
-        property bool showAudio: false
-        property bool showKbLayout: false
-        property bool showNetwork: true
-        property bool showBluetooth: true
-        property bool showBattery: true
-    }
-
     component Sizes: JsonObject {
         property int innerHeight: 30
         property int windowPreviewSize: 400

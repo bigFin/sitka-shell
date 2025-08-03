@@ -41,7 +41,7 @@ RowLayout {
         Loader {
             id: loader
 
-            property bool pane: root.session.bt.active
+            property BluetoothDevice pane: root.session.bt.active
 
             anchors.fill: parent
             anchors.margins: Appearance.padding.large * 2 + Appearance.padding.normal

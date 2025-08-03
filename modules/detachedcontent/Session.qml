@@ -2,7 +2,7 @@ import Quickshell.Bluetooth
 import QtQuick
 
 QtObject {
-    readonly property list<string> panes: ["network", "bluetooth"]
+    readonly property list<string> panes: ["network", "bluetooth", "audio"]
 
     property string active
     property int activeIndex

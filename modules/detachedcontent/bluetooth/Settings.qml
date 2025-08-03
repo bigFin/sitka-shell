@@ -77,6 +77,16 @@ ColumnLayout {
                         adapter.discoverable = checked;
                 }
             }
+
+            Toggle {
+                label: qsTr("Pairable")
+                checked: Bluetooth.defaultAdapter?.pairable ?? false
+                toggle.onToggled: {
+                    const adapter = Bluetooth.defaultAdapter;
+                    if (adapter)
+                        adapter.pairable = checked;
+                }
+            }
         }
     }
 

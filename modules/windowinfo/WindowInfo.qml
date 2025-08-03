@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
+import "ProcessList"
 
 Item {
     id: root
@@ -26,6 +27,21 @@ Item {
         // Preview {
         //     screen: root.screen
         //     client: root.client
+        // }
+
+
+        // ProcessListPopout {
+        //     id: processListPopout
+        // }
+
+
+            
+            ProcessListModal {
+                id: processListModal
+            }
+
+        // ProcessListModal {
+
         // }
 
         ColumnLayout {

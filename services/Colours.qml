@@ -126,6 +126,12 @@ Singleton {
         property color m3onTertiaryFixed: "#301121"
         property color m3onTertiaryFixedVariant: "#613B4C"
 
+        property color archBlue: "#1793D1"
+        property color success: "#4CAF50"
+        property color warning: "#FF9800"
+        property color info: "#2196F3"
+        property color error: "#F2B8B5"
+
         property color rosewater: "#B8C4FF"
         property color flamingo: "#DBB9F8"
         property color pink: "#F3B3E3"

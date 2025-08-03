@@ -12,12 +12,12 @@ ColumnLayout {
 
     property string title: qsTr("Dropdown Title")
     property bool expanded: false
-    property color backgroundColor: expanded ? Colours.palette.m3surfaceContainer : Colours.palette.m3surfaceContainerLow 
+    property color backgroundColor: expanded ? Colours.palette.m3surfaceContainerLow : "transparent"
 
     // Margin properties: if backgroundMargins >= 0, use it for all sides; otherwise, use individual margins
-    property real backgroundMarginLeft: 10
-    property real backgroundMarginRight: 10
-    property real backgroundMarginTop: 10
+    property real backgroundMarginLeft: Appearance.padding.small
+    property real backgroundMarginRight: Appearance.padding.small
+    property real backgroundMarginTop: Appearance.padding.small
     property real backgroundMarginBottom: 0
     property real backgroundMargins: -1 // -1 means "not set"
 
@@ -28,12 +28,14 @@ ColumnLayout {
 
     Rectangle {
         id: backgroundRect
-        Layout.fillWidth: true
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
+        // anchors.left: parent.left
+        // anchors.right: parent.right
+        // anchors.top: parent.top
+        // anchors.bottom: parent.bottom
+        Layout.alignment: Qt.AlignTop
+        // Layout.preferredHeight: 100
+        Layout.fillWidth: true
 
         anchors.leftMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginLeft
         anchors.rightMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginRight
@@ -41,6 +43,7 @@ ColumnLayout {
         anchors.bottomMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginBottom
 
         color: root.backgroundColor
+        // color: "transparent"
         radius: Appearance.rounding.small
 
         // Height is header + content (if expanded) + margins
@@ -82,6 +85,8 @@ ColumnLayout {
                     Layout.fillWidth: true
                     text: root.title
                     elide: Text.ElideRight
+                    font.pointSize: Appearance.font.size.smaller
+                    font.family: Appearance.font.family.sans
                 }
 
                 StyledRect {
@@ -121,7 +126,9 @@ ColumnLayout {
                 clip: true
 
                 // topMargin: Appearance.spacing.smaller
-                bottomMargin: Appearance.spacing.smaller
+                // bottomMargin: Appearance.spacing.smaller
+                bottomMargin: Appearance.padding.large
+
 
                 Loader {
                     id: contentLoader

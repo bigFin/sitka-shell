@@ -5,7 +5,6 @@ import Quickshell
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
-
 //later additions
 import qs.widgets
 import qs.services
@@ -106,6 +105,10 @@ Item {
                     Pane {
                         sourceComponent: Performance {}
                     }
+
+                    Pane {
+                        sourceComponent: NiriThing {}
+                    }
                 }
 
                 Behavior on contentX {
@@ -115,6 +118,17 @@ Item {
                         easing.bezierCurve: Appearance.anim.curves.standard
                     }
                 }
+            }
+
+            StyledRect {
+                id: separator
+
+                Layout.topMargin: Appearance.spacing.normal
+                Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+
+                implicitHeight: 1
+                color: Colours.palette.m3outlineVariant
             }
 
             RowLayout {
@@ -128,12 +142,12 @@ Item {
                     id: activeWindow
                     anchors.margins: Appearance.spacing.large
 
-                    monitor: Brightness.getMonitorForScreen(root.screen)
-    
                     Layout.fillWidth: true
                 }
 
-                Item { Layout.fillWidth : true } // Spacer
+                Item {
+                    Layout.fillWidth: true
+                } // Spacer
 
                 RowLayout {
 
@@ -184,7 +198,7 @@ Item {
                             Niri.closeFocusedWindow();
                         }
                     }
-                }    
+                }
             }
         }
     }

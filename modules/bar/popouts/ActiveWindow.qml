@@ -134,6 +134,8 @@ Item {
         //     }
         // }
 
+        
+
         // RowLayout {
         //     id: windowdecorations
         //     anchors.right: parent.right

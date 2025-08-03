@@ -4,70 +4,73 @@ import qs.config
 import QtQuick
 import QtQuick.Layouts
 
-RowLayout {
-    id: root
+ColumnLayout {
 
-    readonly property int padding: Appearance.padding.large
+    RowLayout {
+        id: root
 
-    spacing: Appearance.spacing.large * 3
+        readonly property int padding: Appearance.padding.large
 
-    Ref {
-        service: SystemUsage
-    }
+        spacing: Appearance.spacing.large * 3
 
-    Resource {
-        Layout.alignment: Qt.AlignVCenter
-        Layout.topMargin: root.padding
-        Layout.bottomMargin: root.padding
-        Layout.leftMargin: root.padding * 2
-
-        value1: Math.min(1, SystemUsage.gpuTemp / 90)
-        value2: SystemUsage.gpuPerc
-
-        label1: `${Math.ceil(SystemUsage.gpuTemp)}°C`
-        label2: `${Math.round(SystemUsage.gpuPerc * 100)}%`
-
-        sublabel1: qsTr("GPU temp")
-        sublabel2: qsTr("Usage")
-    }
-
-    Resource {
-        Layout.alignment: Qt.AlignVCenter
-        Layout.topMargin: root.padding
-        Layout.bottomMargin: root.padding
-
-        primary: true
-
-        value1: Math.min(1, SystemUsage.cpuTemp / 90)
-        value2: SystemUsage.cpuPerc
-
-        label1: `${Math.ceil(SystemUsage.cpuTemp)}°C`
-        label2: `${Math.round(SystemUsage.cpuPerc * 100)}%`
-
-        sublabel1: qsTr("CPU temp")
-        sublabel2: qsTr("Usage")
-    }
-
-    Resource {
-        Layout.alignment: Qt.AlignVCenter
-        Layout.topMargin: root.padding
-        Layout.bottomMargin: root.padding
-        Layout.rightMargin: root.padding * 3
-
-        value1: SystemUsage.memPerc
-        value2: SystemUsage.storagePerc
-
-        label1: {
-            const fmt = SystemUsage.formatKib(SystemUsage.memUsed);
-            return `${+fmt.value.toFixed(1)}${fmt.unit}`;
-        }
-        label2: {
-            const fmt = SystemUsage.formatKib(SystemUsage.storageUsed);
-            return `${Math.floor(fmt.value)}${fmt.unit}`;
+        Ref {
+            service: SystemUsage
         }
 
-        sublabel1: qsTr("Memory")
-        sublabel2: qsTr("Storage")
+        Resource {
+            Layout.alignment: Qt.AlignVCenter
+            Layout.topMargin: root.padding
+            Layout.bottomMargin: root.padding
+            Layout.leftMargin: root.padding * 2
+
+            value1: Math.min(1, SystemUsage.gpuTemp / 90)
+            value2: SystemUsage.gpuPerc
+
+            label1: `${Math.ceil(SystemUsage.gpuTemp)}°C`
+            label2: `${Math.round(SystemUsage.gpuPerc * 100)}%`
+
+            sublabel1: qsTr("GPU temp")
+            sublabel2: qsTr("Usage")
+        }
+
+        Resource {
+            Layout.alignment: Qt.AlignVCenter
+            Layout.topMargin: root.padding
+            Layout.bottomMargin: root.padding
+
+            primary: true
+
+            value1: Math.min(1, SystemUsage.cpuTemp / 90)
+            value2: SystemUsage.cpuPerc
+
+            label1: `${Math.ceil(SystemUsage.cpuTemp)}°C`
+            label2: `${Math.round(SystemUsage.cpuPerc * 100)}%`
+
+            sublabel1: qsTr("CPU temp")
+            sublabel2: qsTr("Usage")
+        }
+
+        Resource {
+            Layout.alignment: Qt.AlignVCenter
+            Layout.topMargin: root.padding
+            Layout.bottomMargin: root.padding
+            Layout.rightMargin: root.padding * 3
+
+            value1: SystemUsage.memPerc
+            value2: SystemUsage.storagePerc
+
+            label1: {
+                const fmt = SystemUsage.formatKib(SystemUsage.memUsed);
+                return `${+fmt.value.toFixed(1)}${fmt.unit}`;
+            }
+            label2: {
+                const fmt = SystemUsage.formatKib(SystemUsage.storageUsed);
+                return `${Math.floor(fmt.value)}${fmt.unit}`;
+            }
+
+            sublabel1: qsTr("Memory")
+            sublabel2: qsTr("Storage")
+        }
     }
 
     component Resource: Item {

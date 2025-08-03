@@ -41,7 +41,7 @@ Item {
 
     Connections {
         target: Niri
-        onFocusedWindowIdChanged: {
+        function onFocusedWindowIdChanged() {
             // Show dashboard for 1 second
             if ((!root.visibilities.dashboard && !root.expanded) && Niri.focusedWindowId) {
                 root.isvisible = true

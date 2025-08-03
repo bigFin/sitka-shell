@@ -194,4 +194,8 @@ Item {
         easing.type: Easing.BezierSpline
         easing.bezierCurve: Appearance.anim.curves.emphasized
     }
+    // for debug
+    Component.onCompleted: {
+        root.detach("winfo");
+    }
 }

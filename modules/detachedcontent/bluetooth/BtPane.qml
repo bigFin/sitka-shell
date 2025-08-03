@@ -61,7 +61,7 @@ RowLayout {
                         }
                         Anim {
                             property: "scale"
-                            to: 0.7
+                            to: 0.8
                             easing.bezierCurve: Appearance.anim.curves.standardAccel
                         }
                     }

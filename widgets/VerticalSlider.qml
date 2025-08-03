@@ -3,7 +3,6 @@ import qs.services
 import qs.config
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Effects
 
 Slider {
     id: root
@@ -38,12 +37,10 @@ Slider {
         implicitWidth: root.width
         implicitHeight: root.width
 
-        RectangularShadow {
+        Elevation {
             anchors.fill: parent
             radius: rect.radius
-            color: Colours.palette.m3shadow
-            blur: 5
-            spread: 0
+            level: handleInteraction.containsMouse ? 2 : 1
         }
 
         StyledRect {
@@ -55,7 +52,10 @@ Slider {
             radius: Appearance.rounding.full
 
             MouseArea {
+                id: handleInteraction
+
                 anchors.fill: parent
+                hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 acceptedButtons: Qt.NoButton
             }

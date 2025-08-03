@@ -8,7 +8,6 @@ import qs.utils
 import Quickshell.Bluetooth
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Effects
 
 Item {
     id: root
@@ -107,33 +106,24 @@ Item {
         Repeater {
             id: fabMenu
 
-            model: [
-                {
-                    icon: "handshake",
-                    label: root.device.trusted ? qsTr("Untrust") : qsTr("Trust"),
-                    onClicked: () => root.device.trusted = !root.device.trusted
-                },
-                {
-                    icon: "block",
-                    label: root.device.blocked ? qsTr("Unblock") : qsTr("Block"),
-                    onClicked: () => root.device.blocked = !root.device.blocked
-                },
-                {
-                    icon: "missing_controller",
-                    label: root.device.paired ? qsTr("Unpair") : qsTr("Pair"),
-                    onClicked: () => {
-                        if (root.device.paired)
-                            root.device.forget();
-                        else
-                            root.device.pair();
-                    }
-                },
-                {
-                    icon: "bluetooth_connected",
-                    label: root.device.connected ? qsTr("Disconnect") : qsTr("Connect"),
-                    onClicked: () => root.device.connected = !root.device.connected
+            model: ListModel {
+                ListElement {
+                    name: "trust"
+                    icon: "handshake"
                 }
-            ]
+                ListElement {
+                    name: "block"
+                    icon: "block"
+                }
+                ListElement {
+                    name: "pair"
+                    icon: "missing_controller"
+                }
+                ListElement {
+                    name: "connect"
+                    icon: "bluetooth_connected"
+                }
+            }
 
             StyledClippingRect {
                 id: fabMenuItem
@@ -207,7 +197,14 @@ Item {
                 StateLayer {
                     function onClicked(): void {
                         root.session.bt.fabMenuOpen = false;
-                        fabMenuItem.modelData.onClicked();
+
+                        const name = fabMenuItem.modelData.name;
+                        if (fabMenuItem.modelData.name !== "pair")
+                            root.device[`${name}ed`] = !root.device[`${name}ed`];
+                        else if (root.device.paired)
+                            root.device.forget();
+                        else
+                            root.device.pair();
                     }
                 }
 
@@ -225,8 +222,17 @@ Item {
                     }
 
                     StyledText {
-                        text: fabMenuItem.modelData.label
+                        animate: true
+                        text: (root.device[`${fabMenuItem.modelData.name}ed`] ? fabMenuItem.modelData.name === "connect" ? "dis" : "un" : "") + fabMenuItem.modelData.name
                         color: Colours.palette.m3onPrimaryContainer
+                        font.capitalization: Font.Capitalize
+                        Layout.preferredWidth: implicitWidth
+
+                        Behavior on Layout.preferredWidth {
+                            Anim {
+                                duration: Appearance.anim.durations.small
+                            }
+                        }
                     }
                 }
             }

@@ -106,6 +106,19 @@ Item {
         }
     }
 
+    Comp {
+        id: detachedContent
+
+        shouldBeActive: root.detachedMode === "any"
+        asynchronous: true
+        anchors.centerIn: parent
+
+        sourceComponent: DetachedContent {
+            screen: root.screen
+            active: root.queuedMode
+        }
+    }
+
     Behavior on x {
         Anim {
             duration: root.animLength

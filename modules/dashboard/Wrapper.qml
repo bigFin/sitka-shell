@@ -54,7 +54,6 @@ Item {
     implicitHeight: 0
     implicitWidth: content.implicitWidth
 
-
     states: [
         State {
             name: "visible"

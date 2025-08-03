@@ -72,9 +72,6 @@ RowLayout {
             id: details
 
             Details {
-                anchors.margins: Appearance.padding.normal
-                anchors.leftMargin: Appearance.padding.normal / 2
-
                 session: root.session
             }
         }

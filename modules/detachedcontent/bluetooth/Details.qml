@@ -30,6 +30,7 @@ Item {
 
             MaterialIcon {
                 Layout.alignment: Qt.AlignHCenter
+                animate: true
                 text: Icons.getBluetoothIcon(root.device.icon)
                 font.pointSize: Appearance.font.size.extraLarge * 3
                 font.bold: true
@@ -37,6 +38,7 @@ Item {
 
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
+                animate: true
                 text: root.device.name
                 font.pointSize: Appearance.font.size.large
                 font.bold: true

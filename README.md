@@ -1,4 +1,13 @@
-<h1 align=center>caelestia-shell</h1>
+> [!CAUTION]
+> This is my personal thingy and it's **STILL WORK IN PROGRESS.**
+> 
+> This repo is **ONLY for the desktop shell** of the caelestia dots, ported to work in [`Niri Window Manager`](https://github.com/YaLTeR/niri) instead of [`Hyprland`](https://hyprland.org). If you want installation instructions
+> for the default caelestia dots, head to [the main repo](https://github.com/caelestia-dots/caelestia) instead.
+
+
+
+<h1 align=center>niri-caelestia-shell</h1>
+
 
 <div align=center>
 
@@ -7,121 +16,217 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/caelestia-dots/shell?style=for-the-badge&labelColor=101418&color=d3bfe6)
 [![Ko-Fi donate](https://img.shields.io/badge/donate-kofi?style=for-the-badge&logo=ko-fi&logoColor=ffffff&label=ko-fi&labelColor=101418&color=f16061&link=https%3A%2F%2Fko-fi.com%2Fsoramane)](https://ko-fi.com/soramane)
 
-</div>
-
 https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
-## Components
+</div>
 
--   Widgets: [`Quickshell`](https://quickshell.outfoxxed.me)
--   Window manager: [`Hyprland`](https://hyprland.org)
--   Dots: [`caelestia`](https://github.com/caelestia-dots)
+<div align=right>
 
-## Installation
+***Components:***
+[`Quickshell`](https://quickshell.outfoxxed.me) 
+[`Niri`](https://github.com/YaLTeR/niri) 
+~~[`caelestia-dots`](https://github.com/caelestia-dots)~~  
+
+</div>
+
+<!-- - [🔽 Installation 🔽](#-installation-)
+    - [👣 Steps](#-steps)
+      - [Core Dependencies 📦](#core-dependencies-)
+      - [Audio \& Visual 🎵](#audio--visual-)
+      - [Fonts 🖋️](#fonts-️)
+      - [Screenshot \& Utilities 🧰](#screenshot--utilities-)
+- [🔶 Usage 🔶](#-usage-)
+    - [⌨️ Custom Shortcuts/IPC](#️-custom-shortcutsipc)
+    - [🎭 PFP/Wallpapers](#-pfpwallpapers)
+    - [🔃 Updating](#-updating)
+    - [⚙️ Configuring](#️-configuring)
+- [➕ My Additions ➕](#-my-additions-)
+- [⛔ Known Issues ⛔](#-known-issues-)
+- [🌟 Credits 🌟](#-credits-)
+    - [Stonks 📈](#stonks-) -->
+
+<div align=center>
+
+[<kbd> <br>    🔽 Installation    <br> </kbd>](#🔽-installation-🔽)
+[<kbd> <br>    📦 Dependencies    <br> </kbd>](#📦-dependencies)
+[<kbd> <br> 🔶 Usage <br> </kbd>](#🔶-usage-🔶)
+
+[<kbd> <br> 🔃 Updating <br> </kbd>](#🔃-updating)
+[<kbd> <br> ⚙️ Configuring <br> </kbd>](#⚙️-configuring)
+[<kbd> <br> ➕ My Additions <br> </kbd>](#➕-my-additions-➕)
+
+[<kbd> <br> ⛔ Known Issues <br> </kbd>](#⛔-known-issues-⛔)
+[<kbd> <br> 🌟 Credits <br> </kbd>](#🌟-credits-🌟)
+
+</div>
+
+<br>
+<br>
+
+# 🔽 Installation 🔽 
+
+> [!NOTE] 
+> There is **NO** package manager installation support yet because... 🤔
+
+
+### 👣 Installation Steps
+
+**1.** Install the dependencies listed below.
+* Exapmle of what to do for CachyOS / Arch: 
+  1. `sudo pacman -S ddcutil brightnessctl cava networkmanager i2c-tools fish aubio libpipewire glibc qt6-declarative gcc-libs ttf-jetbrains-mono-nerd grim swappy libqalculate --needed`
+  2. `paru ttf-material-symbols-variable-git app2unit-git --needed`
+   
+**2.** Either download the code, or clone this repo to your Quickshell config folder.
+* **The folder is usually here:**
+  - `~/.config/quickshell/niri-caelestia-shell`
+
+**3.** Please read the first 2 lines of [Known Issues](#known-issues).
+
+**4.** ***(Optional)*** Build the beat detector.
+>
+>If you want the Bongo Cat to clap along to your song, you need to compile the beat detector and install it to `/usr/lib/caelestia/beat_detector`.
+>
+>```sh
+>cd $XDG_CONFIG_HOME/quickshell
+>git clone https://github.com/caelestia-dots/shell.git caelestia
+>g++ -std=c++17 -Wall -Wextra -I/usr/include/pipewire-0.3 -I/usr/include/spa-0.2 -I/usr/include/aubio -o beat_detector caelestia/assets/beat_detector.cpp -lpipewire-0.3 -laubio
+>sudo mv beat_detector /usr/lib/caelestia/beat_detector
+>```
+>
+> <sup> **The beat detector can actually be installed anywhere.** However, if it is not installed to the default location of `/usr/lib/caelestia/beat_detector`, you must set the environment variable `CAELESTIA_BD_PATH` to wherever you have installed the beat detector. </sup>
+>
+**6.** ***(Optional)*** This shell has a decent notification manager and an app launcher. If you wish, you can uninstall/disable `mako` and `fuzzel`. For app launcher, see [Custom Shortcuts/IPC](#custom-shortcutsipc).
+
+
+<br>
+
+### 📦 Dependencies 
+
+* All dependencies in plain text: 
+   * `quickshell-git networkmanager fish glibc qt6-declarative gcc-libs cava aubio libpipewire lm-sensors ddcutil brightnessctl material-symbols jetbrains-mono-nerd grim swappy app2unit libqalculate`
 
 > [!NOTE]
-> This repo is for the desktop shell of the caelestia dots. If you want installation instructions
-> for the entire dots, head to [the main repo](https://github.com/caelestia-dots/caelestia) instead.
+> 
+> Unlike the default shell,
+> [`caelestia-cli`](https://github.com/caelestia-dots/cli) is **not required for Niri**.
 
-### Package manager
+<details><summary> <b> Detailed info about all dependencies </b></summary>
 
-> [!NOTE]
-> If you want to make your own changes/tweaks to the shell do NOT edit the files installed by the AUR
-> package. Instead, follow the instructions in the [manual installation section](#manual-installation).
+<div align=left> 
 
-The shell is available from the AUR as `caelestia-shell-git`. You can install it with an AUR helper
-like [`yay`](https://github.com/Jguer/yay) or manually downloading the PKGBUILD and running `makepkg -si`.
+> <br>
+> 
+>#### Core Dependencies 🖥️
+>
+>| Package | Usage |
+>|---|---|
+>| [`quickshell-git`](https://quickshell.outfoxxed.me) | Must be the git version |
+>| [`networkmanager`](https://networkmanager.dev) | Network management |
+>| [`fish`](https://github.com/fish-shell/fish-shell) | Terminal |
+>| `glibc` | C library (runtime dependency) |
+>| `qt6-declarative` | Qt components |
+>| `gcc-libs` | GCC runtime |
+>
+>#### Audio & Visual 🎵
+>
+>| Package | Usage |
+>|---|---|
+>| [`cava`](https://github.com/karlstav/cava) | Audio visualizer |
+>| [`aubio`](https://github.com/aubio/aubio) | Beat detector |
+>| [`libpipewire`](https://pipewire.org) | Media backend |
+>| [`lm-sensors`](https://github.com/lm-sensors/lm-sensors) | System usage monitoring |
+>| [`ddcutil`](https://github.com/rockowitz/ddcutil) | Monitor brightness control |
+>| [`brightnessctl`](https://github.com/Hummer12007/brightnessctl) | Brightness control |
+>
+>#### Fonts 🔣
+>
+>| Package | Usage |
+>|---|---|
+>| [`material-symbols`](https://fonts.google.com/icons) | Icon font |
+>| [`jetbrains-mono-nerd`](https://www.nerdfonts.com/font-downloads) | Monospace font |
+>
+>#### Screenshot & Utilities 🧰
+>
+>| Package | Usage |
+>|---|---|
+>| [`grim`](https://gitlab.freedesktop.org/emersion/grim) | Screenshot tool |
+>| [`swappy`](https://github.com/jtheoof/swappy) | Screenshot annotation |
+>| [`app2unit`](https://github.com/Vladimir-csp/app2unit) | Launch apps |
+>| [`libqalculate`](https://github.com/Qalculate/libqalculate) | Calculator |
 
-### Manual installation
+</div>
 
-Dependencies:
+</details>
 
--   [`caelestia-cli`](https://github.com/caelestia-dots/cli)
--   [`quickshell-git`](https://quickshell.outfoxxed.me) - this has to be the git version, not the latest tagged version
--   [`ddcutil`](https://github.com/rockowitz/ddcutil)
--   [`brightnessctl`](https://github.com/Hummer12007/brightnessctl)
--   [`app2unit`](https://github.com/Vladimir-csp/app2unit)
--   [`cava`](https://github.com/karlstav/cava)
--   [`networkmanager`](https://networkmanager.dev)
--   [`lm-sensors`](https://github.com/lm-sensors/lm-sensors)
--   [`fish`](https://github.com/fish-shell/fish-shell)
--   [`aubio`](https://github.com/aubio/aubio)
--   [`libpipewire`](https://pipewire.org)
--   `glibc`
--   `qt6-declarative`
--   `gcc-libs`
--   [`material-symbols`](https://fonts.google.com/icons)
--   [`jetbrains-mono-nerd`](https://www.nerdfonts.com/font-downloads)
--   [`grim`](https://gitlab.freedesktop.org/emersion/grim)
--   [`swappy`](https://github.com/jtheoof/swappy)
--   [`libqalculate`](https://github.com/Qalculate/libqalculate)
+<br>
+<br>
 
-To install the shell manually, install all dependencies and clone this repo to `$XDG_CONFIG_HOME/quickshell/caelestia`.
-Then compile the beat detector and install it to `/usr/lib/caelestia/beat_detector`.
+# 🔶 Usage 🔶
 
-```sh
-cd $XDG_CONFIG_HOME/quickshell
-git clone https://github.com/caelestia-dots/shell.git caelestia
-g++ -std=c++17 -Wall -Wextra -I/usr/include/pipewire-0.3 -I/usr/include/spa-0.2 -I/usr/include/aubio -o beat_detector caelestia/assets/beat_detector.cpp -lpipewire-0.3 -laubio
-sudo mv beat_detector /usr/lib/caelestia/beat_detector
-```
+The shell can be started via the `quickshell -c niri-caelestia-shell -n` command or `qs -c niri-caelestia-shell -n` on your preferred terminal.
+><sub> (`qs` and `quickshell` are interchangable.) </sub>
 
-> [!TIP]
-> The beat detector can actually be installed anywhere. However, if it is not installed to the default
-> location of `/usr/lib/caelestia/beat_detector`, you must set the environment variable `CAELESTIA_BD_PATH`
-> to wherever you have installed the beat detector.
 
-## Usage
 
-The shell can be started via the `caelestia shell -d` command or `qs -c caelestia`.
-If the entire caelestia dots are installed, the shell will be autostarted on login
-via an `exec-once` in the hyprland config.
+* Example line for niri `config.kdl` to launch the shell at startup:
+  
+   ```
+   spawn-at-startup "quickshell" "-c" "niri-caelestia-shell" "-n"
+   ```
 
-### Shortcuts/IPC
+### ⌨️ Custom Shortcuts/IPC
 
-All keybinds are accessible via Hyprland [global shortcuts](https://wiki.hyprland.org/Configuring/Binds/#dbus-global-shortcuts).
-If using the entire caelestia dots, the keybinds are already configured for you.
-Otherwise, [this file](https://github.com/caelestia-dots/caelestia/blob/main/hypr/hyprland/keybinds.conf#L1-L39)
-contains an example on how to use global shortcuts.
+All keybinds are accessible via [Quickshell IPC msg](https://wiki.hyprland.org/Configuring/Binds/#dbus-global-shortcuts).
 
-All IPC commands can be accessed via `caelestia shell ...`. For example
+All IPC commands can be accessed via `quickshell -c niri-caelestia-shell ipc call ...`
 
-```sh
-caelestia shell mpris getActive trackTitle
-```
+* For example:
 
-The list of IPC commands can be shown via `caelestia shell -s`:
+   ```sh
+   qs -c niri-caelestia-shell ipc call mpris getActive <trackTitle>
+   ```
 
-```
-$ caelestia shell -s
-target drawers
-  function toggle(drawer: string): void
-  function list(): string
-target notifs
-  function clear(): void
-target lock
-  function lock(): void
-  function unlock(): void
-  function isLocked(): bool
-target mpris
-  function playPause(): void
-  function getActive(prop: string): string
-  function next(): void
-  function stop(): void
-  function play(): void
-  function list(): string
-  function pause(): void
-  function previous(): void
-target picker
-  function openFreeze(): void
-  function open(): void
-target wallpaper
-  function set(path: string): void
-  function get(): string
-  function list(): string
-```
+* Example shortcut in `config.kdl` to toggle the launcher drawer: 
+    ```sh
+    Mod+Space { spawn  "qs" "-c" "shell" "ipc" "call" "drawers" "toggle" "launcher"; }
+    ```
 
-### PFP/Wallpapers
+
+ The list of IPC commands can be shown via `caelestia shell -s`:
+
+  ```sh
+  ❯ qs -c shell ipc show
+  target picker
+    function openFreeze(): void
+    function open(): void
+  target drawers
+    function list(): string
+    function toggle(drawer: string): void
+  target lock
+    function unlock(): void
+    function isLocked(): bool
+    function lock(): void
+  target wallpaper
+    function get(): string
+    function set(path: string): void
+    function list(): string
+  target notifs
+    function clear(): void
+  target mpris
+    function next(): void
+    function previous(): void
+    function getActive(prop: string): string
+    function playPause(): void
+    function pause(): void
+    function stop(): void
+    function list(): string
+    function play(): void
+  ```
+
+### 🎭 PFP/Wallpapers
+
+> [!WARNING]
+> Not completely implemented yet!
 
 The profile picture for the dashboard is read from the file `~/.face`, so to set
 it you can copy your image to there or set it via the dashboard.
@@ -129,25 +234,23 @@ it you can copy your image to there or set it via the dashboard.
 The wallpapers for the wallpaper switcher are read from `~/Pictures/Wallpapers`
 by default. To change it, change the wallpapers path in `~/.config/caelestia/shell.json`.
 
-To set the wallpaper, you can use the command `caelestia wallpaper`. Use `caelestia wallpaper -h` for more info about
-the command.
+To set the wallpaper, you can use the app launcher command `> wallpaper`.
 
-## Updating
-
-If installed via the AUR package, simply update your system (e.g. using `yay`).
-
-If installed manually, you can update by running `git pull` in `$XDG_CONFIG_HOME/quickshell/caelestia`.
+### 🔃 Updating
+You can update by running `git pull` in `$XDG_CONFIG_HOME/quickshell/niri-caelestia-shell`.
 
 ```sh
-cd $XDG_CONFIG_HOME/quickshell/caelestia
+cd $XDG_CONFIG_HOME/quickshell/niri-caelestia-shell
 git pull
 ```
 
-## Configuring
+### ⚙️ Configuring
 
 All configuration options are in `~/.config/caelestia/shell.json`.
 
-<details><summary>Example configuration</summary>
+You might want to change your default apps.
+
+<details><summary> <b> Example configuration </b></summary>
 
 ```json
 {
@@ -244,7 +347,42 @@ All configuration options are in `~/.config/caelestia/shell.json`.
 
 </details>
 
-## Credits
+<br>
+<br>
+
+# ➕ My Additions ➕
+
+- Clicking on Window Icon on workspace list focuses clicked window.
+- Very WIP Niri management tab in dashboard.
+- Task manager (Got from DankMaterialShell)
+- Window switch popup
+- Window decorations for pinning, hovering window, toggling fullscreen, and closing the window.
+- Dashboard is now opened after clicking on the popup instead of completely popping up and taking up half the screen.
+
+<br>
+<br>
+
+# ⛔ Known Issues ⛔
+
+- Since I don't have multiple monitors I just hard coded my monitor name in services/Visibilities.qml ❗
+- My additions aren't toggleable yet ❗
+- I accidentally deprecated workspace switching by clicking.
+- Occupied workspace background sometimes breaks.
+- No Intel GPU monitoring in task manager 😿
+- I'm dumb so I have something wrong with my Linux installation (not related to the project)
+- I will surely remember other issues...
+
+
+<br>
+<br>
+
+# 🌟 Credits 🌟
+
+<div align=center> 
+<b>(Credits unchanged, please don't forget to star the original config!!!)</b> 
+</div>
+
+<br>
 
 Thanks to the Hyprland discord community (especially the homies in #rice-discussion) for all the help and suggestions
 for improving these dots!
@@ -259,7 +397,7 @@ Finally another thank you to all the configs I took inspiration from (only one f
 
 -   [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
 
-## Stonks 📈
+### Stonks 📈
 
 <a href="https://www.star-history.com/#caelestia-dots/shell&Date">
  <picture>

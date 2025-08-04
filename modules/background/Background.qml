@@ -4,10 +4,11 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 
-LazyLoader {
+Loader {
+    asynchronous: true
     active: Config.background.enabled
 
-    Variants {
+    sourceComponent: Variants {
         model: Quickshell.screens
 
         StyledWindow {

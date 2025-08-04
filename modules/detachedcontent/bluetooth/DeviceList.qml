@@ -74,7 +74,11 @@ ColumnLayout {
             accent: "Primary"
 
             function onClicked(): void {
-                root.session.bt.active = null;
+                if (root.session.bt.active)
+                    root.session.bt.active = null;
+                else {
+                    root.session.bt.active = deviceModel.values[0] ?? null;
+                }
             }
         }
     }
@@ -137,6 +141,7 @@ ColumnLayout {
 
     StyledListView {
         model: ScriptModel {
+            id: deviceModel
             values: [...Bluetooth.devices.values].sort((a, b) => (b.connected - a.connected) || (b.paired - a.paired))
         }
 

@@ -376,13 +376,55 @@ You might want to change your default apps.
 <br>
 <br>
 
-# 🌟 Credits 🌟
-
 <div align=center> 
-<b>(Credits unchanged, please don't forget to star the original config!!!)</b> 
+<b>(FAQ and Credits are unchanged, please don't forget to star the original config!!!)</b> 
 </div>
-
 <br>
+
+
+# ❔ FAQ ❔
+
+### My screen is flickering, help pls!
+
+Try disabling VRR in the hyprland config. You can do this by adding the following to `~/.config/caelestia/hypr-user.conf`:
+
+```conf
+misc {
+    vrr = 0
+}
+```
+
+### I want to make my own changes to the hyprland config!
+
+You can add your custom hyprland configs to `~/.config/caelestia/hypr-user.conf`.
+
+### I want to make my own changes to other stuff!
+
+See the [manual installation](https://github.com/caelestia-dots/shell?tab=readme-ov-file#manual-installation) section
+for the corresponding repo.
+
+### I want to disable XXX feature!
+
+Please read the [configuring](https://github.com/caelestia-dots/shell?tab=readme-ov-file#configuring) section in the readme.
+If there is no corresponding option, make feature request.
+
+### How do I make my colour scheme change with my wallpaper?
+
+Set a wallpaper via the launcher or `caelestia wallpaper` and set the scheme to the dynamic scheme via the launcher
+or `caelestia scheme set`. e.g.
+
+```sh
+caelestia wallpaper -f <path/to/file>
+caelestia scheme set -n dynamic
+```
+
+### My wallpapers aren't showing up in the launcher!
+
+The launcher pulls wallpapers from `~/Pictures/Wallpapers` by default. You can change this in the config. Additionally,
+the launcher only shows an odd number of wallpapers at one time. If you only have 2 wallpapers, consider getting more
+(or just putting one).
+
+# 🌟 Credits 🌟
 
 Thanks to the Hyprland discord community (especially the homies in #rice-discussion) for all the help and suggestions
 for improving these dots!

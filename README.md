@@ -328,9 +328,9 @@ You might want to change your default apps.
         "wallpaperDir": "~/Pictures/Wallpapers"
     },
     "services": {
-      "weatherLocation": "10,10",
-      "useFahrenheit": false,
-      "useTwelveHourClock": false
+        "weatherLocation": "10,10",
+        "useFahrenheit": false,
+        "useTwelveHourClock": false
     },
     "session": {
         "dragThreshold": 30,

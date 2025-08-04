@@ -27,6 +27,8 @@ Item {
         currentIndex: root.state.currentTab
         background: null
 
+        onCurrentIndexChanged: root.state.currentTab = currentIndex
+
         Tab {
             iconName: "dashboard"
             text: qsTr("Dashboard")

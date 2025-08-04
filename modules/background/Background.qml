@@ -1,4 +1,4 @@
-import qs.widgets
+import qs.components.containers
 import qs.config
 import Quickshell
 import Quickshell.Wayland

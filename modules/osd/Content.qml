@@ -1,4 +1,4 @@
-import qs.widgets
+import qs.components.controls
 import qs.services
 import qs.config
 import QtQuick

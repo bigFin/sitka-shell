@@ -35,7 +35,7 @@ Item {
 
         StyledText {
             Layout.bottomMargin: Appearance.spacing.small / 2
-            text: qsTr("Output")
+            text: qsTr("Output device")
             font.weight: 500
         }
 
@@ -57,7 +57,7 @@ Item {
         StyledText {
             Layout.topMargin: Appearance.spacing.normal
             Layout.bottomMargin: Appearance.spacing.small / 2
-            text: qsTr("Input")
+            text: qsTr("Input device")
             font.weight: 500
         }
 

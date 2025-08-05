@@ -55,7 +55,7 @@ Item {
         }
 
         StyledText {
-            Layout.topMargin: Appearance.spacing.small
+            Layout.topMargin: Appearance.spacing.normal
             Layout.bottomMargin: Appearance.spacing.small / 2
             text: qsTr("Input")
             font.weight: 500
@@ -75,24 +75,37 @@ Item {
         }
 
         StyledText {
-            Layout.topMargin: Appearance.spacing.small
+            Layout.topMargin: Appearance.spacing.normal
             Layout.bottomMargin: Appearance.spacing.small / 2
-            text: qsTr("Volume")
+            text: qsTr("Volume (%1)").arg(Audio.muted ? qsTr("Muted") : `${Math.round(Audio.volume * 100)}%`)
             font.weight: 500
         }
 
-        StyledSlider {
+        CustomMouseArea {
             Layout.fillWidth: true
             implicitHeight: Appearance.padding.normal * 3
 
-            value: Audio.volume
-            onMoved: Audio.setVolume(value)
+            onWheel: event => {
+                if (event.angleDelta.y > 0)
+                    Audio.setVolume(Audio.volume + 0.1);
+                else if (event.angleDelta.y < 0)
+                    Audio.setVolume(Audio.volume - 0.1);
+            }
 
-            Behavior on value {
-                NumberAnimation {
-                    duration: Appearance.anim.durations.normal
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
+            StyledSlider {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                implicitHeight: parent.implicitHeight
+
+                value: Audio.volume
+                onMoved: Audio.setVolume(value)
+
+                Behavior on value {
+                    NumberAnimation {
+                        duration: Appearance.anim.durations.normal
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Appearance.anim.curves.standard
+                    }
                 }
             }
         }

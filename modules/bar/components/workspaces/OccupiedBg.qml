@@ -21,7 +21,8 @@ Item {
         const end = start + Config.bar.workspaces.shown;
         for (const [ws, occ] of Object.entries(occupied)) {
             if (ws > start && ws <= end && occ) {
-                if (!occupied[ws + 1]) { // WARNING changed - 1 to + 1 to make workspaces not join
+                if (!occupied[ws + 1]) {
+                    // WARNING changed - 1 to + 1 to make workspaces not join
                     if (pills[count])
                         pills[count].start = ws;
                     else

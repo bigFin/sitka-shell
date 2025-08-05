@@ -24,7 +24,6 @@ Item {
     Layout.preferredWidth: childrenRect.width
     Layout.preferredHeight: size
 
-
     // To make the windows repopulate.
 
     onGroupOffsetChanged: {
@@ -37,7 +36,7 @@ Item {
 
         readonly property string label: Config.bar.workspaces.label || root.ws
         readonly property string occupiedLabel: Config.bar.workspaces.occupiedLabel || label
-        readonly property string activeLabel: /*Config.bar.workspaces.activeLabel*/ Niri.focusedWorkspaceIndex + 1 || (root.isOccupied ? occupiedLabel : label)
+        readonly property string activeLabel: Niri.focusedWorkspaceIndex + 1 || (root.isOccupied ? occupiedLabel : label)
 
         animate: true
         text: Niri.focusedWorkspaceIndex + 1 === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label
@@ -52,8 +51,7 @@ Item {
     Loader {
         id: windows
 
-
-        active: Config.bar.workspaces.showWindows 
+        active: Config.bar.workspaces.showWindows
         asynchronous: true
 
         anchors.horizontalCenter: indicator.horizontalCenter
@@ -93,35 +91,32 @@ Item {
                         return niriWorkspace.id;
                     }
 
-                    values: Niri.windows
-                        .filter(c => c.workspace_id === targetWorkspaceId)
-                        // .slice(0, Config.bar.workspaces.shown) //max windows shown
+                    values: Niri.windows.filter(c => c.workspace_id === targetWorkspaceId)
+                    // .slice(0, Config.bar.workspaces.shown) //max windows shown
                 }
-                
+
                 MaterialIcon {
-                    required property var modelData
                     id: icon
+                    required property var modelData
 
                     grade: 0
                     text: Icons.getAppCategoryIcon(modelData.app_id, "terminal")
-                    color: Niri.focusedWindow.id === modelData.id ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant 
-                    
+                    color: Niri.focusedWindow.id === modelData.id ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+
                     MouseArea {
-                        anchors.fill: parent 
-                        acceptedButtons: Qt.LeftButton 
+                        anchors.fill: parent
+                        acceptedButtons: Qt.LeftButton
                         cursorShape: Qt.PointingHandCursor
 
-                        onClicked: (mouse) => {
+                        onClicked: mouse => {
                             if (mouse.button === Qt.LeftButton) {
-                                
                                 console.log("Right-clicked on window:", modelData.title, "ID:", modelData.id);
                                 if (modelData && Niri.focusWindow) {
-                                    Niri.focusWindow(modelData.id); 
+                                    Niri.focusWindow(modelData.id);
                                 }
                             }
                         }
                     }
-
                 }
             }
         }

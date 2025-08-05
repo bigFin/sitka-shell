@@ -198,25 +198,25 @@ done | awk -F'|' '!seen[\$6]++ {print \$0}'
                     };
                     nvidiaStatsProcess.command = ["nvidia-smi", "--query-gpu=utilization.gpu,temperature.gpu,name,memory.used,memory.total", "--format=csv,noheader,nounits", "-i", String(i)];
                     nvidiaStatsProcess.running = true;
-                // } else if ((gpu.type === "GENERIC" || gpu.type === "UNKNOWN") && gpu.vendor && gpu.vendor.replace(/^0x/i, "").toLowerCase() === "8086") {
-                //     // Intel GPU detected, use intel_gpu_top
-                //     console.log("INTEL DETECTED:", JSON.stringify(gpu));
-                //     intelGpuTopProcess._callback = function (text) {
-                //         console.log("[intelGpuTopProcess._callback] called. Text:", text && text.length ? text.slice(0, 200) : "<empty>");
-                //         let parsed = parseIntelGpuTop(text);
-                //         if (parsed.length > 0) {
-                //             parsed[0].card = gpu.card;
-                //             parsed[0].busId = gpu.pciid || null;
-                //             results.push(parsed[0]);
-                //         }
-                //         pending--;
-                //         if (pending === 0) {
-                //             gpus = results;
-                //         }
-                //     };
-                //     console.log("Starting intel_gpu_top process...");
-                //     intelGpuTopProcess.running = true;
-                //     intelGpuTopKillTimer.start();
+                    // } else if ((gpu.type === "GENERIC" || gpu.type === "UNKNOWN") && gpu.vendor && gpu.vendor.replace(/^0x/i, "").toLowerCase() === "8086") {
+                    //     // Intel GPU detected, use intel_gpu_top
+                    //     console.log("INTEL DETECTED:", JSON.stringify(gpu));
+                    //     intelGpuTopProcess._callback = function (text) {
+                    //         console.log("[intelGpuTopProcess._callback] called. Text:", text && text.length ? text.slice(0, 200) : "<empty>");
+                    //         let parsed = parseIntelGpuTop(text);
+                    //         if (parsed.length > 0) {
+                    //             parsed[0].card = gpu.card;
+                    //             parsed[0].busId = gpu.pciid || null;
+                    //             results.push(parsed[0]);
+                    //         }
+                    //         pending--;
+                    //         if (pending === 0) {
+                    //             gpus = results;
+                    //         }
+                    //     };
+                    //     console.log("Starting intel_gpu_top process...");
+                    //     intelGpuTopProcess.running = true;
+                    //     intelGpuTopKillTimer.start();
                 } else if (gpu.type === "GENERIC") {
                     let usage = null;
                     let temp = null;

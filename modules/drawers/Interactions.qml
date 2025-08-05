@@ -65,8 +65,7 @@ MouseArea {
 
             if (Config.bar.showOnHover)
                 bar.isHovered = false;
-                console.log("Bar hidden")
-
+            console.log("Bar hidden");
         }
     }
 
@@ -80,8 +79,7 @@ MouseArea {
         // Show bar in non-exclusive mode on hover
         if (!visibilities.bar && Config.bar.showOnHover && x < bar.implicitWidth)
             bar.isHovered = true;
-            // console.log("Bar hovered!")
-
+        // console.log("Bar hovered!")
 
         // Show/hide bar on drag
         if (pressed && dragStart.x < bar.implicitWidth) {

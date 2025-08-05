@@ -32,7 +32,7 @@ Column {
             anchors.left: parent.left
             anchors.leftMargin: Appearance.padding.normal
             anchors.verticalCenter: parent.verticalCenter
-            
+
             StyledText {
                 text: "Process"
                 font.pointSize: Appearance.font.size.small
@@ -42,7 +42,7 @@ Column {
                 opacity: SysMonitorService.sortBy === "name" ? 1.0 : 0.7
                 anchors.centerIn: parent
             }
-            
+
             MouseArea {
                 id: processHeaderArea
                 anchors.fill: parent
@@ -54,9 +54,11 @@ Column {
                     processListView.restoreAnchor();
                 }
             }
-            
+
             Behavior on color {
-                ColorAnimation { duration: Appearance.anim.durations.small }
+                ColorAnimation {
+                    duration: Appearance.anim.durations.small
+                }
             }
         }
 
@@ -78,7 +80,7 @@ Column {
                 opacity: SysMonitorService.sortBy === "cpu" ? 1.0 : 0.7
                 anchors.centerIn: parent
             }
-            
+
             MouseArea {
                 id: cpuHeaderArea
                 anchors.fill: parent
@@ -90,9 +92,11 @@ Column {
                     processListView.restoreAnchor();
                 }
             }
-            
+
             Behavior on color {
-                ColorAnimation { duration: Appearance.anim.durations.small }
+                ColorAnimation {
+                    duration: Appearance.anim.durations.small
+                }
             }
         }
 
@@ -114,7 +118,7 @@ Column {
                 opacity: SysMonitorService.sortBy === "memory" ? 1.0 : 0.7
                 anchors.centerIn: parent
             }
-            
+
             MouseArea {
                 id: memoryHeaderArea
                 anchors.fill: parent
@@ -126,9 +130,11 @@ Column {
                     processListView.restoreAnchor();
                 }
             }
-            
+
             Behavior on color {
-                ColorAnimation { duration: Appearance.anim.durations.small }
+                ColorAnimation {
+                    duration: Appearance.anim.durations.small
+                }
             }
         }
 
@@ -140,7 +146,7 @@ Column {
             anchors.right: parent.right
             anchors.rightMargin: 48
             anchors.verticalCenter: parent.verticalCenter
-            
+
             StyledText {
                 text: "PID"
                 font.pointSize: Appearance.font.size.small
@@ -151,7 +157,7 @@ Column {
                 horizontalAlignment: Text.AlignHCenter
                 anchors.centerIn: parent
             }
-            
+
             MouseArea {
                 id: pidHeaderArea
                 anchors.fill: parent
@@ -163,9 +169,11 @@ Column {
                     processListView.restoreAnchor();
                 }
             }
-            
+
             Behavior on color {
-                ColorAnimation { duration: Appearance.anim.durations.small }
+                ColorAnimation {
+                    duration: Appearance.anim.durations.small
+                }
             }
         }
 
@@ -202,11 +210,8 @@ Column {
                 ColorAnimation {
                     duration: Appearance.anim.durations.small
                 }
-
             }
-
         }
-
     }
 
     ListView {
@@ -227,15 +232,15 @@ Column {
 
         onMovementStarted: isUserScrolling = true
         onMovementEnded: {
-            isUserScrolling = false
+            isUserScrolling = false;
             if (contentY > 40) {
-                stableY = contentY
+                stableY = contentY;
             }
         }
 
         onContentYChanged: {
             if (!isUserScrolling && !isScrollBarDragging && visible && stableY > 40 && Math.abs(contentY - stableY) > 10) {
-                contentY = stableY
+                contentY = stableY;
             }
         }
 
@@ -244,60 +249,66 @@ Column {
             contextMenu: root.contextMenu
         }
 
-        ScrollBar.vertical: ScrollBar { 
+        ScrollBar.vertical: ScrollBar {
             id: verticalScrollBar
-            policy: ScrollBar.AsNeeded 
-            
+            policy: ScrollBar.AsNeeded
+
             onPressedChanged: {
-                processListView.isScrollBarDragging = pressed
+                processListView.isScrollBarDragging = pressed;
                 if (!pressed && processListView.contentY > 40) {
-                    processListView.stableY = processListView.contentY
+                    processListView.stableY = processListView.contentY;
                 }
             }
         }
-        ScrollBar.horizontal: ScrollBar { policy: ScrollBar.AlwaysOff }
+        ScrollBar.horizontal: ScrollBar {
+            policy: ScrollBar.AlwaysOff
+        }
 
         property real wheelMultiplier: 1.8
-        property int  wheelBaseStep: 160
+        property int wheelBaseStep: 160
 
         WheelHandler {
             target: null
-            onWheel: (ev) => {
-                let dy = ev.pixelDelta.y !== 0
-                         ? ev.pixelDelta.y
-                         : (ev.angleDelta.y / 120) * processListView.wheelBaseStep;
-                if (ev.inverted) dy = -dy;
+            onWheel: ev => {
+                let dy = ev.pixelDelta.y !== 0 ? ev.pixelDelta.y : (ev.angleDelta.y / 120) * processListView.wheelBaseStep;
+                if (ev.inverted)
+                    dy = -dy;
 
                 const maxY = Math.max(0, processListView.contentHeight - processListView.height);
-                processListView.contentY = Math.max(0, Math.min(maxY,
-                    processListView.contentY - dy * processListView.wheelMultiplier));
+                processListView.contentY = Math.max(0, Math.min(maxY, processListView.contentY - dy * processListView.wheelMultiplier));
 
                 ev.accepted = true;
             }
         }
 
         property string keyRoleName: "pid"
-        property var    _anchorKey: undefined
-        property real   _anchorOffset: 0
+        property var _anchorKey: undefined
+        property real _anchorOffset: 0
 
         function captureAnchor() {
             const y = contentY + 1;
             const idx = indexAt(0, y);
-            if (idx < 0 || !model || idx >= model.length) return;
+            if (idx < 0 || !model || idx >= model.length)
+                return;
             _anchorKey = model[idx][keyRoleName];
             const it = itemAtIndex(idx);
             _anchorOffset = it ? (y - it.y) : 0;
         }
 
         function restoreAnchor() {
-            Qt.callLater(function() {
-                if (_anchorKey === undefined || !model) return;
+            Qt.callLater(function () {
+                if (_anchorKey === undefined || !model)
+                    return;
 
                 var i = -1;
                 for (var j = 0; j < model.length; ++j) {
-                    if (model[j][keyRoleName] === _anchorKey) { i = j; break; }
+                    if (model[j][keyRoleName] === _anchorKey) {
+                        i = j;
+                        break;
+                    }
                 }
-                if (i < 0) return;
+                if (i < 0)
+                    return;
 
                 positionViewAtIndex(i, ListView.Beginning);
                 const maxY = Math.max(0, contentHeight - height);
@@ -308,9 +319,9 @@ Column {
         onModelChanged: {
             if (model && model.length > 0 && !isUserScrolling && stableY > 40) {
                 // Preserve scroll position when model updates
-                Qt.callLater(function() {
-                    contentY = stableY
-                })
+                Qt.callLater(function () {
+                    contentY = stableY;
+                });
             }
         }
     }

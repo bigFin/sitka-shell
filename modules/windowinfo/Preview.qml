@@ -25,7 +25,7 @@ Item {
     }
     // Initial setup in Component.onCompleted
     Component.onCompleted: {
-        root.client = Niri.focusedWindow || Niri.lastFocusedWindow
+        root.client = Niri.focusedWindow || Niri.lastFocusedWindow;
     }
 
     Layout.preferredWidth: preview.implicitWidth + Appearance.padding.large * 2

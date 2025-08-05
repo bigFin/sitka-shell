@@ -6,7 +6,7 @@ ColumnLayout {
     id: processesTab
     anchors.fill: parent
     spacing: Appearance.padding.normal
-    
+
     property var contextMenu: null
 
     SystemOverview {

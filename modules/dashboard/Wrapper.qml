@@ -10,8 +10,8 @@ import QtQuick
 Item {
     id: root
 
-    property bool expanded : false
-    property bool isvisible : false
+    property bool expanded: false
+    property bool isvisible: false
 
     required property PersistentProperties visibilities
     readonly property PersistentProperties state: PersistentProperties {
@@ -35,7 +35,7 @@ Item {
         running: false
         repeat: false
         onTriggered: {
-            root.isvisible = false
+            root.isvisible = false;
         }
     }
 
@@ -44,8 +44,8 @@ Item {
         function onFocusedWindowIdChanged() {
             // Show dashboard for 1 second
             if ((!root.visibilities.dashboard && !root.expanded) && Niri.focusedWindowId) {
-                root.isvisible = true
-                flashTimer.restart()
+                root.isvisible = true;
+                flashTimer.restart();
             }
         }
     }
@@ -72,7 +72,6 @@ Item {
             }
         }
     ]
-    
 
     // --- MouseArea for hover/click detection ---
     MouseArea {
@@ -84,9 +83,9 @@ Item {
         cursorShape: Qt.PointingHandCursor
         onClicked: {
             if (!root.expanded) {
-                root.expanded = true
+                root.expanded = true;
             } else if (root.expanded) {
-                root.expanded = false
+                root.expanded = false;
             }
         }
     }

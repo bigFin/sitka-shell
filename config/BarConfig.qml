@@ -15,7 +15,7 @@ JsonObject {
         property bool occupiedBg: true
         property bool showWindows: true
         property bool activeTrail: false
-        property string label: "◦" // "" 
+        property string label: "◦" // ""
         property string occupiedLabel: "" // "󰮯"
         property string activeLabel: "󰮯" //Handled in workspace.qml
     }

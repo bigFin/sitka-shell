@@ -16,7 +16,6 @@ Item {
     readonly property int exclusiveZone: Config.bar.persistent || visibilities.bar ? content.implicitWidth : Config.border.thickness
     property bool isHovered
 
-
     function checkPopout(y: real): void {
         content.item?.checkPopout(y);
     }
@@ -31,7 +30,6 @@ Item {
 
         PropertyChanges {
             root.implicitWidth: content.implicitWidth
-
         }
     }
 

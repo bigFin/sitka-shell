@@ -6,7 +6,6 @@ import qs.config
 Row {
     width: parent.width
     spacing: Appearance.padding.normal
-    
 
     Component.onCompleted: {
         SysMonitorService.addRef();
@@ -67,23 +66,19 @@ Row {
                 color: Colours.palette.m3onSurface
                 opacity: 0.7
             }
-
         }
 
         Behavior on color {
             ColorAnimation {
                 duration: Appearance.anim.durations.small
             }
-
         }
 
         Behavior on border.color {
             ColorAnimation {
                 duration: Appearance.anim.durations.small
             }
-
         }
-
     }
 
     Rectangle {
@@ -137,23 +132,19 @@ Row {
                 color: Colours.palette.m3onSurface
                 opacity: 0.7
             }
-
         }
 
         Behavior on color {
             ColorAnimation {
                 duration: Appearance.anim.durations.small
             }
-
         }
 
         Behavior on border.color {
             ColorAnimation {
                 duration: Appearance.anim.durations.small
             }
-
         }
-
     }
 
     Rectangle {
@@ -161,7 +152,6 @@ Row {
         height: 80
         radius: Appearance.rounding.small
         color: SysMonitorService.totalSwapKB > 0 ? Qt.rgba(Colours.palette.warning.r, Colours.palette.warning.g, Colours.palette.warning.b, 0.08) : Qt.rgba(Colours.palette.m3onSurface.r, Colours.palette.m3onSurface.g, Colours.palette.m3onSurface.b, 0.04)
-
 
         Column {
             anchors.left: parent.left
@@ -192,9 +182,6 @@ Row {
                 color: Colours.palette.m3onSurface
                 opacity: 0.7
             }
-
         }
-
     }
-
 }

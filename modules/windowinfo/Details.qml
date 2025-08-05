@@ -4,6 +4,7 @@ import qs.config
 import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
+
 // import qs.modules.bar.popouts
 
 ColumnLayout {
@@ -15,16 +16,15 @@ ColumnLayout {
         target: Niri // Listen to the Niri singleton
         function onFocusedWindowChanged(): void {
             root.client = Niri.focusedWindow || Niri.lastFocusedWindow || null;
-            // console.log("ClientDetailView: Niri.focusedWindow changed. Displaying client:", root.client ? root.client.id : "null/none");
+        // console.log("ClientDetailView: Niri.focusedWindow changed. Displaying client:", root.client ? root.client.id : "null/none");
         }
     }
 
     // Initial setup in Component.onCompleted
     Component.onCompleted: {
-        root.client = Niri.focusedWindow || Niri.lastFocusedWindow
+        root.client = Niri.focusedWindow || Niri.lastFocusedWindow;
         // console.log("ClientDetailView: Initial client set to:", root.client ? root.client.id : "null/none");
     }
-
 
     anchors.fill: parent
     spacing: Appearance.spacing.small
@@ -73,7 +73,6 @@ ColumnLayout {
     //     text: qsTr("Size: %1 x %2").arg(root.client?.size[0] ?? -1).arg(root.client?.size[1] ?? -1)
     //     color: Colours.palette.m3tertiary
     // }
-
 
     // TODO REFERENCE
     Detail {

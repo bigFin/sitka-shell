@@ -29,16 +29,13 @@ Item {
         //     client: root.client
         // }
 
-
         // ProcessListPopout {
         //     id: processListPopout
         // }
 
-
-            
-            ProcessListModal {
-                id: processListModal
-            }
+        ProcessListModal {
+            id: processListModal
+        }
 
         // ProcessListModal {
 

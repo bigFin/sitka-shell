@@ -85,9 +85,7 @@ ScrollView {
                             color: Qt.rgba(Colours.palette.m3onSurfaceVariant.r, Colours.palette.m3onSurfaceVariant.g, Colours.palette.m3onSurfaceVariant.b, 0.6)
                             verticalAlignment: Text.AlignVCenter
                         }
-
                     }
-
                 }
 
                 Rectangle {
@@ -234,13 +232,9 @@ ScrollView {
                             }
                         }
                     }
-
                 }
-
             }
-
         }
-
 
         Rectangle {
             width: parent.width
@@ -276,196 +270,185 @@ ScrollView {
                         color: Colours.palette.m3onSurfaceVariant
                         anchors.verticalCenter: parent.verticalCenter
                     }
-
                 }
-
 
                 Column {
                     width: parent.width
                     spacing: 2
 
-                        Row {
-                            width: parent.width
-                            height: 24
-                            spacing: Appearance.padding.small
+                    Row {
+                        width: parent.width
+                        height: 24
+                        spacing: Appearance.padding.small
 
-                            StyledText {
-                                text: "Device"
-                                font.pointSize: Appearance.font.size.small
-                                font.family: Appearance.font.family.sans
-                                font.weight: Font.Bold
-                                color: Colours.palette.m3onSurfaceVariant
-                                width: parent.width * 0.25
-                                elide: Text.ElideRight
-                                verticalAlignment: Text.AlignVCenter
-                            }
-
-                            StyledText {
-                                text: "Mount"
-                                font.pointSize: Appearance.font.size.small
-                                font.family: Appearance.font.family.sans
-                                font.weight: Font.Bold
-                                color: Colours.palette.m3onSurfaceVariant
-                                width: parent.width * 0.2
-                                elide: Text.ElideRight
-                                verticalAlignment: Text.AlignVCenter
-                            }
-
-                            StyledText {
-                                text: "Size"
-                                font.pointSize: Appearance.font.size.small
-                                font.family: Appearance.font.family.sans
-                                font.weight: Font.Bold
-                                color: Colours.palette.m3onSurfaceVariant
-                                width: parent.width * 0.15
-                                elide: Text.ElideRight
-                                verticalAlignment: Text.AlignVCenter
-                            }
-
-                            StyledText {
-                                text: "Used"
-                                font.pointSize: Appearance.font.size.small
-                                font.family: Appearance.font.family.sans
-                                font.weight: Font.Bold
-                                color: Colours.palette.m3onSurfaceVariant
-                                width: parent.width * 0.15
-                                elide: Text.ElideRight
-                                verticalAlignment: Text.AlignVCenter
-                            }
-
-                            StyledText {
-                                text: "Available"
-                                font.pointSize: Appearance.font.size.small
-                                font.family: Appearance.font.family.sans
-                                font.weight: Font.Bold
-                                color: Colours.palette.m3onSurfaceVariant
-                                width: parent.width * 0.15
-                                elide: Text.ElideRight
-                                verticalAlignment: Text.AlignVCenter
-                            }
-
-                            StyledText {
-                                text: "Use%"
-                                font.pointSize: Appearance.font.size.small
-                                font.family: Appearance.font.family.sans
-                                font.weight: Font.Bold
-                                color: Colours.palette.m3onSurfaceVariant
-                                width: parent.width * 0.1
-                                elide: Text.ElideRight
-                                verticalAlignment: Text.AlignVCenter
-                            }
-
+                        StyledText {
+                            text: "Device"
+                            font.pointSize: Appearance.font.size.small
+                            font.family: Appearance.font.family.sans
+                            font.weight: Font.Bold
+                            color: Colours.palette.m3onSurfaceVariant
+                            width: parent.width * 0.25
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
                         }
 
-                        Repeater {
-                            id: diskMountRepeater
-
-                            model: SysMonitorService.diskMounts
-
-                            Rectangle {
-                                width: parent.width
-                                height: 24
-                                radius: Appearance.rounding.small
-                                color: diskMouseArea.containsMouse ? Qt.rgba(Colours.palette.m3onSurfaceVariant.r, Colours.palette.m3onSurfaceVariant.g, Colours.palette.m3onSurfaceVariant.b, 0.04) : "transparent"
-
-                                MouseArea {
-                                    id: diskMouseArea
-
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                }
-
-                                Row {
-                                    anchors.fill: parent
-                                    spacing: Appearance.padding.small
-
-                                    StyledText {
-                                        text: modelData.device
-                                        font.pointSize: Appearance.font.size.small
-                                        font.family: Appearance.font.family.sans
-                                        color: Colours.palette.m3onSurfaceVariant
-                                        width: parent.width * 0.25
-                                        elide: Text.ElideRight
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-
-                                    StyledText {
-                                        text: modelData.mount
-                                        font.pointSize: Appearance.font.size.small
-                                        font.family: Appearance.font.family.sans
-                                        color: Colours.palette.m3onSurfaceVariant
-                                        width: parent.width * 0.2
-                                        elide: Text.ElideRight
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-
-                                    StyledText {
-                                        text: modelData.size
-                                        font.pointSize: Appearance.font.size.small
-                                        font.family: Appearance.font.family.sans
-                                        color: Colours.palette.m3onSurfaceVariant
-                                        width: parent.width * 0.15
-                                        elide: Text.ElideRight
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-
-                                    StyledText {
-                                        text: modelData.used
-                                        font.pointSize: Appearance.font.size.small
-                                        font.family: Appearance.font.family.sans
-                                        color: Colours.palette.m3onSurfaceVariant
-                                        width: parent.width * 0.15
-                                        elide: Text.ElideRight
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-
-                                    StyledText {
-                                        text: modelData.avail
-                                        font.pointSize: Appearance.font.size.small
-                                        font.family: Appearance.font.family.sans
-                                        color: Colours.palette.m3onSurfaceVariant
-                                        width: parent.width * 0.15
-                                        elide: Text.ElideRight
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-
-                                    StyledText {
-                                        text: modelData.percent
-                                        font.pointSize: Appearance.font.size.small
-                                        font.family: Appearance.font.family.sans
-                                        color: {
-                                            const percent = parseInt(modelData.percent);
-                                            if (percent > 90)
-                                                return Colours.palette.error;
-
-                                            if (percent > 75)
-                                                return Colours.palette.warning;
-
-                                            return Colours.palette.m3onSurfaceVariant;
-                                        }
-                                        width: parent.width * 0.1
-                                        elide: Text.ElideRight
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-
-                                }
-
-                            }
-
+                        StyledText {
+                            text: "Mount"
+                            font.pointSize: Appearance.font.size.small
+                            font.family: Appearance.font.family.sans
+                            font.weight: Font.Bold
+                            color: Colours.palette.m3onSurfaceVariant
+                            width: parent.width * 0.2
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
                         }
 
+                        StyledText {
+                            text: "Size"
+                            font.pointSize: Appearance.font.size.small
+                            font.family: Appearance.font.family.sans
+                            font.weight: Font.Bold
+                            color: Colours.palette.m3onSurfaceVariant
+                            width: parent.width * 0.15
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
+                        StyledText {
+                            text: "Used"
+                            font.pointSize: Appearance.font.size.small
+                            font.family: Appearance.font.family.sans
+                            font.weight: Font.Bold
+                            color: Colours.palette.m3onSurfaceVariant
+                            width: parent.width * 0.15
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
+                        StyledText {
+                            text: "Available"
+                            font.pointSize: Appearance.font.size.small
+                            font.family: Appearance.font.family.sans
+                            font.weight: Font.Bold
+                            color: Colours.palette.m3onSurfaceVariant
+                            width: parent.width * 0.15
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
+                        StyledText {
+                            text: "Use%"
+                            font.pointSize: Appearance.font.size.small
+                            font.family: Appearance.font.family.sans
+                            font.weight: Font.Bold
+                            color: Colours.palette.m3onSurfaceVariant
+                            width: parent.width * 0.1
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
                     }
 
+                    Repeater {
+                        id: diskMountRepeater
+
+                        model: SysMonitorService.diskMounts
+
+                        Rectangle {
+                            width: parent.width
+                            height: 24
+                            radius: Appearance.rounding.small
+                            color: diskMouseArea.containsMouse ? Qt.rgba(Colours.palette.m3onSurfaceVariant.r, Colours.palette.m3onSurfaceVariant.g, Colours.palette.m3onSurfaceVariant.b, 0.04) : "transparent"
+
+                            MouseArea {
+                                id: diskMouseArea
+
+                                anchors.fill: parent
+                                hoverEnabled: true
+                            }
+
+                            Row {
+                                anchors.fill: parent
+                                spacing: Appearance.padding.small
+
+                                StyledText {
+                                    text: modelData.device
+                                    font.pointSize: Appearance.font.size.small
+                                    font.family: Appearance.font.family.sans
+                                    color: Colours.palette.m3onSurfaceVariant
+                                    width: parent.width * 0.25
+                                    elide: Text.ElideRight
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                StyledText {
+                                    text: modelData.mount
+                                    font.pointSize: Appearance.font.size.small
+                                    font.family: Appearance.font.family.sans
+                                    color: Colours.palette.m3onSurfaceVariant
+                                    width: parent.width * 0.2
+                                    elide: Text.ElideRight
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                StyledText {
+                                    text: modelData.size
+                                    font.pointSize: Appearance.font.size.small
+                                    font.family: Appearance.font.family.sans
+                                    color: Colours.palette.m3onSurfaceVariant
+                                    width: parent.width * 0.15
+                                    elide: Text.ElideRight
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                StyledText {
+                                    text: modelData.used
+                                    font.pointSize: Appearance.font.size.small
+                                    font.family: Appearance.font.family.sans
+                                    color: Colours.palette.m3onSurfaceVariant
+                                    width: parent.width * 0.15
+                                    elide: Text.ElideRight
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                StyledText {
+                                    text: modelData.avail
+                                    font.pointSize: Appearance.font.size.small
+                                    font.family: Appearance.font.family.sans
+                                    color: Colours.palette.m3onSurfaceVariant
+                                    width: parent.width * 0.15
+                                    elide: Text.ElideRight
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                StyledText {
+                                    text: modelData.percent
+                                    font.pointSize: Appearance.font.size.small
+                                    font.family: Appearance.font.family.sans
+                                    color: {
+                                        const percent = parseInt(modelData.percent);
+                                        if (percent > 90)
+                                            return Colours.palette.error;
+
+                                        if (percent > 75)
+                                            return Colours.palette.warning;
+
+                                        return Colours.palette.m3onSurfaceVariant;
+                                    }
+                                    width: parent.width * 0.1
+                                    elide: Text.ElideRight
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+                            }
+                        }
+                    }
+                }
             }
-
         }
-
     }
-
 }

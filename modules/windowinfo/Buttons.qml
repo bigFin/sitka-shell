@@ -1,7 +1,8 @@
+pragma ComponentBehavior: Bound
+
 import qs.components
 import qs.services
 import qs.config
-import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
 
@@ -152,6 +153,8 @@ ColumnLayout {
                     onColor: Colours.palette.m3onSecondaryContainer
                     text: root.client?.pinned ? qsTr("Unpin") : qsTr("Pin")
                     icon: root.client?.pinned ? "push_pin" : "push_pin"
+
+                    // TODO Add a way to pin stuff in Niri
 
                     function onClicked(): void {
                         Niri.dispatch(`pin address:0x${root.client?.address}`);

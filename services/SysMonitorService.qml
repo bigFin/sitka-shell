@@ -736,7 +736,7 @@ printf "}\\n"`
         onExited: exitCode => {
             if (exitCode !== 0) {
                 console.warn("Unified stats process failed with exit code:", exitCode);
-                isUpdating = false;
+                root.isUpdating = false;
             }
         }
         stdout: StdioCollector {
@@ -746,16 +746,16 @@ printf "}\\n"`
                     const lastBraceIndex = fullText.lastIndexOf('}');
                     if (lastBraceIndex === -1) {
                         console.error("SysMonitorService: No JSON object found in output.", fullText);
-                        isUpdating = false;
+                        root.isUpdating = false;
                         return;
                     }
                     const jsonText = fullText.substring(0, lastBraceIndex + 1);
 
                     try {
                         const data = JSON.parse(jsonText);
-                        parseUnifiedStats(jsonText);
+                        root.parseUnifiedStats(jsonText);
                     } catch (e) {
-                        isUpdating = false;
+                        root.isUpdating = false;
                         return;
                     }
                 }

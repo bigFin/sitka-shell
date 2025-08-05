@@ -1,8 +1,4 @@
-import qs.components
-import qs.services
 import qs.config
-import Quickshell
-import Quickshell.Widgets
 import QtQuick
 
 Item {

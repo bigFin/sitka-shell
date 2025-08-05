@@ -1,7 +1,8 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 import qs.services
-import qs.components.misc
 import qs.components
 import qs.config
 
@@ -245,6 +246,7 @@ Column {
         }
 
         delegate: ProcessListItem {
+            required property var modelData
             process: modelData
             contextMenu: root.contextMenu
         }

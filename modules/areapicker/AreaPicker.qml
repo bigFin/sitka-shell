@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import qs.components.containers
-import qs.components.misc
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io

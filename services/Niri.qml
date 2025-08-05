@@ -4,7 +4,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Quickshell.Wayland
 
 Singleton {
     id: root
@@ -91,7 +90,7 @@ Singleton {
             if (root.niriAvailable) {
                 console.log("NiriService: niri found, starting event stream and loading initial data");
                 eventStreamProcess.running = true;
-                loadInitialWorkspaceData();
+                root.loadInitialWorkspaceData();
             } else {
                 console.log("NiriService: niri not found, workspace features disabled");
             }
@@ -115,7 +114,7 @@ Singleton {
                         console.log("NiriService: Loaded initial workspace data");
                         const workspaces = JSON.parse(text.trim());
                         // Initial query returns array directly, event stream wraps it in WorkspacesChanged
-                        handleWorkspacesChanged({
+                        root.handleWorkspacesChanged({
                             workspaces: workspaces
                         });
                     } catch (e) {
@@ -138,7 +137,7 @@ Singleton {
                     try {
                         const windowsData = JSON.parse(text.trim());
                         if (windowsData && windowsData.windows) {
-                            handleWindowsChanged(windowsData);
+                            root.handleWindowsChanged(windowsData);
                             console.log("NiriService: Loaded", windowsData.windows.length, "initial windows");
                         }
                     } catch (e) {
@@ -161,7 +160,7 @@ Singleton {
                     try {
                         const focusedData = JSON.parse(text.trim());
                         if (focusedData && focusedData.id) {
-                            handleWindowFocusChanged({
+                            root.handleWindowFocusChanged({
                                 id: focusedData.id
                             });
                             console.log("NiriService: Loaded initial focused window:", focusedData.id);
@@ -191,7 +190,7 @@ Singleton {
             onRead: data => {
                 try {
                     const event = JSON.parse(data.trim());
-                    handleNiriEvent(event);
+                    root.handleNiriEvent(event);
                 } catch (e) {
                     console.warn("NiriService: Failed to parse event:", data, e);
                 }

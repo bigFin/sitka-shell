@@ -1,4 +1,4 @@
-import "../services"
+import qs.modules.launcher.services
 import qs.components
 import qs.services
 import qs.config
@@ -16,7 +16,7 @@ Item {
     anchors.right: parent?.right
 
     StateLayer {
-        radius: Appearance.rounding.full
+        radius: Appearance.rounding.small
 
         function onClicked(): void {
             root.modelData?.onClicked(root.list);
@@ -38,7 +38,7 @@ Item {
             border.color: Qt.alpha(`#${root.modelData?.colours?.outline}`, 0.5)
 
             color: `#${root.modelData?.colours?.surface}`
-            radius: Appearance.rounding.full
+            radius: Appearance.rounding.small
             implicitWidth: parent.height * 0.8
             implicitHeight: parent.height * 0.8
 
@@ -57,7 +57,7 @@ Item {
 
                     implicitWidth: preview.implicitWidth
                     color: `#${root.modelData?.colours?.primary}`
-                    radius: Appearance.rounding.full
+                    radius: Appearance.rounding.small
                 }
             }
         }

@@ -1,11 +1,5 @@
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Effects
 import QtQuick.Layouts
-import Quickshell
-import Quickshell.Io
-import Quickshell.Wayland
-import Quickshell.Widgets
 import qs.services
 import qs.widgets
 import qs.config

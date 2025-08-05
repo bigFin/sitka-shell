@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import "items"
 import qs.services
 import qs.config

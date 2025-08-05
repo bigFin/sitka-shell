@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import qs.components
 import qs.services
 import qs.utils
@@ -110,9 +112,9 @@ Item {
 
                         onClicked: mouse => {
                             if (mouse.button === Qt.LeftButton) {
-                                console.log("Right-clicked on window:", modelData.title, "ID:", modelData.id);
-                                if (modelData && Niri.focusWindow) {
-                                    Niri.focusWindow(modelData.id);
+                                console.log("Right-clicked on window:", icon.modelData.title, "ID:", icon.modelData.id);
+                                if (icon.modelData && Niri.focusWindow) {
+                                    Niri.focusWindow(icon.modelData.id);
                                 }
                             }
                         }

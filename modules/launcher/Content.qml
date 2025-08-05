@@ -45,7 +45,7 @@ Item {
         id: searchWrapper
 
         color: Colours.alpha(Colours.palette.m3surfaceContainer, true)
-        radius: Appearance.rounding.full
+        radius: Appearance.rounding.small
 
         anchors.left: parent.left
         anchors.right: parent.right

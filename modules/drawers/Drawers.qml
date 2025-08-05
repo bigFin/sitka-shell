@@ -7,7 +7,6 @@ import qs.config
 import qs.modules.bar
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Effects
 

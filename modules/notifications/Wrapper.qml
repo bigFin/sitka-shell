@@ -1,4 +1,3 @@
-import qs.config
 import Quickshell
 import QtQuick
 

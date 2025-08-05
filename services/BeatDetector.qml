@@ -1,12 +1,15 @@
 pragma Singleton
 
 import Quickshell
-import Quickshell.Io
+
+// import Quickshell.Io
 
 Singleton {
     id: root
 
     property real bpm: 1
+
+    //TODO Enable Beat Detector
 
     // Process {
     //     running: false

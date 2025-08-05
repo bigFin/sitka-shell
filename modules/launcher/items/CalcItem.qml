@@ -30,7 +30,7 @@ Item {
     }
 
     StateLayer {
-        radius: Appearance.rounding.full
+        radius: Appearance.rounding.small
 
         function onClicked(): void {
             root.onClicked();

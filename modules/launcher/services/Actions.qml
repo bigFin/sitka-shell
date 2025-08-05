@@ -1,6 +1,6 @@
 pragma Singleton
 
-import ".."
+import qs.modules.launcher
 import qs.services
 import qs.config
 import qs.utils

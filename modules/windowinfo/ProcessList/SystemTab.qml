@@ -1,10 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import qs.services
-import qs.components.misc
 import qs.components
 import qs.config
-import QtQuick.Layouts
 
 ScrollView {
     anchors.fill: parent
@@ -354,6 +352,9 @@ ScrollView {
                         model: SysMonitorService.diskMounts
 
                         Rectangle {
+                            id: individualDiskMount
+                            required property var modelData
+
                             width: parent.width
                             height: 24
                             radius: Appearance.rounding.small
@@ -371,7 +372,7 @@ ScrollView {
                                 spacing: Appearance.padding.small
 
                                 StyledText {
-                                    text: modelData.device
+                                    text: individualDiskMount.modelData.device
                                     font.pointSize: Appearance.font.size.small
                                     font.family: Appearance.font.family.sans
                                     color: Colours.palette.m3onSurfaceVariant
@@ -382,7 +383,7 @@ ScrollView {
                                 }
 
                                 StyledText {
-                                    text: modelData.mount
+                                    text: individualDiskMount.modelData.mount
                                     font.pointSize: Appearance.font.size.small
                                     font.family: Appearance.font.family.sans
                                     color: Colours.palette.m3onSurfaceVariant
@@ -393,7 +394,7 @@ ScrollView {
                                 }
 
                                 StyledText {
-                                    text: modelData.size
+                                    text: individualDiskMount.modelData.size
                                     font.pointSize: Appearance.font.size.small
                                     font.family: Appearance.font.family.sans
                                     color: Colours.palette.m3onSurfaceVariant
@@ -404,7 +405,7 @@ ScrollView {
                                 }
 
                                 StyledText {
-                                    text: modelData.used
+                                    text: individualDiskMount.modelData.used
                                     font.pointSize: Appearance.font.size.small
                                     font.family: Appearance.font.family.sans
                                     color: Colours.palette.m3onSurfaceVariant
@@ -415,7 +416,7 @@ ScrollView {
                                 }
 
                                 StyledText {
-                                    text: modelData.avail
+                                    text: individualDiskMount.modelData.avail
                                     font.pointSize: Appearance.font.size.small
                                     font.family: Appearance.font.family.sans
                                     color: Colours.palette.m3onSurfaceVariant
@@ -426,11 +427,11 @@ ScrollView {
                                 }
 
                                 StyledText {
-                                    text: modelData.percent
+                                    text: individualDiskMount.modelData.percent
                                     font.pointSize: Appearance.font.size.small
                                     font.family: Appearance.font.family.sans
                                     color: {
-                                        const percent = parseInt(modelData.percent);
+                                        const percent = parseInt(individualDiskMount.modelData.percent);
                                         if (percent > 90)
                                             return Colours.palette.error;
 

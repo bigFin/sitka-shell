@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.services
+import qs.config
 
 ColumnLayout {
     id: processesTab

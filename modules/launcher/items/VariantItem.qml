@@ -1,4 +1,4 @@
-import "../services"
+import qs.modules.launcher.services
 import qs.components
 import qs.services
 import qs.config
@@ -16,7 +16,7 @@ Item {
     anchors.right: parent?.right
 
     StateLayer {
-        radius: Appearance.rounding.full
+        radius: Appearance.rounding.small
 
         function onClicked(): void {
             root.modelData?.onClicked(root.list);

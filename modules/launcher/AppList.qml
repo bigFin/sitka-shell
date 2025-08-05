@@ -31,7 +31,7 @@ StyledListView {
     highlightResizeDuration: 0
 
     highlight: StyledRect {
-        radius: Appearance.rounding.full
+        radius: Appearance.rounding.small
         color: Colours.palette.m3onSurface
         opacity: 0.08
     }

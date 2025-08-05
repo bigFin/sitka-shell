@@ -1,4 +1,3 @@
-import qs.widgets
 import qs.services
 import qs.config
 import Quickshell.Widgets
@@ -21,7 +20,7 @@ ColumnLayout {
     property real backgroundMarginBottom: 0
     property real backgroundMargins: -1 // -1 means "not set"
 
-    signal collapsed()
+    signal collapsed
 
     // Header height constant
     readonly property int headerHeight: headerRow.implicitHeight + Appearance.padding.small * 2  // Typical Material header height
@@ -37,19 +36,17 @@ ColumnLayout {
         // Layout.preferredHeight: 100
         Layout.fillWidth: true
 
-        anchors.leftMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginLeft
-        anchors.rightMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginRight
-        anchors.topMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginTop
-        anchors.bottomMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginBottom
+        Layout.leftMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginLeft
+        Layout.rightMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginRight
+        Layout.topMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginTop
+        Layout.bottomMargin: root.backgroundMargins >= 0 ? root.backgroundMargins : root.backgroundMarginBottom
 
         color: root.backgroundColor
         // color: "transparent"
         radius: Appearance.rounding.small
 
         // Height is header + content (if expanded) + margins
-        Layout.preferredHeight: root.headerHeight +
-                               (root.expanded ? contentWrapper.implicitHeight : 0) +
-                               (anchors.topMargin + anchors.bottomMargin)
+        Layout.preferredHeight: root.headerHeight + (root.expanded ? contentWrapper.implicitHeight : 0) + (anchors.topMargin + anchors.bottomMargin)
 
         // Behavior on color {
         //     NumberAnimation {
@@ -79,7 +76,7 @@ ColumnLayout {
                 Layout.bottomMargin: Appearance.padding.small
 
                 spacing: Appearance.spacing.normal
-                height: root.headerHeight
+                implicitHeight: root.headerHeight
 
                 StyledText {
                     Layout.fillWidth: true
@@ -99,7 +96,9 @@ ColumnLayout {
                     implicitHeight: expandIcon.implicitHeight + Appearance.padding.small
 
                     StateLayer {
-                        function onClicked(): void { root.expanded = !root.expanded; }
+                        function onClicked(): void {
+                            root.expanded = !root.expanded;
+                        }
                     }
 
                     MaterialIcon {
@@ -128,7 +127,6 @@ ColumnLayout {
                 // topMargin: Appearance.spacing.smaller
                 // bottomMargin: Appearance.spacing.smaller
                 bottomMargin: Appearance.padding.large
-
 
                 Loader {
                     id: contentLoader

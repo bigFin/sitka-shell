@@ -1,6 +1,6 @@
 import QtQuick
 import qs.services
-import qs.widgets
+import qs.components
 import qs.config
 
 Rectangle {
@@ -21,21 +21,21 @@ Rectangle {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onClicked: (mouse) => {
+        onClicked: mouse => {
             if (mouse.button === Qt.RightButton) {
-                if (process && process.pid > 0 && contextMenu) {
-                    contextMenu.processData = process;
+                if (processItem.process && processItem.process.pid > 0 && processItem.contextMenu) {
+                    processItem.contextMenu.processData = processItem.process;
                     let globalPos = processMouseArea.mapToGlobal(mouse.x, mouse.y);
-                    let localPos = contextMenu.parent ? contextMenu.parent.mapFromGlobal(globalPos.x, globalPos.y) : globalPos;
-                    contextMenu.show(localPos.x, localPos.y);
+                    let localPos = processItem.contextMenu.parent ? processItem.contextMenu.parent.mapFromGlobal(globalPos.x, globalPos.y) : globalPos;
+                    processItem.contextMenu.show(localPos.x, localPos.y);
                 }
             }
         }
         onPressAndHold: {
-            if (process && process.pid > 0 && contextMenu) {
-                contextMenu.processData = process;
+            if (processItem.process && processItem.process.pid > 0 && processItem.contextMenu) {
+                processItem.contextMenu.processData = processItem.process;
                 let globalPos = processMouseArea.mapToGlobal(processMouseArea.width / 2, processMouseArea.height / 2);
-                contextMenu.show(globalPos.x, globalPos.y);
+                processItem.contextMenu.show(globalPos.x, globalPos.y);
             }
         }
     }
@@ -47,13 +47,13 @@ Rectangle {
         MaterialIcon {
             id: processIcon
 
-            text: SysMonitorService.getProcessIcon(process ? process.command : "")
+            text: SysMonitorService.getProcessIcon(processItem.process ? processItem.process.command : "")
             font.pointSize: Appearance.font.size.small * 2
             color: {
-                if (process && process.cpu > 80)
+                if (processItem.process && processItem.process.cpu > 80)
                     return Colours.palette.error;
 
-                if (process && process.cpu > 50)
+                if (processItem.process && processItem.process.cpu > 50)
                     return Colours.palette.warning;
 
                 return Colours.palette.m3onSurface;
@@ -64,7 +64,7 @@ Rectangle {
         }
 
         StyledText {
-            text: process ? process.displayName : ""
+            text: processItem.process ? processItem.process.displayName : ""
             font.pointSize: Appearance.font.size.small
             font.family: Appearance.font.family.mono
             font.weight: Font.Medium
@@ -83,10 +83,10 @@ Rectangle {
             height: 20
             radius: Appearance.rounding.normal
             color: {
-                if (process && process.cpu > 80)
+                if (processItem.process && processItem.process.cpu > 80)
                     return Qt.rgba(Colours.palette.m3onErrorContainer.r, Colours.palette.m3onErrorContainer.g, Colours.palette.m3onErrorContainer.b, 0.12);
 
-                if (process && process.cpu > 50)
+                if (processItem.process && processItem.process.cpu > 50)
                     return Qt.rgba(Colours.palette.warning.r, Colours.palette.warning.g, Colours.palette.warning.b, 0.12);
 
                 return Qt.rgba(Colours.palette.m3onSurface.r, Colours.palette.m3onSurface.g, Colours.palette.m3onSurface.b, 0.08);
@@ -96,22 +96,21 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             StyledText {
-                text: SysMonitorService.formatCpuUsage(process ? process.cpu : 0)
+                text: SysMonitorService.formatCpuUsage(processItem.process ? processItem.process.cpu : 0)
                 font.pointSize: Appearance.font.size.small
                 font.family: Appearance.font.family.mono
                 font.weight: Font.Bold
                 color: {
-                    if (process && process.cpu > 80)
+                    if (processItem.process && processItem.process.cpu > 80)
                         return Colours.palette.error;
 
-                    if (process && process.cpu > 50)
+                    if (processItem.process && processItem.process.cpu > 50)
                         return Colours.palette.warning;
 
                     return Colours.palette.m3onSurface;
                 }
                 anchors.centerIn: parent
             }
-
         }
 
         Rectangle {
@@ -121,10 +120,10 @@ Rectangle {
             height: 20
             radius: Appearance.rounding.normal
             color: {
-                if (process && process.memoryKB > 1024 * 1024)
+                if (processItem.process && processItem.process.memoryKB > 1024 * 1024)
                     return Qt.rgba(Colours.palette.m3onErrorContainer.r, Colours.palette.m3onErrorContainer.g, Colours.palette.m3onErrorContainer.b, 0.12);
 
-                if (process && process.memoryKB > 512 * 1024)
+                if (processItem.process && processItem.process.memoryKB > 512 * 1024)
                     return Qt.rgba(Colours.palette.warning.r, Colours.palette.warning.g, Colours.palette.warning.b, 0.12);
 
                 return Qt.rgba(Colours.palette.m3onSurface.r, Colours.palette.m3onSurface.g, Colours.palette.m3onSurface.b, 0.08);
@@ -134,26 +133,25 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             StyledText {
-                text: SysMonitorService.formatMemoryUsage(process ? process.memoryKB : 0)
+                text: SysMonitorService.formatMemoryUsage(processItem.process ? processItem.process.memoryKB : 0)
                 font.pointSize: Appearance.font.size.small
                 font.family: Appearance.font.family.mono
                 font.weight: Font.Bold
                 color: {
-                    if (process && process.memoryKB > 1024 * 1024)
+                    if (processItem.process && processItem.process.memoryKB > 1024 * 1024)
                         return Colours.palette.error;
 
-                        if (process && process.memoryKB > 512 * 1024)
+                    if (processItem.process && processItem.process.memoryKB > 512 * 1024)
                         return Colours.palette.warning;
 
-                        return Colours.palette.m3onSurface;
+                    return Colours.palette.m3onSurface;
                 }
                 anchors.centerIn: parent
             }
-
         }
 
         StyledText {
-            text: process ? process.pid.toString() : ""
+            text: processItem.process ? processItem.process.pid.toString() : ""
             font.pointSize: Appearance.font.size.small
             font.family: Appearance.font.family.mono
             color: Colours.palette.m3onSurface
@@ -190,11 +188,11 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
-                    if (process && process.pid > 0 && contextMenu) {
-                        contextMenu.processData = process;
+                    if (processItem.process && processItem.process.pid > 0 && processItem.contextMenu) {
+                        processItem.contextMenu.processData = processItem.process;
                         let globalPos = menuButtonArea.mapToGlobal(menuButtonArea.width / 2, menuButtonArea.height);
-                        let localPos = contextMenu.parent ? contextMenu.parent.mapFromGlobal(globalPos.x, globalPos.y) : globalPos;
-                        contextMenu.show(localPos.x, localPos.y);
+                        let localPos = processItem.contextMenu.parent ? processItem.contextMenu.parent.mapFromGlobal(globalPos.x, globalPos.y) : globalPos;
+                        processItem.contextMenu.show(localPos.x, localPos.y);
                     }
                 }
             }
@@ -203,11 +201,7 @@ Rectangle {
                 ColorAnimation {
                     duration: Appearance.anim.durations.small
                 }
-
             }
-
         }
-
     }
-
 }

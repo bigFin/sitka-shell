@@ -1,9 +1,6 @@
-import qs.widgets
 import qs.services
 import qs.config
-import Quickshell.Widgets
 import QtQuick
-import QtQuick.Layouts
 
 StyledRect {
     property color basecolor: Colours.palette.m3secondaryContainer

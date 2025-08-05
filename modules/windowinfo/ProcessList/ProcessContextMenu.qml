@@ -1,9 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Io
 import qs.services
-import qs.widgets
+import qs.components
 import qs.config
 
 Popup {
@@ -15,7 +14,7 @@ Popup {
         if (!processContextMenu.parent && typeof Overlay !== "undefined" && Overlay.overlay) {
             processContextMenu.parent = Overlay.overlay;
         }
-        
+
         const menuWidth = 180;
         const menuHeight = menuColumn.implicitHeight + Appearance.padding.small * 2;
         const screenWidth = Screen.width;
@@ -41,15 +40,15 @@ Popup {
     padding: 0
     modal: false
     closePolicy: Popup.CloseOnEscape
-    
+
     onClosed: {
         closePolicy = Popup.CloseOnEscape;
     }
-    
+
     onOpened: {
         outsideClickTimer.start();
     }
-    
+
     Timer {
         id: outsideClickTimer
         interval: 100
@@ -57,7 +56,7 @@ Popup {
             processContextMenu.closePolicy = Popup.CloseOnEscape | Popup.CloseOnPressOutside;
         }
     }
-    
+
     background: Rectangle {
         color: "transparent"
     }

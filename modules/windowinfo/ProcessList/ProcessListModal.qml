@@ -1,13 +1,10 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Effects
 import QtQuick.Layouts
-import Quickshell
-import Quickshell.Io
-import Quickshell.Wayland
-import Quickshell.Widgets
 import qs.services
-import qs.widgets
+import qs.components
+import qs.components.misc
 import qs.config
 
 Item {
@@ -33,7 +30,7 @@ Item {
     // Remove onBackgroundClicked, as it's modal-specific
 
     focus: true
-    Keys.onPressed: function(event) {
+    Keys.onPressed: function (event) {
         if (event.key === Qt.Key_Escape) {
             // Optionally, you can hide the item or do something else
             // processListItem.visible = false;
@@ -49,16 +46,14 @@ Item {
             event.accepted = true;
         }
     }
-    
 
-    
     ColumnLayout {
         anchors.fill: parent
         spacing: Appearance.padding.normal
 
         Rectangle {
             Layout.fillWidth: true
-            height: 52
+            implicitHeight: 52
             color: Colours.palette.m3surfaceContainer
             radius: Appearance.rounding.small
 
@@ -68,25 +63,30 @@ Item {
                 spacing: Appearance.padding.small
 
                 Repeater {
-                    model: tabNames
+                    model: processListItem.tabNames
 
                     Rectangle {
-                        Layout.alignment : Qt.AlignCenter
+                        id: individualTab
+
+                        required property int index
+                        required property var modelData
+
+                        Layout.alignment: Qt.AlignCenter
                         Layout.fillWidth: true
                         Layout.fillHeight: true
 
                         radius: Appearance.rounding.small
-                        color: currentTab === index ? Colours.palette.m3primaryContainer : (tabMouseArea.containsMouse ? Qt.rgba(Colours.palette.m3primaryContainer.r, Colours.palette.m3primaryContainer.g, Colours.palette.m3primaryContainer.b, 0.12) : "transparent")
-                        border.color: currentTab === index ? Colours.palette.m3primaryContainer : "transparent"
-                        border.width: currentTab === index ? 1 : 0
+                        color: processListItem.currentTab === index ? Colours.palette.m3primaryContainer : (tabMouseArea.containsMouse ? Qt.rgba(Colours.palette.m3primaryContainer.r, Colours.palette.m3primaryContainer.g, Colours.palette.m3primaryContainer.b, 0.12) : "transparent")
+                        border.color: processListItem.currentTab === index ? Colours.palette.m3primaryContainer : "transparent"
+                        border.width: processListItem.currentTab === index ? 1 : 0
 
                         RowLayout {
                             anchors.centerIn: parent
-                            spacing:  Appearance.padding.small
+                            spacing: Appearance.padding.small
 
                             MaterialIcon {
                                 text: {
-                                    switch (index) {
+                                    switch (individualTab.index) {
                                     case 0:
                                         return "list_alt";
                                     case 1:
@@ -98,8 +98,8 @@ Item {
                                     }
                                 }
                                 font.pointSize: Appearance.font.size.small * 2
-                                color: currentTab === index ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3onSurfaceVariant
-                                opacity: currentTab === index ? 1 : 0.7
+                                color: processListItem.currentTab === individualTab.index ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3onSurfaceVariant
+                                opacity: processListItem.currentTab === individualTab.index ? 1 : 0.7
                                 // anchors.verticalCenter: parent.verticalCenter
 
                                 Behavior on color {
@@ -110,10 +110,10 @@ Item {
                             }
 
                             StyledText {
-                                text: modelData
+                                text: individualTab.modelData
                                 font.pointSize: Appearance.font.size.normal
                                 font.weight: Font.Medium
-                                color: currentTab === index ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3onSurfaceVariant
+                                color: processListItem.currentTab === individualTab.index ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3onSurfaceVariant
                                 // anchors.verticalCenter: parent.verticalCenter
                                 // anchors.verticalCenterOffset: -1
 
@@ -132,7 +132,7 @@ Item {
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
-                                currentTab = index;
+                                processListItem.currentTab = individualTab.index;
                             }
                         }
 
@@ -163,15 +163,15 @@ Item {
 
                 anchors.fill: parent
                 anchors.margins: Appearance.padding.small
-                active: currentTab === 0
-                visible: currentTab === 0
-                opacity: currentTab === 0 ? 1 : 0
+                active: processListItem.currentTab === 0
+                visible: processListItem.currentTab === 0
+                opacity: processListItem.currentTab === 0 ? 1 : 0
                 sourceComponent: processesTabComponent
 
                 Behavior on opacity {
                     NumberAnimation {
                         duration: Appearance.anim.durations.normal
-                        easing.type: Appearance.anim.curves.emphasizedDecel
+                        easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
                     }
                 }
             }
@@ -181,15 +181,15 @@ Item {
 
                 anchors.fill: parent
                 anchors.margins: Appearance.padding.small
-                active: currentTab === 1
-                visible: currentTab === 1
-                opacity: currentTab === 1 ? 1 : 0
+                active: processListItem.currentTab === 1
+                visible: processListItem.currentTab === 1
+                opacity: processListItem.currentTab === 1 ? 1 : 0
                 sourceComponent: performanceTabComponent
 
                 Behavior on opacity {
                     NumberAnimation {
                         duration: Appearance.anim.durations.normal
-                        easing.type: Appearance.anim.curves.emphasizedDecel
+                        easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
                     }
                 }
             }
@@ -199,15 +199,15 @@ Item {
 
                 anchors.fill: parent
                 anchors.margins: Appearance.padding.small
-                active: currentTab === 2
-                visible: currentTab === 2
-                opacity: currentTab === 2 ? 1 : 0
+                active: processListItem.currentTab === 2
+                visible: processListItem.currentTab === 2
+                opacity: processListItem.currentTab === 2 ? 1 : 0
                 sourceComponent: systemTabComponent
 
                 Behavior on opacity {
                     NumberAnimation {
                         duration: Appearance.anim.durations.normal
-                        easing.type: Appearance.anim.curves.emphasizedDecel
+                        easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
                     }
                 }
             }

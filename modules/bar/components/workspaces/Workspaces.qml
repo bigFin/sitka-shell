@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import qs.components
 import qs.services
 import qs.config
 import QtQuick
@@ -31,7 +32,6 @@ Item {
             }
         }
     }
-
 
     Loader {
         id: pager
@@ -65,20 +65,20 @@ Item {
 
             // Trigger animation when loaded
             Component.onCompleted: entered = true
-            
+
             StyledRect {
                 id: rectt
 
                 color: Colours.palette.m3surfaceContainer
-                Layout.alignment : Qt.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter
 
                 radius: Appearance.rounding.large
                 implicitHeight: 30
                 implicitWidth: root.width
-                    
+
                 StyledText {
                     // Layout.alignment : Qt.AlignHCenter
-                    readonly property int pageNumber: Math.floor(groupOffset / Config.bar.workspaces.shown) + 1
+                    readonly property int pageNumber: Math.floor(root.groupOffset / Config.bar.workspaces.shown) + 1
                     readonly property int totalPages: Math.ceil(Niri.getWorkspaceCount() / Config.bar.workspaces.shown)
                     text: qsTr(`${pageNumber} / ${totalPages}`)
                     // font.pointSize : 10
@@ -86,8 +86,6 @@ Item {
                 }
             }
         }
-        
-
     }
 
     Loader {

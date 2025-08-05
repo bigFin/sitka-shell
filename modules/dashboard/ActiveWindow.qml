@@ -1,6 +1,6 @@
 pragma ComponentBehavior: Bound
 
-import qs.widgets
+import qs.components
 import qs.services
 import qs.utils
 import qs.config
@@ -66,7 +66,10 @@ Item {
                 let sepIdx = elided.indexOf(separator);
                 if (sepIdx === -1) {
                     // Fallback: all in class, empty title
-                    return { classPart: elided, titlePart: "" };
+                    return {
+                        classPart: elided,
+                        titlePart: ""
+                    };
                 }
                 return {
                     classPart: elided.substring(0, sepIdx) + separator,

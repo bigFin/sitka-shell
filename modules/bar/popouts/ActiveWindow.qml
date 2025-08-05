@@ -1,9 +1,9 @@
 import qs.components
+import qs.components.controls
 import qs.services
 import qs.utils
 import qs.config
 import Quickshell.Widgets
-import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -15,7 +15,7 @@ Item {
 
     required property Item wrapper
 
-    implicitWidth: Niri.focusedWindowTitle /*Niri.activeToplevel*/  ? child.implicitWidth : -Appearance.padding.large * 2
+    implicitWidth: Niri.focusedWindowTitle /*Niri.activeToplevel*/   ? child.implicitWidth : -Appearance.padding.large * 2
     implicitHeight: child.implicitHeight
 
     Column {
@@ -133,8 +133,6 @@ Item {
         //         constraintSize.height: Config.bar.sizes.windowPreviewSize
         //     }
         // }
-
-        
 
         // RowLayout {
         //     id: windowdecorations

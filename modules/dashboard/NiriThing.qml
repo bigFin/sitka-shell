@@ -1,7 +1,6 @@
-import qs.widgets
+import qs.components
 import qs.services
 import qs.config
-import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
 
@@ -208,8 +207,7 @@ ColumnLayout {
                 font.pointSize: label.font.pointSize * 3.0
 
                 // anchors.verticalCenter: parent.verticalCenter
-                Layout.alignment:  Qt.AlignVCenter
-
+                Layout.alignment: Qt.AlignVCenter
 
                 // opacity: icon.text ? !stateLayer.containsMouse : true
                 // Behavior on opacity {
@@ -242,8 +240,6 @@ ColumnLayout {
                 //     }
                 // }
             }
-
-
         }
 
         StateLayer {

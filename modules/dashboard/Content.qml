@@ -6,7 +6,7 @@ import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
 //later additions
-import qs.widgets
+import qs.components
 import qs.services
 
 Item {
@@ -139,8 +139,9 @@ Item {
                 Layout.rightMargin: Appearance.spacing.small
 
                 ActiveWindow {
+                    //TODO Add a way to mitigate overflow
                     id: activeWindow
-                    anchors.margins: Appearance.spacing.large
+                    // Layout.margins: Appearance.spacing.small
 
                     Layout.fillWidth: true
                 }
@@ -163,6 +164,7 @@ Item {
 
                             icon: "push_pin"
                             function onClicked(): void {
+                                // TODO Add a way to pin in Niri.
                                 Niri.dispatch(`pin address:0x${root.client?.address}`);
                             }
                         }

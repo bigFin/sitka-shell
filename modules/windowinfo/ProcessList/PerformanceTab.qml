@@ -1,13 +1,12 @@
 import QtQuick
 import QtQuick.Controls
 import qs.services
-import qs.widgets
+import qs.components
 import qs.config
 import QtQuick.Layouts
 
-import "."
-
 ColumnLayout {
+    id: root
     spacing: Appearance.padding.normal
 
     Component.onCompleted: {
@@ -96,7 +95,7 @@ ColumnLayout {
                 }
 
                 InfoBadge {
-                    width: 110
+                    implicitWidth: 110
                     text: SysMonitorService.cpuCount + " cores"
                     badgeColor: Colours.palette.success
                     fontSize: Appearance.font.size.small
@@ -110,6 +109,7 @@ ColumnLayout {
                 Layout.fillHeight: true
                 clip: true
                 ScrollBar.vertical.policy: ScrollBar.AsNeeded
+                // TODO FIX
                 ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
                 GridLayout {
@@ -123,18 +123,22 @@ ColumnLayout {
                         model: SysMonitorService.perCoreCpuUsage
 
                         RowLayout {
+                            id: individualCpuUsage
+                            required property var modelData
+                            required property var index
+
                             Layout.fillWidth: true
                             Layout.preferredHeight: 20
                             Layout.preferredWidth: parent.parent.width
                             spacing: Appearance.padding.small
 
                             InfoBadge {
-                                text: index
+                                text: individualCpuUsage.index
                                 badgeColor: Colours.palette.m3onSurfaceVariant
                                 fontSize: Appearance.font.size.small
 
-                                width: 50
-                                height: 20
+                                implicitWidth: 50
+                                implicitHeight: 20
                             }
 
                             Rectangle {
@@ -147,11 +151,11 @@ ColumnLayout {
                                 Layout.alignment: Qt.AlignVCenter
 
                                 Rectangle {
-                                    width: parent.width * Math.min(1, modelData / 100)
+                                    width: parent.width * Math.min(1, individualCpuUsage.modelData / 100)
                                     height: parent.height
                                     radius: parent.radius
                                     color: {
-                                        const usage = modelData;
+                                        const usage = individualCpuUsage.modelData;
                                         if (usage > 80)
                                             return Colours.palette.error;
                                         if (usage > 60)
@@ -162,7 +166,7 @@ ColumnLayout {
                                     Behavior on width {
                                         NumberAnimation {
                                             //HAX
-                                            from: rectangul.width * Math.min(1, SysMonitorService.perCoreCpuUsagePrev[index] / 100)
+                                            from: rectangul.width * Math.min(1, SysMonitorService.perCoreCpuUsagePrev[individualCpuUsage.index] / 100)
                                             duration: Appearance.anim.durations.normal
                                         }
                                     }
@@ -170,13 +174,13 @@ ColumnLayout {
                             }
 
                             InfoBadge {
-                                text: modelData ? modelData.toFixed(0) + "%" : "0%"
+                                text: individualCpuUsage.modelData ? individualCpuUsage.modelData.toFixed(0) + "%" : "0%"
                                 badgeColor: Colours.palette.m3onSurface
                                 fontSize: Appearance.font.size.small
                                 fontWeight: Font.Medium
 
-                                width: 50
-                                height: 20
+                                implicitWidth: 50
+                                implicitHeight: 20
                             }
                         }
                     }
@@ -194,11 +198,13 @@ ColumnLayout {
             model: SysMonitorService.gpus || []
 
             Rectangle {
+                id: videocard
                 Layout.alignment: Qt.AlignTop
                 Layout.fillWidth: true
                 Layout.preferredHeight: 120
                 radius: Appearance.rounding.small
                 color: Colours.palette.m3surfaceContainer
+                required property var modelData
                 property var gpu: modelData
 
                 ColumnLayout {
@@ -220,14 +226,14 @@ ColumnLayout {
                         }
 
                         InfoBadge {
-                            text: gpu.usage !== undefined ? gpu.usage.toFixed(1) + "%" : "N/A"
+                            text: videocard.gpu.usage !== undefined ? videocard.gpu.usage.toFixed(1) + "%" : "N/A"
                             badgeColor: Colours.palette.info
                             fontSize: Appearance.font.size.small
                             fontWeight: Font.Bold
                         }
 
                         InfoBadge {
-                            text: gpu.temperature !== undefined ? gpu.temperature + "°C" : "N/A"
+                            text: videocard.gpu.temperature !== undefined ? videocard.gpu.temperature + "°C" : "N/A"
                             badgeColor: Colours.palette.warning
                             fontSize: Appearance.font.size.small
                             fontWeight: Font.Bold
@@ -238,9 +244,9 @@ ColumnLayout {
                         }
 
                         InfoBadge {
-                            text: gpu.name ? gpu.name : "Unknown"
+                            text: videocard.gpu.name ? videocard.gpu.name : "Unknown"
                             badgeColor: Colours.palette.success
-                            width: 340
+                            implicitWidth: 340
                             fontSize: Appearance.font.size.small
                             fontWeight: Font.Bold
                             Layout.alignment: Qt.AlignVCenter
@@ -252,8 +258,8 @@ ColumnLayout {
                         spacing: Appearance.padding.normal
 
                         InfoBadge {
-                            width: 165
-                            text: (gpu.memoryTotal) ? (gpu.memoryUsed / 1024).toFixed(0) + " GB / " + (gpu.memoryTotal / 1024).toFixed(0) + " GB" : "N/A"
+                            implicitWidth: 165
+                            text: (videocard.gpu.memoryTotal) ? (videocard.gpu.memoryUsed / 1024).toFixed(0) + " GB / " + (videocard.gpu.memoryTotal / 1024).toFixed(0) + " GB" : "N/A"
                             badgeColor: Colours.palette.m3primary
                             fontSize: Appearance.font.size.small
                             fontWeight: Font.Bold
@@ -263,9 +269,9 @@ ColumnLayout {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 16
                             radius: 8
-                            value: (gpu.memoryTotal > 0) ? (gpu.memoryUsed / gpu.memoryTotal) : 0
+                            value: (videocard.gpu.memoryTotal > 0) ? (videocard.gpu.memoryUsed / videocard.gpu.memoryTotal) : 0
                             barColor: {
-                                const usage = gpu.memoryTotal > 0 ? (gpu.memoryUsed / gpu.memoryTotal) : 0;
+                                const usage = videocard.gpu.memoryTotal > 0 ? (videocard.gpu.memoryUsed / videocard.gpu.memoryTotal) : 0;
                                 if (usage > 0.9)
                                     return Colours.palette.error;
                                 if (usage > 0.7)
@@ -320,8 +326,8 @@ ColumnLayout {
                     }
                     RowLayout {
                         InfoBadge {
-                            width: 165
-                            height: 24
+                            implicitWidth: 165
+                            implicitHeight: 24
                             text: SysMonitorService.formatSystemMemory(SysMonitorService.usedMemoryKB) + " / " + SysMonitorService.formatSystemMemory(SysMonitorService.totalMemoryKB)
                             badgeColor: Colours.palette.m3tertiary
                             fontSize: Appearance.font.size.small
@@ -393,8 +399,8 @@ ColumnLayout {
                         }
 
                         InfoBadge {
-                            width: 165
-                            height: 24
+                            implicitWidth: 165
+                            implicitHeight: 24
                             text: SysMonitorService.totalSwapKB > 0 ? SysMonitorService.formatSystemMemory(SysMonitorService.usedSwapKB) + " / " + SysMonitorService.formatSystemMemory(SysMonitorService.totalSwapKB) : "No swap configured"
                             badgeColor: Colours.palette.m3tertiary
                             fontSize: Appearance.font.size.small
@@ -447,8 +453,8 @@ ColumnLayout {
                             color: Colours.palette.info
                         }
                         InfoBadge {
-                            width: 120
-                            text: SysMonitorService.networkTxRate > 0 ? formatNetworkSpeed(SysMonitorService.networkTxRate) : "0 B/s"
+                            implicitWidth: 120
+                            text: SysMonitorService.networkTxRate > 0 ? root.formatNetworkSpeed(SysMonitorService.networkTxRate) : "0 B/s"
                             badgeColor: Colours.palette.info
                             fontSize: Appearance.font.size.small
                             fontWeight: Font.Bold
@@ -466,8 +472,8 @@ ColumnLayout {
                             color: Colours.palette.success
                         }
                         InfoBadge {
-                            width: 120
-                            text: SysMonitorService.networkRxRate > 0 ? formatNetworkSpeed(SysMonitorService.networkRxRate) : "0 B/s"
+                            implicitWidth: 120
+                            text: SysMonitorService.networkRxRate > 0 ? root.formatNetworkSpeed(SysMonitorService.networkRxRate) : "0 B/s"
                             badgeColor: Colours.palette.success
                             fontSize: Appearance.font.size.small
                             fontWeight: Font.Bold
@@ -512,8 +518,8 @@ ColumnLayout {
                         }
 
                         InfoBadge {
-                            width: 120
-                            text: formatDiskSpeed(SysMonitorService.diskWriteRate)
+                            implicitWidth: 120
+                            text: root.formatDiskSpeed(SysMonitorService.diskWriteRate)
                             badgeColor: Colours.palette.info
                             fontSize: Appearance.font.size.small
                             fontWeight: Font.Bold
@@ -531,8 +537,8 @@ ColumnLayout {
                             color: Colours.palette.success
                         }
                         InfoBadge {
-                            width: 120
-                            text: formatDiskSpeed(SysMonitorService.diskReadRate)
+                            implicitWidth: 120
+                            text: root.formatDiskSpeed(SysMonitorService.diskReadRate)
                             badgeColor: Colours.palette.success
                             fontSize: Appearance.font.size.small
                             fontWeight: Font.Bold
@@ -551,8 +557,8 @@ ColumnLayout {
         property int fontWeight: Font.Bold
         // property real radius: 8
         property string fontFamily: Appearance.font.family.mono
-        width: 80
-        height: 24
+        implicitWidth: 80
+        implicitHeight: 24
         // radius: radius
         radius: Appearance.rounding.small
         color: Qt.rgba(badgeColor.r, badgeColor.g, badgeColor.b, 0.12)
@@ -560,10 +566,10 @@ ColumnLayout {
         StyledText {
             anchors.centerIn: parent
             text: badge.text
-            font.pointSize: fontSize
-            font.weight: fontWeight
-            color: badgeColor
-            font.family: fontFamily
+            font.pointSize: badge.fontSize
+            font.weight: badge.fontWeight
+            color: badge.badgeColor
+            font.family: badge.fontFamily
         }
     }
 
@@ -575,20 +581,20 @@ ColumnLayout {
         // property real radius: 8
         property int animationDuration: 300
 
-        width: 120
-        height: 16
+        implicitWidth: 120
+        implicitHeight: 16
         color: backgroundColor
 
         Rectangle {
             id: fillBar
-            width: bar.width * Math.min(1, Math.max(0, value))
+            width: bar.width * Math.min(1, Math.max(0, bar.value))
             height: bar.height
             radius: bar.radius
-            color: barColor
+            color: bar.barColor
 
             Behavior on width {
                 NumberAnimation {
-                    duration: animationDuration
+                    duration: bar.animationDuration
                 }
             }
         }

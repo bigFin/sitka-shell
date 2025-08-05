@@ -1,9 +1,9 @@
-import QtQuick
+pragma ComponentBehavior: Bound
+
 import QtQuick.Effects
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
-import qs.widgets
 
 IconImage {
     id: root
@@ -25,14 +25,12 @@ IconImage {
                 root.source = Quickshell.iconPath(this.text.trim());
             }
         }
-
     }
 
     layer.effect: MultiEffect {
         colorization: 1
-        colorizationColor: colorOverride
-        brightness: brightnessOverride
-        contrast: contrastOverride
+        colorizationColor: root.colorOverride
+        brightness: root.brightnessOverride
+        contrast: root.contrastOverride
     }
-
 }

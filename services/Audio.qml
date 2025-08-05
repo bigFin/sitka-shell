@@ -1,5 +1,6 @@
 pragma Singleton
 
+import qs.config
 import Quickshell
 import Quickshell.Services.Pipewire
 
@@ -33,6 +34,14 @@ Singleton {
             sink.audio.muted = false;
             sink.audio.volume = Math.max(0, Math.min(1, newVolume));
         }
+    }
+
+    function incrementVolume(amount: real): void {
+        setVolume(volume + (amount || Config.services.audioIncrement));
+    }
+
+    function decrementVolume(amount: real): void {
+        setVolume(volume - (amount || Config.services.audioIncrement));
     }
 
     function setAudioSink(newSink: PwNode): void {

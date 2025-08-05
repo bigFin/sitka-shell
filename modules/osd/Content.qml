@@ -22,9 +22,9 @@ Column {
 
         onWheel: event => {
             if (event.angleDelta.y > 0)
-                Audio.setVolume(Audio.volume + 0.1);
+                Audio.incrementVolume();
             else if (event.angleDelta.y < 0)
-                Audio.setVolume(Audio.volume - 0.1);
+                Audio.decrementVolume();
         }
 
         FilledSlider {

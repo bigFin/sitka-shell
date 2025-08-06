@@ -1,6 +1,6 @@
 > [!CAUTION]
 > This is my personal thingy and it's **STILL WORK IN PROGRESS.**
-> 
+>
 > This repo is **ONLY for the desktop shell** of the caelestia dots, ported to work in [`Niri Window Manager`](https://github.com/YaLTeR/niri) instead of [`Hyprland`](https://hyprland.org). If you want installation instructions
 > for the default caelestia dots, head to [the main repo](https://github.com/caelestia-dots/caelestia) instead.
 
@@ -23,9 +23,9 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 <div align=right>
 
 ***Components:***
-[`Quickshell`](https://quickshell.outfoxxed.me) 
-[`Niri`](https://github.com/YaLTeR/niri) 
-~~[`caelestia-dots`](https://github.com/caelestia-dots)~~  
+[`Quickshell`](https://quickshell.outfoxxed.me)
+[`Niri`](https://github.com/YaLTeR/niri)
+~~[`caelestia-dots`](https://github.com/caelestia-dots)~~
 
 </div>
 
@@ -72,9 +72,9 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 <br>
 <br>
 
-# 🔽 Installation 🔽 
+# 🔽 Installation 🔽
 
-> [!NOTE] 
+> [!NOTE]
 > There is **NO** package manager installation support yet because... 🤔
 
 <br>
@@ -82,10 +82,10 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 ### 👣 Installation Steps
 
 **1.** Install the dependencies listed below.
-* Exapmle of what to do for CachyOS / Arch: 
+* Exapmle of what to do for CachyOS / Arch:
   1. `sudo pacman -S ddcutil brightnessctl cava networkmanager i2c-tools fish aubio libpipewire glibc qt6-declarative gcc-libs ttf-jetbrains-mono-nerd grim swappy libqalculate --needed`
   2. `paru ttf-material-symbols-variable-git app2unit-git --needed`
-   
+
 **2.** Either download the code, or clone this repo to your Quickshell config folder.
 * **The folder is usually here:**
   - `~/.config/quickshell/niri-caelestia-shell`
@@ -110,13 +110,13 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 <br>
 
-### 📦 Dependencies 
+### 📦 Dependencies
 
-* All dependencies in plain text: 
+* All dependencies in plain text:
    * `quickshell-git networkmanager fish glibc qt6-declarative gcc-libs cava aubio libpipewire lm-sensors ddcutil brightnessctl material-symbols jetbrains-mono-nerd grim swappy app2unit libqalculate`
 
 > [!NOTE]
-> 
+>
 > Unlike the default shell,
 > [`caelestia-cli`](https://github.com/caelestia-dots/cli) is **not required for Niri**.
 
@@ -124,10 +124,10 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 <details><summary> <b> Detailed info about all dependencies </b></summary>
 
-<div align=left> 
+<div align=left>
 
 > <br>
-> 
+>
 >#### Core Dependencies 🖥️
 >
 >| Package | Usage |
@@ -161,7 +161,6 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 >
 >| Package | Usage |
 >|---|---|
->| [`grim`](https://gitlab.freedesktop.org/emersion/grim) | Screenshot tool |
 >| [`swappy`](https://github.com/jtheoof/swappy) | Screenshot annotation |
 >| [`app2unit`](https://github.com/Vladimir-csp/app2unit) | Launch apps |
 >| [`libqalculate`](https://github.com/Qalculate/libqalculate) | Calculator |
@@ -180,7 +179,7 @@ The shell can be started via the `quickshell -c niri-caelestia-shell -n` command
 
 
 * Example line for niri `config.kdl` to launch the shell at startup:
-  
+
    ```
    spawn-at-startup "quickshell" "-c" "niri-caelestia-shell" "-n"
    ```
@@ -200,7 +199,7 @@ All IPC commands can be called via `quickshell -c niri-caelestia-shell ipc call 
    qs -c niri-caelestia-shell ipc call mpris getActive <trackTitle>
    ```
 
-* Example shortcut in `config.kdl` to toggle the launcher drawer: 
+* Example shortcut in `config.kdl` to toggle the launcher drawer:
     ```sh
     Mod+Space { spawn  "qs" "-c" "shell" "ipc" "call" "drawers" "toggle" "launcher"; }
     ```
@@ -409,8 +408,8 @@ You might want to change your default apps.
 <br>
 <br>
 
-<div align=center> 
-<b>(FAQ and Credits are unchanged, please don't forget to star the original config!!!)</b> 
+<div align=center>
+<b>(FAQ and Credits are unchanged, please don't forget to star the original config!!!)</b>
 </div>
 <br>
 

@@ -116,6 +116,7 @@ Item {
                 anchors.leftMargin: Appearance.padding.large
 
                 text: "select_window"
+                color: Colours.palette.m3onPrimaryContainer
                 font.pointSize: Appearance.font.size.large
                 fill: 1
             }
@@ -128,6 +129,7 @@ Item {
                 anchors.leftMargin: Appearance.spacing.normal
 
                 text: qsTr("Float window")
+                color: Colours.palette.m3onPrimaryContainer
                 opacity: root.session.navExpanded ? 1 : 0
 
                 Behavior on opacity {
@@ -208,7 +210,7 @@ Item {
             id: background
 
             radius: Appearance.rounding.full
-            color: item.active ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainer
+            color: item.active ? Colours.palette.m3secondaryContainer : "transparent"
 
             implicitWidth: icon.implicitWidth + icon.anchors.leftMargin * 2
             implicitHeight: icon.implicitHeight + Appearance.padding.small

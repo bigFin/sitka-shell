@@ -5,7 +5,6 @@ import qs.config
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 
 RowLayout {
     id: root

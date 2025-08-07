@@ -12,9 +12,9 @@ Item {
     id: root
 
     required property ShellScreen screen
-    property bool floating
     readonly property int rounding: floating ? 0 : Appearance.rounding.normal
 
+    property alias floating: session.floating
     property alias active: session.active
     property alias navExpanded: session.navExpanded
 

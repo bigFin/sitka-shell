@@ -80,81 +80,84 @@ Item {
             }
         }
 
-        StyledRect {
-            id: normalWinBtn
+        Loader {
+            asynchronous: true
+            active: !root.session.floating
+            visible: active
 
-            readonly property int nonAnimWidth: normalWinIcon.implicitWidth + (root.session.navExpanded ? normalWinLabel.anchors.leftMargin + normalWinLabel.implicitWidth : 0) + normalWinIcon.anchors.leftMargin * 2
+            sourceComponent: StyledRect {
+                readonly property int nonAnimWidth: normalWinIcon.implicitWidth + (root.session.navExpanded ? normalWinLabel.anchors.leftMargin + normalWinLabel.implicitWidth : 0) + normalWinIcon.anchors.leftMargin * 2
 
-            Layout.bottomMargin: Appearance.spacing.large * 2
+                implicitWidth: nonAnimWidth
+                implicitHeight: root.session.navExpanded ? normalWinIcon.implicitHeight + Appearance.padding.normal * 2 : nonAnimWidth
 
-            implicitWidth: nonAnimWidth
-            implicitHeight: root.session.navExpanded ? normalWinIcon.implicitHeight + Appearance.padding.normal * 2 : nonAnimWidth
+                color: Colours.palette.m3primaryContainer
+                radius: Appearance.rounding.small
 
-            color: Colours.palette.m3primaryContainer
-            radius: Appearance.rounding.small
+                StateLayer {
+                    id: normalWinState
 
-            StateLayer {
-                id: normalWinState
+                    color: Colours.palette.m3onPrimaryContainer
 
-                color: Colours.palette.m3onPrimaryContainer
-
-                function onClicked(): void {
-                    root.session.root.close();
-                    WindowFactory.create(null, {
-                        screen: root.screen,
-                        active: root.session.active,
-                        navExpanded: root.session.navExpanded
-                    });
-                }
-            }
-
-            MaterialIcon {
-                id: normalWinIcon
-
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.leftMargin: Appearance.padding.large
-
-                text: "select_window"
-                color: Colours.palette.m3onPrimaryContainer
-                font.pointSize: Appearance.font.size.large
-                fill: 1
-            }
-
-            StyledText {
-                id: normalWinLabel
-
-                anchors.left: normalWinIcon.right
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.leftMargin: Appearance.spacing.normal
-
-                text: qsTr("Float window")
-                color: Colours.palette.m3onPrimaryContainer
-                opacity: root.session.navExpanded ? 1 : 0
-
-                Behavior on opacity {
-                    Anim {
-                        duration: Appearance.anim.durations.small
+                    function onClicked(): void {
+                        root.session.root.close();
+                        WindowFactory.create(null, {
+                            screen: root.screen,
+                            active: root.session.active,
+                            navExpanded: root.session.navExpanded
+                        });
                     }
                 }
-            }
 
-            Behavior on implicitWidth {
-                Anim {
-                    duration: Appearance.anim.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                MaterialIcon {
+                    id: normalWinIcon
+
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: Appearance.padding.large
+
+                    text: "select_window"
+                    color: Colours.palette.m3onPrimaryContainer
+                    font.pointSize: Appearance.font.size.large
+                    fill: 1
                 }
-            }
 
-            Behavior on implicitHeight {
-                Anim {
-                    duration: Appearance.anim.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                StyledText {
+                    id: normalWinLabel
+
+                    anchors.left: normalWinIcon.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: Appearance.spacing.normal
+
+                    text: qsTr("Float window")
+                    color: Colours.palette.m3onPrimaryContainer
+                    opacity: root.session.navExpanded ? 1 : 0
+
+                    Behavior on opacity {
+                        Anim {
+                            duration: Appearance.anim.durations.small
+                        }
+                    }
+                }
+
+                Behavior on implicitWidth {
+                    Anim {
+                        duration: Appearance.anim.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                    }
+                }
+
+                Behavior on implicitHeight {
+                    Anim {
+                        duration: Appearance.anim.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                    }
                 }
             }
         }
 
         NavItem {
+            Layout.topMargin: Appearance.spacing.large * 2
             icon: "network_manage"
             label: "network"
         }

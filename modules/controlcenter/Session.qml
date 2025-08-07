@@ -5,6 +5,7 @@ QtObject {
     readonly property list<string> panes: ["network", "bluetooth", "audio"]
 
     required property var root
+    property bool floating: false
     property string active: panes[0]
     property int activeIndex: 0
     property bool navExpanded: false

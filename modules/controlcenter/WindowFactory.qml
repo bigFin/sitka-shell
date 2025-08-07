@@ -38,6 +38,8 @@ Singleton {
             implicitWidth: cc.implicitWidth
             implicitHeight: cc.implicitHeight
 
+            title: qsTr("Caelestia Settings - %1").arg(cc.active.slice(0, 1).toUpperCase() + cc.active.slice(1))
+
             ControlCenter {
                 id: cc
 
@@ -46,7 +48,7 @@ Singleton {
                 floating: true
 
                 function close(): void {
-                    win.visible = false;
+                    win.destroy();
                 }
             }
 

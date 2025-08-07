@@ -30,10 +30,27 @@ Item {
     implicitWidth: implicitHeight * Config.controlCenter.sizes.ratio
     implicitHeight: screen.height * Config.controlCenter.sizes.heightMult
 
-    RowLayout {
+    GridLayout {
         anchors.fill: parent
 
-        spacing: 0
+        rowSpacing: 0
+        columnSpacing: 0
+        rows: root.floating ? 2 : 1
+        columns: 2
+
+        Loader {
+            Layout.fillWidth: true
+            Layout.columnSpan: 2
+
+            asynchronous: true
+            active: root.floating
+            visible: active
+
+            sourceComponent: WindowTitle {
+                screen: root.screen
+                session: root.session
+            }
+        }
 
         StyledRect {
             Layout.fillHeight: true

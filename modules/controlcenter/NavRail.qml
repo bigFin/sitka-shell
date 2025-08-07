@@ -13,13 +13,15 @@ Item {
     required property ShellScreen screen
     required property Session session
 
-    implicitWidth: layout.implicitWidth + Appearance.padding.large * 4
+    implicitWidth: layout.implicitWidth + Appearance.padding.larger * 4
     implicitHeight: layout.implicitHeight + Appearance.padding.large * 2
 
     ColumnLayout {
         id: layout
 
-        anchors.centerIn: parent
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.leftMargin: Appearance.padding.larger * 2
         spacing: Appearance.spacing.normal
 
         states: State {
@@ -45,7 +47,7 @@ Item {
             id: menuBtn
 
             Layout.topMargin: Appearance.spacing.large
-            Layout.fillWidth: true
+            implicitWidth: menuIcon.implicitWidth + menuIcon.anchors.leftMargin * 2
             implicitHeight: menuIcon.implicitHeight + Appearance.padding.normal * 2
 
             StateLayer {
@@ -125,7 +127,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.leftMargin: Appearance.spacing.normal
 
-                text: qsTr("Open in window")
+                text: qsTr("Float window")
                 opacity: root.session.navExpanded ? 1 : 0
 
                 Behavior on opacity {
@@ -183,7 +185,7 @@ Item {
             PropertyChanges {
                 expandedLabel.opacity: 1
                 smallLabel.opacity: 0
-                background.implicitWidth: Config.controlCenter.sizes.expandedNavWidth
+                background.implicitWidth: icon.implicitWidth + icon.anchors.leftMargin * 2 + expandedLabel.anchors.leftMargin + expandedLabel.implicitWidth
                 background.implicitHeight: icon.implicitHeight + Appearance.padding.normal * 2
                 item.implicitHeight: background.implicitHeight
             }

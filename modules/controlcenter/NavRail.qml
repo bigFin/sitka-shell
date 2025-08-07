@@ -3,14 +3,15 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.services
 import qs.config
+import Quickshell
 import QtQuick
 import QtQuick.Layouts
 
 Item {
     id: root
 
+    required property ShellScreen screen
     required property Session session
-    property bool expanded
 
     implicitWidth: layout.implicitWidth + Appearance.padding.large * 4
     implicitHeight: layout.implicitHeight + Appearance.padding.large * 2
@@ -23,7 +24,7 @@ Item {
 
         states: State {
             name: "expanded"
-            when: root.expanded
+            when: root.session.navExpanded
 
             PropertyChanges {
                 layout.spacing: Appearance.spacing.small
@@ -31,14 +32,6 @@ Item {
                 menuIconExpanded.opacity: 1
                 menuIcon.rotation: 180
                 menuIconExpanded.rotation: 0
-            }
-            AnchorChanges {
-                target: menuIcon
-                anchors.horizontalCenter: undefined
-            }
-            AnchorChanges {
-                target: menuIconExpanded
-                anchors.horizontalCenter: undefined
             }
         }
 
@@ -49,23 +42,27 @@ Item {
         }
 
         Item {
+            id: menuBtn
+
+            Layout.topMargin: Appearance.spacing.large
             Layout.fillWidth: true
-            Layout.bottomMargin: Appearance.spacing.large * 2
-            implicitHeight: Math.max(menuIcon.implicitHeight, menuIconExpanded.implicitHeight) + Appearance.padding.normal * 2
+            implicitHeight: menuIcon.implicitHeight + Appearance.padding.normal * 2
 
             StateLayer {
                 radius: Appearance.rounding.small
 
                 function onClicked(): void {
-                    root.expanded = !root.expanded;
+                    root.session.navExpanded = !root.session.navExpanded;
                 }
             }
 
             MaterialIcon {
                 id: menuIcon
 
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: Appearance.padding.large
+
                 text: "menu"
                 font.pointSize: Appearance.font.size.large
             }
@@ -73,12 +70,83 @@ Item {
             MaterialIcon {
                 id: menuIconExpanded
 
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.fill: menuIcon
                 text: "menu_open"
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: menuIcon.font.pointSize
                 opacity: 0
                 rotation: -180
+            }
+        }
+
+        StyledRect {
+            id: normalWinBtn
+
+            readonly property int nonAnimWidth: normalWinIcon.implicitWidth + (root.session.navExpanded ? normalWinLabel.anchors.leftMargin + normalWinLabel.implicitWidth : 0) + normalWinIcon.anchors.leftMargin * 2
+
+            Layout.bottomMargin: Appearance.spacing.large * 2
+
+            implicitWidth: nonAnimWidth
+            implicitHeight: root.session.navExpanded ? normalWinIcon.implicitHeight + Appearance.padding.normal * 2 : nonAnimWidth
+
+            color: Colours.palette.m3primaryContainer
+            radius: Appearance.rounding.small
+
+            StateLayer {
+                id: normalWinState
+
+                color: Colours.palette.m3onPrimaryContainer
+
+                function onClicked(): void {
+                    root.session.root.close();
+                    WindowFactory.create(null, {
+                        screen: root.screen,
+                        active: root.session.active,
+                        navExpanded: root.session.navExpanded
+                    });
+                }
+            }
+
+            MaterialIcon {
+                id: normalWinIcon
+
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: Appearance.padding.large
+
+                text: "select_window"
+                font.pointSize: Appearance.font.size.large
+                fill: 1
+            }
+
+            StyledText {
+                id: normalWinLabel
+
+                anchors.left: normalWinIcon.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: Appearance.spacing.normal
+
+                text: qsTr("Open in window")
+                opacity: root.session.navExpanded ? 1 : 0
+
+                Behavior on opacity {
+                    Anim {
+                        duration: Appearance.anim.durations.small
+                    }
+                }
+            }
+
+            Behavior on implicitWidth {
+                Anim {
+                    duration: Appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                }
+            }
+
+            Behavior on implicitHeight {
+                Anim {
+                    duration: Appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                }
             }
         }
 
@@ -110,7 +178,7 @@ Item {
 
         states: State {
             name: "expanded"
-            when: root.expanded
+            when: root.session.navExpanded
 
             PropertyChanges {
                 expandedLabel.opacity: 1

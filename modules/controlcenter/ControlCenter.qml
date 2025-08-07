@@ -12,9 +12,19 @@ Item {
     id: root
 
     required property ShellScreen screen
+    property bool floating
+    readonly property int rounding: floating ? 0 : Appearance.rounding.normal
+
     property alias active: session.active
+    property alias navExpanded: session.navExpanded
+
     readonly property Session session: Session {
         id: session
+
+        root: root
+    }
+
+    function close(): void {
     }
 
     implicitWidth: implicitHeight * Config.controlCenter.sizes.ratio
@@ -28,8 +38,8 @@ Item {
         StyledRect {
             Layout.fillHeight: true
 
-            topLeftRadius: Appearance.rounding.normal
-            bottomLeftRadius: Appearance.rounding.normal
+            topLeftRadius: root.rounding
+            bottomLeftRadius: root.rounding
             implicitWidth: navRail.implicitWidth
             color: Colours.palette.m3surfaceContainer
 
@@ -47,6 +57,7 @@ Item {
             NavRail {
                 id: navRail
 
+                screen: root.screen
                 session: root.session
             }
         }
@@ -55,6 +66,8 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
+            topRightRadius: root.rounding
+            bottomRightRadius: root.rounding
             session: root.session
         }
     }

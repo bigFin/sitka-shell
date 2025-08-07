@@ -1,3 +1,5 @@
+import qs.components.misc
+import qs.modules.controlcenter
 import qs.services
 import Quickshell
 import Quickshell.Io
@@ -6,6 +8,12 @@ Scope {
     id: root
 
     property bool launcherInterrupted
+
+    // CustomShortcut {
+    //     name: "controlCenter"
+    //     description: "Open control center"
+    //     onPressed: WindowFactory.create()
+    // }
 
     // CustomShortcut {
     //     name: "showall"
@@ -59,6 +67,14 @@ Scope {
         function list(): string {
             const visibilities = Visibilities.getForActive();
             return Object.keys(visibilities).filter(k => typeof visibilities[k] === "boolean").join("\n");
+        }
+    }
+
+    IpcHandler {
+        target: "controlCenter"
+
+        function open(): void {
+            WindowFactory.create();
         }
     }
 }

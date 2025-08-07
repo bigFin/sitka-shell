@@ -322,7 +322,10 @@ You might want to change your default apps.
         "thickness": 10
     },
     "dashboard": {
+        "enabled": true,
+        "dragThreshold": 50,
         "mediaUpdateInterval": 500,
+        "showOnHover": true,
         "visualiserBars": 45
     },
     "launcher": {

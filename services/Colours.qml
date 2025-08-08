@@ -75,7 +75,7 @@ Singleton {
     }
 
     component Transparency: QtObject {
-        property bool enabled: true
+        property bool enabled: false
         property real base: 0.8
         property real layers: 0.75
     }

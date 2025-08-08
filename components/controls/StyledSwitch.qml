@@ -24,7 +24,7 @@ Switch {
             readonly property real nonAnimWidth: root.pressed ? implicitHeight * 1.3 : implicitHeight
 
             radius: Appearance.rounding.full
-            color: root.checked ? Colours.palette.m3onPrimary : Colours.palette.m3outline
+            color: root.checked ? Colours.palette.m3onPrimary : Colours.layer(Colours.palette.m3outline, root.cLayer + 1)
 
             x: root.checked ? parent.implicitWidth - nonAnimWidth - Appearance.padding.small / 2 : Appearance.padding.small / 2
             implicitWidth: nonAnimWidth

@@ -43,7 +43,7 @@ Item {
 
         animate: true
         text: Niri.focusedWorkspaceIndex + 1 === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label
-        color: Config.bar.workspaces.occupiedBg || root.isOccupied || Niri.focusedWorkspaceIndex + 1 === root.ws ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant
+        color: Config.bar.workspaces.occupiedBg || root.isOccupied || Niri.focusedWorkspaceIndex + 1 === root.ws ? Colours.palette.m3onSurface : (Colours.palette.m3outlineVariant, 2)
         horizontalAlignment: StyledText.AlignHCenter
         verticalAlignment: StyledText.AlignVCenter
 

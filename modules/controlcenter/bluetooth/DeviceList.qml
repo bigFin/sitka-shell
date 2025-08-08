@@ -20,7 +20,6 @@ ColumnLayout {
     readonly property bool smallDiscoverable: width <= 540
     readonly property bool smallPairable: width <= 480
 
-    anchors.fill: parent
     spacing: Appearance.spacing.small
 
     RowLayout {

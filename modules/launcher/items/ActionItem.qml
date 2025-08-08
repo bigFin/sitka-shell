@@ -58,7 +58,7 @@ Item {
 
                 text: root.modelData?.desc ?? ""
                 font.pointSize: Appearance.font.size.small
-                color: Colours.tPalette.m3outline
+                color: Colours.palette.m3outline
 
                 elide: Text.ElideRight
                 width: root.width - icon.width - Appearance.rounding.normal * 2

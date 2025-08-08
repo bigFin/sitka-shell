@@ -61,7 +61,7 @@ Item {
 
                 text: (root.modelData?.comment || root.modelData?.genericName || root.modelData?.name) ?? ""
                 font.pointSize: Appearance.font.size.small
-                color: Colours.tPalette.m3outline
+                color: Colours.palette.m3outline
 
                 elide: Text.ElideRight
                 width: root.width - icon.width - Appearance.rounding.normal * 2

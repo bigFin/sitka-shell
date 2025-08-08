@@ -1,6 +1,7 @@
 pragma Singleton
 pragma ComponentBehavior: Bound
 
+import qs.config
 import qs.utils
 import Quickshell
 import Quickshell.Io
@@ -93,9 +94,9 @@ Singleton {
     }
 
     component Transparency: QtObject {
-        property bool enabled: false
-        property real base: 0.8
-        property real layers: 0.4
+        readonly property bool enabled: Appearance.transparency.enabled
+        readonly property real base: Appearance.transparency.base - (root.light ? 0.1 : 0)
+        readonly property real layers: Appearance.transparency.layers
     }
 
     component M3TPalette: QtObject {

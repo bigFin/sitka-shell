@@ -20,11 +20,11 @@ PathView {
         const max = Config.launcher.maxWallpapers;
         const maxItemsOnScreen = Math.floor(screenWidth / itemWidth);
 
-        const visible = Math.min(maxItemsOnScreen, max, scriptModel.values.length)
+        const visible = Math.min(maxItemsOnScreen, max, scriptModel.values.length);
         if (visible === 2)
-            return 1
-        else if (visible > 1 && visible %2 === 0)
-            return visible - 1
+            return 1;
+        else if (visible > 1 && visible % 2 === 0)
+            return visible - 1;
         return visible;
     }
 

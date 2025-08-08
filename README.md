@@ -282,10 +282,46 @@ You might want to change your default apps.
 
 <br>
 
+> [!NOTE]
+> The example configuration only includes recommended configuration options. For more advanced customisation
+> such as modifying the size of individual items or changing constants in the code, there are some other
+> options which can be found in the source files in the `config` directory.
+
 <details><summary> <b> Example configuration </b></summary>
 
 ```json
 {
+    "appearance": {
+        "anim": {
+            "durations": {
+                "scale": 1
+            }
+        },
+        "font": {
+            "family": {
+                "material": "Material Symbols Rounded",
+                "mono": "JetBrains Mono NF",
+                "sans": "IBM Plex Sans"
+            },
+            "size": {
+                "scale": 1
+            }
+        },
+        "padding": {
+            "scale": 1
+        },
+        "rounding": {
+        	"scale": 1
+        },
+        "spacing": {
+            "scale": 1
+        },
+        "transparency": {
+            "enabled": false,
+            "base": 0.85,
+            "layers": 0.4
+        }
+    },
     "general": {
         "apps": {
             "terminal": ["foot"],

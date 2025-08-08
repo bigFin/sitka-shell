@@ -20,13 +20,24 @@ Singleton {
     readonly property M3Palette current: M3Palette {}
     readonly property M3Palette preview: M3Palette {}
     readonly property Transparency transparency: Transparency {}
+    readonly property color wallColour: quantizer.colors[0] ?? "black"
+
+    function getLuminance(c: color): real {
+        if (c.r == 0 && c.g == 0 && c.b == 0)
+            return 0;
+        return Math.sqrt(0.299 * (c.r ** 2) + 0.587 * (c.g ** 2) + 0.114 * (c.b ** 2));
+    }
 
     function alterColour(c: color, a: real, layer: int): color {
-        const luminance = Math.sqrt(0.299 * (c.r ** 2) + 0.587 * (c.g ** 2) + 0.114 * (c.b ** 2));
-        const scale = (luminance + (!light || layer == 1 ? 1 : -layer / 2) * (light ? 0.1 : 0.3) * (1 - transparency.base)) / luminance;
+        const wallLuminance = getLuminance(wallColour);
+        const luminance = getLuminance(c);
+
+        const offset = (!light || layer == 1 ? 1 : -layer / 2) * (light ? 0.2 : 0.3) * (1 - transparency.base) * (1 + wallLuminance * (light ? 3 : 2.5));
+        const scale = (luminance + offset) / luminance;
         const r = Math.max(0, Math.min(1, c.r * scale));
         const g = Math.max(0, Math.min(1, c.g * scale));
         const b = Math.max(0, Math.min(1, c.b * scale));
+
         return Qt.rgba(r, g, b, a);
     }
 
@@ -73,10 +84,18 @@ Singleton {
         onLoaded: root.load(text(), false)
     }
 
+    ColorQuantizer {
+        id: quantizer
+
+        source: Qt.resolvedUrl(Wallpapers.current)
+        depth: 0
+        rescaleSize: 128
+    }
+
     component Transparency: QtObject {
         property bool enabled: false
         property real base: 0.8
-        property real layers: 0.75
+        property real layers: 0.4
     }
 
     component M3TPalette: QtObject {

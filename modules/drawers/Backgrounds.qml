@@ -20,7 +20,6 @@ Shape {
     anchors.margins: Config.border.thickness
     anchors.leftMargin: bar.implicitWidth
     preferredRendererType: Shape.CurveRenderer
-    opacity: Colours.transparency.enabled ? Colours.transparency.base : 1
 
     Osd.Background {
         wrapper: root.panels.osd

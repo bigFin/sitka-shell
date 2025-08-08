@@ -47,7 +47,7 @@ ColumnLayout {
                     readonly property int wsId: Math.floor((Niri.focusedWorkspaceIndex) / 10) * 10 + index + 1
                     readonly property bool isCurrent: (wsId - 1) % 10 === Niri.focusedWorkspaceIndex
 
-                    color: isCurrent ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
+                    color: isCurrent ? Colours.tPalette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
                     onColor: isCurrent ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
                     text: (Niri.allWorkspaces[wsId - 1].name) || wsId
                     disabled: isCurrent

@@ -8,12 +8,14 @@ import QtQuick.Shapes
 Switch {
     id: root
 
+    property int cLayer: 1
+
     implicitWidth: implicitIndicatorWidth
     implicitHeight: implicitIndicatorHeight
 
     indicator: StyledRect {
         radius: Appearance.rounding.full
-        color: root.checked ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHighest
+        color: root.checked ? Colours.palette.m3primary : Colours.layer(Colours.palette.m3surfaceContainerHighest, root.cLayer)
 
         implicitWidth: implicitHeight * 1.7
         implicitHeight: Appearance.font.size.normal + Appearance.padding.smaller * 2

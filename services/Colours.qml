@@ -1,31 +1,41 @@
 pragma Singleton
+pragma ComponentBehavior: Bound
 
 import qs.utils
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import QtQuick.Controls
 
 Singleton {
     id: root
 
-    readonly property list<string> colourNames: ["rosewater", "flamingo", "pink", "mauve", "red", "maroon", "peach", "yellow", "green", "teal", "sky", "sapphire", "blue", "lavender"]
-
     property bool showPreview
     property string scheme
     property string flavour
-    property bool light
+    readonly property bool light: showPreview ? previewLight : currentLight
+    property bool currentLight
+    property bool previewLight
     readonly property M3Palette palette: showPreview ? preview : current
+    readonly property M3TPalette tPalette: M3TPalette {}
     readonly property M3Palette current: M3Palette {}
     readonly property M3Palette preview: M3Palette {}
     readonly property Transparency transparency: Transparency {}
 
-    function alpha(c: color, layer: bool): color {
+    function alterColour(c: color, a: real, layer: int): color {
+        const luminance = Math.sqrt(0.299 * (c.r ** 2) + 0.587 * (c.g ** 2) + 0.114 * (c.b ** 2));
+        const scale = (luminance + (!light || layer == 1 ? 1 : -layer / 2) * (light ? 0.1 : 0.3) * (1 - transparency.base)) / luminance;
+        const r = Math.max(0, Math.min(1, c.r * scale));
+        const g = Math.max(0, Math.min(1, c.g * scale));
+        const b = Math.max(0, Math.min(1, c.b * scale));
+        return Qt.rgba(r, g, b, a);
+    }
+
+    function layer(c: color, layer: var): color {
         if (!transparency.enabled)
             return c;
-        c = Qt.rgba(c.r, c.g, c.b, layer ? transparency.layers : transparency.base);
-        if (layer)
-            c.hsvValue = Math.max(0, Math.min(1, c.hslLightness + (light ? -0.2 : 0.2))); // TODO: edit based on colours (hue or smth)
-        return c;
+
+        return layer === 0 ? Qt.alpha(c, transparency.base) : alterColour(c, transparency.layers, layer ?? 1);
     }
 
     function on(c: color): color {
@@ -41,12 +51,13 @@ Singleton {
         if (!isPreview) {
             root.scheme = scheme.name;
             flavour = scheme.flavour;
+            currentLight = scheme.mode === "light";
+        } else {
+            previewLight = scheme.mode === "light";
         }
 
-        light = scheme.mode === "light";
-
         for (const [name, colour] of Object.entries(scheme.colours)) {
-            const propName = colourNames.includes(name) ? name : `m3${name}`;
+            const propName = `m3${name}`;
             if (colours.hasOwnProperty(propName))
                 colours[propName] = `#${colour}`;
         }
@@ -64,9 +75,66 @@ Singleton {
     }
 
     component Transparency: QtObject {
-        readonly property bool enabled: false
-        readonly property real base: 0.78
-        readonly property real layers: 0.58
+        property bool enabled: true
+        property real base: 0.8
+        property real layers: 0.75
+    }
+
+    component M3TPalette: M3Palette {
+        m3primary_paletteKeyColor: root.layer(root.palette.m3primary_paletteKeyColor)
+        m3secondary_paletteKeyColor: root.layer(root.palette.m3secondary_paletteKeyColor)
+        m3tertiary_paletteKeyColor: root.layer(root.palette.m3tertiary_paletteKeyColor)
+        m3neutral_paletteKeyColor: root.layer(root.palette.m3neutral_paletteKeyColor)
+        m3neutral_variant_paletteKeyColor: root.layer(root.palette.m3neutral_variant_paletteKeyColor)
+        m3background: root.layer(root.palette.m3background, 0)
+        m3onBackground: root.layer(root.palette.m3onBackground)
+        m3surface: root.layer(root.palette.m3surface, 0)
+        m3surfaceDim: root.layer(root.palette.m3surfaceDim, 0)
+        m3surfaceBright: root.layer(root.palette.m3surfaceBright, 0)
+        m3surfaceContainerLowest: root.layer(root.palette.m3surfaceContainerLowest)
+        m3surfaceContainerLow: root.layer(root.palette.m3surfaceContainerLow)
+        m3surfaceContainer: root.layer(root.palette.m3surfaceContainer)
+        m3surfaceContainerHigh: root.layer(root.palette.m3surfaceContainerHigh)
+        m3surfaceContainerHighest: root.layer(root.palette.m3surfaceContainerHighest)
+        m3onSurface: root.layer(root.palette.m3onSurface)
+        m3surfaceVariant: root.layer(root.palette.m3surfaceVariant, 0)
+        m3onSurfaceVariant: root.layer(root.palette.m3onSurfaceVariant)
+        m3inverseSurface: root.layer(root.palette.m3inverseSurface, 0)
+        m3inverseOnSurface: root.layer(root.palette.m3inverseOnSurface)
+        m3outline: root.layer(root.palette.m3outline)
+        m3outlineVariant: root.layer(root.palette.m3outlineVariant)
+        m3shadow: root.layer(root.palette.m3shadow)
+        m3scrim: root.layer(root.palette.m3scrim)
+        m3surfaceTint: root.layer(root.palette.m3surfaceTint)
+        m3primary: root.layer(root.palette.m3primary)
+        m3onPrimary: root.layer(root.palette.m3onPrimary)
+        m3primaryContainer: root.layer(root.palette.m3primaryContainer)
+        m3onPrimaryContainer: root.layer(root.palette.m3onPrimaryContainer)
+        m3inversePrimary: root.layer(root.palette.m3inversePrimary)
+        m3secondary: root.layer(root.palette.m3secondary)
+        m3onSecondary: root.layer(root.palette.m3onSecondary)
+        m3secondaryContainer: root.layer(root.palette.m3secondaryContainer)
+        m3onSecondaryContainer: root.layer(root.palette.m3onSecondaryContainer)
+        m3tertiary: root.layer(root.palette.m3tertiary)
+        m3onTertiary: root.layer(root.palette.m3onTertiary)
+        m3tertiaryContainer: root.layer(root.palette.m3tertiaryContainer)
+        m3onTertiaryContainer: root.layer(root.palette.m3onTertiaryContainer)
+        m3error: root.layer(root.palette.m3error)
+        m3onError: root.layer(root.palette.m3onError)
+        m3errorContainer: root.layer(root.palette.m3errorContainer)
+        m3onErrorContainer: root.layer(root.palette.m3onErrorContainer)
+        m3primaryFixed: root.layer(root.palette.m3primaryFixed)
+        m3primaryFixedDim: root.layer(root.palette.m3primaryFixedDim)
+        m3onPrimaryFixed: root.layer(root.palette.m3onPrimaryFixed)
+        m3onPrimaryFixedVariant: root.layer(root.palette.m3onPrimaryFixedVariant)
+        m3secondaryFixed: root.layer(root.palette.m3secondaryFixed)
+        m3secondaryFixedDim: root.layer(root.palette.m3secondaryFixedDim)
+        m3onSecondaryFixed: root.layer(root.palette.m3onSecondaryFixed)
+        m3onSecondaryFixedVariant: root.layer(root.palette.m3onSecondaryFixedVariant)
+        m3tertiaryFixed: root.layer(root.palette.m3tertiaryFixed)
+        m3tertiaryFixedDim: root.layer(root.palette.m3tertiaryFixedDim)
+        m3onTertiaryFixed: root.layer(root.palette.m3onTertiaryFixed)
+        m3onTertiaryFixedVariant: root.layer(root.palette.m3onTertiaryFixedVariant)
     }
 
     component M3Palette: QtObject {

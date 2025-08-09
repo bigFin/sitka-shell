@@ -3,6 +3,7 @@
     "app2unit": {
       "inputs": {
         "nixpkgs": [
+          "caelestia-cli",
           "nixpkgs"
         ]
       },
@@ -22,9 +23,7 @@
     },
     "caelestia-cli": {
       "inputs": {
-        "app2unit": [
-          "app2unit"
-        ],
+        "app2unit": "app2unit",
         "caelestia-shell": [],
         "nixpkgs": [
           "nixpkgs"
@@ -82,7 +81,6 @@
     },
     "root": {
       "inputs": {
-        "app2unit": "app2unit",
         "caelestia-cli": "caelestia-cli",
         "nixpkgs": "nixpkgs",
         "quickshell": "quickshell"

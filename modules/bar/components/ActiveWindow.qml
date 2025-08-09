@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import qs.components
-// import qs.components.controls
 import qs.services
 import qs.utils
 import qs.config
@@ -16,36 +15,6 @@ Item {
 
     implicitWidth: child.implicitWidth
     implicitHeight: child.implicitHeight
-
-    // TODO, Disabled a feature where you mouse scroll on empty space around 'current window name' element!
-
-    // CustomMouseArea {
-    //     anchors.top: parent.top
-    //     anchors.bottom: child.top
-    //     anchors.left: parent.left
-    //     anchors.right: parent.right
-    //     function onWheel(event: WheelEvent): void {
-    //         if (event.angleDelta.y > 0)
-    //             Audio.incrementVolume();
-    //         else if (event.angleDelta.y < 0)
-    //             Audio.decrementVolume();
-    //     }
-    // }
-
-    // CustomMouseArea {
-    //     anchors.top: child.bottom
-    //     anchors.bottom: parent.bottom
-    //     anchors.left: parent.left
-    //     anchors.right: parent.right
-
-    //     function onWheel(event: WheelEvent): void {
-    //         const monitor = root.monitor;
-    //         if (event.angleDelta.y > 0)
-    //             monitor.setBrightness(monitor.brightness + 0.1);
-    //         else if (event.angleDelta.y < 0)
-    //             monitor.setBrightness(monitor.brightness - 0.1);
-    //     }
-    // }
 
     Item {
         id: child

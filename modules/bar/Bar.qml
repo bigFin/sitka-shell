@@ -97,8 +97,8 @@ Item {
 
             CustomMouseArea {
                 anchors.fill: parent
-                anchors.leftMargin: -Config.border.thickness
-                anchors.rightMargin: -Config.border.thickness
+                anchors.leftMargin: -Math.max(Appearance.padding.smaller, Config.border.thickness)
+                anchors.rightMargin: -Math.max(Appearance.padding.smaller, Config.border.thickness)
 
                 function onWheel(event: WheelEvent): void {
                     // TODO Special workspaces in Niri?

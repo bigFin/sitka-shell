@@ -23,7 +23,6 @@ ColumnLayout {
 
     RowLayout {
         Layout.alignment: Qt.AlignHCenter
-        Layout.bottomMargin: Appearance.spacing.large
         spacing: Appearance.spacing.small
 
         StyledText {
@@ -67,7 +66,19 @@ ColumnLayout {
         }
     }
 
+    StyledText {
+        Layout.alignment: Qt.AlignHCenter
+        Layout.topMargin: -Appearance.padding.large * 2
+
+        text: Time.format("dddd, d MMMM yyyy")
+        color: Colours.palette.m3tertiary
+        font.pointSize: Appearance.font.size.extraLarge
+        font.family: Appearance.font.family.mono
+        font.bold: true
+    }
+
     StyledClippingRect {
+        Layout.topMargin: Appearance.spacing.large * 2
         Layout.alignment: Qt.AlignHCenter
 
         implicitWidth: Config.lock.sizes.centerWidth / 2

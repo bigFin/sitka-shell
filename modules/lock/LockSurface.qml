@@ -1,5 +1,7 @@
 pragma ComponentBehavior: Bound
 
+import qs.components
+import qs.components.effects
 import qs.services
 import qs.config
 import Quickshell.Wayland
@@ -11,30 +13,107 @@ WlSessionLockSurface {
 
     required property WlSessionLock lock
 
-    property bool thisLocked
-    readonly property bool locked: thisLocked && !lock.unlocked
+    property bool locked
 
     function unlock(): void {
         lock.unlocked = true;
-        animDelay.start();
     }
 
-    Component.onCompleted: thisLocked = true
+    Component.onCompleted: locked = true
 
     color: "transparent"
-
-    Timer {
-        id: animDelay
-
-        interval: Appearance.anim.durations.large
-        onTriggered: root.lock.locked = false
-    }
 
     Connections {
         target: root.lock
 
-        function onUnlockedChanged(): void {
-            background.opacity = 0;
+        function onUnlock(): void {
+            root.locked = false;
+            unlockAnim.start();
+        }
+    }
+
+    SequentialAnimation {
+        id: unlockAnim
+
+        ParallelAnimation {
+            Anim {
+                target: lockBg
+                properties: "implicitWidth,implicitHeight"
+                to: lockBg.size
+                duration: Appearance.anim.durations.expressiveFastSpatial
+                easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+            }
+            Anim {
+                target: lockBg
+                property: "radius"
+                to: lockBg.size / 4
+            }
+            Anim {
+                targets: [background, lockBg]
+                property: "opacity"
+                to: 0
+            }
+        }
+        PropertyAction {
+            target: root.lock
+            property: "locked"
+            value: false
+        }
+    }
+
+    ParallelAnimation {
+        running: true
+
+        Anim {
+            target: background
+            property: "opacity"
+            to: 1
+            duration: Appearance.anim.durations.large
+        }
+        SequentialAnimation {
+            ParallelAnimation {
+                Anim {
+                    target: lockBg
+                    property: "scale"
+                    to: 1
+                    duration: Appearance.anim.durations.expressiveFastSpatial
+                    easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                }
+                Anim {
+                    target: lockBg
+                    property: "rotation"
+                    to: 180
+                    duration: Appearance.anim.durations.expressiveFastSpatial
+                    easing.bezierCurve: Appearance.anim.curves.standardAccel
+                }
+            }
+            ParallelAnimation {
+                Anim {
+                    target: lockIcon
+                    property: "rotation"
+                    to: 180
+                    easing.bezierCurve: Appearance.anim.curves.standardDecel
+                }
+                Anim {
+                    target: lockBg
+                    property: "radius"
+                    to: Appearance.rounding.large
+                }
+                Anim {
+                    target: lockBg
+                    property: "implicitWidth"
+                    to: root.width * 0.8
+                    duration: Appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                }
+                Anim {
+                    target: lockBg
+                    property: "implicitHeight"
+                    to: root.height * 0.8
+                    duration: Appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                }
+            }
         }
     }
 
@@ -43,138 +122,53 @@ WlSessionLockSurface {
 
         anchors.fill: parent
         captureSource: root.screen
+        opacity: 0
 
         layer.enabled: true
         layer.effect: MultiEffect {
+            id: backgroundBlur
+
             autoPaddingEnabled: false
             blurEnabled: true
-            blur: root.locked ? 1 : 0
+            blur: 1
             blurMax: 64
             blurMultiplier: 1
-
-            Behavior on blur {
-                Anim {}
-            }
-        }
-
-        Behavior on opacity {
-            Anim {}
         }
     }
 
-    Backgrounds {
-        id: backgrounds
+    StyledRect {
+        id: lockBg
 
-        locked: root.locked
-        weatherWidth: weather.implicitWidth
-        buttonsWidth: buttons.item?.nonAnimWidth ?? 0
-        buttonsHeight: buttons.item?.nonAnimHeight ?? 0
-        statusWidth: status.nonAnimWidth ?? 0
-        statusHeight: status.nonAnimHeight ?? 0
-        isNormal: root.screen.width > Config.lock.sizes.smallScreenWidth
-        isLarge: root.screen.width > Config.lock.sizes.largeScreenWidth
+        readonly property int size: lockIcon.implicitHeight + Appearance.padding.large * 4
 
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            shadowEnabled: true
-            blurMax: 15
-            shadowColor: Qt.alpha(Colours.palette.m3shadow, 0.7)
+        anchors.centerIn: parent
+        implicitWidth: size
+        implicitHeight: size
+
+        color: Colours.tPalette.m3surface
+        radius: size / 4
+        scale: 0
+
+        Elevation {
+            anchors.fill: parent
+            radius: parent.radius
+            z: -1
+            level: 3
+            offset.y: 0
         }
-    }
 
-    Clock {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.top
-        anchors.bottomMargin: -backgrounds.clockBottom
-    }
+        MaterialIcon {
+            id: lockIcon
 
-    Input {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.bottom
-        anchors.topMargin: -backgrounds.inputTop
-
-        lock: root
-    }
-
-    WeatherInfo {
-        id: weather
-
-        anchors.top: parent.bottom
-        anchors.right: parent.left
-        anchors.topMargin: -backgrounds.weatherTop
-        anchors.rightMargin: -backgrounds.weatherRight
-    }
-
-    Loader {
-        id: media
-
-        active: root.screen.width > Config.lock.sizes.smallScreenWidth
-        asynchronous: true
-
-        state: root.screen.width > Config.lock.sizes.largeScreenWidth ? "tl" : "br"
-        states: [
-            State {
-                name: "tl"
-
-                AnchorChanges {
-                    target: media
-                    anchors.bottom: media.parent.top
-                    anchors.right: media.parent.left
-                }
-
-                PropertyChanges {
-                    media.anchors.bottomMargin: -backgrounds.mediaY
-                    media.anchors.rightMargin: -backgrounds.mediaX
-                }
-            },
-            State {
-                name: "br"
-
-                AnchorChanges {
-                    target: media
-                    anchors.top: media.parent.bottom
-                    anchors.left: media.parent.right
-                }
-
-                PropertyChanges {
-                    media.anchors.topMargin: -backgrounds.mediaY
-                    media.anchors.leftMargin: -backgrounds.mediaX
-                }
-            }
-        ]
-
-        sourceComponent: MediaPlaying {
-            isLarge: root.screen.width > Config.lock.sizes.largeScreenWidth
+            anchors.centerIn: parent
+            text: "lock"
+            font.pointSize: Appearance.font.size.extraLarge * 4
+            font.bold: true
         }
-    }
-
-    Loader {
-        id: buttons
-
-        active: root.screen.width > Config.lock.sizes.largeScreenWidth
-        asynchronous: true
-
-        anchors.top: parent.bottom
-        anchors.left: parent.right
-        anchors.topMargin: -backgrounds.buttonsTop
-        anchors.leftMargin: -backgrounds.buttonsLeft
-
-        sourceComponent: Buttons {}
-    }
-
-    Status {
-        id: status
-
-        anchors.bottom: parent.top
-        anchors.left: parent.right
-        anchors.bottomMargin: -backgrounds.statusBottom
-        anchors.leftMargin: -backgrounds.statusLeft
-
-        showNotifs: root.screen.width > Config.lock.sizes.largeScreenWidth
     }
 
     component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.large
+        duration: Appearance.anim.durations.normal
         easing.type: Easing.BezierSpline
         easing.bezierCurve: Appearance.anim.curves.standard
     }

@@ -34,16 +34,16 @@ WlSessionLockSurface {
 
         ParallelAnimation {
             Anim {
-                target: lockBg
+                target: lockContent
                 properties: "implicitWidth,implicitHeight"
-                to: lockBg.size
+                to: lockContent.size
                 duration: Appearance.anim.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
             }
             Anim {
                 target: lockBg
                 property: "radius"
-                to: lockBg.size / 4
+                to: lockContent.size / 4
             }
             Anim {
                 target: content
@@ -75,7 +75,7 @@ WlSessionLockSurface {
                     duration: Appearance.anim.durations.small
                 }
                 Anim {
-                    target: lockBg
+                    target: lockContent
                     property: "opacity"
                     to: 0
                 }
@@ -100,14 +100,14 @@ WlSessionLockSurface {
         SequentialAnimation {
             ParallelAnimation {
                 Anim {
-                    target: lockBg
+                    target: lockContent
                     property: "scale"
                     to: 1
                     duration: Appearance.anim.durations.expressiveFastSpatial
                     easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
                 }
                 Anim {
-                    target: lockBg
+                    target: lockContent
                     property: "rotation"
                     to: 360
                     duration: Appearance.anim.durations.expressiveFastSpatial
@@ -144,14 +144,14 @@ WlSessionLockSurface {
                     to: Appearance.rounding.large * 1.5
                 }
                 Anim {
-                    target: lockBg
+                    target: lockContent
                     property: "implicitWidth"
                     to: root.screen.height * Config.lock.sizes.heightMult * Config.lock.sizes.ratio
                     duration: Appearance.anim.durations.expressiveDefaultSpatial
                     easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
                 }
                 Anim {
-                    target: lockBg
+                    target: lockContent
                     property: "implicitHeight"
                     to: root.screen.height * Config.lock.sizes.heightMult
                     duration: Appearance.anim.durations.expressiveDefaultSpatial
@@ -180,8 +180,8 @@ WlSessionLockSurface {
         }
     }
 
-    StyledRect {
-        id: lockBg
+    Item {
+        id: lockContent
 
         readonly property int size: lockIcon.implicitHeight + Appearance.padding.large * 4
 
@@ -189,18 +189,23 @@ WlSessionLockSurface {
         implicitWidth: size
         implicitHeight: size
 
-        clip: true
-        color: Colours.tPalette.m3surface
-        radius: size / 4
         rotation: 180
         scale: 0
 
-        Elevation {
+        StyledRect {
+            id: lockBg
+
             anchors.fill: parent
-            radius: parent.radius
-            z: -1
-            level: 3
-            offset.y: 0
+            color: Colours.palette.m3surface
+            radius: parent.size / 4
+            opacity: Colours.transparency.enabled ? Colours.transparency.base : 1
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: true
+                blurMax: 15
+                shadowColor: Qt.alpha(Colours.palette.m3shadow, 0.7)
+            }
         }
 
         MaterialIcon {

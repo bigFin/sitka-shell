@@ -110,6 +110,15 @@ ColumnLayout {
 
         Keys.onPressed: event => root.lock.pam.handleKey(event)
 
+        StateLayer {
+            hoverEnabled: false
+            cursorShape: Qt.IBeamCursor
+
+            function onClicked(): void {
+                parent.forceActiveFocus();
+            }
+        }
+
         RowLayout {
             id: input
 
@@ -122,58 +131,81 @@ ColumnLayout {
                 text: "lock"
             }
 
-            ListView {
-                id: passwordList
-
+            Item {
                 Layout.fillWidth: true
-                implicitHeight: Appearance.font.size.normal
+                Layout.fillHeight: true
 
-                orientation: Qt.Horizontal
-                clip: true
-                spacing: Appearance.spacing.small / 2
-                highlightRangeMode: ListView.StrictlyEnforceRange
-                preferredHighlightBegin: 0
-                preferredHighlightEnd: count ? width - implicitHeight * 2 : 0
-                currentIndex: count - 1
+                ListView {
+                    id: passwordList
 
-                model: ScriptModel {
-                    values: root.lock.pam.buffer
-                }
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    implicitHeight: Appearance.font.size.normal
 
-                delegate: StyledRect {
-                    implicitWidth: implicitHeight
-                    implicitHeight: passwordList.implicitHeight
+                    orientation: Qt.Horizontal
+                    clip: true
+                    interactive: false
+                    spacing: Appearance.spacing.small / 2
+                    highlightRangeMode: ListView.StrictlyEnforceRange
+                    preferredHighlightBegin: 0
+                    preferredHighlightEnd: count ? width - implicitHeight * 2 : 0
+                    currentIndex: count - 1
 
-                    color: Colours.palette.m3onSurface
-                    radius: Appearance.rounding.small / 2
-                }
+                    model: ScriptModel {
+                        values: root.lock.pam.buffer
+                    }
 
-                add: Transition {
-                    Anim {
-                        property: "scale"
-                        from: 0
-                        to: 1
-                        duration: Appearance.anim.durations.expressiveFastSpatial
-                        easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                    delegate: StyledRect {
+                        implicitWidth: implicitHeight
+                        implicitHeight: passwordList.implicitHeight
+
+                        color: Colours.palette.m3onSurface
+                        radius: Appearance.rounding.small / 2
+                    }
+
+                    add: Transition {
+                        Anim {
+                            property: "scale"
+                            from: 0
+                            to: 1
+                            duration: Appearance.anim.durations.expressiveFastSpatial
+                            easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                        }
+                    }
+
+                    remove: Transition {
+                        Anim {
+                            property: "scale"
+                            to: 0.5
+                        }
+                        Anim {
+                            property: "opacity"
+                            to: 0
+                        }
+                    }
+
+                    highlightFollowsCurrentItem: false
+                    highlight: Item {
+                        x: passwordList.currentItem?.x ?? 0
+
+                        Behavior on x {
+                            Anim {}
+                        }
                     }
                 }
 
-                remove: Transition {
-                    Anim {
-                        property: "scale"
-                        to: 0.5
-                    }
-                    Anim {
-                        property: "opacity"
-                        to: 0
-                    }
-                }
+                StyledText {
+                    anchors.centerIn: parent
 
-                highlightFollowsCurrentItem: false
-                highlight: Item {
-                    x: passwordList.currentItem?.x ?? 0
+                    text: qsTr("Enter your password")
+                    color: Colours.palette.m3outline
+                    font.pointSize: Appearance.font.size.normal
+                    font.family: Appearance.font.family.mono
 
-                    Behavior on x {
+                    opacity: root.lock.pam.buffer ? 0 : 1
+
+                    Behavior on opacity {
                         Anim {}
                     }
                 }

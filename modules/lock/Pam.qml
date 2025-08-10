@@ -1,8 +1,9 @@
+import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Pam
 import QtQuick
 
-PamContext {
+Scope {
     id: root
 
     required property WlSessionLock lock
@@ -11,11 +12,11 @@ PamContext {
     property string buffer: ""
 
     function handleKey(event: KeyEvent): void {
-        if (active)
+        if (passwd.active)
             return;
 
         if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
-            start();
+            passwd.start();
         } else if (event.key === Qt.Key_Backspace) {
             if (event.modifiers & Qt.ControlModifier) {
                 buffer = "";
@@ -28,23 +29,36 @@ PamContext {
         }
     }
 
-    onResponseRequiredChanged: {
-        if (!responseRequired)
-            return;
+    PamContext {
+        id: passwd
 
-        respond(buffer);
-        buffer = "";
+        onResponseRequiredChanged: {
+            if (!responseRequired)
+                return;
+
+            respond(root.buffer);
+            root.buffer = "";
+        }
+
+        onCompleted: res => {
+            if (res === PamResult.Success)
+                return root.lock.unlock();
+
+            if (res === PamResult.Error)
+                root.state = "error";
+            else if (res === PamResult.MaxTries)
+                root.state = "max";
+            else if (res === PamResult.Failed)
+                root.state = "fail";
+
+            stateReset.restart();
+        }
     }
 
-    onCompleted: res => {
-        if (res === PamResult.Success)
-            return lock.unlock();
+    Timer {
+        id: stateReset
 
-        if (res === PamResult.Error)
-            state = "error";
-        else if (res === PamResult.MaxTries)
-            state = "max";
-        else if (res === PamResult.Failed)
-            state = "fail";
+        interval: 4000
+        onTriggered: root.state = "none"
     }
 }

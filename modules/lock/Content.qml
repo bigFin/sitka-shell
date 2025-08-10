@@ -13,7 +13,7 @@ RowLayout {
     anchors.fill: parent
     anchors.margins: Appearance.padding.large
 
-    spacing: Appearance.spacing.large
+    spacing: Appearance.spacing.large * 2
 
     ColumnLayout {
         Layout.fillWidth: true
@@ -23,6 +23,7 @@ RowLayout {
             Layout.fillWidth: true
             implicitHeight: weather.implicitHeight
 
+            topLeftRadius: Appearance.rounding.large
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
 
@@ -35,6 +36,7 @@ RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
+            bottomLeftRadius: Appearance.rounding.large
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
         }
@@ -55,6 +57,7 @@ RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
+            topRightRadius: Appearance.rounding.large
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
         }
@@ -63,6 +66,7 @@ RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
+            bottomRightRadius: Appearance.rounding.large
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
         }

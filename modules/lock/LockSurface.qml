@@ -133,7 +133,7 @@ WlSessionLockSurface {
                 Anim {
                     target: lockBg
                     property: "radius"
-                    to: Appearance.rounding.large
+                    to: Appearance.rounding.large * 1.5
                 }
                 Anim {
                     target: lockBg

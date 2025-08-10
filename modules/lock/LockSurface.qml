@@ -138,14 +138,14 @@ WlSessionLockSurface {
                 Anim {
                     target: lockBg
                     property: "implicitWidth"
-                    to: root.height * Config.lock.sizes.heightMult * Config.lock.sizes.ratio
+                    to: root.screen.height * Config.lock.sizes.heightMult * Config.lock.sizes.ratio
                     duration: Appearance.anim.durations.expressiveDefaultSpatial
                     easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
                 }
                 Anim {
                     target: lockBg
                     property: "implicitHeight"
-                    to: root.height * Config.lock.sizes.heightMult
+                    to: root.screen.height * Config.lock.sizes.heightMult
                     duration: Appearance.anim.durations.expressiveDefaultSpatial
                     easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
                 }

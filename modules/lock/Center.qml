@@ -48,7 +48,7 @@ ColumnLayout {
         }
 
         Loader {
-            Layout.leftMargin: Appearance.spacing.normal
+            Layout.leftMargin: Appearance.spacing.small
             Layout.alignment: Qt.AlignVCenter
 
             asynchronous: true
@@ -118,6 +118,9 @@ ColumnLayout {
         }
 
         Keys.onPressed: event => {
+            if (!root.lock.locked)
+                return;
+
             if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return)
                 inputField.placeholder.animate = false;
 

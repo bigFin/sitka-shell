@@ -62,6 +62,7 @@ WlSessionLockSurface {
                 target: lockIcon
                 property: "opacity"
                 to: 1
+                duration: Appearance.anim.durations.large
             }
             Anim {
                 target: background

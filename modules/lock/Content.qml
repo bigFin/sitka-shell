@@ -21,12 +21,14 @@ RowLayout {
 
         StyledRect {
             Layout.fillWidth: true
-            Layout.fillHeight: true
+            implicitHeight: weather.implicitHeight
 
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
 
-            // WeatherInfo {}
+            WeatherInfo {
+                id: weather
+            }
         }
 
         StyledRect {

@@ -47,6 +47,13 @@ WlSessionLockSurface {
             }
             Anim {
                 target: content
+                property: "centerScale"
+                to: 0
+                duration: Appearance.anim.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+            }
+            Anim {
+                target: content
                 property: "opacity"
                 to: 0
                 duration: Appearance.anim.durations.small

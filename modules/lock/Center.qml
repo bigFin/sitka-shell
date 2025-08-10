@@ -108,7 +108,12 @@ ColumnLayout {
                 forceActiveFocus();
         }
 
-        Keys.onPressed: event => root.lock.pam.handleKey(event)
+        Keys.onPressed: event => {
+            if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return)
+                inputField.placeholder.animate = false;
+
+            root.lock.pam.handleKey(event);
+        }
 
         StateLayer {
             hoverEnabled: false
@@ -131,84 +136,10 @@ ColumnLayout {
                 text: "lock"
             }
 
-            Item {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+            InputField {
+                id: inputField
 
-                ListView {
-                    id: passwordList
-
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    implicitHeight: Appearance.font.size.normal
-
-                    orientation: Qt.Horizontal
-                    clip: true
-                    interactive: false
-                    spacing: Appearance.spacing.small / 2
-                    highlightRangeMode: ListView.StrictlyEnforceRange
-                    preferredHighlightBegin: 0
-                    preferredHighlightEnd: count ? width - implicitHeight * 2 : 0
-                    currentIndex: count - 1
-
-                    model: ScriptModel {
-                        values: root.lock.pam.buffer
-                    }
-
-                    delegate: StyledRect {
-                        implicitWidth: implicitHeight
-                        implicitHeight: passwordList.implicitHeight
-
-                        color: Colours.palette.m3onSurface
-                        radius: Appearance.rounding.small / 2
-                    }
-
-                    add: Transition {
-                        Anim {
-                            property: "scale"
-                            from: 0
-                            to: 1
-                            duration: Appearance.anim.durations.expressiveFastSpatial
-                            easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
-                        }
-                    }
-
-                    remove: Transition {
-                        Anim {
-                            property: "scale"
-                            to: 0.5
-                        }
-                        Anim {
-                            property: "opacity"
-                            to: 0
-                        }
-                    }
-
-                    highlightFollowsCurrentItem: false
-                    highlight: Item {
-                        x: passwordList.currentItem?.x ?? 0
-
-                        Behavior on x {
-                            Anim {}
-                        }
-                    }
-                }
-
-                StyledText {
-                    anchors.centerIn: parent
-
-                    text: qsTr("Enter your password")
-                    color: Colours.palette.m3outline
-                    font.pointSize: Appearance.font.size.normal
-                    font.family: Appearance.font.family.mono
-
-                    opacity: root.lock.pam.buffer ? 0 : 1
-
-                    Behavior on opacity {
-                        Anim {}
-                    }
-                }
+                pam: root.lock.pam
             }
 
             StyledRect {

@@ -8,8 +8,9 @@ Scope {
 
     required property WlSessionLock lock
 
-    property string state: "none"
-    property string buffer: ""
+    readonly property bool active: passwd.active
+    property string state
+    property string buffer
 
     function handleKey(event: KeyEvent): void {
         if (passwd.active)
@@ -59,6 +60,6 @@ Scope {
         id: stateReset
 
         interval: 4000
-        onTriggered: root.state = "none"
+        onTriggered: root.state = ""
     }
 }

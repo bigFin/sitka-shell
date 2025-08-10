@@ -162,7 +162,7 @@ ColumnLayout {
                     color: root.lock.pam.buffer ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
 
                     function onClicked(): void {
-                        root.lock.pam.start();
+                        root.lock.pam.passwd.start();
                     }
                 }
 

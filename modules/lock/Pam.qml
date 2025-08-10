@@ -8,6 +8,7 @@ Scope {
 
     required property WlSessionLock lock
 
+    readonly property alias passwd: passwd
     readonly property bool active: passwd.active
     property string state
     property string buffer

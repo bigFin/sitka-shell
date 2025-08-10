@@ -5,7 +5,6 @@ import qs.components.images
 import qs.services
 import qs.config
 import qs.utils
-import Quickshell
 import QtQuick
 import QtQuick.Layouts
 
@@ -15,9 +14,8 @@ ColumnLayout {
     required property var lock
     readonly property list<string> timeComponents: Time.format(Config.services.useTwelveHourClock ? "hh:mm:A" : "hh:mm").split(":")
 
-    Layout.fillWidth: true
+    Layout.preferredWidth: Config.lock.sizes.centerWidth
     Layout.fillHeight: true
-    Layout.minimumWidth: Config.lock.sizes.centerWidth
 
     spacing: Appearance.spacing.large * 2
 

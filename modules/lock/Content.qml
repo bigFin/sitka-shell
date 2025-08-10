@@ -8,6 +8,7 @@ RowLayout {
     id: root
 
     required property var lock
+    property real centerScale
 
     anchors.fill: parent
     anchors.margins: Appearance.padding.large
@@ -24,6 +25,8 @@ RowLayout {
 
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
+
+            // WeatherInfo {}
         }
 
         StyledRect {
@@ -36,6 +39,9 @@ RowLayout {
     }
 
     Center {
+        Layout.leftMargin: -(1 - scale) * implicitWidth / 2
+        Layout.rightMargin: -(1 - scale) * implicitWidth / 2
+        scale: root.centerScale
         lock: root.lock
     }
 

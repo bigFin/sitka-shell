@@ -124,6 +124,13 @@ WlSessionLockSurface {
                     to: 1
                 }
                 Anim {
+                    target: content
+                    property: "centerScale"
+                    to: 1
+                    duration: Appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                }
+                Anim {
                     target: lockBg
                     property: "radius"
                     to: Appearance.rounding.large
@@ -131,14 +138,14 @@ WlSessionLockSurface {
                 Anim {
                     target: lockBg
                     property: "implicitWidth"
-                    to: root.width * 0.8
+                    to: root.height * Config.lock.sizes.heightMult * Config.lock.sizes.ratio
                     duration: Appearance.anim.durations.expressiveDefaultSpatial
                     easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
                 }
                 Anim {
                     target: lockBg
                     property: "implicitHeight"
-                    to: root.height * 0.8
+                    to: root.height * Config.lock.sizes.heightMult
                     duration: Appearance.anim.durations.expressiveDefaultSpatial
                     easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
                 }
@@ -174,6 +181,7 @@ WlSessionLockSurface {
         implicitWidth: size
         implicitHeight: size
 
+        clip: true
         color: Colours.tPalette.m3surface
         radius: size / 4
         rotation: 180

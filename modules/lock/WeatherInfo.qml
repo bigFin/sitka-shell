@@ -7,22 +7,10 @@ import QtQuick.Layouts
 RowLayout {
     id: root
 
-    Timer {
-        running: true
-        triggeredOnStart: true
-        repeat: true
-        interval: 900000 // 15 minutes
-        onTriggered: Weather.reload()
-    }
-
+    anchors.fill: parent
     spacing: Appearance.spacing.large
 
     MaterialIcon {
-        id: icon
-
-        Layout.alignment: Qt.AlignVCenter
-        Layout.topMargin: Config.lock.sizes.border / 4
-
         animate: true
         text: Weather.icon || "cloud_alert"
         color: Colours.palette.m3secondary
@@ -31,8 +19,6 @@ RowLayout {
 
     ColumnLayout {
         Layout.alignment: Qt.AlignVCenter
-        Layout.topMargin: Config.lock.sizes.border / 4
-        Layout.rightMargin: Config.lock.sizes.border / 2
 
         spacing: Appearance.spacing.small
 
@@ -49,7 +35,6 @@ RowLayout {
 
         StyledText {
             Layout.fillWidth: true
-            Layout.maximumWidth: Config.lock.sizes.weatherWidth - icon.implicitWidth
 
             animate: true
             text: Weather.description || qsTr("No weather")
@@ -57,5 +42,13 @@ RowLayout {
             font.pointSize: Appearance.font.size.large
             elide: Text.ElideRight
         }
+    }
+
+    Timer {
+        running: true
+        triggeredOnStart: true
+        repeat: true
+        interval: 900000 // 15 minutes
+        onTriggered: Weather.reload()
     }
 }

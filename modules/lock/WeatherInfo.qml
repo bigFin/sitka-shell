@@ -59,31 +59,37 @@ ColumnLayout {
             }
         }
 
-        ColumnLayout {
+        Loader {
             Layout.rightMargin: Appearance.padding.smaller
-            spacing: Appearance.spacing.small
+            asynchronous: true
+            active: root.width > 400
+            visible: active
 
-            StyledText {
-                Layout.fillWidth: true
+            sourceComponent: ColumnLayout {
+                spacing: Appearance.spacing.small
 
-                animate: true
-                text: Weather.temp
-                color: Colours.palette.m3primary
-                horizontalAlignment: Text.AlignRight
-                font.pointSize: Appearance.font.size.extraLarge
-                font.weight: 500
-                elide: Text.ElideLeft
-            }
+                StyledText {
+                    Layout.fillWidth: true
 
-            StyledText {
-                Layout.fillWidth: true
+                    animate: true
+                    text: Weather.temp
+                    color: Colours.palette.m3primary
+                    horizontalAlignment: Text.AlignRight
+                    font.pointSize: Appearance.font.size.extraLarge
+                    font.weight: 500
+                    elide: Text.ElideLeft
+                }
 
-                animate: true
-                text: qsTr("Feels like: %1").arg(Weather.feelsLike)
-                color: Colours.palette.m3outline
-                horizontalAlignment: Text.AlignRight
-                font.pointSize: Appearance.font.size.smaller
-                elide: Text.ElideLeft
+                StyledText {
+                    Layout.fillWidth: true
+
+                    animate: true
+                    text: qsTr("Feels like: %1").arg(Weather.feelsLike)
+                    color: Colours.palette.m3outline
+                    horizontalAlignment: Text.AlignRight
+                    font.pointSize: Appearance.font.size.smaller
+                    elide: Text.ElideLeft
+                }
             }
         }
     }
@@ -97,14 +103,14 @@ ColumnLayout {
         Repeater {
             model: {
                 const forecast = Weather.forecast;
+                let count = root.width < 320 ? 3 : root.width < 400 ? 4 : 5;
                 if (!forecast)
                     return Array.from({
-                        length: 5
+                        length: count
                     }, () => null);
 
                 const hours = [];
                 const hour = new Date().getHours();
-                let count = 5;
 
                 const today = forecast[0].hourly;
                 const arr = [...today, ...forecast[1].hourly];

@@ -12,60 +12,40 @@ import QtQuick.Layouts
 ColumnLayout {
     id: root
 
-    required property WlSessionLockSurface lock
+    required property var lock
 
     property string passwordBuffer
 
+    Layout.preferredWidth: Config.lock.sizes.faceSize * 2
+    Layout.fillWidth: false
     spacing: Appearance.spacing.large * 2
 
-    RowLayout {
-        Layout.alignment: Qt.AlignHCenter
-        Layout.topMargin: Appearance.padding.large * 3
-        Layout.maximumWidth: Config.lock.sizes.inputWidth - Appearance.rounding.large * 2
+    StyledRect {
+        Layout.fillWidth: true
+        implicitHeight: user.implicitHeight + Appearance.padding.small * 2
 
-        spacing: Appearance.spacing.large
+        color: Colours.tPalette.m3surfaceContainer
+        radius: Appearance.rounding.small
 
-        StyledClippingRect {
-            Layout.alignment: Qt.AlignVCenter
-            implicitWidth: Config.lock.sizes.faceSize
-            implicitHeight: Config.lock.sizes.faceSize
+        RowLayout {
+            id: user
 
-            radius: Appearance.rounding.large
-            color: Colours.tPalette.m3surfaceContainer
+            anchors.centerIn: parent
+
+            spacing: Appearance.spacing.normal
 
             MaterialIcon {
-                anchors.centerIn: parent
-
-                text: "person"
-                fill: 1
-                grade: 200
-                font.pointSize: Config.lock.sizes.faceSize / 2
-            }
-
-            CachingImage {
-                anchors.fill: parent
-                path: `${Paths.stringify(Paths.home)}/.face`
-            }
-        }
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter
-            spacing: Appearance.spacing.small
-
-            StyledText {
-                Layout.fillWidth: true
-                text: qsTr("Welcome back, %1").arg(Quickshell.env("USER"))
-                font.pointSize: Appearance.font.size.extraLarge
+                text: "account_circle"
+                font.pointSize: Appearance.font.size.large * 1.4
                 font.weight: 500
-                elide: Text.ElideRight
             }
 
             StyledText {
-                Layout.fillWidth: true
-                text: qsTr("Logging in to %1").arg(Quickshell.env("XDG_CURRENT_DESKTOP") || Quickshell.env("XDG_SESSION_DESKTOP"))
-                color: Colours.palette.m3tertiary
+                // Layout.fillWidth: true
+                text: Quickshell.env("USER")
                 font.pointSize: Appearance.font.size.large
+                // font.capitalization: Font.Capitalize
+                font.weight: 500
                 elide: Text.ElideRight
             }
         }
@@ -121,7 +101,7 @@ ColumnLayout {
 
             onCompleted: res => {
                 if (res === PamResult.Success)
-                    return root.lock.unlock();
+                    return root.lock.lock.unlock();
 
                 if (res === PamResult.Error)
                     placeholder.pamState = "error";

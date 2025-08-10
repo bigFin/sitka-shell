@@ -15,10 +15,6 @@ WlSessionLockSurface {
 
     property bool locked
 
-    function unlock(): void {
-        lock.unlocked = true;
-    }
-
     Component.onCompleted: locked = true
 
     color: "transparent"
@@ -40,8 +36,8 @@ WlSessionLockSurface {
                 target: lockBg
                 properties: "implicitWidth,implicitHeight"
                 to: lockBg.size
-                duration: Appearance.anim.durations.expressiveFastSpatial
-                easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                duration: Appearance.anim.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
             }
             Anim {
                 target: lockBg
@@ -49,9 +45,31 @@ WlSessionLockSurface {
                 to: lockBg.size / 4
             }
             Anim {
-                targets: [background, lockBg]
+                target: content
                 property: "opacity"
                 to: 0
+                duration: Appearance.anim.durations.small
+            }
+            Anim {
+                target: lockIcon
+                property: "opacity"
+                to: 1
+            }
+            Anim {
+                target: background
+                property: "opacity"
+                to: 0
+                duration: Appearance.anim.durations.large
+            }
+            SequentialAnimation {
+                PauseAnimation {
+                    duration: Appearance.anim.durations.small
+                }
+                Anim {
+                    target: lockBg
+                    property: "opacity"
+                    to: 0
+                }
             }
         }
         PropertyAction {
@@ -82,7 +100,7 @@ WlSessionLockSurface {
                 Anim {
                     target: lockBg
                     property: "rotation"
-                    to: 180
+                    to: 360
                     duration: Appearance.anim.durations.expressiveFastSpatial
                     easing.bezierCurve: Appearance.anim.curves.standardAccel
                 }
@@ -91,8 +109,18 @@ WlSessionLockSurface {
                 Anim {
                     target: lockIcon
                     property: "rotation"
-                    to: 180
+                    to: 360
                     easing.bezierCurve: Appearance.anim.curves.standardDecel
+                }
+                Anim {
+                    target: lockIcon
+                    property: "opacity"
+                    to: 0
+                }
+                Anim {
+                    target: content
+                    property: "opacity"
+                    to: 1
                 }
                 Anim {
                     target: lockBg
@@ -147,6 +175,7 @@ WlSessionLockSurface {
 
         color: Colours.tPalette.m3surface
         radius: size / 4
+        rotation: 180
         scale: 0
 
         Elevation {
@@ -164,6 +193,14 @@ WlSessionLockSurface {
             text: "lock"
             font.pointSize: Appearance.font.size.extraLarge * 4
             font.bold: true
+            rotation: 180
+        }
+
+        Content {
+            id: content
+
+            lock: root
+            opacity: 0
         }
     }
 

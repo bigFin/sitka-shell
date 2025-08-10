@@ -13,7 +13,14 @@ Scope {
 
         LockSurface {
             lock: lock
+            pam: pam
         }
+    }
+
+    Pam {
+        id: pam
+
+        lock: lock
     }
 
     // CustomShortcut {

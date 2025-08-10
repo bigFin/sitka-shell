@@ -12,6 +12,7 @@ WlSessionLockSurface {
     id: root
 
     required property WlSessionLock lock
+    required property Pam pam
 
     property bool locked
 

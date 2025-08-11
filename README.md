@@ -161,6 +161,7 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 >
 >| Package | Usage |
 >|---|---|
+>| [`grim`](https://gitlab.freedesktop.org/emersion/grim) | Screenshot tool |
 >| [`swappy`](https://github.com/jtheoof/swappy) | Screenshot annotation |
 >| [`app2unit`](https://github.com/Vladimir-csp/app2unit) | Launch apps |
 >| [`libqalculate`](https://github.com/Qalculate/libqalculate) | Calculator |
@@ -322,10 +323,7 @@ You might want to change your default apps.
         "thickness": 10
     },
     "dashboard": {
-        "enabled": true,
-        "dragThreshold": 50,
         "mediaUpdateInterval": 500,
-        "showOnHover": true,
         "visualiserBars": 45
     },
     "launcher": {

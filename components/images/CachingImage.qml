@@ -1,4 +1,3 @@
-import qs.services
 import qs.utils
 import Quickshell
 import Quickshell.Io
@@ -32,7 +31,8 @@ Image {
             source = path;
         else if (source == path && status === Image.Ready) {
             Paths.mkdir(Paths.imagecache);
-            ImageGrabber.grab(this, cachePath);
+            const grabPath = cachePath;
+            grabToImage(res => res.saveToFile(grabPath));
         }
     }
 

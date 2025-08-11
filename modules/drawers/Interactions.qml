@@ -19,6 +19,10 @@ MouseArea {
     property bool osdShortcutActive
     property bool utilitiesShortcutActive
 
+    property bool draggingBar: false
+
+    cursorShape: draggingBar && pressed ? Qt.ClosedHandCursor : Qt.ArrowCursor
+
     function withinPanelHeight(panel: Item, x: real, y: real): bool {
         const panelY = Config.border.thickness + panel.y;
         return y >= panelY - Config.border.rounding && y <= panelY + panel.height + Config.border.rounding;
@@ -44,7 +48,15 @@ MouseArea {
     anchors.fill: parent
     hoverEnabled: true
 
-    onPressed: event => dragStart = Qt.point(event.x, event.y)
+    onPressed: event => {
+        dragStart = Qt.point(event.x, event.y);
+        draggingBar = dragStart.x < bar.implicitWidth;
+    }
+
+    onReleased: event => {
+        draggingBar = false;
+    }
+
     onContainsMouseChanged: {
         if (!containsMouse) {
             // Only hide if not activated by shortcut

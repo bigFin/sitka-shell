@@ -29,12 +29,11 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 </div>
 
-<!-- - [🔽 Installation 🔽](#-installation-)
-    - [👣 Steps](#-steps)
-      - [Core Dependencies 📦](#core-dependencies-)
-      - [Audio \& Visual 🎵](#audio--visual-)
-      - [Fonts 🖋️](#fonts-️)
-      - [Screenshot \& Utilities 🧰](#screenshot--utilities-)
+---
+
+- [🔽 Installation 🔽](#-installation-)
+    - [👣 Installation Steps](#-installation-steps)
+    - [📦 Dependencies](#-dependencies)
 - [🔶 Usage 🔶](#-usage-)
     - [⌨️ Custom Shortcuts/IPC](#️-custom-shortcutsipc)
     - [🎭 PFP/Wallpapers](#-pfpwallpapers)
@@ -42,12 +41,22 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
     - [⚙️ Configuring](#️-configuring)
 - [➕ My Additions ➕](#-my-additions-)
 - [⛔ Known Issues ⛔](#-known-issues-)
+- [❔ FAQ ❔](#-faq-)
+    - [My screen is flickering, help pls!](#my-screen-is-flickering-help-pls)
+    - [I want to make my own changes to the hyprland config!](#i-want-to-make-my-own-changes-to-the-hyprland-config)
+    - [I want to make my own changes to other stuff!](#i-want-to-make-my-own-changes-to-other-stuff)
+    - [I want to disable XXX feature!](#i-want-to-disable-xxx-feature)
+    - [How do I make my colour scheme change with my wallpaper?](#how-do-i-make-my-colour-scheme-change-with-my-wallpaper)
+    - [My wallpapers aren't showing up in the launcher!](#my-wallpapers-arent-showing-up-in-the-launcher)
 - [🌟 Credits 🌟](#-credits-)
-    - [Stonks 📈](#stonks-) -->
+    - [Stonks 📈](#stonks-)
 
-<div align=center>
+---
 
-[<kbd> <br>    🔽 Installation    <br> </kbd>](#🔽-installation-🔽)
+
+<!-- <div align=center> -->
+
+<!-- [<kbd> <br>    🔽 Installation    <br> </kbd>](#🔽-installation-🔽)
 [<kbd> <br>    📦 Dependencies    <br> </kbd>](#📦-dependencies)
 [<kbd> <br> 🔶 Usage <br> </kbd>](#🔶-usage-🔶)
 
@@ -56,9 +65,9 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 [<kbd> <br> ➕ My Additions <br> </kbd>](#➕-my-additions-➕)
 
 [<kbd> <br> ⛔ Known Issues <br> </kbd>](#⛔-known-issues-⛔)
-[<kbd> <br> 🌟 Credits <br> </kbd>](#🌟-credits-🌟)
+[<kbd> <br> 🌟 Credits <br> </kbd>](#🌟-credits-🌟) -->
 
-</div>
+<!-- </div> -->
 
 <br>
 <br>
@@ -68,6 +77,7 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 > [!NOTE] 
 > There is **NO** package manager installation support yet because... 🤔
 
+<br>
 
 ### 👣 Installation Steps
 
@@ -109,6 +119,8 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 > 
 > Unlike the default shell,
 > [`caelestia-cli`](https://github.com/caelestia-dots/cli) is **not required for Niri**.
+
+<br>
 
 <details><summary> <b> Detailed info about all dependencies </b></summary>
 
@@ -167,18 +179,20 @@ The shell can be started via the `quickshell -c niri-caelestia-shell -n` command
 ><sub> (`qs` and `quickshell` are interchangable.) </sub>
 
 
-
 * Example line for niri `config.kdl` to launch the shell at startup:
   
    ```
    spawn-at-startup "quickshell" "-c" "niri-caelestia-shell" "-n"
    ```
 
+<br>
+
+
 ### ⌨️ Custom Shortcuts/IPC
 
-All keybinds are accessible via [Quickshell IPC msg](https://wiki.hyprland.org/Configuring/Binds/#dbus-global-shortcuts).
+All keybinds are accessible via [Quickshell IPC msg](https://quickshell.org/docs/v0.1.0/types/Quickshell.Io/IpcHandler/).
 
-All IPC commands can be accessed via `quickshell -c niri-caelestia-shell ipc call ...`
+All IPC commands can be called via `quickshell -c niri-caelestia-shell ipc call ...`
 
 * For example:
 
@@ -191,8 +205,14 @@ All IPC commands can be accessed via `quickshell -c niri-caelestia-shell ipc cal
     Mod+Space { spawn  "qs" "-c" "shell" "ipc" "call" "drawers" "toggle" "launcher"; }
     ```
 
+<br>
 
- The list of IPC commands can be shown via `caelestia shell -s`:
+
+ The list of IPC commands can be shown via `qs -c shell ipc show`.
+
+<br>
+
+<details><summary> <b> Ipc Commands </b></summary>
 
   ```sh
   ❯ qs -c shell ipc show
@@ -223,10 +243,15 @@ All IPC commands can be accessed via `quickshell -c niri-caelestia-shell ipc cal
     function play(): void
   ```
 
+</details>
+
+<br>
+
+
 ### 🎭 PFP/Wallpapers
 
 > [!WARNING]
-> Not completely implemented yet!
+> Not implemented yet!
 
 The profile picture for the dashboard is read from the file `~/.face`, so to set
 it you can copy your image to there or set it via the dashboard.
@@ -236,6 +261,9 @@ by default. To change it, change the wallpapers path in `~/.config/caelestia/she
 
 To set the wallpaper, you can use the app launcher command `> wallpaper`.
 
+<br>
+
+
 ### 🔃 Updating
 You can update by running `git pull` in `$XDG_CONFIG_HOME/quickshell/niri-caelestia-shell`.
 
@@ -244,11 +272,15 @@ cd $XDG_CONFIG_HOME/quickshell/niri-caelestia-shell
 git pull
 ```
 
+<br>
+
 ### ⚙️ Configuring
 
 All configuration options are in `~/.config/caelestia/shell.json`.
 
 You might want to change your default apps.
+
+<br>
 
 <details><summary> <b> Example configuration </b></summary>
 
@@ -424,6 +456,9 @@ The launcher pulls wallpapers from `~/Pictures/Wallpapers` by default. You can c
 the launcher only shows an odd number of wallpapers at one time. If you only have 2 wallpapers, consider getting more
 (or just putting one).
 
+<br>
+<br>
+
 # 🌟 Credits 🌟
 
 Thanks to the Hyprland discord community (especially the homies in #rice-discussion) for all the help and suggestions
@@ -438,6 +473,11 @@ which helped me a lot with learning how to use Quickshell.
 Finally another thank you to all the configs I took inspiration from (only one for now):
 
 -   [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
+
+<br>
+<br>
+<br>
+
 
 ### Stonks 📈
 

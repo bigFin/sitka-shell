@@ -6,7 +6,6 @@ import qs.modules.windowinfo
 import qs.modules.detachedcontent
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import QtQuick
 
 Item {

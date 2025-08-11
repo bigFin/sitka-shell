@@ -86,6 +86,20 @@ Item {
                         contentX = Qt.binding(() => currentItem.x);
                 }
 
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton
+                    hoverEnabled: true
+                    cursorShape: pressed || view.dragging ? Qt.ClosedHandCursor : Qt.ArrowCursor
+                    // Prevent this MouseArea from interfering with Flickable's own drag
+                    // propagateComposedEvents: true
+                    // onPressed: mouse => mouse.accepted = true
+                    // onReleased: mouse => mouse.accepted = false
+                    // onClicked: mouse => mouse.accepted = false
+                    // onDoubleClicked: mouse => mouse.accepted = false
+                    // onWheel: wheel => wheel.accepted = false
+                }
+
                 RowLayout {
                     id: row
 
@@ -133,22 +147,20 @@ Item {
 
             RowLayout {
                 id: windowdecorations
-                Layout.alignment: Qt.AlignHCenter
+                Layout.alignment: Qt.AlignLeft
                 Layout.topMargin: Appearance.spacing.small
                 Layout.leftMargin: Appearance.spacing.small
                 Layout.rightMargin: Appearance.spacing.small
 
                 ActiveWindow {
-                    //TODO Add a way to mitigate overflow
+                    //TODO Add a way to mitigate overflow, I implemented a solution in dashboard/ActiveWindow but it's meh.
                     id: activeWindow
-                    // Layout.margins: Appearance.spacing.small
-
                     Layout.fillWidth: true
                 }
 
                 Item {
                     Layout.fillWidth: true
-                } // Spacer
+                }
 
                 RowLayout {
 

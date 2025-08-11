@@ -87,19 +87,19 @@ ColumnLayout {
             spacing: Appearance.spacing.normal
 
             FetchText {
-                text: qsTr("OS  : %1").arg(SysInfo.osPrettyName || SysInfo.osName)
+                text: `OS  : ${SysInfo.osPrettyName || SysInfo.osName}`
             }
 
             FetchText {
-                text: qsTr("WM  : %1").arg(SysInfo.wm)
+                text: `WM  : ${SysInfo.wm}`
             }
 
             FetchText {
-                text: qsTr("USER: %1").arg(SysInfo.user)
+                text: `USER: ${SysInfo.user}`
             }
 
             FetchText {
-                text: qsTr("SH  : %1").arg(SysInfo.shell)
+                text: `UP  : ${SysInfo.uptime}`
             }
         }
     }

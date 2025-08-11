@@ -104,13 +104,34 @@ ColumnLayout {
                 }
             }
 
+            remove: Transition {
+                Anim {
+                    property: "opacity"
+                    to: 0
+                }
+                Anim {
+                    property: "scale"
+                    to: 0.6
+                }
+            }
+
             move: Transition {
                 Anim {
+                    properties: "opacity,scale"
+                    to: 1
+                }
+                Anim {
                     property: "y"
+                    duration: Appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
                 }
             }
 
             displaced: Transition {
+                Anim {
+                    properties: "opacity,scale"
+                    to: 1
+                }
                 Anim {
                     property: "y"
                     duration: Appearance.anim.durations.expressiveDefaultSpatial

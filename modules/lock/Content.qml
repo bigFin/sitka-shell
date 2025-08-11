@@ -69,11 +69,15 @@ RowLayout {
 
         StyledRect {
             Layout.fillWidth: true
-            Layout.fillHeight: true
+            implicitHeight: resources.implicitHeight
 
             topRightRadius: Appearance.rounding.large
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
+
+            Resources {
+                id: resources
+            }
         }
 
         StyledRect {

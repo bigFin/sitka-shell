@@ -97,7 +97,7 @@ Item {
 
         RowLayout {
             Layout.alignment: Qt.AlignHCenter
-            Layout.topMargin: Appearance.spacing.large * 1.5
+            Layout.topMargin: Appearance.spacing.large * 1.2
             Layout.bottomMargin: Appearance.padding.large
 
             spacing: Appearance.spacing.large

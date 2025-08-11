@@ -18,6 +18,7 @@ RowLayout {
     ColumnLayout {
         Layout.fillWidth: true
         spacing: Appearance.spacing.normal
+        scale: root.centerScale
 
         StyledRect {
             Layout.fillWidth: true
@@ -64,6 +65,7 @@ RowLayout {
     ColumnLayout {
         Layout.fillWidth: true
         spacing: Appearance.spacing.normal
+        scale: root.centerScale
 
         StyledRect {
             Layout.fillWidth: true

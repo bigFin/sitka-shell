@@ -39,6 +39,8 @@ RowLayout {
 
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
+
+            Fetch {}
         }
 
         StyledClippingRect {

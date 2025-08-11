@@ -113,15 +113,15 @@ Row {
         spacing: Appearance.spacing.normal
 
         InfoLine {
-            icon: Icons.osIcon
-            text: Icons.osName
+            icon: SysInfo.osIcon
+            text: SysInfo.osPrettyName || SysInfo.osName
             colour: Colours.palette.m3primary
             materialIcon: false
         }
 
         InfoLine {
             icon: "select_window_2"
-            text: Quickshell.env("XDG_CURRENT_DESKTOP") || Quickshell.env("XDG_SESSION_DESKTOP")
+            text: SysInfo.wm
             colour: Colours.palette.m3secondary
         }
 

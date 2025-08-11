@@ -84,7 +84,7 @@ ColumnLayout {
             clip: true
 
             model: ScriptModel {
-                values: [...new Set(Notifs.list.map(notif => notif.appName))].reverse()
+                values: root.lock.animating ? [] : [...new Set(Notifs.list.map(notif => notif.appName))].reverse()
             }
 
             delegate: NotifGroup {}

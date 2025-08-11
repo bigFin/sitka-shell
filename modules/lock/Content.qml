@@ -30,6 +30,8 @@ RowLayout {
 
             WeatherInfo {
                 id: weather
+
+                rootHeight: root.height
             }
         }
 

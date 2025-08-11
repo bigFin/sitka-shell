@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import qs.components
 import qs.services
 import qs.config
@@ -7,6 +9,8 @@ import QtQuick.Layouts
 
 ColumnLayout {
     id: root
+
+    required property int rootHeight
 
     anchors.left: parent.left
     anchors.right: parent.right
@@ -24,6 +28,7 @@ ColumnLayout {
     }
 
     RowLayout {
+        Layout.bottomMargin: forecastLoader.active ? 0 : Appearance.padding.large
         Layout.fillWidth: true
         spacing: Appearance.spacing.large
 
@@ -94,74 +99,83 @@ ColumnLayout {
         }
     }
 
-    RowLayout {
+    Loader {
+        id: forecastLoader
+
         Layout.topMargin: Appearance.spacing.smaller
         Layout.bottomMargin: Appearance.padding.large * 2
         Layout.fillWidth: true
-        spacing: Appearance.spacing.large
 
-        Repeater {
-            model: {
-                const forecast = Weather.forecast;
-                let count = root.width < 320 ? 3 : root.width < 400 ? 4 : 5;
-                if (!forecast)
-                    return Array.from({
-                        length: count
-                    }, () => null);
+        asynchronous: true
+        active: root.rootHeight > 820
+        visible: active
 
-                const hours = [];
-                const hour = new Date().getHours();
+        sourceComponent: RowLayout {
+            spacing: Appearance.spacing.large
 
-                const today = forecast[0].hourly;
-                const arr = [...today, ...forecast[1].hourly];
-                for (let i = 0; i < arr.length; i++) {
-                    const time = parseInt(arr[i].time, 10) / 100;
+            Repeater {
+                model: {
+                    const forecast = Weather.forecast;
+                    let count = root.width < 320 ? 3 : root.width < 400 ? 4 : 5;
+                    if (!forecast)
+                        return Array.from({
+                            length: count
+                        }, () => null);
 
-                    if (i > today.length ? time < hour : time > hour) {
-                        hours.push(arr[i]);
-                        count--;
+                    const hours = [];
+                    const hour = new Date().getHours();
+
+                    const today = forecast[0].hourly;
+                    const arr = [...today, ...forecast[1].hourly];
+                    for (let i = 0; i < arr.length; i++) {
+                        const time = parseInt(arr[i].time, 10) / 100;
+
+                        if (i > today.length ? time < hour : time > hour) {
+                            hours.push(arr[i]);
+                            count--;
+                        }
+
+                        if (count === 0)
+                            break;
                     }
 
-                    if (count === 0)
-                        break;
+                    return hours;
                 }
 
-                return hours;
-            }
+                ColumnLayout {
+                    id: forecastHour
 
-            ColumnLayout {
-                id: forecastHour
+                    required property var modelData
 
-                required property var modelData
-
-                Layout.fillWidth: true
-                spacing: Appearance.spacing.small
-
-                StyledText {
                     Layout.fillWidth: true
-                    text: {
-                        if (!forecastHour.modelData)
-                            return "00 AM";
-                        const hour = parseInt(forecastHour.modelData.time, 10) / 100;
-                        return hour > 12 ? `${(hour - 12).toString().padStart(2, "0")} PM` : `${hour.toString().padStart(2, "0")} AM`;
+                    spacing: Appearance.spacing.small
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        text: {
+                            if (!forecastHour.modelData)
+                                return "00 AM";
+                            const hour = parseInt(forecastHour.modelData.time, 10) / 100;
+                            return hour > 12 ? `${(hour - 12).toString().padStart(2, "0")} PM` : `${hour.toString().padStart(2, "0")} AM`;
+                        }
+                        color: Colours.palette.m3outline
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pointSize: Appearance.font.size.larger
                     }
-                    color: Colours.palette.m3outline
-                    horizontalAlignment: Text.AlignHCenter
-                    font.pointSize: Appearance.font.size.larger
-                }
 
-                MaterialIcon {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: forecastHour.modelData ? Icons.getWeatherIcon(forecastHour.modelData.weatherCode) : "cloud_alert"
-                    font.pointSize: Appearance.font.size.extraLarge * 1.5
-                    font.weight: 500
-                }
+                    MaterialIcon {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: forecastHour.modelData ? Icons.getWeatherIcon(forecastHour.modelData.weatherCode) : "cloud_alert"
+                        font.pointSize: Appearance.font.size.extraLarge * 1.5
+                        font.weight: 500
+                    }
 
-                StyledText {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: Config.services.useFahrenheit ? `${forecastHour.modelData?.tempF ?? 0}°F` : `${forecastHour.modelData?.tempC ?? 0}°C`
-                    color: Colours.palette.m3secondary
-                    font.pointSize: Appearance.font.size.larger
+                    StyledText {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: Config.services.useFahrenheit ? `${forecastHour.modelData?.tempF ?? 0}°F` : `${forecastHour.modelData?.tempC ?? 0}°C`
+                        color: Colours.palette.m3secondary
+                        font.pointSize: Appearance.font.size.larger
+                    }
                 }
             }
         }

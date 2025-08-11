@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import qs.components
 import qs.services
 import qs.config
@@ -13,9 +15,11 @@ ColumnLayout {
     anchors.fill: parent
     anchors.margins: Appearance.padding.large * 2
 
-    spacing: Appearance.spacing.large * 2
+    spacing: Appearance.spacing.small
 
     RowLayout {
+        Layout.fillWidth: true
+        Layout.fillHeight: false
         spacing: Appearance.spacing.normal
 
         StyledRect {
@@ -30,29 +34,56 @@ ColumnLayout {
 
                 anchors.centerIn: parent
                 text: ">"
+                font.pointSize: root.width > 400 ? Appearance.font.size.larger : Appearance.font.size.normal
                 color: Colours.palette.m3onPrimary
             }
         }
 
         MonoText {
+            Layout.fillWidth: true
             text: "caelestiafetch.sh"
+            font.pointSize: root.width > 400 ? Appearance.font.size.larger : Appearance.font.size.normal
+            elide: Text.ElideRight
+        }
+
+        Loader {
+            Layout.fillHeight: true
+            asynchronous: true
+            active: !iconLoader.active
+            visible: active
+
+            sourceComponent: IconImage {
+                source: Quickshell.iconPath(SysInfo.logo)
+                implicitSize: height
+            }
         }
     }
 
     RowLayout {
         Layout.fillWidth: true
-        Layout.fillHeight: true
-        spacing: Appearance.spacing.large * 2
+        Layout.fillHeight: false
+        spacing: height * 0.15
 
-        IconImage {
+        Loader {
+            id: iconLoader
+
             Layout.fillHeight: true
-            source: Quickshell.iconPath(SysInfo.logo)
-            implicitSize: height
+
+            asynchronous: true
+            active: root.width > 320
+            visible: active
+
+            sourceComponent: IconImage {
+                source: Quickshell.iconPath(SysInfo.logo)
+                implicitSize: height
+            }
         }
 
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.fillHeight: true
+            Layout.topMargin: Appearance.padding.normal
+            Layout.bottomMargin: Appearance.padding.normal
+            Layout.leftMargin: iconLoader.active ? 0 : width * 0.1
             spacing: Appearance.spacing.normal
 
             FetchText {
@@ -73,26 +104,34 @@ ColumnLayout {
         }
     }
 
-    RowLayout {
+    Loader {
         Layout.alignment: Qt.AlignHCenter
-        spacing: Appearance.spacing.large
 
-        Repeater {
-            model: 8
+        asynchronous: true
+        active: root.height > 250
+        visible: active
 
-            StyledRect {
-                required property int index
+        sourceComponent: RowLayout {
+            spacing: Appearance.spacing.large
 
-                implicitWidth: implicitHeight
-                implicitHeight: Appearance.font.size.larger * 2
-                color: Colours.palette[`term${index}`]
-                radius: Appearance.rounding.small
+            Repeater {
+                model: Math.min(8, root.width / (Appearance.font.size.larger * 2 + Appearance.spacing.large))
+
+                StyledRect {
+                    required property int index
+
+                    implicitWidth: implicitHeight
+                    implicitHeight: Appearance.font.size.larger * 2
+                    color: Colours.palette[`term${index}`]
+                    radius: Appearance.rounding.small
+                }
             }
         }
     }
 
     component FetchText: MonoText {
-        font.pointSize: Appearance.font.size.larger
+        Layout.fillWidth: true
+        font.pointSize: root.width > 400 ? Appearance.font.size.larger : Appearance.font.size.normal
         elide: Text.ElideRight
     }
 

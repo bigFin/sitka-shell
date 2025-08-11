@@ -31,6 +31,14 @@ Item {
 
             fragmentShader: `file://${Quickshell.shellDir}/assets/shaders/opacitymask.frag.qsb`
         }
+
+        opacity: status === Image.Ready ? 1 : 0
+
+        Behavior on opacity {
+            Anim {
+                duration: Appearance.anim.durations.extraLarge
+            }
+        }
     }
 
     Rectangle {

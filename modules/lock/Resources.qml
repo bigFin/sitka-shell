@@ -57,7 +57,7 @@ GridLayout {
         required property real value
         required property color colour
 
-        readonly property int thickness: Appearance.padding.normal
+        readonly property int thickness: width < 200 ? Appearance.padding.smaller : Appearance.padding.normal
         readonly property real arcRadius: (width - Appearance.padding.large * 3 - thickness) / 2
         readonly property real vValue: value || 1 / 360
         readonly property real gapAngle: ((Appearance.spacing.small + thickness) / (arcRadius || 1)) * (180 / Math.PI)
@@ -127,7 +127,7 @@ GridLayout {
             anchors.centerIn: parent
             text: res.icon
             color: res.colour
-            font.pointSize: (parent.width / 4) || 1
+            font.pointSize: (res.arcRadius * 0.7) || 1
             font.weight: 600
         }
 

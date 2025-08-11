@@ -91,7 +91,9 @@ RowLayout {
             bottomRightRadius: Appearance.rounding.large
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
-            NotifDock {}
+            NotifDock {
+                lock: root.lock
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import qs.components
-import qs.components.effects
 import qs.services
 import qs.config
 import Quickshell.Wayland
@@ -14,6 +13,7 @@ WlSessionLockSurface {
     required property WlSessionLock lock
     required property Pam pam
 
+    readonly property bool animating: initAnim.running || unlockAnim.running
     property bool locked
 
     Component.onCompleted: locked = true
@@ -89,6 +89,8 @@ WlSessionLockSurface {
     }
 
     ParallelAnimation {
+        id: initAnim
+
         running: true
 
         Anim {

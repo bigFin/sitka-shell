@@ -54,6 +54,8 @@ StyledRect {
                     fillMode: Image.PreserveAspectCrop
                     cache: false
                     asynchronous: true
+                    width: Config.notifs.sizes.image
+                    height: Config.notifs.sizes.image
                 }
             }
 
@@ -123,10 +125,13 @@ StyledRect {
         }
 
         ColumnLayout {
+            Layout.topMargin: -Appearance.padding.small
+            Layout.bottomMargin: -Appearance.padding.small / 2 - (root.expanded ? 0 : spacing)
             Layout.fillWidth: true
             spacing: Math.round(Appearance.spacing.small / 2)
 
             RowLayout {
+                Layout.bottomMargin: -parent.spacing
                 Layout.fillWidth: true
                 spacing: Appearance.spacing.smaller
 
@@ -139,6 +144,7 @@ StyledRect {
                 }
 
                 StyledText {
+                    animate: true
                     text: root.notifs[0].timeStr
                     color: Colours.palette.m3outline
                     font.pointSize: Appearance.font.size.small

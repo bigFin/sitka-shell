@@ -14,6 +14,7 @@ ColumnLayout {
 
     anchors.fill: parent
     anchors.margins: Appearance.padding.large * 2
+    anchors.topMargin: Appearance.padding.large
 
     spacing: Appearance.spacing.small
 

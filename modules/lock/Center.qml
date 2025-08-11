@@ -108,7 +108,7 @@ ColumnLayout {
         implicitWidth: Config.lock.sizes.centerWidth * 0.8
         implicitHeight: input.implicitHeight + Appearance.padding.small * 2
 
-        color: Colours.palette.m3surfaceContainer
+        color: Colours.tPalette.m3surfaceContainer
         radius: Appearance.rounding.full
 
         focus: true

@@ -7,6 +7,7 @@ import qs.config
 import Quickshell
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Widgets
 
 Item {
     id: root
@@ -96,6 +97,18 @@ Item {
                     values: Niri.windows.filter(c => c.workspace_id === targetWorkspaceId)
                     // .slice(0, Config.bar.workspaces.shown) //max windows shown
                 }
+
+                // TODO Setting to show App Images instead Material Icons, in config :)
+
+                // IconImage {
+                //     id: icon
+                //     required property var modelData
+                //     // grade: 0
+
+                //     // Layout.alignment: Qt.AlignVCenter
+                //     implicitSize: 25
+                //     source: Icons.getAppIcon(modelData.app_id ?? "", "image-missing")
+                //     Layout.margins: Appearance.padding.small
 
                 MaterialIcon {
                     id: icon

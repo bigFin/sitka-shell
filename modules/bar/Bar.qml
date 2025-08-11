@@ -121,12 +121,21 @@ Item {
             id: activeWindow
 
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: workspaces.bottom
             anchors.bottom: tray.top
-            anchors.margins: Appearance.spacing.large
+            anchors.bottomMargin: Appearance.spacing.larger
 
             monitor: Brightness.getMonitorForScreen(root.screen)
         }
+
+        // Item {
+        //     anchors.horizontalCenter: parent.horizontalCenter
+        //     // anchors.top: workspaces.bottom
+        //     anchors.bottom: tray.top
+
+        //     anchors.bottomMargin: Appearance.spacing.larger
+
+        //     implicitWidth: 120
+        // }
 
         Tray {
             id: tray

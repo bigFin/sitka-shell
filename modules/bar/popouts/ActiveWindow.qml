@@ -1,34 +1,39 @@
 import qs.components
-import qs.components.controls
+// import qs.components.controls
 import qs.services
 import qs.utils
 import qs.config
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
+
+// import QtQuick.Controls
 // import qs.widgets
-import qs.modules.windowinfo // TODO Niri for details.
+// import qs.modules.windowinfo // TODO Niri for details.
 
 Item {
     id: root
 
     required property Item wrapper
 
-    implicitWidth: Niri.focusedWindowTitle /*Niri.activeToplevel*/    ? child.implicitWidth : -Appearance.padding.large * 2
+    implicitWidth: Niri.focusedWindowTitle /*Niri.activeToplevel*/                           ? child.implicitWidth : -Appearance.padding.large * 2
     implicitHeight: child.implicitHeight
 
-    Column {
+    ColumnLayout {
         id: child
 
-        anchors.centerIn: parent
+        anchors.left: parent.left
         spacing: Appearance.spacing.normal
+
+        // height: 20
+        // width: Config.bar.sizes.windowPreviewSize - 100
 
         RowLayout {
             id: detailsRow
 
-            anchors.left: parent.left
-            anchors.right: parent.right
+            Layout.alignment: Qt.AlignLeft
+            // anchors.left: parent.left
+            // anchors.right: parent.right
             spacing: Appearance.spacing.normal
 
             IconImage {
@@ -50,6 +55,7 @@ Item {
                     text: Niri.focusedWindowTitle ?? ""
                     font.pointSize: Appearance.font.size.normal
                     elide: Text.ElideRight
+                    Layout.preferredWidth: 200
                 }
 
                 StyledText {
@@ -87,36 +93,36 @@ Item {
             }
         }
 
-        StyledRect {
-            // Layout.fillWidth: true
-            // Layout.fillHeight: true
-            // clip: true
+        // StyledRect {
+        //     // Layout.fillWidth: true
+        //     // Layout.fillHeight: true
+        //     // clip: true
 
-            // Layout.preferredHeight: buttons.implicitHeight
-            // height : 250
+        //     // Layout.preferredHeight: buttons.implicitHeight
+        //     // height : 250
 
-            height: 200
+        //     height: 200
 
-            width: Config.bar.sizes.windowPreviewSize
-            // color: Colours.palette.m3surfaceContainer
-            radius: Appearance.rounding.normal
+        //     width: Config.bar.sizes.windowPreviewSize
+        //     // color: Colours.palette.m3surfaceContainer
+        //     radius: Appearance.rounding.normal
 
-            Flickable {
-                id: flick
-                anchors.fill: parent
-                contentHeight: buttons.implicitHeight
+        //     Flickable {
+        //         id: flick
+        //         anchors.fill: parent
+        //         contentHeight: buttons.implicitHeight
 
-                interactive: true
-                clip: true
+        //         interactive: true
+        //         clip: true
 
-                Buttons {
-                    id: buttons
-                    // Your buttons content here
-                }
+        //         Buttons {
+        //             id: buttons
+        //             // Your buttons content here
+        //         }
 
-                ScrollBar.vertical: StyledScrollBar {}
-            }
-        }
+        //         ScrollBar.vertical: StyledScrollBar {}
+        //     }
+        // }
 
         // ClippingWrapperRectangle {
         //     color: "transparent"

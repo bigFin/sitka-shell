@@ -10,11 +10,26 @@ Item {
     id: root
 
     property color classColour: Colours.palette.m3primary
-    property color titleColour: Colours.palette.m3secondary // Pick a suitable palette color
+    property color titleColour: Colours.palette.m3secondary
     readonly property Item child: child
+
+    // The width available for text (excluding icon and spacing)
+    // TODO: Fix change window when panel open, still overflows.
+
+    property int textAvailableWidth: Math.max(0, width - icon.width - Appearance.spacing.small)
 
     implicitWidth: child.implicitWidth
     implicitHeight: child.implicitHeight
+
+    function cleanWindowTitle(windowClass, windowTitle) {
+        // Remove leading non-ASCII (icon) characters and whitespace Firefox Fix.
+        if (windowClass && windowClass.toLowerCase() === "firefox" && windowTitle) {
+            // Remove all leading non-printable or non-ASCII chars (favicons are often in the Unicode private use area or emoji)
+            // This regex removes all leading chars that are not basic ASCII printable (32-126)
+            return windowTitle.replace(/^[^\x20-\x7E]+/, "");
+        }
+        return windowTitle;
+    }
 
     Item {
         id: child
@@ -40,9 +55,11 @@ Item {
         // Row for two-part colored text
         TitleRow {
             id: textRow1
+            availableWidth: root.textAvailableWidth
         }
         TitleRow {
             id: textRow2
+            availableWidth: root.textAvailableWidth
         }
 
         // Elision logic for both parts
@@ -50,14 +67,15 @@ Item {
             id: metrics
 
             property string classPart: Niri.focusedWindowClass || ""
-            property string titlePart: Niri.focusedWindowTitle || "Hi!"
+            property string rawTitlePart: Niri.focusedWindowTitle || "Hi!"
+            property string cleanedTitlePart: root.cleanWindowTitle(classPart, rawTitlePart)
             property string separator: " -> "
 
-            text: classPart + separator + titlePart
+            text: classPart + separator + cleanedTitlePart
             font.pointSize: Appearance.font.size.smaller
             font.family: Appearance.font.family.mono
             elide: Qt.ElideRight
-            elideWidth: root.width - icon.width + textRow1.anchors.leftMargin
+            elideWidth: root.textAvailableWidth
 
             // Helper to split elided text into two parts
             function splitElidedText() {
@@ -72,12 +90,12 @@ Item {
                     };
                 }
                 return {
-                    classPart: elided.substring(0, sepIdx) + separator,
+                    classPart: elided.substring(0, sepIdx + separator.length),
                     titlePart: elided.substring(sepIdx + separator.length)
                 };
             }
 
-            onTextChanged: {
+            function updateRows() {
                 const next = child.current === textRow1 ? textRow2 : textRow1;
                 const parts = splitElidedText();
                 next.classText = parts.classPart;
@@ -86,17 +104,14 @@ Item {
                     child.current = next;
                 });
             }
-            onElideWidthChanged: {
-                const parts = splitElidedText();
-                // child.current.text = parts.classPart + parts.titlePart;
-                child.current.classText = parts.classPart;
-                child.current.titleText = parts.titlePart;
-            }
+
+            onTextChanged: updateRows()
+            onElideWidthChanged: updateRows()
         }
 
         Behavior on implicitWidth {
             NumberAnimation {
-                duration: Appearance.anim.durations.normal
+                duration: Appearance.anim.durations.large
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Appearance.anim.curves.emphasized
             }
@@ -117,40 +132,31 @@ Item {
 
         property string classText: ""
         property string titleText: ""
+        property int availableWidth: 200 // default, will be set by parent
 
         anchors.verticalCenter: icon.verticalCenter
         anchors.left: icon.right
         anchors.leftMargin: Appearance.spacing.small
 
-        spacing: 2
+        spacing: 0 // Remove extra spacing
 
+        // Both StyledText elements use implicitWidth, since elision is already handled
         StyledText {
+            id: classPart
             text: row.classText
             font.pointSize: metrics.font.pointSize
             font.family: metrics.font.family
             color: root.classColour
             opacity: child.current === row ? 1 : 0
-
-            width: implicitWidth
-            height: implicitHeight
-
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: Appearance.anim.durations.normal
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
-                }
-            }
         }
+
         StyledText {
+            id: titlePart
             text: row.titleText
             font.pointSize: metrics.font.pointSize
             font.family: metrics.font.family
             color: root.titleColour
             opacity: child.current === row ? 1 : 0
-
-            width: implicitWidth
-            height: implicitHeight
 
             Behavior on opacity {
                 NumberAnimation {

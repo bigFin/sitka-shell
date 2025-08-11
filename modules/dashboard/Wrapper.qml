@@ -28,6 +28,12 @@ Item {
         }
     }
 
+    // TODO add a way to dismiss with keyboard.
+    // Keys.onEscapePressed: function () {
+    //     root.expanded = false;
+    //     root.isvisible = false;
+    // }
+
     // Timer to control temporary visibility
     Timer {
         id: flashTimer
@@ -65,30 +71,13 @@ Item {
         },
         State {
             name: "expanded"
-            when: (root.visibilities.dashboard && Config.dashboard.enabled) && root.expanded
+            when: (Config.dashboard.enabled) && root.expanded
             PropertyChanges {
                 target: root
                 implicitHeight: content.implicitHeight
             }
         }
     ]
-
-    // --- MouseArea for hover/click detection ---
-    MouseArea {
-        id: hoverArea
-        anchors.fill: parent
-        // hoverEnabled: true
-        preventStealing: true
-        // z: 1000
-        cursorShape: Qt.PointingHandCursor
-        onClicked: {
-            if (!root.expanded) {
-                root.expanded = true;
-            } else if (root.expanded) {
-                root.expanded = false;
-            }
-        }
-    }
 
     transitions: [
         Transition {
@@ -140,6 +129,26 @@ Item {
         sourceComponent: Content {
             visibilities: root.visibilities
             state: root.state
+            // --- MouseArea for hover/click detection ---
+            MouseArea {
+                id: hoverArea
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                height: 50
+                // hoverEnabled: true
+                preventStealing: true
+                // z: 1000
+                cursorShape: Qt.PointingHandCursor
+                onClicked: {
+                    if (!root.expanded) {
+                        root.expanded = true;
+                    } else if (root.expanded) {
+                        root.expanded = false;
+                    }
+                }
+            }
         }
     }
 }

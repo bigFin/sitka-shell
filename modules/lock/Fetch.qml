@@ -6,6 +6,7 @@ import qs.config
 import qs.utils
 import Quickshell
 import Quickshell.Widgets
+import Quickshell.Services.UPower
 import QtQuick
 import QtQuick.Layouts
 
@@ -90,7 +91,7 @@ ColumnLayout {
             Loader {
                 Layout.fillWidth: true
                 asynchronous: true
-                active: root.height > 200
+                active: !batLoader.active && root.height > 200
                 visible: active
 
                 sourceComponent: FetchText {
@@ -101,7 +102,7 @@ ColumnLayout {
             Loader {
                 Layout.fillWidth: true
                 asynchronous: true
-                active: root.height > 110
+                active: root.height > (batLoader.active ? 200 : 110)
                 visible: active
 
                 sourceComponent: FetchText {
@@ -115,6 +116,19 @@ ColumnLayout {
 
             FetchText {
                 text: `UP  : ${SysInfo.uptime}`
+            }
+
+            Loader {
+                id: batLoader
+
+                Layout.fillWidth: true
+                asynchronous: true
+                active: UPower.displayDevice.isLaptopBattery
+                visible: active
+
+                sourceComponent: FetchText {
+                    text: `BATT: ${UPower.onBattery ? "" : "(+) "}${Math.round(UPower.displayDevice.percentage * 100)}%`
+                }
             }
         }
     }

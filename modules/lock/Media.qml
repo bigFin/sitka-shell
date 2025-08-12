@@ -17,7 +17,7 @@ Item {
 
     Image {
         anchors.fill: parent
-        source: Players.active?.trackArtUrl ?? null
+        source: Players.active?.trackArtUrl ?? ""
 
         asynchronous: true
         fillMode: Image.PreserveAspectCrop

@@ -13,8 +13,9 @@ ColumnLayout {
 
     required property var lock
     readonly property list<string> timeComponents: Time.format(Config.services.useTwelveHourClock ? "hh:mm:A" : "hh:mm").split(":")
+    readonly property int centerWidth: Config.lock.sizes.centerWidth * Math.min(1, lock.screen.height / 1440)
 
-    Layout.preferredWidth: Config.lock.sizes.centerWidth
+    Layout.preferredWidth: centerWidth
     Layout.fillHeight: true
 
     spacing: Appearance.spacing.large * 2
@@ -79,8 +80,8 @@ ColumnLayout {
         Layout.topMargin: Appearance.spacing.large * 2
         Layout.alignment: Qt.AlignHCenter
 
-        implicitWidth: Config.lock.sizes.centerWidth / 2
-        implicitHeight: Config.lock.sizes.centerWidth / 2
+        implicitWidth: root.centerWidth / 2
+        implicitHeight: root.centerWidth / 2
 
         color: Colours.tPalette.m3surfaceContainer
         radius: Appearance.rounding.full
@@ -91,7 +92,7 @@ ColumnLayout {
             text: "person"
             fill: 1
             grade: 200
-            font.pointSize: Math.floor(Config.lock.sizes.centerWidth / 4)
+            font.pointSize: Math.floor(root.centerWidth / 4) || 1
         }
 
         CachingImage {
@@ -105,7 +106,7 @@ ColumnLayout {
     StyledRect {
         Layout.alignment: Qt.AlignHCenter
 
-        implicitWidth: Config.lock.sizes.centerWidth * 0.8
+        implicitWidth: root.centerWidth * 0.8
         implicitHeight: input.implicitHeight + Appearance.padding.small * 2
 
         color: Colours.tPalette.m3surfaceContainer

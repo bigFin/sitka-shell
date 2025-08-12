@@ -109,7 +109,7 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter
 
         asynchronous: true
-        active: root.height > 250
+        active: root.height > 220
         visible: active
 
         sourceComponent: RowLayout {

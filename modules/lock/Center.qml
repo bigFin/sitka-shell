@@ -30,6 +30,7 @@ ColumnLayout {
             text: root.timeComponents[0]
             color: Colours.palette.m3secondary
             font.pointSize: Math.floor(Appearance.font.size.extraLarge * 3 * root.centerScale)
+            font.family: Appearance.font.family.clock
             font.bold: true
         }
 
@@ -38,6 +39,7 @@ ColumnLayout {
             text: ":"
             color: Colours.palette.m3primary
             font.pointSize: Math.floor(Appearance.font.size.extraLarge * 3 * root.centerScale)
+            font.family: Appearance.font.family.clock
             font.bold: true
         }
 
@@ -46,6 +48,7 @@ ColumnLayout {
             text: root.timeComponents[1]
             color: Colours.palette.m3secondary
             font.pointSize: Math.floor(Appearance.font.size.extraLarge * 3 * root.centerScale)
+            font.family: Appearance.font.family.clock
             font.bold: true
         }
 
@@ -61,6 +64,7 @@ ColumnLayout {
                 text: root.timeComponents[2] ?? ""
                 color: Colours.palette.m3primary
                 font.pointSize: Math.floor(Appearance.font.size.extraLarge * 2 * root.centerScale)
+                font.family: Appearance.font.family.clock
                 font.bold: true
             }
         }

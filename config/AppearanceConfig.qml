@@ -38,6 +38,7 @@ JsonObject {
         property string sans: "Rubik"
         property string mono: "CaskaydiaCove NF"
         property string material: "Material Symbols Rounded"
+        property string clock: "Rubik"
     }
 
     component FontSize: JsonObject {

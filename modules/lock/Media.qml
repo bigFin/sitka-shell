@@ -91,6 +91,7 @@ Item {
             color: Colours.palette.m3primary
             horizontalAlignment: Text.AlignHCenter
             font.pointSize: Appearance.font.size.large
+            font.family: Appearance.font.family.mono
             font.weight: 600
             elide: Text.ElideRight
         }

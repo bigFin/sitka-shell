@@ -11,13 +11,15 @@ import QtQuick.Layouts
 Item {
     id: root
 
+    required property var lock
+
     anchors.left: parent.left
     anchors.right: parent.right
     implicitHeight: layout.implicitHeight
 
     Image {
         anchors.fill: parent
-        source: Players.active?.trackArtUrl ?? ""
+        source: root.lock.animating ? "" : (Players.active?.trackArtUrl ?? "")
 
         asynchronous: true
         fillMode: Image.PreserveAspectCrop

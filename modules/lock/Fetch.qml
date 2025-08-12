@@ -130,7 +130,7 @@ ColumnLayout {
             spacing: Appearance.spacing.large
 
             Repeater {
-                model: Math.min(8, root.width / (Appearance.font.size.larger * 2 + Appearance.spacing.large))
+                model: Math.max(0, Math.min(8, root.width / (Appearance.font.size.larger * 2 + Appearance.spacing.large)))
 
                 StyledRect {
                     required property int index

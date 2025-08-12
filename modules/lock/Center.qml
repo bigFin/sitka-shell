@@ -29,7 +29,7 @@ ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             text: root.timeComponents[0]
             color: Colours.palette.m3secondary
-            font.pointSize: Appearance.font.size.extraLarge * 3 * root.centerScale
+            font.pointSize: Math.floor(Appearance.font.size.extraLarge * 3 * root.centerScale)
             font.bold: true
         }
 
@@ -37,7 +37,7 @@ ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             text: ":"
             color: Colours.palette.m3primary
-            font.pointSize: Appearance.font.size.extraLarge * 3 * root.centerScale
+            font.pointSize: Math.floor(Appearance.font.size.extraLarge * 3 * root.centerScale)
             font.bold: true
         }
 
@@ -45,7 +45,7 @@ ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             text: root.timeComponents[1]
             color: Colours.palette.m3secondary
-            font.pointSize: Appearance.font.size.extraLarge * 3 * root.centerScale
+            font.pointSize: Math.floor(Appearance.font.size.extraLarge * 3 * root.centerScale)
             font.bold: true
         }
 
@@ -60,7 +60,7 @@ ColumnLayout {
             sourceComponent: StyledText {
                 text: root.timeComponents[2] ?? ""
                 color: Colours.palette.m3primary
-                font.pointSize: Appearance.font.size.extraLarge * 2 * root.centerScale
+                font.pointSize: Math.floor(Appearance.font.size.extraLarge * 2 * root.centerScale)
                 font.bold: true
             }
         }
@@ -72,7 +72,7 @@ ColumnLayout {
 
         text: Time.format("dddd, d MMMM yyyy")
         color: Colours.palette.m3tertiary
-        font.pointSize: Appearance.font.size.extraLarge * root.centerScale
+        font.pointSize: Math.floor(Appearance.font.size.extraLarge * root.centerScale)
         font.family: Appearance.font.family.mono
         font.bold: true
     }

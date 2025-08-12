@@ -55,6 +55,8 @@ RowLayout {
 
             Media {
                 id: media
+
+                lock: root.lock
             }
         }
     }

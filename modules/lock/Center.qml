@@ -13,7 +13,8 @@ ColumnLayout {
 
     required property var lock
     readonly property list<string> timeComponents: Time.format(Config.services.useTwelveHourClock ? "hh:mm:A" : "hh:mm").split(":")
-    readonly property int centerWidth: Config.lock.sizes.centerWidth * Math.min(1, lock.screen.height / 1440)
+    readonly property real centerScale: Math.min(1, (lock.screen?.height ?? 1440) / 1440)
+    readonly property int centerWidth: Config.lock.sizes.centerWidth * centerScale
 
     Layout.preferredWidth: centerWidth
     Layout.fillHeight: true
@@ -28,7 +29,7 @@ ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             text: root.timeComponents[0]
             color: Colours.palette.m3secondary
-            font.pointSize: Appearance.font.size.extraLarge * 3
+            font.pointSize: Appearance.font.size.extraLarge * 3 * root.centerScale
             font.bold: true
         }
 
@@ -36,7 +37,7 @@ ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             text: ":"
             color: Colours.palette.m3primary
-            font.pointSize: Appearance.font.size.extraLarge * 3
+            font.pointSize: Appearance.font.size.extraLarge * 3 * root.centerScale
             font.bold: true
         }
 
@@ -44,7 +45,7 @@ ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             text: root.timeComponents[1]
             color: Colours.palette.m3secondary
-            font.pointSize: Appearance.font.size.extraLarge * 3
+            font.pointSize: Appearance.font.size.extraLarge * 3 * root.centerScale
             font.bold: true
         }
 
@@ -59,7 +60,7 @@ ColumnLayout {
             sourceComponent: StyledText {
                 text: root.timeComponents[2] ?? ""
                 color: Colours.palette.m3primary
-                font.pointSize: Appearance.font.size.extraLarge * 2
+                font.pointSize: Appearance.font.size.extraLarge * 2 * root.centerScale
                 font.bold: true
             }
         }
@@ -71,7 +72,7 @@ ColumnLayout {
 
         text: Time.format("dddd, d MMMM yyyy")
         color: Colours.palette.m3tertiary
-        font.pointSize: Appearance.font.size.extraLarge
+        font.pointSize: Appearance.font.size.extraLarge * root.centerScale
         font.family: Appearance.font.family.mono
         font.bold: true
     }
@@ -92,7 +93,7 @@ ColumnLayout {
             text: "person"
             fill: 1
             grade: 200
-            font.pointSize: Math.floor(root.centerWidth / 4) || 1
+            font.pointSize: Math.floor(root.centerWidth / 4)
         }
 
         CachingImage {

@@ -87,12 +87,26 @@ ColumnLayout {
             Layout.leftMargin: iconLoader.active ? 0 : width * 0.1
             spacing: Appearance.spacing.normal
 
-            FetchText {
-                text: `OS  : ${SysInfo.osPrettyName || SysInfo.osName}`
+            Loader {
+                Layout.fillWidth: true
+                asynchronous: true
+                active: root.height > 200
+                visible: active
+
+                sourceComponent: FetchText {
+                    text: `OS  : ${SysInfo.osPrettyName || SysInfo.osName}`
+                }
             }
 
-            FetchText {
-                text: `WM  : ${SysInfo.wm}`
+            Loader {
+                Layout.fillWidth: true
+                asynchronous: true
+                active: root.height > 110
+                visible: active
+
+                sourceComponent: FetchText {
+                    text: `WM  : ${SysInfo.wm}`
+                }
             }
 
             FetchText {
@@ -109,7 +123,7 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter
 
         asynchronous: true
-        active: root.height > 220
+        active: root.height > 180
         visible: active
 
         sourceComponent: RowLayout {

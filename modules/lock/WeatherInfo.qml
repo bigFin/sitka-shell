@@ -18,17 +18,24 @@ ColumnLayout {
 
     spacing: Appearance.spacing.small
 
-    StyledText {
+    Loader {
         Layout.topMargin: Appearance.padding.large * 2
+        Layout.bottomMargin: -Appearance.padding.large
         Layout.alignment: Qt.AlignHCenter
-        text: qsTr("Weather")
-        color: Colours.palette.m3primary
-        font.pointSize: Appearance.font.size.extraLarge
-        font.weight: 500
+
+        asynchronous: true
+        active: root.rootHeight > 610
+        visible: active
+
+        sourceComponent: StyledText {
+            text: qsTr("Weather")
+            color: Colours.palette.m3primary
+            font.pointSize: Appearance.font.size.extraLarge
+            font.weight: 500
+        }
     }
 
     RowLayout {
-        Layout.bottomMargin: forecastLoader.active ? 0 : Appearance.padding.large
         Layout.fillWidth: true
         spacing: Appearance.spacing.large
 

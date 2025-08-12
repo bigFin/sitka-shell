@@ -83,7 +83,7 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 **1.** Install the dependencies listed below.
 * Exapmle of what to do for CachyOS / Arch:
-  1. `sudo pacman -S ddcutil brightnessctl cava networkmanager i2c-tools fish aubio libpipewire glibc qt6-declarative gcc-libs ttf-jetbrains-mono-nerd grim swappy libqalculate --needed`
+  1. `sudo pacman -S ddcutil brightnessctl cava networkmanager i2c-tools fish aubio libpipewire glibc qt6-declarative gcc-libs ttf-cascadia-code-nerd grim swappy libqalculate --needed`
   2. `paru ttf-material-symbols-variable-git app2unit-git --needed`
 
 **2.** Either download the code, or clone this repo to your Quickshell config folder.
@@ -113,7 +113,7 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 ### 📦 Dependencies
 
 * All dependencies in plain text:
-   * `quickshell-git networkmanager fish glibc qt6-declarative gcc-libs cava aubio libpipewire lm-sensors ddcutil brightnessctl material-symbols jetbrains-mono-nerd grim swappy app2unit libqalculate`
+   * `quickshell-git networkmanager fish glibc qt6-declarative gcc-libs cava aubio libpipewire lm-sensors ddcutil brightnessctl material-symbols caskaydia-cove-nerd grim swappy app2unit libqalculate`
 
 > [!NOTE]
 >
@@ -155,8 +155,8 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 >| Package | Usage |
 >|---|---|
 >| [`material-symbols`](https://fonts.google.com/icons) | Icon font |
->| [`jetbrains-mono-nerd`](https://www.nerdfonts.com/font-downloads) | Monospace font |
->
+>| [`jetbrains-mono-nerd`](https://www.nerdfonts.com/font-downloads) | Monospace font (Deprecated) |
+>| [`caskaydia-cove-nerd`](https://www.nerdfonts.com/font-downloads) | Font |
 >#### Screenshot & Utilities 🧰
 >
 >| Package | Usage |
@@ -300,8 +300,8 @@ You might want to change your default apps.
         "font": {
             "family": {
                 "material": "Material Symbols Rounded",
-                "mono": "JetBrains Mono NF",
-                "sans": "IBM Plex Sans"
+                "mono": "CaskaydiaCove NF",
+                "sans": "Rubik"
             },
             "size": {
                 "scale": 1

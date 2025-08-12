@@ -55,7 +55,7 @@
     ++ lib.optional withCli caelestia-cli;
 
   fontconfig = makeFontsConf {
-    fontDirectories = [material-symbols nerd-fonts.jetbrains-mono];
+    fontDirectories = [material-symbols nerd-fonts.caskaydia-cove];
   };
 in
   stdenv.mkDerivation {

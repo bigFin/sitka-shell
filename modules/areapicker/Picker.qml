@@ -1,5 +1,7 @@
 pragma ComponentBehavior: Bound
 
+// Currently, Niri doesn't have a way to check window sizes and location so this only functions as a standard screenshot tool.
+
 import qs.components
 import qs.services
 import qs.config

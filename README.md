@@ -438,7 +438,7 @@ You might want to change your default apps.
 - I accidentally deprecated workspace switching by clicking.
 - Occupied workspace background sometimes breaks.
 - No Intel GPU monitoring in task manager 😿
-- I'm dumb so I have something wrong with my Linux installation (not related to the project)
+- Currently, **Niri** doesn't have a way to check window sizes and location so the screenshot tool (picker) only functions as a standard screenshot tool.
 - I will surely remember other issues...
 
 

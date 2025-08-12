@@ -23,6 +23,7 @@
   findutils,
   file,
   material-symbols,
+  rubik,
   nerd-fonts,
   gcc,
   quickshell,

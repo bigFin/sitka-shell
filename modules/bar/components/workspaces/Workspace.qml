@@ -61,10 +61,9 @@ Item {
 
         MouseArea {
             anchors.fill: parent
-            propagateComposedEvents: true
-            preventStealing: true
-            z: 10
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+            z: -1
+            acceptedButtons: Qt.RightButton
             onPressed: event => {
                 if (event.button === Qt.RightButton) {
                     const thing = windows.childAt(event.x, event.y);

@@ -2,10 +2,11 @@ pragma ComponentBehavior: Bound
 
 import qs.services
 import qs.config
+import qs.components
 import QtQuick
 import QtQuick.Layouts
 
-Item {
+StyledRect {
     id: root
 
     readonly property list<Workspace> workspaces: layout.children.filter(c => c.isWorkspace).sort((w1, w2) => w1.ws - w2.ws)
@@ -13,94 +14,102 @@ Item {
     readonly property int groupOffset: Math.floor((Niri.focusedWorkspaceIndex) / Config.bar.workspaces.shown) * Config.bar.workspaces.shown
     readonly property int focusedWindowId: Niri.focusedWindow.id
 
-    implicitWidth: layout.implicitWidth
-    implicitHeight: layout.implicitHeight
+    implicitWidth: layout.implicitWidth + Appearance.padding.small * 2
+    implicitHeight: layout.implicitHeight + Appearance.padding.small * 2
+    color: Colours.tPalette.m3surfaceContainer
+    radius: Appearance.rounding.full
 
     signal requestWindowPopout
 
-    ColumnLayout {
-        id: layout
+    Item {
+        id: inner
 
-        spacing: 0
-        layer.enabled: true
-        layer.smooth: true
+        anchors.fill: parent
+        anchors.margins: Appearance.padding.small
 
-        Repeater {
-            model: Config.bar.workspaces.shown > Niri.getWorkspaceCount() ? Niri.getWorkspaceCount() : Config.bar.workspaces.shown
+        ColumnLayout {
+            id: layout
 
-            Workspace {
-                occupied: root.occupied
-                groupOffset: root.groupOffset
-                focusedWindowId: root.focusedWindowId
-                windowPopoutSignal: root
+            spacing: 0
+            layer.enabled: true
+            layer.smooth: true
+
+            Repeater {
+                model: Config.bar.workspaces.shown > Niri.getWorkspaceCount() ? Niri.getWorkspaceCount() : Config.bar.workspaces.shown
+
+                Workspace {
+                    occupied: root.occupied
+                    groupOffset: root.groupOffset
+                    focusedWindowId: root.focusedWindowId
+                    windowPopoutSignal: root
+                }
             }
         }
-    }
 
-    Loader {
-        id: pager
-        active: Config.bar.workspaces.shown < Niri.getWorkspaceCount()
+        Loader {
+            active: Config.bar.workspaces.occupiedBg
+            asynchronous: true
 
-        anchors.top: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        z: -1
+            z: -1
+            anchors.fill: parent
 
-        sourceComponent: Pager {
-            groupOffset: root.groupOffset
+            sourceComponent: OccupiedBg {
+                workspaces: root.workspaces
+                occupied: root.occupied
+                groupOffset: root.groupOffset
+            }
         }
-    }
-    Loader {
-        active: Config.bar.workspaces.occupiedBg
-        asynchronous: true
 
-        z: -1
-        anchors.fill: parent
+        Loader {
+            id: pager
+            active: Config.bar.workspaces.shown < Niri.getWorkspaceCount()
 
-        sourceComponent: OccupiedBg {
-            workspaces: root.workspaces
-            occupied: root.occupied
-            groupOffset: root.groupOffset
+            anchors.top: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            z: -1
+
+            sourceComponent: Pager {
+                groupOffset: root.groupOffset
+            }
         }
-    }
 
-    Loader {
-        active: Config.bar.workspaces.activeIndicator
-        asynchronous: true
+        Loader {
+            active: Config.bar.workspaces.activeIndicator
+            asynchronous: true
 
-        z: -1
+            z: -1
 
-        sourceComponent: ActiveIndicator {
-            workspaces: root.workspaces
-            // mask: layout
-            // maskWidth: root.width
-            // maskHeight: root.height
-            groupOffset: root.groupOffset
+            sourceComponent: ActiveIndicator {
+                workspaces: root.workspaces
+                // mask: layout
+                // maskWidth: inner.width
+                // maskHeight: inner.height
+                groupOffset: root.groupOffset
+            }
         }
-    }
 
-    Loader {
-        // Right click on window context menu
-        active: Config.bar.workspaces.windowRighClickContext
-        asynchronous: true
+        Loader {
+            // Right click on window context menu
+            active: Config.bar.workspaces.windowRighClickContext
+            asynchronous: true
 
-        z: -1
+            z: -1
 
-        anchors.right: parent.right
-        anchors.rightMargin: -Appearance.padding.small
+            anchors.right: parent.right
+            anchors.rightMargin: -Appearance.padding.small
 
-        sourceComponent: ContextBg {
-            groupOffset: root.groupOffset
-            wsOffset: root.y
+            sourceComponent: ContextBg {
+                groupOffset: root.groupOffset
+                wsOffset: root.y
+            }
         }
-    }
 
-    MouseArea {
-        anchors.fill: parent
-        // propagateComposedEvents: true
-        z: -1
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onPressed: event => {
-            if (event.button === Qt.LeftButton) {
+        MouseArea {
+            anchors.fill: parent
+
+            z: -1
+
+            onPressed: event => {
                 const ws = layout.childAt(event.x, event.y).index + root.groupOffset + 1;
                 if (Niri.focusedWorkspaceId + 1 !== ws)
                     Niri.switchToWorkspace(ws);

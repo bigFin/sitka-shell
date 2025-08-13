@@ -439,7 +439,8 @@ You might want to change your default apps.
         "audioIncrement": 0.1,
         "weatherLocation": "10,10",
         "useFahrenheit": false,
-        "useTwelveHourClock": false
+        "useTwelveHourClock": false,
+        "smartScheme": true
     },
     "session": {
         "dragThreshold": 30,

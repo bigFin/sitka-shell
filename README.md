@@ -436,7 +436,6 @@ You might want to change your default apps.
 - Since I don't have multiple monitors I just hard coded my monitor name in services/Visibilities.qml ❗
 - My additions aren't toggleable yet ❗
 - I accidentally deprecated workspace switching by clicking.
-- Occupied workspace background sometimes breaks.
 - No Intel GPU monitoring in task manager 😿
 - Currently, **Niri** doesn't have a way to check window sizes and location so the screenshot tool (picker) only functions as a standard screenshot tool.
 - I will surely remember other issues...

@@ -15,7 +15,10 @@ Item {
 
     property list<var> pills: []
 
-    onOccupiedChanged: {
+    onGroupOffsetChanged: buildPills()
+    onOccupiedChanged: buildPills()
+
+    function buildPills() {
         let count = 0;
         const start = groupOffset;
         const end = start + Config.bar.workspaces.shown;

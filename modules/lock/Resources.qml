@@ -71,6 +71,7 @@ GridLayout {
         Shape {
             anchors.fill: parent
             preferredRendererType: Shape.CurveRenderer
+            asynchronous: true
 
             ShapePath {
                 fillColor: "transparent"

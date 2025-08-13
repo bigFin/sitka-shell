@@ -1,7 +1,7 @@
 import Quickshell.Io
 
 JsonObject {
-    property int maxNotifs: 5
+    property bool recolourLogo: false
     property Sizes sizes: Sizes {}
 
     component Sizes: JsonObject {

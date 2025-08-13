@@ -1,11 +1,15 @@
-import qs.components
+import qs.components.effects
 import qs.services
 import qs.utils
 import qs.config
+import Quickshell.Widgets
 
-StyledText {
-    text: SysInfo.osIcon
-    font.pointSize: Appearance.font.size.smaller
-    font.family: Appearance.font.family.mono
-    color: Colours.palette.m3tertiary
+IconImage {
+    source: SysInfo.osLogo
+    implicitSize: Appearance.font.size.large * 1.2
+
+    layer.enabled: true
+    layer.effect: Colouriser {
+        colorizationColor: Colours.palette.m3tertiary
+    }
 }

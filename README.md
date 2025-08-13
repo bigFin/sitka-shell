@@ -338,6 +338,9 @@ You might want to change your default apps.
         }
     },
     "background": {
+        "desktopClock": {
+            "enabled": false
+        },
         "enabled": true
     },
     "bar": {
@@ -425,7 +428,7 @@ You might want to change your default apps.
         }
     },
     "lock": {
-        "maxNotifs": 5
+        "recolourLogo": false
     },
     "notifs": {
         "actionOnClick": false,

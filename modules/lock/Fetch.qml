@@ -1,10 +1,11 @@
 pragma ComponentBehavior: Bound
 
 import qs.components
+import qs.components.widgets
+import qs.components.effects
 import qs.services
 import qs.config
 import qs.utils
-import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.UPower
 import QtQuick
@@ -50,14 +51,9 @@ ColumnLayout {
 
         WrappedLoader {
             Layout.fillHeight: true
-            asynchronous: true
             active: !iconLoader.active
-            visible: active
 
-            sourceComponent: IconImage {
-                source: Quickshell.iconPath(SysInfo.logo)
-                implicitSize: height
-            }
+            sourceComponent: OsLogo {}
         }
     }
 
@@ -72,10 +68,7 @@ ColumnLayout {
             Layout.fillHeight: true
             active: root.width > 320
 
-            sourceComponent: IconImage {
-                source: Quickshell.iconPath(SysInfo.logo)
-                implicitSize: height
-            }
+            sourceComponent: OsLogo {}
         }
 
         ColumnLayout {
@@ -154,6 +147,17 @@ ColumnLayout {
     component WrappedLoader: Loader {
         asynchronous: true
         visible: active
+    }
+
+    component OsLogo: IconImage {
+        source: SysInfo.osLogo
+        implicitSize: height
+        asynchronous: true
+
+        layer.enabled: Config.lock.recolourLogo || SysInfo.isDefaultLogo
+        layer.effect: Colouriser {
+            colorizationColor: Colours.palette.m3primary
+        }
     }
 
     component FetchText: MonoText {

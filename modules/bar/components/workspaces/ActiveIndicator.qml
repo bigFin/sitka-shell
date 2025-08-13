@@ -8,7 +8,7 @@ StyledRect {
     id: root
 
     required property list<Workspace> workspaces
-    required property Item mask
+    // required property Item mask
     required property real maskWidth
     required property real maskHeight
     required property int groupOffset
@@ -48,17 +48,17 @@ StyledRect {
     radius: Config.bar.workspaces.rounded ? Appearance.rounding.full : 0
     color: Colours.palette.m3primary
 
-    Colouriser {
-        source: root.mask
-        colorizationColor: Colours.palette.m3onPrimary
+    // Colouriser {
+    //     source: root.mask
+    //     colorizationColor: Colours.palette.m3onPrimary
 
-        x: 0
-        y: -parent.offset
-        implicitWidth: root.maskWidth
-        implicitHeight: root.maskHeight
+    //     x: 0
+    //     y: -parent.offset
+    //     implicitWidth: root.maskWidth
+    //     implicitHeight: root.maskHeight
 
-        anchors.horizontalCenter: parent.horizontalCenter
-    }
+    //     anchors.horizontalCenter: parent.horizontalCenter
+    // }
 
     Behavior on leading {
         enabled: Config.bar.workspaces.activeTrail

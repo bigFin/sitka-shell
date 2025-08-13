@@ -8,6 +8,7 @@ import Quickshell
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Widgets
+import qs.components.effects
 
 Item {
     id: root
@@ -15,6 +16,7 @@ Item {
     required property int index
     required property var occupied
     required property int groupOffset
+    required property int focusedWindowId
 
     readonly property bool isWorkspace: true // Flag for finding workspace children
     // Unanimated prop for others to use as reference
@@ -23,6 +25,8 @@ Item {
     readonly property int ws: groupOffset + index + 1
     readonly property bool isOccupied: occupied[ws] ?? false
     readonly property bool hasWindows: isOccupied && Config.bar.workspaces.showWindows
+
+    readonly property int currentWorkspace: Niri.focusedWorkspaceIndex + 1 // + 1 cuz Niri index starts with 0 this needs 1.
 
     Layout.preferredWidth: childrenRect.width
     Layout.preferredHeight: size
@@ -39,11 +43,15 @@ Item {
 
         readonly property string label: Config.bar.workspaces.label || root.ws
         readonly property string occupiedLabel: Config.bar.workspaces.occupiedLabel || label
-        readonly property string activeLabel: Niri.focusedWorkspaceIndex + 1 || (root.isOccupied ? occupiedLabel : label)
+        readonly property string activeLabel: root.currentWorkspace || (root.isOccupied ? occupiedLabel : label)
 
         animate: true
-        text: Niri.focusedWorkspaceIndex + 1 === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label
-        color: Config.bar.workspaces.occupiedBg || root.isOccupied || Niri.focusedWorkspaceIndex + 1 === root.ws ? Colours.palette.m3onSurface : (Colours.palette.m3outlineVariant, 2)
+        text: root.currentWorkspace === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label
+        // color: Config.bar.workspaces.occupiedBg || root.isOccupied || root.currentWorkspace === root.ws ? Colours.palette.m3onSurface : (Colours.palette.m3outlineVariant, 2)
+
+        color: root.currentWorkspace === root.ws ? Colours.palette.m3onPrimary // <--- customize to your active color
+         : (root.isOccupied ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant)
+
         horizontalAlignment: StyledText.AlignHCenter
         verticalAlignment: StyledText.AlignVCenter
 
@@ -114,9 +122,27 @@ Item {
                     id: icon
                     required property var modelData
 
+                    // The shadow
+                    Loader {
+                        active: root.focusedWindowId === parent.modelData.id
+                        asynchronous: true
+                        z: -1
+                        anchors.fill: parent
+
+                        sourceComponent: ElevationGlow {
+                            level: 1 // Change this to set shadow depth (0-5)
+                        }
+                    }
+
+                    font.pointSize: root.focusedWindowId === modelData.id ? Appearance.font.size.large : Appearance.font.size.larger
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+
                     grade: 0
-                    text: Icons.getAppCategoryIcon(modelData.app_id, "terminal")
-                    color: Niri.focusedWindow.id === modelData.id ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+                    text: Icons.getAppCategoryIcon(modelData.app_id, "help_center")
+                    // color: root.focusedWindowId === modelData.id ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+
+                    color: root.currentWorkspace === root.ws ? (Colours.palette.m3onPrimary) : Colours.palette.m3onSurfaceVariant
 
                     MouseArea {
                         anchors.fill: parent

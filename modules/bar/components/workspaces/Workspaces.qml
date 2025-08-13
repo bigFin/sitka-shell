@@ -12,6 +12,7 @@ Item {
     readonly property list<Workspace> workspaces: layout.children.filter(c => c.isWorkspace).sort((w1, w2) => w1.ws - w2.ws)
     readonly property var occupied: Niri.workspaceHasWindows
     readonly property int groupOffset: Math.floor((Niri.focusedWorkspaceIndex) / Config.bar.workspaces.shown) * Config.bar.workspaces.shown
+    readonly property int focusedWindowId: Niri.focusedWindow.id
 
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
@@ -29,6 +30,7 @@ Item {
             Workspace {
                 occupied: root.occupied
                 groupOffset: root.groupOffset
+                focusedWindowId: root.focusedWindowId
             }
         }
     }
@@ -106,22 +108,25 @@ Item {
         active: Config.bar.workspaces.activeIndicator
         asynchronous: true
 
+        z: -1
+
         sourceComponent: ActiveIndicator {
             workspaces: root.workspaces
-            mask: layout
+            // mask: layout
             maskWidth: root.width
             maskHeight: root.height
             groupOffset: root.groupOffset
         }
     }
 
-    // MouseArea {
-    //     anchors.fill: parent
-
-    //     onPressed: event => {
-    //         const ws = layout.childAt(event.x, event.y).index + root.groupOffset + 1;
-    //         if (Niri.focusedWorkspaceId + 1 !== ws)
-    //             Niri.switchToWorkspace(ws);
-    //     }
-    // }
+    MouseArea {
+        anchors.fill: parent
+        // propagateComposedEvents: true
+        z: -1
+        onPressed: event => {
+            const ws = layout.childAt(event.x, event.y).index + root.groupOffset + 1;
+            if (Niri.focusedWorkspaceId + 1 !== ws)
+                Niri.switchToWorkspace(ws);
+        }
+    }
 }

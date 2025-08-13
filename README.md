@@ -427,6 +427,7 @@ You might want to change your default apps.
 - Window switch popup
 - Window decorations for pinning, hovering window, toggling fullscreen, and closing the window.
 - Dashboard is now opened after clicking on the popup instead of completely popping up and taking up half the screen.
+- More but I forgot...
 
 <br>
 <br>
@@ -435,7 +436,7 @@ You might want to change your default apps.
 
 - Since I don't have multiple monitors I just hard coded my monitor name in services/Visibilities.qml ❗
 - My additions aren't toggleable yet ❗
-- I accidentally deprecated workspace switching by clicking.
+- Focused window effects stay if you switch to a workspace with no windows.
 - No Intel GPU monitoring in task manager 😿
 - Currently, **Niri** doesn't have a way to check window sizes and location so the screenshot tool (picker) only functions as a standard screenshot tool.
 - I will surely remember other issues...

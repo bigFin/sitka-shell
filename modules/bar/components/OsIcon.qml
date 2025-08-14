@@ -1,15 +1,10 @@
 import qs.components.effects
 import qs.services
-import qs.utils
 import qs.config
-import Quickshell.Widgets
+import qs.utils
 
-IconImage {
+ColouredIcon {
     source: SysInfo.osLogo
     implicitSize: Appearance.font.size.large * 1.2
-
-    layer.enabled: true
-    layer.effect: Colouriser {
-        colorizationColor: Colours.palette.m3tertiary
-    }
+    colour: Colours.palette.m3tertiary
 }

@@ -1,12 +1,10 @@
 pragma ComponentBehavior: Bound
 
 import qs.components
-import qs.components.widgets
 import qs.components.effects
 import qs.services
 import qs.config
 import qs.utils
-import Quickshell.Widgets
 import Quickshell.Services.UPower
 import QtQuick
 import QtQuick.Layouts
@@ -149,15 +147,11 @@ ColumnLayout {
         visible: active
     }
 
-    component OsLogo: IconImage {
+    component OsLogo: ColouredIcon {
         source: SysInfo.osLogo
         implicitSize: height
-        asynchronous: true
-
+        colour: Colours.palette.m3primary
         layer.enabled: Config.lock.recolourLogo || SysInfo.isDefaultLogo
-        layer.effect: Colouriser {
-            colorizationColor: Colours.palette.m3primary
-        }
     }
 
     component FetchText: MonoText {

@@ -62,15 +62,11 @@ StyledRect {
             Component {
                 id: appIconComp
 
-                IconImage {
+                ColouredIcon {
                     implicitSize: Math.round(Config.notifs.sizes.image * 0.6)
                     source: Quickshell.iconPath(root.appIcon)
-                    asynchronous: true
-
+                    colour: root.urgency === "critical" ? Colours.palette.m3onError : root.urgency === "low" ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
                     layer.enabled: root.appIcon.endsWith("symbolic")
-                    layer.effect: Colouriser {
-                        colorizationColor: root.urgency === "critical" ? Colours.palette.m3onError : root.urgency === "low" ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
-                    }
                 }
             }
 
@@ -109,16 +105,12 @@ StyledRect {
                     color: root.urgency === "critical" ? Colours.palette.m3error : root.urgency === "low" ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3secondaryContainer
                     radius: Appearance.rounding.full
 
-                    IconImage {
+                    ColouredIcon {
                         anchors.centerIn: parent
                         implicitSize: Math.round(Config.notifs.sizes.badge * 0.6)
                         source: Quickshell.iconPath(root.appIcon)
-                        asynchronous: true
-
+                        colour: root.urgency === "critical" ? Colours.palette.m3onError : root.urgency === "low" ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
                         layer.enabled: root.appIcon.endsWith("symbolic")
-                        layer.effect: Colouriser {
-                            colorizationColor: root.urgency === "critical" ? Colours.palette.m3onError : root.urgency === "low" ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
-                        }
                     }
                 }
             }

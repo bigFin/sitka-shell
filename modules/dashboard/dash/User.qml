@@ -5,7 +5,6 @@ import qs.services
 import qs.config
 import qs.utils
 import Quickshell
-import Quickshell.Widgets
 import QtQuick
 
 Row {
@@ -119,7 +118,7 @@ Row {
             implicitWidth: icon.implicitWidth + text.width + text.anchors.leftMargin
             implicitHeight: Math.max(icon.implicitHeight, text.implicitHeight)
 
-            IconImage {
+            ColouredIcon {
                 id: icon
 
                 anchors.left: parent.left
@@ -127,11 +126,7 @@ Row {
 
                 source: SysInfo.osLogo
                 implicitSize: Math.floor(Appearance.font.size.normal * 1.34)
-
-                layer.enabled: true
-                layer.effect: Colouriser {
-                    colorizationColor: Colours.palette.m3primary
-                }
+                colour: Colours.palette.m3primary
             }
 
             StyledText {

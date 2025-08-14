@@ -392,6 +392,10 @@ You might want to change your default apps.
             "showKbLayout": false,
             "showNetwork": true
         },
+        "tray": {
+            "background": false,
+            "recolour": false
+        },
         "workspaces": {
             "activeIndicator": true,
             "activeLabel": "󰮯 ",

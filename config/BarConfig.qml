@@ -5,6 +5,7 @@ JsonObject {
     property bool showOnHover: true
     property int dragThreshold: 20
     property Workspaces workspaces: Workspaces {}
+    property Tray tray: Tray {}
     property Status status: Status {}
     property Sizes sizes: Sizes {}
 
@@ -61,6 +62,11 @@ JsonObject {
         property string label: "◦" // ""
         property string occupiedLabel: "⊙" // "󰮯"
         property string activeLabel: "󰮯" //Handled in workspace.qml
+    }
+
+    component Tray: JsonObject {
+        property bool background: false
+        property bool recolour: false
     }
 
     component Status: JsonObject {

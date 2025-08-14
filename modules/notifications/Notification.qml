@@ -147,7 +147,7 @@ StyledRect {
 
                 sourceComponent: StyledRect {
                     radius: Appearance.rounding.full
-                    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData.urgency === NotificationUrgency.Low ? Colours.layer(Colours.palette.m3surfaceContainerHighest, 2) : Colours.palette.m3tertiaryContainer
+                    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData.urgency === NotificationUrgency.Low ? Colours.layer(Colours.palette.m3surfaceContainerHighest, 2) : Colours.palette.m3secondaryContainer
                     implicitWidth: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
                     implicitHeight: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
 
@@ -165,7 +165,7 @@ StyledRect {
                         sourceComponent: ColouredIcon {
                             anchors.fill: parent
                             source: Quickshell.iconPath(root.modelData.appIcon)
-                            colour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
+                            colour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
                             layer.enabled: root.modelData.appIcon.endsWith("symbolic")
                         }
                     }
@@ -180,7 +180,7 @@ StyledRect {
                         sourceComponent: MaterialIcon {
                             text: Icons.getNotifIcon(root.modelData.summary.toLowerCase(), root.modelData.urgency)
 
-                            color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
+                            color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
                             font.pointSize: Appearance.font.size.large
                         }
                     }

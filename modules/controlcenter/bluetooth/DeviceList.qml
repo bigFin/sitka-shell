@@ -237,23 +237,14 @@ ColumnLayout {
                     id: connectBtn
 
                     implicitWidth: implicitHeight
-                    implicitHeight: connectIcon.implicitHeight + Appearance.padding.small * 2
+                    implicitHeight: connectIcon.implicitHeight + Appearance.padding.smaller * 2
 
                     radius: Appearance.rounding.full
                     color: device.connected ? Colours.palette.m3primaryContainer : "transparent"
 
                     StyledBusyIndicator {
-                        anchors.centerIn: parent
-
-                        implicitWidth: implicitHeight
-                        implicitHeight: connectIcon.implicitHeight
-
-                        running: opacity > 0
-                        opacity: device.loading ? 1 : 0
-
-                        Behavior on opacity {
-                            Anim {}
-                        }
+                        anchors.fill: parent
+                        running: device.loading
                     }
 
                     StateLayer {

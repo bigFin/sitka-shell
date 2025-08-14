@@ -105,17 +105,8 @@ ColumnLayout {
                 color: Qt.alpha(Colours.palette.m3primary, networkItem.modelData.active ? 1 : 0)
 
                 StyledBusyIndicator {
-                    anchors.centerIn: parent
-
-                    implicitWidth: implicitHeight
-                    implicitHeight: connectIcon.implicitHeight
-
-                    running: opacity > 0
-                    opacity: networkItem.loading ? 1 : 0
-
-                    Behavior on opacity {
-                        Anim {}
-                    }
+                    anchors.fill: parent
+                    running: networkItem.loading
                 }
 
                 StateLayer {

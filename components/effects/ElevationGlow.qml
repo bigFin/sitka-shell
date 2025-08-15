@@ -17,7 +17,7 @@ RectangularShadow {
     property int level
     property real dp: [0, 1, 3, 6, 8, 12][level]
 
-    color: Qt.alpha("white", 0.7)
+    color: Qt.alpha(Colours.palette.m3onBackground, 0.7)
     // blur: (dp * 5) ** 0.7
     spread: -dp * 0.3 + (dp * 0.1) ** 2
     // offset.y: dp / 2

@@ -15,7 +15,6 @@ ColumnLayout {
     required property ShellScreen screen
     required property PersistentProperties visibilities
     required property BarPopouts.Wrapper popouts
-    readonly property int padding: Math.max(Appearance.padding.smaller, Config.border.thickness)
     readonly property int vPadding: Appearance.padding.large
 
     // Handle Workspace Popouts for Niri
@@ -196,8 +195,6 @@ ColumnLayout {
         }
 
         Layout.alignment: Qt.AlignHCenter
-        Layout.leftMargin: root.padding
-        Layout.rightMargin: root.padding
 
         // Cursed ahh thing to add padding to first and last enabled components
         Layout.topMargin: findFirstEnabled() === this ? root.vPadding : 0
@@ -205,5 +202,6 @@ ColumnLayout {
 
         visible: enabled
         active: enabled
+        asynchronous: true
     }
 }

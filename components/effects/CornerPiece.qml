@@ -11,9 +11,13 @@ Item {
     property bool invertH: false
     property bool invertV: false
 
+    onRadiusChanged: cornerCanvas.requestPaint()
+    onColorChanged: cornerCanvas.requestPaint()
+
     Canvas {
+        id: cornerCanvas
         anchors.fill: parent
-        // antialiasing: true // Add this line
+
         onPaint: {
             const ctx = getContext("2d");
             const w = parent.width;
@@ -75,7 +79,6 @@ Item {
 
             ctx.restore();
         }
-
         onWidthChanged: requestPaint()
         onHeightChanged: requestPaint()
         Component.onCompleted: requestPaint()

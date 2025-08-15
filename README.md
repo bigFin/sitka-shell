@@ -398,12 +398,11 @@ You might want to change your default apps.
         },
         "workspaces": {
             "activeIndicator": true,
-            "activeLabel": "󰮯 ",
+            "activeLabel": "󰮯",
             "activeTrail": false,
             "label": "  ",
             "occupiedBg": false,
             "occupiedLabel": "󰮯 ",
-            "rounded": true,
             "showWindows": true,
             "shown": 5
         }

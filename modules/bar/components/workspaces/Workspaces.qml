@@ -6,114 +6,130 @@ import qs.components
 import QtQuick
 import QtQuick.Layouts
 
+import "context"
+
 StyledRect {
     id: root
 
-    readonly property list<Workspace> workspaces: layout.children.filter(c => c.isWorkspace).sort((w1, w2) => w1.ws - w2.ws)
+    // required property ShellScreen screen
+
+    readonly property int activeWsId: Niri.focusedWorkspaceIndex + 1
     readonly property var occupied: Niri.workspaceHasWindows
     readonly property int groupOffset: Math.floor((Niri.focusedWorkspaceIndex) / Config.bar.workspaces.shown) * Config.bar.workspaces.shown
+
     readonly property int focusedWindowId: Niri.focusedWindow.id
 
-    implicitWidth: layout.implicitWidth + Appearance.padding.small * 2
     implicitHeight: layout.implicitHeight + Appearance.padding.small * 2
+    implicitWidth: Config.bar.sizes.innerWidth
+
     color: Colours.tPalette.m3surfaceContainer
-    radius: Appearance.rounding.full
+    radius: Appearance.rounding.normal
 
     signal requestWindowPopout
 
-    Item {
-        id: inner
+    Connections {
+        target: Niri
+        function onWsContextTypeChanged() {
+            if (Niri.wsContextType === "workspaces") {
+                Niri.wsContextAnchor = root;
+            }
+        }
+    }
+
+    Loader {
+        active: Config.bar.workspaces.occupiedBg
+        asynchronous: true
 
         anchors.fill: parent
         anchors.margins: Appearance.padding.small
 
-        ColumnLayout {
-            id: layout
-
-            spacing: 0
-            layer.enabled: true
-            layer.smooth: true
-
-            Repeater {
-                model: Config.bar.workspaces.shown > Niri.getWorkspaceCount() ? Niri.getWorkspaceCount() : Config.bar.workspaces.shown
-
-                Workspace {
-                    occupied: root.occupied
-                    groupOffset: root.groupOffset
-                    focusedWindowId: root.focusedWindowId
-                    windowPopoutSignal: root
-                }
-            }
+        sourceComponent: OccupiedBg {
+            workspaces: workspaces
+            occupied: root.occupied
+            groupOffset: root.groupOffset
         }
+    }
 
-        Loader {
-            active: Config.bar.workspaces.occupiedBg
-            asynchronous: true
+    Loader {
+        // Right click on window context menu
+        active: Config.bar.workspaces.windowRighClickContext && Niri.wsContextType !== "none"
+        asynchronous: true
 
-            z: -1
-            anchors.fill: parent
+        anchors.left: parent.left
+        anchors.leftMargin: Appearance.padding.small
 
-            sourceComponent: OccupiedBg {
-                workspaces: root.workspaces
+        z: Niri.wsContextType === "workspaces" ? -10 : 0
+
+        sourceComponent: ContextBg {
+            groupOffset: root.groupOffset
+            wsOffset: root.y
+            anchorWs: Niri.wsContextAnchor
+        }
+    }
+
+    //For Niri, workspace context menu on right click.
+    // Loader {
+    //     active: Config.bar.workspaces.windowRighClickContext && Niri.wsContextType !== "none"
+    //     asynchronous: true
+    //     z: Niri.wsContextType === "item" ? 10 : 1
+
+    //     anchors.right: parent.right
+    //     anchors.rightMargin: -Appearance.padding.small
+
+    //     sourceComponent: ContextIndicator {
+    //         groupOffset: root.groupOffset
+    //         wsOffset: root.y
+    //         anchorWs: Niri.wsContextAnchor
+    //     }
+    // }
+
+    Loader {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        active: Config.bar.workspaces.activeIndicator
+        asynchronous: true
+
+        sourceComponent: ActiveIndicator {
+            activeWsId: root.activeWsId
+            workspaces: workspaces
+            mask: layout
+            groupOffset: root.groupOffset
+        }
+    }
+
+    ColumnLayout {
+        id: layout
+
+        z: 1
+
+        anchors.centerIn: parent
+        spacing: Math.floor(Appearance.spacing.small)
+
+        Repeater {
+            id: workspaces
+
+            model: Config.bar.workspaces.shown > Niri.getWorkspaceCount() ? Niri.getWorkspaceCount() : Config.bar.workspaces.shown
+
+            Workspace {
+                activeWsId: root.activeWsId
                 occupied: root.occupied
                 groupOffset: root.groupOffset
+                focusedWindowId: root.focusedWindowId
+                windowPopoutSignal: root
             }
         }
+    }
 
-        Loader {
-            id: pager
-            active: Config.bar.workspaces.shown < Niri.getWorkspaceCount()
+    Loader {
+        id: pager
+        active: Config.bar.workspaces.pagerActive
 
-            anchors.top: parent.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-            z: -1
+        anchors.top: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        z: -1
 
-            sourceComponent: Pager {
-                groupOffset: root.groupOffset
-            }
-        }
-
-        Loader {
-            active: Config.bar.workspaces.activeIndicator
-            asynchronous: true
-
-            z: -1
-
-            sourceComponent: ActiveIndicator {
-                workspaces: root.workspaces
-                // mask: layout
-                // maskWidth: inner.width
-                // maskHeight: inner.height
-                groupOffset: root.groupOffset
-            }
-        }
-
-        Loader {
-            // Right click on window context menu
-            active: Config.bar.workspaces.windowRighClickContext
-            asynchronous: true
-
-            z: -1
-
-            anchors.right: parent.right
-            anchors.rightMargin: -Appearance.padding.small
-
-            sourceComponent: ContextBg {
-                groupOffset: root.groupOffset
-                wsOffset: root.y
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-
-            z: -1
-
-            onPressed: event => {
-                const ws = layout.childAt(event.x, event.y).index + root.groupOffset + 1;
-                if (Niri.focusedWorkspaceId + 1 !== ws)
-                    Niri.switchToWorkspace(ws);
-            }
+        sourceComponent: Pager {
+            groupOffset: root.groupOffset
         }
     }
 }

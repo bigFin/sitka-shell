@@ -1,6 +1,5 @@
 pragma ComponentBehavior: Bound
 import qs.components
-// import qs.components.effects
 import qs.services
 import qs.config
 import QtQuick
@@ -8,152 +7,183 @@ import QtQuick
 StyledRect {
     id: root
 
-    required property list<Workspace> workspaces
-    // required property Item mask
-    // required property real maskWidth
-    // required property real maskHeight
+    required property int activeWsId
+    required property Repeater workspaces
+    required property Item mask
     required property int groupOffset
 
     readonly property int currentWsIdx: Niri.focusedWorkspaceIndex - groupOffset
-    property real leading: getWsY(currentWsIdx)
-    property real trailing: getWsY(currentWsIdx)
-    property real currentSize: workspaces[currentWsIdx]?.size ?? 0
-    property real offset: Math.min(leading, trailing)
-    property real size: {
-        const s = Math.abs(leading - trailing) + currentSize;
-        if (Config.bar.workspaces.activeTrail && lastWs > currentWsIdx)
-            return Math.min(getWsY(lastWs) + (workspaces[lastWs]?.size ?? 0) - offset, s);
-        return s;
-    }
-
-    property int cWs
-    property int lastWs
-
-    function getWsY(idx: int): real {
-        let y = 0;
-        for (let i = 0; i < idx; i++)
-            y += workspaces[i]?.size ?? 0;
-        return y;
-    }
 
     onCurrentWsIdxChanged: {
         lastWs = cWs;
         cWs = currentWsIdx;
     }
 
+    property int cWs
+    property int lastWs
+
+    // Geometry tracking
+    property real leading: workspaces.itemAt(currentWsIdx)?.y ?? 0
+    property real trailing: workspaces.itemAt(currentWsIdx)?.y ?? 0
+
+    property real currentSize: workspaces.itemAt(currentWsIdx)?.size ?? 0
+    property real offset: Math.min(leading, trailing)
+
+    property real size: {
+        const s = Math.abs(leading - trailing) + currentSize;
+        if (Config.bar.workspaces.activeTrail && lastWs > currentWsIdx) {
+            const ws = workspaces.itemAt(lastWs);
+            return ws ? Math.min(ws.y + ws.size - offset, s) : 0;
+        }
+        return s;
+    }
+
+    property bool isContextActiveInWs: (Niri.wsContextType === "workspace" && Niri.wsContextAnchor?.index === root.currentWsIdx)
+    property bool isWorkspacesContextActive: (Niri.wsContextType === "workspaces") && Niri.wsContextAnchor
     clip: false
-    x: 1
-    y: offset + 1 + Appearance.padding.small / 2
-    implicitWidth: Config.bar.sizes.innerWidth
-    implicitHeight: size - Appearance.padding.small
-    radius: Config.bar.workspaces.rounded ? Appearance.rounding.full : 0
-    color: Colours.palette.m3primary
-    anchors.horizontalCenter: parent.horizontalCenter
+    y: offset + mask.y
+    implicitHeight: size
+    radius: Appearance.rounding.small
+    color: Qt.alpha(Colours.palette.m3primary, 0.95)
 
-    // Colouriser {
-    //     source: root.mask
-    //     sourceColor: Colours.palette.m3onSurface
-    //     colorizationColor: Colours.palette.m3onPrimary
+    anchors {
+        left: parent.left
+        right: parent.right
+        leftMargin: Appearance.padding.small
+        rightMargin: isWorkspacesContextActive ? -Config.bar.workspaces.windowContextWidth + Appearance.padding.small * 2 : Appearance.padding.small
+        Behavior on rightMargin {
+            Anim {}
+        }
+    }
 
-    //     x: 0
-    //     y: -parent.offset
-    //     implicitWidth: root.maskWidth
-    //     implicitHeight: root.maskHeight
-
-    //     anchors.horizontalCenter: parent.horizontalCenter
-    // }
+    Behavior on radius {
+        Anim {}
+    }
 
     Loader {
-        active: Config.bar.workspaces.focusedWindowBlob
-        anchors.horizontalCenter: parent.horizontalCenter
+        id: blob
+        active: Config.bar.workspaces.focusedWindowBlob || root.isContextActiveInWs
+
+        anchors {
+            left: parent.left
+            right: parent.right
+            leftMargin: computeMargins().left
+            rightMargin: computeMargins().right
+            Behavior on leftMargin {
+                Anim {}
+            }
+            Behavior on rightMargin {
+                Anim {}
+            }
+        }
+
+        function computeMargins() {
+            if (!Niri.focusedWindowId)
+                return {
+                    left: Appearance.padding.small,
+                    right: Appearance.padding.small
+                };
+
+            if (root.isContextActiveInWs && !root.isWorkspacesContextActive)
+                return {
+                    left: -Appearance.padding.small / 2,
+                    right: -Config.bar.workspaces.windowContextWidth - Appearance.padding.small / 2
+                };
+
+            return {
+                left: -Appearance.padding.small / 2,
+                right: -Appearance.padding.small / 2
+            };
+        }
 
         sourceComponent: Rectangle {
             id: activeWindowIndicator
-            width: Niri.focusedWindowId ? Config.bar.sizes.innerWidth + Appearance.padding.normal : 0
-            height: Niri.focusedWindowId ? Config.bar.sizes.innerWidth + Appearance.padding.normal : 0 // Match window icon height
+            height: Niri.focusedWindowId ? Config.bar.workspaces.windowIconSize + Appearance.padding.small + Config.bar.workspaces.windowIconGap * 2 : 0
             color: Colours.palette.m3primary
-            radius: Config.bar.workspaces.rounded ? (Niri.focusedWindowId ? Appearance.rounding.large : Appearance.rounding.full) : 0
-            y: {
-                const currentWs = root.currentWsIdx + root.groupOffset;
-                const wsWindows = Niri.windows.filter(w => w.workspace_id === currentWs + 1);
-                const focusedWindow = wsWindows.find(w => w.id === root.workspaces[root.currentWsIdx]?.focusedWindowId);
+            radius: Niri.focusedWindowId ? Appearance.rounding.small / 2 : Appearance.rounding.large
+            // bottomRightRadius: root.isContextActiveInWs ? Appearance.rounding.large : radius
+            // topRightRadius: root.isContextActiveInWs ? Appearance.rounding.large : radius
+            anchors.horizontalCenter: parent.horizontalCenter
 
-                if (!focusedWindow)
-                    return Appearance.spacing.large / 2;
+            y: computeFocusedY()
 
-                var focusedIndex = wsWindows.indexOf(focusedWindow);
-
-                if (Config.bar.workspaces.groupIconsByApp) {
-                    // For grouped windows, use the first window's index with same app_id
-                    const firstWindowWithSameApp = wsWindows.find(w => w.app_id === focusedWindow.app_id);
-                    const firstAppIndex = wsWindows.indexOf(firstWindowWithSameApp);
-
-                    // Count grouped windows before the first occurrence
-                    let groupedWindowsBeforeCount = 0;
-                    const seenAppIds = new Set();
-
-                    for (let i = 0; i < firstAppIndex; i++) {
-                        const appId = wsWindows[i].app_id;
-                        if (seenAppIds.has(appId)) {
-                            groupedWindowsBeforeCount++;
-                        } else {
-                            seenAppIds.add(appId);
-                        }
-                    }
-
-                    focusedIndex = firstAppIndex - groupedWindowsBeforeCount;
-                }
-
-                return Config.bar.sizes.innerWidth / 1.7 /* inaccurate af */  + (focusedIndex * (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap));
-            }
-
+            // staggered animations
             Behavior on y {
                 Anim {}
             }
-
-            Behavior on width {
-                Anim {}
-            }
-
             Behavior on height {
                 Anim {}
             }
-
             Behavior on radius {
                 Anim {}
+            }
+
+            function computeFocusedY() {
+                const focusedWindow = Niri.focusedWindow;
+                if (!focusedWindow)
+                    return Appearance.spacing.large / 2;
+
+                // Get windows for the current workspace and sort them by layout position
+                // This matches the sorting logic used in Workspace.qml
+                const wsWindows = Niri.getActiveWorkspaceWindows().sort((a, b) => {
+                    const aCol = a.layout?.pos_in_scrolling_layout[0] ?? 0;
+                    const bCol = b.layout?.pos_in_scrolling_layout[0] ?? 0;
+                    const aRow = a.layout?.pos_in_scrolling_layout[1] ?? 0;
+                    const bRow = b.layout?.pos_in_scrolling_layout[1] ?? 0;
+
+                    if (aCol !== bCol) {
+                        return aCol - bCol;
+                    }
+                    return aRow - bRow;
+                });
+
+                let focusedIndex = -1;
+
+                if (Config.bar.workspaces.groupIconsByApp) {
+                    const grouped = Niri.groupWindowsByApp(wsWindows);
+                    for (let i = 0; i < grouped.length; i++) {
+                        // Use window ID comparison instead of object reference
+                        if (grouped[i].windows.some(w => w.id === focusedWindow.id)) {
+                            focusedIndex = i;
+                            break;
+                        }
+                    }
+                } else {
+                    // Find the index of the focused window in the sorted array
+                    focusedIndex = wsWindows.findIndex(w => w.id === focusedWindow.id);
+                }
+
+                // If window not found, default to first position
+                if (focusedIndex === -1) {
+                    focusedIndex = 0;
+                }
+
+                return (Config.bar.sizes.innerWidth - Appearance.padding.small * 2.5) + focusedIndex * (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap);
             }
         }
     }
 
+    // Trail animations
     Behavior on leading {
         enabled: Config.bar.workspaces.activeTrail
-
         Anim {}
     }
-
     Behavior on trailing {
         enabled: Config.bar.workspaces.activeTrail
-
         Anim {
             duration: Appearance.anim.durations.normal * 2
         }
     }
-
     Behavior on currentSize {
         enabled: Config.bar.workspaces.activeTrail
-
         Anim {}
     }
-
     Behavior on offset {
         enabled: !Config.bar.workspaces.activeTrail
-
         Anim {}
     }
-
     Behavior on size {
         enabled: !Config.bar.workspaces.activeTrail
-
         Anim {}
     }
 

@@ -223,7 +223,7 @@ StyledRect {
             grabPermissions: PointerHandler.TakeOverForbidden
             acceptedButtons: Qt.LeftButton
             cursorShape: Qt.PointingHandCursor
-            onTapped: if (Niri.focusWindow && itemMain.modelData?.id)
+            onTapped: if (itemMain.modelData?.id)
                 Niri.focusWindow(itemMain.modelData.id)
         }
 

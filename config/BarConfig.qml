@@ -50,7 +50,6 @@ JsonObject {
 
     component Workspaces: JsonObject {
         property int shown: 4
-        property bool rounded: true
         property bool activeIndicator: true
         property bool occupiedBg: true
         property bool showWindows: true
@@ -58,9 +57,14 @@ JsonObject {
         property int windowIconGap: 5
         property int windowIconSize: 30
         property bool groupIconsByApp: false
+        property bool groupingRespectsLayout: true
         property bool focusedWindowBlob: true
         property bool windowRighClickContext: true
+        property bool windowContextDefaultExpand: true
+        property bool doubleClickToCenter: true
+        property int windowContextWidth: 250
         property bool activeTrail: false
+        property bool pagerActive: true
         property string label: "◦" // ""
         property string occupiedLabel: "⊙" // "󰮯"
         property string activeLabel: "󰮯" //Handled in workspace.qml

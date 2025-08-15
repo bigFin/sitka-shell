@@ -23,7 +23,7 @@ ColumnLayout {
         target: root.popouts
         function onHasCurrentChanged() {
             if (!root.popouts.hasCurrent && root.popouts.currentName === "wsWindow") {
-                Niri.wsAnchorItem = null;
+                Niri.wsContextAnchor = null;
             }
         }
     }
@@ -31,6 +31,17 @@ ColumnLayout {
     // Handle Popouts Hover
 
     function checkPopout(y: real): void {
+        if (Niri.wsContextType === "workspaces") {
+            // Workspace context menu
+            const anchor = Niri.wsContextAnchor;
+            if (!anchor) {
+                popouts.hasCurrent = false;
+                return;
+            }
+            popouts.currentCenter = Qt.binding(() => Math.round(anchor.mapToItem(root, anchor.width, (anchor.height) / 2).y));
+            return;
+        }
+
         const ch = childAt(width / 2, y) as WrappedLoader;
         if (!ch) {
             popouts.hasCurrent = false;
@@ -112,7 +123,20 @@ ColumnLayout {
             DelegateChoice {
                 roleValue: "logo"
                 delegate: WrappedLoader {
-                    sourceComponent: OsIcon {}
+                    sourceComponent: OsIcon {
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.RightButton
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: mouse => {
+                                if (mouse.button === Qt.RightButton) {
+                                    Niri.wsContextType = "workspaces";
+                                    root.popouts.currentName = "wsWindow";
+                                    root.popouts.hasCurrent = true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             DelegateChoice {
@@ -120,10 +144,10 @@ ColumnLayout {
                 delegate: WrappedLoader {
                     sourceComponent: Workspaces {
 
-                        property var anchorItem: Niri.wsAnchorItem ? Niri.wsAnchorItem : null
+                        property var anchorItem: Niri.wsContextAnchor && Niri.wsContextType !== "none" ? Niri.wsContextAnchor : null
 
                         onRequestWindowPopout: {
-                            if (anchorItem) {
+                            if (anchorItem && Config.bar.workspaces.windowRighClickContext) {
                                 root.popouts.currentName = "wsWindow";
                                 root.popouts.currentCenter = Qt.binding(() => Math.round(anchorItem.mapToItem(null, anchorItem.width, (anchorItem.height) / 2).y));
                                 root.popouts.hasCurrent = true;
@@ -202,6 +226,5 @@ ColumnLayout {
 
         visible: enabled
         active: enabled
-        asynchronous: true
     }
 }

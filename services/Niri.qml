@@ -4,6 +4,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.config
 
 Singleton {
     id: root
@@ -13,8 +14,27 @@ Singleton {
     property string scrollDirection: "none" // "left", "right", "none"
 
     // Workspace management
-    property var wsAnchorItem: null
-    property var wsItemWindows: null
+    property var wsContextExpanded: false
+    property var wsContextAnchor: null
+    property string wsContextType: "none" // "item", "workspace", "workspaces", "none"
+    property Timer wsAnchorClearTimer: Timer {
+        interval: Appearance.anim.durations.normal // ms, adjust as you like
+        repeat: false
+        onTriggered: {
+            if (root.wsContextAnchor === null) {
+                root.wsContextType = "none";
+            }
+        }
+    }
+
+    onWsContextAnchorChanged: {
+        // cancel any existing countdown
+        wsAnchorClearTimer.stop();
+        // only start timer if it’s null
+        if (wsContextAnchor === null) {
+            wsAnchorClearTimer.start();
+        }
+    }
 
     // Workspace management
     property var allWorkspaces: []
@@ -32,17 +52,16 @@ Singleton {
     // Outputs / Monitor management:
     property var outputs: ({})
     property string focusedMonitorName: ""
-
     onOutputsChanged: console.log(outputs)
 
     // Overview state
     property bool inOverview: false
-
     signal windowOpenedOrChanged(var windowData)
 
     // Last focused window
     property var focusedWindow: root.windows[root.focusedWindowIndex]
     property var lastFocusedWindow: null
+
     // Monitor changes to focusedWindowId to update lastFocusedWindow
     onFocusedWindowIdChanged: {
         if (focusedWindow) {
@@ -57,15 +76,11 @@ Singleton {
                 lastFocusedColumn = currentCol;
             }
         }
-
-        // console.log(JSON.stringify(focusedWindow));
-        // console.log(JSON.stringify(focusedWindow.layout.pos_in_scrolling_layout));
     }
 
     property var workspaceHasWindows: ({})
     function updateWorkspaceHasWindows() {
         let newWorkspaceHasWindows = {};
-
         // Initialize all known workspaces to false
         for (const ws of root.allWorkspaces) {
             // Use allWorkspaces here
@@ -78,6 +93,7 @@ Singleton {
                 newWorkspaceHasWindows[getWorkspaceIdxById(window.workspace_id)] = true;
             }
         }
+
         // Only update if there's an actual change to avoid unnecessary property change signals
         if (JSON.stringify(root.workspaceHasWindows) !== JSON.stringify(newWorkspaceHasWindows)) {
             root.workspaceHasWindows = newWorkspaceHasWindows;
@@ -106,7 +122,6 @@ Singleton {
     Process {
         id: niriCheck
         command: ["which", "niri"]
-
         onExited: exitCode => {
             root.niriAvailable = exitCode === 0;
             if (root.niriAvailable) {
@@ -128,7 +143,6 @@ Singleton {
         id: initialDataQuery
         command: ["niri", "msg", "-j", "workspaces"]
         running: false
-
         stdout: StdioCollector {
             onStreamFinished: {
                 if (text && text.trim()) {
@@ -152,7 +166,6 @@ Singleton {
         id: initialOutputsQuery
         command: ["niri", "msg", "-j", "outputs"]
         running: false
-
         stdout: StdioCollector {
             onStreamFinished: {
                 if (text && text.trim()) {
@@ -172,7 +185,6 @@ Singleton {
         id: initialWindowsQuery
         command: ["niri", "msg", "-j", "windows"]
         running: false
-
         stdout: StdioCollector {
             onStreamFinished: {
                 if (text && text.trim()) {
@@ -195,7 +207,6 @@ Singleton {
         id: initialFocusedWindowQuery
         command: ["niri", "msg", "-j", "focused-window"]
         running: false
-
         stdout: StdioCollector {
             onStreamFinished: {
                 if (text && text.trim()) {
@@ -228,7 +239,6 @@ Singleton {
         id: eventStreamProcess
         command: ["niri", "msg", "-j", "event-stream"]
         running: false // Will be enabled after niri check
-
         stdout: SplitParser {
             onRead: data => {
                 try {
@@ -239,7 +249,6 @@ Singleton {
                 }
             }
         }
-
         onExited: exitCode => {
             if (exitCode !== 0 && root.niriAvailable) {
                 console.warn("NiriService: Event stream exited with code", exitCode, "restarting immediately");
@@ -253,6 +262,8 @@ Singleton {
             handleWorkspacesChanged(event.WorkspacesChanged);
         } else if (event.WorkspaceActivated) {
             handleWorkspaceActivated(event.WorkspaceActivated);
+        } else if (event.WindowLayoutsChanged) {
+            handleWindowLayoutsChanged(event.WindowLayoutsChanged);
         } else if (event.WindowsChanged) {
             handleWindowsChanged(event.WindowsChanged);
         } else if (event.WindowClosed) {
@@ -263,8 +274,6 @@ Singleton {
             handleWindowOpenedOrChanged(event.WindowOpenedOrChanged);
         } else if (event.OverviewOpenedOrClosed) {
             handleOverviewChanged(event.OverviewOpenedOrClosed);
-        } else if (event.WindowLayoutsChanged) {
-            handleWindowLayoutsChanged(event.WindowLayoutsChanged);
         }
     }
 
@@ -272,38 +281,36 @@ Singleton {
         if (!data.changes)
             return;
 
-        var updatedWindows = windows.slice(); // copy array
+        // Save the currently focused window object
+        var prevFocusedWindow = (focusedWindowIndex >= 0 && focusedWindowIndex < windows.length) ? windows[focusedWindowIndex] : null;
+
+        // Copy and update layouts
+        var updatedWindows = windows.map(w => Object.assign({}, w));
         for (var i = 0; i < data.changes.length; i++) {
             var id = data.changes[i][0];
             var layout = data.changes[i][1];
-            var idx = -1;
-
-            for (var j = 0; j < updatedWindows.length; j++) {
-                if (updatedWindows[j].id === id) {
-                    idx = j;
-                    break;
-                }
-            }
-
+            var idx = updatedWindows.findIndex(w => w.id === id);
             if (idx >= 0) {
-                updatedWindows[idx] = Object.assign({}, updatedWindows[idx], {
-                    layout: layout
-                });
+                updatedWindows[idx].layout = layout;
             }
         }
+
+        // Sort windows by new layout
+        updatedWindows = sortWindows(updatedWindows);
+
+        // Find the new index of the previously focused window
+        var newFocusIdx = -1;
+        if (prevFocusedWindow) {
+            newFocusIdx = updatedWindows.findIndex(w => w.id === prevFocusedWindow.id);
+        }
+        focusedWindowIndex = newFocusIdx;
+
         windows = updatedWindows;
+        updateFocusedWindow();
     }
 
     function handleWorkspacesChanged(data) {
-        // console.log(allWorkspaces.length, "workspaces found");
-        // console.log(windows.length, "windows found");
-
         allWorkspaces = [...data.workspaces].sort((a, b) => a.idx - b.idx);
-
-        // console.log(allWorkspaces.length, "workspaces sorted");
-        // console.log(JSON.stringify(allWorkspaces, null, 2));
-
-        // Update focused workspace
         focusedWorkspaceIndex = allWorkspaces.findIndex(w => w.is_focused);
         if (focusedWorkspaceIndex >= 0) {
             var focusedWs = allWorkspaces[focusedWorkspaceIndex];
@@ -314,58 +321,51 @@ Singleton {
             focusedWorkspaceIndex = 0;
             focusedWorkspaceId = "";
         }
-
         updateCurrentOutputWorkspaces();
     }
 
     function handleWorkspaceActivated(data) {
-        // Update focused workspace
         focusedWorkspaceId = data.id;
         focusedWorkspaceIndex = allWorkspaces.findIndex(w => w.id === data.id);
-
         if (focusedWorkspaceIndex >= 0) {
             var activatedWs = allWorkspaces[focusedWorkspaceIndex];
-
-            // Update workspace states properly
-            // First, deactivate all workspaces on this output
             for (var i = 0; i < allWorkspaces.length; i++) {
                 if (allWorkspaces[i].output === activatedWs.output) {
                     allWorkspaces[i].is_active = false;
                     allWorkspaces[i].is_focused = false;
                 }
             }
-
-            // Then activate the new workspace
             allWorkspaces[focusedWorkspaceIndex].is_active = true;
             allWorkspaces[focusedWorkspaceIndex].is_focused = data.focused || false;
-
             focusedMonitorName = activatedWs.output || "";
-
             updateCurrentOutputWorkspaces();
-
-            // Force property change notifications
             allWorkspacesChanged();
         } else {
             focusedWorkspaceIndex = 0;
         }
     }
 
+    function sortWindows(windows) {
+        return windows.slice().sort(function (a, b) {
+            const aCol = a.layout?.pos_in_scrolling_layout[0] ?? 0;
+            const bCol = b.layout?.pos_in_scrolling_layout[0] ?? 0;
+            const aRow = a.layout?.pos_in_scrolling_layout[1] ?? 0;
+            const bRow = b.layout?.pos_in_scrolling_layout[1] ?? 0;
+            if (aCol !== bCol) {
+                return aCol - bCol;
+            }
+            return aRow - bRow;
+        });
+    }
+
     function handleWindowsChanged(data) {
         var newWindows = data.windows.slice(); // shallow copy
-
-        // Ensure layout objects exist
         for (var i = 0; i < newWindows.length; i++) {
             if (!newWindows[i].layout) {
                 newWindows[i].layout = {};
             }
         }
-
-        // Sort by id for consistency
-        newWindows.sort(function (a, b) {
-            return a.id - b.id;
-        });
-
-        windows = newWindows;
+        windows = sortWindows(newWindows);
         updateFocusedWindow();
     }
 
@@ -393,37 +393,24 @@ Singleton {
     function handleWindowOpenedOrChanged(data) {
         if (!data.window)
             return;
-
         var window = data.window;
         var updatedWindows = windows.slice();
         var existingIndex = updatedWindows.findIndex(function (w) {
             return w.id === window.id;
         });
-
         if (existingIndex >= 0) {
-            // Merge properties safely
             updatedWindows[existingIndex] = Object.assign({}, updatedWindows[existingIndex], window);
         } else {
             updatedWindows.push(window);
         }
-
-        // Sort for stability
-        updatedWindows.sort(function (a, b) {
-            return a.id - b.id;
-        });
-        windows = updatedWindows;
-
-        // If focused, update state
+        windows = sortWindows(updatedWindows);
         if (window.is_focused) {
             focusedWindowId = window.id;
             focusedWindowIndex = updatedWindows.findIndex(function (w) {
                 return w.id === window.id;
             });
         }
-
         updateFocusedWindow();
-
-        // Emit signal for others
         windowOpenedOrChanged(window);
     }
 
@@ -436,17 +423,22 @@ Singleton {
             currentOutputWorkspaces = allWorkspaces;
             return;
         }
-
-        // Filter workspaces for current output
         var outputWs = allWorkspaces.filter(w => w.output === focusedMonitorName);
         currentOutputWorkspaces = outputWs;
+    }
+
+    function cleanWindowTitle(windowTitle) {
+        if (windowTitle) {
+            return windowTitle.replace(/^[^\x20-\x7E]+/, "");
+        }
+        return windowTitle;
     }
 
     function updateFocusedWindow() {
         if (focusedWindowIndex >= 0 && focusedWindowIndex < windows.length) {
             var focusedWin = windows[focusedWindowIndex];
-            focusedWindowTitle = focusedWin.title || "(Unnamed window)";
-            focusedWindowClass = focusedWin.app_id || "";
+            focusedWindowTitle = cleanWindowTitle(focusedWin.title) || "(Unnamed window)";
+            focusedWindowClass = cleanWindowTitle(focusedWin.app_id) || "";
         } else {
             focusedWindowTitle = "";
             focusedWindowClass = "Desktop";
@@ -468,15 +460,19 @@ Singleton {
         return "";
     }
 
+    function getWorkspaceNameById(id) {
+        if (root.allWorkspaces && id >= 0) {
+            return root.allWorkspaces.find(w => w.id === id).name || "";
+        }
+        return "";
+    }
+
     function getActiveWorkspaceWindows() {
-        // Defensive: check bounds
         if (!root.allWorkspaces || root.focusedWorkspaceIndex === undefined)
             return [];
-
         var currentWorkspaceObj = root.allWorkspaces[root.focusedWorkspaceIndex];
         if (!currentWorkspaceObj || currentWorkspaceObj.id === undefined)
             return [];
-
         var currentWorkspaceId = currentWorkspaceObj.id;
         return root.windows ? root.windows.filter(function (windowObj) {
             return windowObj.workspace_id === currentWorkspaceId;
@@ -494,7 +490,6 @@ Singleton {
     function getWindowsByWorkspaceIndex(index) {
         if (index < 0 || index >= allWorkspaces.length)
             return [];
-
         const workspaceId = allWorkspaces[index].id;
         return windows.filter(window => window.workspace_id === workspaceId);
     }
@@ -502,7 +497,6 @@ Singleton {
     function switchToWorkspace(workspaceId) {
         if (!niriAvailable)
             return false;
-
         Quickshell.execDetached(["niri", "msg", "action", "focus-workspace", workspaceId.toString()]);
         return true;
     }
@@ -510,7 +504,6 @@ Singleton {
     function switchToWorkspaceUpDown(string) {
         if (!niriAvailable)
             return false;
-
         Quickshell.execDetached(["niri", "msg", "action", `focus-workspace-${string}`]);
         return true;
     }
@@ -518,7 +511,6 @@ Singleton {
     function toggleWindowFloating() {
         if (!niriAvailable)
             return false;
-
         Quickshell.execDetached(["niri", "msg", "action", `toggle-window-floating`]);
         return true;
     }
@@ -526,6 +518,12 @@ Singleton {
     function focusWindow(windowID) {
         if (!niriAvailable)
             return false;
+
+        if (Number(windowID) === Number(focusedWindowId) && Config.bar.workspaces.doubleClickToCenter) {
+            centerWindow();
+            return true;
+        }
+
         Quickshell.execDetached(["niri", "msg", "action", `focus-window`, `--id`, windowID.toString()]);
         return true;
     }
@@ -543,42 +541,49 @@ Singleton {
         Quickshell.execDetached(["niri", "msg", "action", `toggle-window-rule-opacity`]);
         return true;
     }
+
     function expandColumnToAvailable() {
         if (!niriAvailable)
             return false;
         Quickshell.execDetached(["niri", "msg", "action", `expand-column-to-available-width`]);
         return true;
     }
+
     function centerWindow() {
         if (!niriAvailable)
             return false;
         Quickshell.execDetached(["niri", "msg", "action", `center-window`]);
         return true;
     }
+
     function screenshotWindow() {
         if (!niriAvailable)
             return false;
         Quickshell.execDetached(["niri", "msg", "action", `screenshot-window`]);
         return true;
     }
+
     function keyboardShortcutsInhibitWindow() {
         if (!niriAvailable)
             return false;
         Quickshell.execDetached(["niri", "msg", "action", `toggle-keyboard-shortcuts-inhibit`]);
         return true;
     }
+
     function toggleWindowedFullscreen() {
         if (!niriAvailable)
             return false;
         Quickshell.execDetached(["niri", "msg", "action", `toggle-windowed-fullscreen`]);
         return true;
     }
+
     function toggleFullscreen() {
         if (!niriAvailable)
             return false;
         Quickshell.execDetached(["niri", "msg", "action", `fullscreen-window`]);
         return true;
     }
+
     function toggleMaximize() {
         if (!niriAvailable)
             return false;
@@ -586,10 +591,89 @@ Singleton {
         return true;
     }
 
-    function moveWindowToWorkspace(workspaceId) {
+    function toggleOverview() {
+        if (!niriAvailable)
+            return false;
+        Quickshell.execDetached(["niri", "msg", "action", `toggle-overview`]);
+        return true;
+    }
+
+    function doScreenTransition(delayMs = 500) {
+        if (!niriAvailable)
+            return false;
+        Quickshell.execDetached(["niri", "msg", "action", `do-screen-transition -d`, delayMs.toString()]);
+        return true;
+    }
+
+    function moveGroupColumnsSequential(curWindowId, windowIds, targetIndex, delayMs) {
+        var i = 0;
+        // toggleOverview();
+        function moveNext() {
+            if (i >= windowIds.length) {
+                // After all moves, focus curWindowId, hax!
+                var timer = Qt.createQmlObject('import QtQuick 2.0; Timer { interval: ' + (delayMs * (i + 1) || 100) + '; repeat: false }', root);
+                timer.triggered.connect(function () {
+                    timer.stop();
+                    timer.destroy();
+                    // toggleOverview();
+
+                    focusWindow(Number(curWindowId));
+                    i++;
+                });
+                timer.start();
+                return;
+            }
+
+            var windowId = windowIds[i];
+            var timer = Qt.createQmlObject('import QtQuick 2.0; Timer { interval: ' + (delayMs * (i + 1) || 100) + '; repeat: false }', root);
+            timer.triggered.connect(function () {
+                timer.stop();
+                timer.destroy();
+                Niri.moveColumnToIndexAfterFocus(windowId, targetIndex);
+                i++;
+                moveNext();
+            });
+            timer.start();
+        }
+        moveNext();
+    }
+
+    function moveColumnToIndexAfterFocus(windowId, index, delayMs = 2) {
         if (!niriAvailable)
             return false;
 
+        if (Number(windowId) === Number(focusedWindowId)) {
+            // Already focused,
+            Quickshell.execDetached(["niri", "msg", "action", "move-column-to-index", index.toString()]);
+            return true;
+        }
+
+        focusWindow(windowId);
+
+        var delay = delayMs !== undefined ? delayMs : 25; // Default to 25ms
+        var timer = Qt.createQmlObject('import QtQuick 2.0; Timer { interval: ' + delay + '; repeat: false }', root);
+        timer.triggered.connect(function () {
+            timer.stop();
+            timer.destroy();
+            Quickshell.execDetached(["niri", "msg", "action", "move-column-to-index", index.toString()]);
+        });
+        timer.start();
+        return true;
+    }
+
+    function moveColumnToIndex(windowId, index) {
+        if (!niriAvailable)
+            return false;
+        if (focusWindow(windowId)) {
+            Quickshell.execDetached(["niri", "msg", "action", `move-column-to-index`, index.toString()]);
+            return true;
+        }
+        return true;
+    }
+
+    function moveWindowToWorkspace(workspaceId) {
+        if (!niriAvailable)
+            return false;
         Quickshell.execDetached(["niri", "msg", "action", `move-window-to-workspace`, workspaceId.toString()]);
         return true;
     }
@@ -597,7 +681,6 @@ Singleton {
     function switchToWorkspaceByIndex(index) {
         if (!niriAvailable || index < 0 || index >= allWorkspaces.length)
             return false;
-
         var workspace = allWorkspaces[index];
         return switchToWorkspace(workspace.id);
     }
@@ -605,22 +688,16 @@ Singleton {
     function switchToWorkspaceByNumber(number, output) {
         if (!niriAvailable)
             return false;
-
         var targetOutput = output || focusedMonitorName;
         if (!targetOutput) {
             console.warn("NiriService: No output specified for workspace switching");
             return false;
         }
-
-        // Get workspaces for the target output, sorted by idx
         var outputWorkspaces = allWorkspaces.filter(w => w.output === targetOutput).sort((a, b) => a.idx - b.idx);
-
-        // Use sequential index (number is 1-based, array is 0-based)
         if (number >= 1 && number <= outputWorkspaces.length) {
             var workspace = outputWorkspaces[number - 1];
             return switchToWorkspace(workspace.id);
         }
-
         console.warn("NiriService: No workspace", number, "found on output", targetOutput);
         return false;
     }
@@ -636,8 +713,13 @@ Singleton {
         return allWorkspaces.length;
     }
 
+    function getOccupiedWorkspaceCount() {
+        return allWorkspaces.filter(w => w.active_window_id !== "").length;
+    }
+
+    // Picker helpers
     function getCurrentOutputWorkspaceNumbers() {
-        return currentOutputWorkspaces.map(w => w.idx + 1); // niri uses 0-based, UI shows 1-based
+        return currentOutputWorkspaces.map(w => w.idx + 1);
     }
 
     function getCurrentWorkspaceNumber() {
@@ -650,37 +732,24 @@ Singleton {
     function getWindowsInScreen(screenX, screenY, screenWidth, screenHeight, windowBorder, padding) {
         if (!focusedWindow?.layout?.pos_in_scrolling_layout)
             return [];
-
         const focusedCol = focusedWindow.layout.pos_in_scrolling_layout[0];
         const focusedRow = focusedWindow.layout.pos_in_scrolling_layout[1];
-
         return getActiveWorkspaceWindows().map(window => {
             if (!window.layout?.pos_in_scrolling_layout || !window.layout?.window_size)
                 return null;
-
-            // Calculate screen position relative to focused window
             const colOffset = window.layout.pos_in_scrolling_layout[0] - focusedCol;
             const rowOffset = window.layout.pos_in_scrolling_layout[1] - focusedRow;
-
-            // In getWindowsInScreen()
             const focusedWidth = focusedWindow.layout.window_size[0];
             let focusedScreenX;
-
             if (focusedWidth < screenWidth - windowBorder) {
-                // Use scroll direction to determine alignment
                 focusedScreenX = scrollDirection === "left" ? 5 : screenWidth - focusedWidth;
             } else {
                 focusedScreenX = 0;
             }
-
             const winX = focusedScreenX + (colOffset * window.layout.window_size[0]) - windowBorder;
-
-            // const winX = colOffset * window.layout.window_size[0];
             const winY = rowOffset * window.layout.window_size[1] + windowBorder;
             const winW = window.layout.window_size[0] - padding * 2;
             const winH = window.layout.window_size[1] - padding * 2;
-
-            // Check if window intersects with screen bounds
             if (winX < screenWidth + windowBorder && winY < screenHeight && winX + winW > 0 && winY + winH > 0) {
                 return {
                     window: window,
@@ -692,5 +761,77 @@ Singleton {
             }
             return null;
         }).filter(item => item !== null);
+    }
+
+    // Grouping helpers
+    function groupWindowsByApp(windows) {
+        windows = sortWindows(windows);
+        var groups = {};
+        for (var i = 0; i < windows.length; i++) {
+            var w = windows[i];
+            var appId = w.app_id || "unknown";
+            if (!groups[appId]) {
+                groups[appId] = {
+                    app_id: appId,
+                    id: w.id,
+                    title: w.title,
+                    index: w.index,
+                    windows: []
+                };
+            }
+            groups[appId].windows.push(w);
+        }
+        var result = [];
+        for (var key in groups) {
+            var g = groups[key];
+            g.count = g.windows.length;
+            g.main = g.windows[0];
+            result.push(g);
+        }
+        return result;
+    }
+
+    function groupWindowsByLayoutAndId(windows) {
+        // console.log("=== groupWindowsByLayoutAndId START ===");
+        windows = sortWindows(windows); // make sure layout order is respected
+        // console.log("Input windows (sorted):");
+        // for (var i = 0; i < windows.length; i++) {
+        // console.log(" ", i, windows[i].app_id, windows[i].title, windows[i].id);
+        // }
+
+        var groups = [];
+        var currentGroup = null;
+
+        for (var i = 0; i < windows.length; i++) {
+            var w = windows[i];
+
+            if (!currentGroup || currentGroup.app_id !== w.app_id) {
+                // Start a new group
+                currentGroup = {
+                    app_id: w.app_id,
+                    windows: [w],
+                    count: 1,
+                    title: w.title,
+                    id: w.id,
+                    main: w
+                };
+                groups.push(currentGroup);
+                // console.log(" → new group", w.app_id, "starting with window", w.id);
+            } else {
+                // Extend the current group
+                currentGroup.windows.push(w);
+                currentGroup.count = currentGroup.windows.length;
+                // console.log(" → extended group", w.app_id, "size now", currentGroup.count);
+            }
+        }
+
+        // console.log("Final groups:");
+        for (var i = 0; i < groups.length; i++) {
+            var g = groups[i];
+            // console.log(" Group", i, "app:", g.app_id, "count:", g.count, "window IDs:", g.windows.map(x => x.id).join(", "));
+        }
+        // console.log("=== groupWindowsByLayoutAndId END ===");
+
+        return groups;
     }
 }

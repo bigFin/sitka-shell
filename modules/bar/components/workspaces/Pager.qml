@@ -11,15 +11,15 @@ StyledRect {
     required property int groupOffset
 
     // Start hidden and below, animate in when loaded
-    property bool entered: false
+    property bool entered: Config.bar.workspaces.shown < Niri.getWorkspaceCount() ? true : false
 
     color: Colours.palette.m3surfaceContainer
-    radius: Appearance.rounding.large
+    radius: entered ? Appearance.rounding.small : Appearance.rounding.full
 
     // Animate both y and opacity for a smooth effect
-    anchors.topMargin: entered ? 0 : -Config.bar.sizes.innerWidth
+    anchors.topMargin: entered ? -Appearance.padding.small : -Config.bar.sizes.innerWidth
 
-    width: Config.bar.sizes.innerWidth + Appearance.spacing.small
+    width: Config.bar.sizes.innerWidth - Appearance.spacing.small
     height: (text.contentHeight + Appearance.spacing.small)
 
     // Animate when 'entered' changes
@@ -31,8 +31,8 @@ StyledRect {
         }
     }
 
-    // Trigger animation when loaded
-    Component.onCompleted: entered = true
+    // // Trigger animation when loaded
+    // Component.onCompleted: entered = true
 
     StyledText {
         id: text

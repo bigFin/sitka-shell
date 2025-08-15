@@ -2,71 +2,115 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
+// import qs.components.effects
 import qs.config
-import Quickshell
 import QtQuick
 import QtQuick.Layouts
 
-Item {
+ColumnLayout {
     id: root
 
     required property int index
     required property var occupied
     required property int groupOffset
     required property int focusedWindowId
+    required property int activeWsId
 
     required property Item windowPopoutSignal
 
-    readonly property bool workspacesPopoutActive: false
-
     readonly property bool isWorkspace: true // Flag for finding workspace children
-    // Unanimated prop for others to use as reference
-    readonly property real size: childrenRect.height + (hasWindows ? Appearance.padding.smaller : 0)
-
+    readonly property int size: implicitHeight + (hasWindows ? Appearance.padding.small : 0)
     readonly property int ws: groupOffset + index + 1
     readonly property bool isOccupied: occupied[ws] ?? false
     readonly property bool hasWindows: isOccupied && Config.bar.workspaces.showWindows
 
-    readonly property int currentWorkspace: Niri.focusedWorkspaceIndex + 1 // + 1 cuz Niri index starts with 0 this needs 1.
+    // To make the windows repopulate, for Niri.
+    // onGroupOffsetChanged: {
+    //     windows.active = false;
+    //     windows.active = true;
+    // }
 
-    Layout.preferredWidth: childrenRect.width
-    Layout.preferredHeight: size
-
-    // To make the windows repopulate.
-
-    onGroupOffsetChanged: {
-        windows.active = false;
-        windows.active = true;
+    Behavior on scale {
+        Anim {}
     }
 
-    StyledText {
-        id: indicator
+    Layout.alignment: Qt.AlignHCenter
+    Layout.preferredHeight: size
 
-        readonly property string label: Config.bar.workspaces.label || root.ws
-        readonly property string occupiedLabel: Config.bar.workspaces.occupiedLabel || label
-        readonly property string activeLabel: root.currentWorkspace || (root.isOccupied ? occupiedLabel : label)
+    spacing: 0
 
-        animate: true
-        text: root.currentWorkspace === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label
+    Item {
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+        Layout.preferredHeight: Config.bar.sizes.innerWidth - Appearance.padding.small * 2
 
-        color: root.currentWorkspace === root.ws ? Colours.palette.m3onPrimary // <--- customize to your active color
-         : (root.isOccupied ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant)
+        Layout.preferredWidth: indicator.width
 
-        horizontalAlignment: StyledText.AlignHCenter
-        verticalAlignment: StyledText.AlignVCenter
+        StyledText {
+            id: indicator
 
-        width: Config.bar.sizes.innerWidth
-        height: Config.bar.sizes.innerWidth
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+
+            animate: true
+            text: {
+                const label = Config.bar.workspaces.label || root.ws;
+                const occupiedLabel = Config.bar.workspaces.occupiedLabel || label;
+                const activeLabel = root.activeWsId || (root.isOccupied ? occupiedLabel : label);
+                return root.activeWsId === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label;
+            }
+
+            color: root.activeWsId === root.ws ? Colours.palette.m3onPrimary : (root.isOccupied ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant)
+            verticalAlignment: Qt.AlignVCenter
+        }
+
+        Loader {
+
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.right
+            anchors.leftMargin: Appearance.padding.large
+
+            active: (Niri.wsContextType === "workspace" && Niri.wsContextAnchor === root) || Niri.wsContextType === "workspaces" && Niri.wsContextAnchor
+            sourceComponent: StyledText {
+                color: root.activeWsId === root.ws ? Colours.palette.m3onPrimary // <--- customize to your active color
+                 : (root.isOccupied ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant)
+
+                font.family: Appearance.font.family.mono
+                text: Niri.getWorkspaceNameByIndex(root.index) || "Workspace " + (root.index + 1)
+            }
+        }
 
         MouseArea {
+            id: interaction
             anchors.fill: parent
+            propagateComposedEvents: true
+            preventStealing: true
 
-            z: -1
-            acceptedButtons: Qt.RightButton
+            // hoverEnabled: true
+
+            cursorShape: Qt.PointingHandCursor
+
+            acceptedButtons: Qt.RightButton | Qt.LeftButton
+
             onPressed: event => {
                 if (event.button === Qt.RightButton) {
-                    const thing = windows.childAt(event.x, event.y);
-                    Niri.wsAnchorItem = thing;
+                    // const thing = layout.childAt(event.x, event.y);
+                    const thing = root;
+                    const winds = Niri.getWindowsByWorkspaceIndex(thing.index);
+
+                    if (thing && winds) {
+                        Niri.wsContextAnchor = thing;
+                        Niri.wsContextType = "workspace";
+                        root.windowPopoutSignal.requestWindowPopout();
+                    }
+                    return;
+                }
+                if (event.button === Qt.LeftButton) {
+                    // const thing = layout.childAt(event.x, event.y);
+                    const thing = root;
+                    const ws = thing.index + root.groupOffset;
+                    if (Niri.focusedWorkspaceId + 1 !== ws)
+                        Niri.switchToWorkspaceByIndex(ws);
+                    return;
                 }
             }
         }
@@ -75,96 +119,26 @@ Item {
     Loader {
         id: windows
 
-        active: Config.bar.workspaces.showWindows
+        Layout.alignment: Qt.AlignHCenter
+        // Layout.fillHeight: true
+        Layout.topMargin: -Config.bar.sizes.innerWidth / 10
+
+        visible: active
+        active: root.hasWindows
         asynchronous: true
 
-        anchors.horizontalCenter: indicator.horizontalCenter
-        anchors.top: indicator.bottom
-        anchors.topMargin: -Config.bar.sizes.innerWidth / 10
+        sourceComponent: DraggableWindowColumn {
+            id: dragDropLayout
+            spacing: 0
 
-        sourceComponent: Item {
-            id: cocol
-            height: col.height
-            width: col.width
-
-            Column {
-                id: col
-                spacing: 0
-
-                add: Transition {
-                    Anim {
-                        properties: "scale"
-                        from: 0
-                        to: 1
-                        easing.bezierCurve: Appearance.anim.curves.standardDecel
-                    }
-                }
-
-                move: Transition {
-                    Anim {
-                        properties: "scale"
-                        to: 1
-                        easing.bezierCurve: Appearance.anim.curves.standardDecel
-                    }
-                    Anim {
-                        properties: "x,y"
-                    }
-                }
-
-                Repeater {
-                    model: ScriptModel {
-                        // WARNING DEFAULT:
-                        // values: Niri.toplevels.filter(c => c.workspace_id === root.ws)
-
-                        readonly property int targetWorkspaceId: {
-                            const niriWorkspace = Niri.currentOutputWorkspaces[root.index + root.groupOffset];
-                            return niriWorkspace.id;
-                        }
-
-                        values: Config.bar.workspaces.groupIconsByApp ? (() => {
-                                const wsId = targetWorkspaceId;
-                                const windows = Niri.windows.filter(w => w.workspace_id === wsId);
-                                const groups = {};
-                                for (let w of windows) {
-                                    const aid = w.app_id || "unknown";
-                                    if (!groups[aid])
-                                        groups[aid] = [];
-                                    groups[aid].push(w);
-                                }
-                                return Object.keys(groups).map(app_id => ({
-                                            app_id,
-                                            windows: groups[app_id]
-                                        }));
-                            })() : Niri.windows.filter(c => c.workspace_id === targetWorkspaceId)
-
-                        // .slice(0, Config.bar.workspaces.shown) //max windows shown
-                    }
-
-                    WindowGroupIcon {
-                        id: wgIcon
-
-                        required property var modelData
-
-                        windowData: Config.bar.workspaces.groupIconsByApp ? (modelData.windows.find(w => w.id === root.focusedWindowId) || modelData.windows[0]) : modelData
-                        windowCount: Config.bar.workspaces.groupIconsByApp ? modelData.windows.length : 1
-                        groupWindows: Config.bar.workspaces.groupIconsByApp ? modelData.windows : [modelData]
-                        isFocused: Config.bar.workspaces.groupIconsByApp ? modelData.windows.some(w => w.id === root.focusedWindowId) : root.focusedWindowId === modelData.id
-                        isWsFocused: root.currentWorkspace === root.ws
-                        useImageIcon: Config.bar.workspaces.windowIconImage
-                        onRequestPopup: (windows, iconItem) => {
-                            Niri.wsItemWindows = windows;
-                            Niri.wsAnchorItem = iconItem;
-                            // groupPopup.visible = groupPopup.visible ? false : true;
-                            root.windowPopoutSignal.requestWindowPopout(); // Only right-click triggers the signal!
-                        }
-                    }
-                }
-            }
+            workspace: root
+            focusedWindowId: root.focusedWindowId
+            activeWsId: root.activeWsId
+            ws: root.ws
+            windowPopoutSignal: root.windowPopoutSignal
+            idx: root.index
+            groupOffset: root.groupOffset
         }
-    }
-
-    Behavior on Layout.preferredWidth {
-        Anim {}
     }
 
     Behavior on Layout.preferredHeight {

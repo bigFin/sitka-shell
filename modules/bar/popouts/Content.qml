@@ -23,10 +23,9 @@ Item {
 
         Popout {
             name: "wsWindow"
-
-            sourceComponent: WindowGroupPopout {
-                id: groupPopup
-            }
+            sourceComponent:
+            // Bind y to currentCenter for dynamic following
+            WsContextPopout {}
         }
 
         // Popout { // TODO

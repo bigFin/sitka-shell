@@ -13,7 +13,6 @@ Singleton {
     property int focusedWorkspaceIndex: 0
     property string focusedWorkspaceId: ""
     property var currentOutputWorkspaces: []
-    property string currentOutput: ""
 
     // Window management
     property var windows: []
@@ -22,7 +21,7 @@ Singleton {
     property string focusedWindowClass: "(No active window)"
     property string focusedWindowId: ""
 
-    property string focusedMonitorName: "eDP-2" //placeholder
+    property string focusedMonitorName: ""
 
     // Overview state
     property bool inOverview: false
@@ -224,14 +223,20 @@ Singleton {
     }
 
     function handleWorkspacesChanged(data) {
+        // console.log(allWorkspaces.length, "workspaces found");
+        // console.log(windows.length, "windows found");
+
         allWorkspaces = [...data.workspaces].sort((a, b) => a.idx - b.idx);
+
+        // console.log(allWorkspaces.length, "workspaces sorted");
+        // console.log(JSON.stringify(allWorkspaces, null, 2));
 
         // Update focused workspace
         focusedWorkspaceIndex = allWorkspaces.findIndex(w => w.is_focused);
         if (focusedWorkspaceIndex >= 0) {
             var focusedWs = allWorkspaces[focusedWorkspaceIndex];
             focusedWorkspaceId = focusedWs.id;
-            currentOutput = focusedWs.output || "";
+            focusedMonitorName = focusedWs.output || "";
         } else {
             focusedWorkspaceIndex = 0;
             focusedWorkspaceId = "";
@@ -261,7 +266,7 @@ Singleton {
             allWorkspaces[focusedWorkspaceIndex].is_active = true;
             allWorkspaces[focusedWorkspaceIndex].is_focused = data.focused || false;
 
-            currentOutput = activatedWs.output || "";
+            focusedMonitorName = activatedWs.output || "";
 
             updateCurrentOutputWorkspaces();
 
@@ -327,13 +332,13 @@ Singleton {
     }
 
     function updateCurrentOutputWorkspaces() {
-        if (!currentOutput) {
+        if (!focusedMonitorName) {
             currentOutputWorkspaces = allWorkspaces;
             return;
         }
 
         // Filter workspaces for current output
-        var outputWs = allWorkspaces.filter(w => w.output === currentOutput);
+        var outputWs = allWorkspaces.filter(w => w.output === focusedMonitorName);
         currentOutputWorkspaces = outputWs;
     }
 
@@ -369,6 +374,22 @@ Singleton {
         return root.windows ? root.windows.filter(function (windowObj) {
             return windowObj.workspace_id === currentWorkspaceId;
         }) : [];
+    }
+
+    function getWindowsByWorkspaceId(wsid) {
+        const windowsByWorkspace = {};
+        for (const workspace of allWorkspaces) {
+            windowsByWorkspace[workspace.id] = windows.filter(window => window.workspace_id === workspace.id);
+        }
+        return windowsByWorkspace[wsid] || [];
+    }
+
+    function getWindowsByWorkspaceIndex(index) {
+        if (index < 0 || index >= allWorkspaces.length)
+            return [];
+
+        const workspaceId = allWorkspaces[index].id;
+        return windows.filter(window => window.workspace_id === workspaceId);
     }
 
     function switchToWorkspace(workspaceId) {
@@ -478,7 +499,7 @@ Singleton {
         if (!niriAvailable)
             return false;
 
-        var targetOutput = output || currentOutput;
+        var targetOutput = output || focusedMonitorName;
         if (!targetOutput) {
             console.warn("NiriService: No output specified for workspace switching");
             return false;

@@ -349,6 +349,28 @@ Singleton {
     }
 
     // Public API functions
+    function getActiveWorkspaceName() {
+        if (root.allWorkspaces && root.focusedWorkspaceIndex >= 0 && root.focusedWorkspaceIndex < root.allWorkspaces.length) {
+            return root.allWorkspaces[root.focusedWorkspaceIndex].name || "";
+        }
+        return "";
+    }
+
+    function getActiveWorkspaceWindows() {
+        // Defensive: check bounds
+        if (!root.allWorkspaces || root.focusedWorkspaceIndex === undefined)
+            return [];
+
+        var currentWorkspaceObj = root.allWorkspaces[root.focusedWorkspaceIndex];
+        if (!currentWorkspaceObj || currentWorkspaceObj.id === undefined)
+            return [];
+
+        var currentWorkspaceId = currentWorkspaceObj.id;
+        return root.windows ? root.windows.filter(function (windowObj) {
+            return windowObj.workspace_id === currentWorkspaceId;
+        }) : [];
+    }
+
     function switchToWorkspace(workspaceId) {
         if (!niriAvailable)
             return false;

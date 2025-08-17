@@ -169,8 +169,6 @@ WlSessionLockSurface {
 
         layer.enabled: true
         layer.effect: MultiEffect {
-            id: backgroundBlur
-
             autoPaddingEnabled: false
             blurEnabled: true
             blur: 1

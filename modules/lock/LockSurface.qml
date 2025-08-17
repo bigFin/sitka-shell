@@ -40,7 +40,7 @@ WlSessionLockSurface {
             Anim {
                 target: lockBg
                 property: "radius"
-                to: lockContent.size / 4
+                to: lockContent.radius
             }
             Anim {
                 target: content
@@ -183,6 +183,7 @@ WlSessionLockSurface {
         id: lockContent
 
         readonly property int size: lockIcon.implicitHeight + Appearance.padding.large * 4
+        readonly property int radius: size / 4 * Appearance.rounding.scale
 
         anchors.centerIn: parent
         implicitWidth: size
@@ -196,7 +197,7 @@ WlSessionLockSurface {
 
             anchors.fill: parent
             color: Colours.palette.m3surface
-            radius: parent.size / 4
+            radius: parent.radius
             opacity: Colours.transparency.enabled ? Colours.transparency.base : 1
 
             layer.enabled: true

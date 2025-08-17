@@ -13,10 +13,8 @@ WlSessionLockSurface {
     required property WlSessionLock lock
     required property Pam pam
 
+    readonly property alias unlocking: unlockAnim.running
     readonly property bool animating: initAnim.running || unlockAnim.running
-    property bool locked
-
-    Component.onCompleted: locked = true
 
     color: "transparent"
 
@@ -24,7 +22,6 @@ WlSessionLockSurface {
         target: root.lock
 
         function onUnlock(): void {
-            root.locked = false;
             unlockAnim.start();
         }
     }

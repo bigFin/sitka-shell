@@ -42,15 +42,13 @@ StyledRect {
         }
 
         // Keyboard layout icon
-        Loader {
-            Layout.alignment: Qt.AlignHCenter
-            asynchronous: true
+        WrappedLoader {
+            name: "kblayout"
             active: Config.bar.status.showKbLayout
-            visible: active
 
             sourceComponent: StyledText {
                 animate: true
-                text: Hyprland.kbLayout
+                text: Niri.kbLayout
                 color: root.colour
                 font.family: Appearance.font.family.mono
             }

@@ -58,6 +58,12 @@ Singleton {
     property bool inOverview: false
     signal windowOpenedOrChanged(var windowData)
 
+    // Keyboard layout
+    property var kbLayoutsArray: []
+    property int kbLayoutIndex: 0
+    property string kbLayouts: "?"
+    readonly property string kbLayout: (kbLayoutsArray.length > 0 && kbLayoutIndex >= 0 && kbLayoutIndex < kbLayoutsArray.length) ? kbLayoutsArray[kbLayoutIndex].slice(0, 2).toLowerCase() : "?"
+
     // Last focused window
     property var focusedWindow: root.windows[root.focusedWindowIndex]
     property var lastFocusedWindow: null
@@ -274,6 +280,24 @@ Singleton {
             handleWindowOpenedOrChanged(event.WindowOpenedOrChanged);
         } else if (event.OverviewOpenedOrClosed) {
             handleOverviewChanged(event.OverviewOpenedOrClosed);
+        } else if (event.KeyboardLayoutsChanged) {
+            handleKeyboardLayoutsChanged(event.KeyboardLayoutsChanged);
+        }
+    }
+    function handleKeyboardLayoutsChanged(data) {
+        if (data && data.keyboard_layouts && data.keyboard_layouts.names && data.keyboard_layouts.names.length > 0) {
+            kbLayoutsArray = data.keyboard_layouts.names;
+            kbLayouts = data.keyboard_layouts.names.join(",");
+            var idx = data.keyboard_layouts.current_idx;
+            if (idx >= 0 && idx < data.keyboard_layouts.names.length) {
+                kbLayoutIndex = idx;
+            } else {
+                kbLayoutIndex = 0;
+            }
+        } else {
+            kbLayoutsArray = [];
+            kbLayouts = "?";
+            kbLayoutIndex = 0;
         }
     }
 

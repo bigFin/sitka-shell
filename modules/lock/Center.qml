@@ -95,8 +95,7 @@ ColumnLayout {
             anchors.centerIn: parent
 
             text: "person"
-            fill: 1
-            grade: 200
+            color: Colours.palette.m3onSurfaceVariant
             font.pointSize: Math.floor(root.centerWidth / 4)
         }
 

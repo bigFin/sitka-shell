@@ -1,4 +1,6 @@
 > [!CAUTION]
+> **DEPENDENCIES GOT UPDATED!**
+>
 > This is my personal thingy and it's **STILL WORK IN PROGRESS.**
 >
 > This repo is **ONLY for the desktop shell** of the caelestia dots, ported to work in [`Niri Window Manager`](https://github.com/YaLTeR/niri) instead of [`Hyprland`](https://hyprland.org). If you want installation instructions
@@ -24,7 +26,7 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 ***Components:***
 [`Quickshell`](https://quickshell.outfoxxed.me)
-[`Niri`](https://github.com/YaLTeR/niri)
+[`niri-git`](https://github.com/YaLTeR/niri)
 ~~[`caelestia-dots`](https://github.com/caelestia-dots)~~
 
 </div>
@@ -84,7 +86,7 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 **1.** Install the dependencies listed below.
 * Exapmle of what to do for CachyOS / Arch:
   1. `sudo pacman -S ddcutil brightnessctl cava networkmanager i2c-tools fish aubio libpipewire glibc qt6-declarative gcc-libs ttf-cascadia-code-nerd grim swappy libqalculate --needed`
-  2. `paru ttf-material-symbols-variable-git app2unit-git --needed`
+  2. `paru niri-git ttf-material-symbols-variable-git app2unit-git --needed`
 
 **2.** Either download the code, or clone this repo to your Quickshell config folder.
 * **The folder is usually here:**
@@ -113,7 +115,7 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 ### 📦 Dependencies
 
 * All dependencies in plain text:
-   * `quickshell-git networkmanager fish glibc qt6-declarative gcc-libs cava aubio libpipewire lm-sensors ddcutil brightnessctl material-symbols caskaydia-cove-nerd grim swappy app2unit libqalculate`
+   * `niri-git quickshell-git networkmanager fish glibc qt6-declarative gcc-libs cava aubio libpipewire lm-sensors ddcutil brightnessctl material-symbols caskaydia-cove-nerd grim swappy app2unit libqalculate`
 
 > [!NOTE]
 >

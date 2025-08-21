@@ -15,7 +15,32 @@ Item {
     required property PersistentProperties visibilities
     required property BarPopouts.Wrapper popouts
 
+    // handle workspace popouts
+
+    property bool workspacesPopoutActive: false
+
+    Connections {
+        target: root.popouts
+        function onHasCurrentChanged() {
+            if (!root.popouts.hasCurrent && root.popouts.currentName === "wsWindow") {
+                root.workspacesPopoutActive = false;
+                Niri.wsAnchorItem = null;
+            }
+        }
+    }
+
+    // Handle Popouts Hover
+
     function checkPopout(y: real): void {
+        // check for workspace icons
+        if (workspacesPopoutActive) {
+            const wsy = workspaces.y;
+            const wsh = workspaces.implicitHeight;
+            if (y >= wsy && y <= wsy + wsh) {
+                return; // So it doesn't fall through to aw or tray checks
+            }
+        }
+
         const spacing = Appearance.spacing.small;
         const aw = activeWindow.child;
         const awy = activeWindow.y + aw.y;
@@ -112,8 +137,18 @@ Item {
 
             Workspaces {
                 id: workspacesInner
-
                 anchors.centerIn: parent
+
+                property var anchorItem: Niri.wsAnchorItem ? Niri.wsAnchorItem : null
+
+                onRequestWindowPopout: {
+                    if (anchorItem) {
+                        root.popouts.currentName = "wsWindow";
+                        root.popouts.currentCenter = Qt.binding(() => Math.round(anchorItem.mapToItem(null, anchorItem.width, (anchorItem.height) / 2).y));
+                        root.popouts.hasCurrent = true;
+                        root.workspacesPopoutActive = true;
+                    }
+                }
             }
         }
 

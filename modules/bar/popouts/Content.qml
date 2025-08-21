@@ -22,6 +22,19 @@ Item {
         anchors.margins: Appearance.padding.large
 
         Popout {
+            name: "wsWindow"
+
+            sourceComponent: WindowGroupPopout {
+                id: groupPopup
+            }
+        }
+
+        // Popout { // TODO
+        //     name: "workspaces"
+        //     sourceComponent: WorkspacesPopout {}
+        // }
+
+        Popout {
             name: "activewindow"
             sourceComponent: ActiveWindow {
                 wrapper: root.wrapper

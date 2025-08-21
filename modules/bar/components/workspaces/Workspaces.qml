@@ -1,6 +1,5 @@
 pragma ComponentBehavior: Bound
 
-import qs.components
 import qs.services
 import qs.config
 import QtQuick
@@ -17,6 +16,8 @@ Item {
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
 
+    signal requestWindowPopout
+
     ColumnLayout {
         id: layout
 
@@ -31,6 +32,7 @@ Item {
                 occupied: root.occupied
                 groupOffset: root.groupOffset
                 focusedWindowId: root.focusedWindowId
+                windowPopoutSignal: root
             }
         }
     }
@@ -38,58 +40,15 @@ Item {
     Loader {
         id: pager
         active: Config.bar.workspaces.shown < Niri.getWorkspaceCount()
-        y: layout.implicitHeight
 
-        sourceComponent: ColumnLayout {
-            id: pagerContent
-            // Start hidden and below, animate in when loaded
-            property bool entered: false
+        anchors.top: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        z: -1
 
-            // Animate both y and opacity for a smooth effect
-            y: entered ? 0 : 40
-            opacity: entered ? 1 : 0
-
-            // Animate when 'entered' changes
-            Behavior on y {
-                NumberAnimation {
-                    duration: Appearance.anim.durations.normal
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
-                }
-            }
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: Appearance.anim.durations.normal
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
-                }
-            }
-
-            // Trigger animation when loaded
-            Component.onCompleted: entered = true
-
-            StyledRect {
-                id: rectt
-
-                color: Colours.palette.m3surfaceContainer
-                Layout.alignment: Qt.AlignHCenter
-
-                radius: Appearance.rounding.large
-                implicitHeight: 30
-                implicitWidth: root.width
-
-                StyledText {
-                    // Layout.alignment : Qt.AlignHCenter
-                    readonly property int pageNumber: Math.floor(root.groupOffset / Config.bar.workspaces.shown) + 1
-                    readonly property int totalPages: Math.ceil(Niri.getWorkspaceCount() / Config.bar.workspaces.shown)
-                    text: qsTr(`${pageNumber} / ${totalPages}`)
-                    // font.pointSize : 10
-
-                }
-            }
+        sourceComponent: Pager {
+            groupOffset: root.groupOffset
         }
     }
-
     Loader {
         active: Config.bar.workspaces.occupiedBg
         asynchronous: true
@@ -113,9 +72,25 @@ Item {
         sourceComponent: ActiveIndicator {
             workspaces: root.workspaces
             // mask: layout
-            maskWidth: root.width
-            maskHeight: root.height
+            // maskWidth: root.width
+            // maskHeight: root.height
             groupOffset: root.groupOffset
+        }
+    }
+
+    Loader {
+        // Right click on window context menu
+        active: Config.bar.workspaces.windowRighClickContext
+        asynchronous: true
+
+        z: -1
+
+        anchors.right: parent.right
+        anchors.rightMargin: -Appearance.padding.small
+
+        sourceComponent: ChosenBg {
+            groupOffset: root.groupOffset
+            wsOffset: root.y
         }
     }
 
@@ -123,10 +98,13 @@ Item {
         anchors.fill: parent
         // propagateComposedEvents: true
         z: -1
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         onPressed: event => {
-            const ws = layout.childAt(event.x, event.y).index + root.groupOffset + 1;
-            if (Niri.focusedWorkspaceId + 1 !== ws)
-                Niri.switchToWorkspace(ws);
+            if (event.button === Qt.LeftButton) {
+                const ws = layout.childAt(event.x, event.y).index + root.groupOffset + 1;
+                if (Niri.focusedWorkspaceId + 1 !== ws)
+                    Niri.switchToWorkspace(ws);
+            }
         }
     }
 }

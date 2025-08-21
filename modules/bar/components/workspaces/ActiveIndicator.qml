@@ -1,5 +1,6 @@
+pragma ComponentBehavior: Bound
 import qs.components
-import qs.components.effects
+// import qs.components.effects
 import qs.services
 import qs.config
 import QtQuick
@@ -9,8 +10,8 @@ StyledRect {
 
     required property list<Workspace> workspaces
     // required property Item mask
-    required property real maskWidth
-    required property real maskHeight
+    // required property real maskWidth
+    // required property real maskHeight
     required property int groupOffset
 
     readonly property int currentWsIdx: Niri.focusedWorkspaceIndex - groupOffset
@@ -40,13 +41,14 @@ StyledRect {
         cWs = currentWsIdx;
     }
 
-    clip: true
+    clip: false
     x: 1
-    y: offset + 1
-    implicitWidth: Config.bar.sizes.innerHeight - 2
-    implicitHeight: size - 2
+    y: offset + 1 + Appearance.padding.small / 2
+    implicitWidth: Config.bar.sizes.innerHeight
+    implicitHeight: size - Appearance.padding.small
     radius: Config.bar.workspaces.rounded ? Appearance.rounding.full : 0
     color: Colours.palette.m3primary
+    anchors.horizontalCenter: parent.horizontalCenter
 
     // Colouriser {
     //     source: root.mask
@@ -59,6 +61,68 @@ StyledRect {
 
     //     anchors.horizontalCenter: parent.horizontalCenter
     // }
+
+    Loader {
+        active: Config.bar.workspaces.focusedWindowBlob
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        sourceComponent: Rectangle {
+            id: activeWindowIndicator
+            width: Niri.focusedWindowId ? Config.bar.sizes.innerHeight + Appearance.padding.normal : Config.bar.sizes.innerHeight
+            height: Niri.focusedWindowId ? Config.bar.sizes.innerHeight + Appearance.padding.normal : 0 // Match window icon height
+            color: Colours.palette.m3primary
+            radius: Config.bar.workspaces.rounded ? (Niri.focusedWindowId ? Appearance.rounding.large : Appearance.rounding.full) : 0
+            y: {
+                const currentWs = root.currentWsIdx + root.groupOffset;
+                const wsWindows = Niri.windows.filter(w => w.workspace_id === currentWs + 1);
+                const focusedWindow = wsWindows.find(w => w.id === root.workspaces[root.currentWsIdx]?.focusedWindowId);
+
+                if (!focusedWindow)
+                    return Appearance.spacing.large / 2;
+
+                var focusedIndex = wsWindows.indexOf(focusedWindow);
+
+                if (Config.bar.workspaces.groupIconsByApp) {
+                    // For grouped windows, use the first window's index with same app_id
+                    const firstWindowWithSameApp = wsWindows.find(w => w.app_id === focusedWindow.app_id);
+                    const firstAppIndex = wsWindows.indexOf(firstWindowWithSameApp);
+
+                    // Count grouped windows before the first occurrence
+                    let groupedWindowsBeforeCount = 0;
+                    const seenAppIds = new Set();
+
+                    for (let i = 0; i < firstAppIndex; i++) {
+                        const appId = wsWindows[i].app_id;
+                        if (seenAppIds.has(appId)) {
+                            groupedWindowsBeforeCount++;
+                        } else {
+                            seenAppIds.add(appId);
+                        }
+                    }
+
+                    focusedIndex = firstAppIndex - groupedWindowsBeforeCount;
+                }
+
+                return Appearance.spacing.large + (focusedIndex * Config.bar.sizes.innerHeight);
+            }
+
+            Behavior on y {
+                Anim {}
+            }
+
+            Behavior on width {
+                Anim {}
+            }
+
+            Behavior on height {
+                Anim {}
+            }
+
+            Behavior on radius {
+                Anim {}
+            }
+        }
+    }
 
     Behavior on leading {
         enabled: Config.bar.workspaces.activeTrail

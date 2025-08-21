@@ -145,6 +145,11 @@ Singleton {
 
     function getAppIcon(name: string, fallback: string): string {
         const icon = DesktopEntries.heuristicLookup(name)?.icon;
+
+        //Temp fix until I find a better solution
+        if (String(icon) === "undefined")
+            return Quickshell.iconPath(icon, name);
+
         if (fallback !== "undefined")
             return Quickshell.iconPath(icon, fallback);
         return Quickshell.iconPath(icon);

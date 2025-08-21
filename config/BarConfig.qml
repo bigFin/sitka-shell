@@ -14,8 +14,10 @@ JsonObject {
         property bool activeIndicator: true
         property bool occupiedBg: true
         property bool showWindows: true
-        property bool windowIconImage: false // false -> MaterialIcons, true -> IconImage
-        property bool groupIconsByApp: true
+        property bool windowIconImage: true // false -> MaterialIcons, true -> IconImage
+        property bool groupIconsByApp: false
+        property bool focusedWindowBlob: true
+        property bool windowRighClickContext: true
         property bool activeTrail: false
         property string label: "◦" // ""
         property string occupiedLabel: "⊙" // "󰮯"

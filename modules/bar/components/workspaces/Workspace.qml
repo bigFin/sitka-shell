@@ -2,13 +2,10 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.utils
 import qs.config
 import Quickshell
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Widgets
-import qs.components.effects
 
 Item {
     id: root
@@ -17,6 +14,10 @@ Item {
     required property var occupied
     required property int groupOffset
     required property int focusedWindowId
+
+    required property Item windowPopoutSignal
+
+    readonly property bool workspacesPopoutActive: false
 
     readonly property bool isWorkspace: true // Flag for finding workspace children
     // Unanimated prop for others to use as reference
@@ -57,6 +58,20 @@ Item {
 
         width: Config.bar.sizes.innerHeight
         height: Config.bar.sizes.innerHeight
+
+        MouseArea {
+            anchors.fill: parent
+            propagateComposedEvents: true
+            preventStealing: true
+            z: 10
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            onPressed: event => {
+                if (event.button === Qt.RightButton) {
+                    const thing = windows.childAt(event.x, event.y);
+                    Niri.wsAnchorItem = thing;
+                }
+            }
+        }
     }
 
     Loader {
@@ -69,93 +84,80 @@ Item {
         anchors.top: indicator.bottom
         anchors.topMargin: -Config.bar.sizes.innerHeight / 10
 
-        sourceComponent: Column {
-            spacing: 0
+        sourceComponent: Item {
+            id: cocol
+            height: col.height
+            width: col.width
 
-            add: Transition {
-                Anim {
-                    properties: "scale"
-                    from: 0
-                    to: 1
-                    easing.bezierCurve: Appearance.anim.curves.standardDecel
-                }
-            }
+            Column {
+                id: col
+                spacing: 0
 
-            move: Transition {
-                Anim {
-                    properties: "scale"
-                    to: 1
-                    easing.bezierCurve: Appearance.anim.curves.standardDecel
-                }
-                Anim {
-                    properties: "x,y"
-                }
-            }
-
-            Repeater {
-                model: ScriptModel {
-                    // WARNING DEFAULT:
-                    // values: Niri.toplevels.filter(c => c.workspace_id === root.ws)
-
-                    readonly property int targetWorkspaceId: {
-                        const niriWorkspace = Niri.allWorkspaces[root.index + root.groupOffset];
-                        return niriWorkspace.id;
+                add: Transition {
+                    Anim {
+                        properties: "scale"
+                        from: 0
+                        to: 1
+                        easing.bezierCurve: Appearance.anim.curves.standardDecel
                     }
-
-                    values: Niri.windows.filter(c => c.workspace_id === targetWorkspaceId)
-                    // .slice(0, Config.bar.workspaces.shown) //max windows shown
                 }
 
-                // TODO Setting to show App Images instead Material Icons, in config :)
+                move: Transition {
+                    Anim {
+                        properties: "scale"
+                        to: 1
+                        easing.bezierCurve: Appearance.anim.curves.standardDecel
+                    }
+                    Anim {
+                        properties: "x,y"
+                    }
+                }
 
-                // IconImage {
-                //     id: icon
-                //     required property var modelData
-                //     // grade: 0
+                Repeater {
+                    model: ScriptModel {
+                        // WARNING DEFAULT:
+                        // values: Niri.toplevels.filter(c => c.workspace_id === root.ws)
 
-                //     // Layout.alignment: Qt.AlignVCenter
-                //     implicitSize: 25
-                //     source: Icons.getAppIcon(modelData.app_id ?? "", "image-missing")
-                //     Layout.margins: Appearance.padding.small
-
-                MaterialIcon {
-                    id: icon
-                    required property var modelData
-
-                    // The shadow
-                    Loader {
-                        active: root.focusedWindowId === parent.modelData.id
-                        asynchronous: true
-                        z: -1
-                        anchors.fill: parent
-
-                        sourceComponent: ElevationGlow {
-                            level: 1 // Change this to set shadow depth (0-5)
+                        readonly property int targetWorkspaceId: {
+                            const niriWorkspace = Niri.currentOutputWorkspaces[root.index + root.groupOffset];
+                            return niriWorkspace.id;
                         }
+
+                        values: Config.bar.workspaces.groupIconsByApp ? (() => {
+                                const wsId = targetWorkspaceId;
+                                const windows = Niri.windows.filter(w => w.workspace_id === wsId);
+                                const groups = {};
+                                for (let w of windows) {
+                                    const aid = w.app_id || "unknown";
+                                    if (!groups[aid])
+                                        groups[aid] = [];
+                                    groups[aid].push(w);
+                                }
+                                return Object.keys(groups).map(app_id => ({
+                                            app_id,
+                                            windows: groups[app_id]
+                                        }));
+                            })() : Niri.windows.filter(c => c.workspace_id === targetWorkspaceId)
+
+                        // .slice(0, Config.bar.workspaces.shown) //max windows shown
                     }
 
-                    font.pointSize: root.focusedWindowId === modelData.id ? Appearance.font.size.large : Appearance.font.size.larger
+                    WindowGroupIcon {
+                        id: wgIcon
 
-                    anchors.horizontalCenter: parent.horizontalCenter
+                        required property var modelData
 
-                    grade: 0
-                    text: Icons.getAppCategoryIcon(modelData.app_id, "help_center")
-                    // color: root.focusedWindowId === modelData.id ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
-
-                    color: root.currentWorkspace === root.ws ? (Colours.palette.m3onPrimary) : Colours.palette.m3onSurfaceVariant
-
-                    MouseArea {
-                        anchors.fill: parent
-                        acceptedButtons: Qt.LeftButton
-                        cursorShape: Qt.PointingHandCursor
-
-                        onClicked: mouse => {
-                            if (mouse.button === Qt.LeftButton) {
-                                console.log("Right-clicked on window:", icon.modelData.title, "ID:", icon.modelData.id);
-                                if (icon.modelData && Niri.focusWindow) {
-                                    Niri.focusWindow(icon.modelData.id);
-                                }
-                            }
+                        windowData: Config.bar.workspaces.groupIconsByApp ? (modelData.windows.find(w => w.id === root.focusedWindowId) || modelData.windows[0]) : modelData
+                        windowCount: Config.bar.workspaces.groupIconsByApp ? modelData.windows.length : 1
+                        groupWindows: Config.bar.workspaces.groupIconsByApp ? modelData.windows : [modelData]
+                        isFocused: Config.bar.workspaces.groupIconsByApp ? modelData.windows.some(w => w.id === root.focusedWindowId) : root.focusedWindowId === modelData.id
+                        isWsFocused: root.currentWorkspace === root.ws
+                        useImageIcon: Config.bar.workspaces.windowIconImage
+                        onRequestPopup: (windows, iconItem) => {
+                            Niri.wsItemWindows = windows;
+                            Niri.wsAnchorItem = iconItem;
+                            // groupPopup.visible = groupPopup.visible ? false : true;
+                            root.windowPopoutSignal.requestWindowPopout(); // Only right-click triggers the signal!
                         }
                     }
                 }

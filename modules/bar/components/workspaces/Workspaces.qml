@@ -88,7 +88,7 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: -Appearance.padding.small
 
-        sourceComponent: ChosenBg {
+        sourceComponent: ContextBg {
             groupOffset: root.groupOffset
             wsOffset: root.y
         }

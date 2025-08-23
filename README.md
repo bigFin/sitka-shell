@@ -382,6 +382,10 @@ You might want to change your default apps.
    	        {
    	            "id": "power",
    	            "enabled": true
+   	        },
+   	        {
+   	            "id": "idleInhibitor",
+   	            "enabled": false
    	        }
         ],
         "persistent": true,

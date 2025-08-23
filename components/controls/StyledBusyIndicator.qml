@@ -1,3 +1,4 @@
+import qs.services
 import qs.config
 import QtQuick
 import QtQuick.Controls
@@ -7,6 +8,9 @@ BusyIndicator {
 
     property real implicitSize: Appearance.font.size.normal * 3
     property real strokeWidth: Appearance.padding.small
+    property color fgColour: Colours.palette.m3primary
+    property color bgColour: Colours.palette.m3secondaryContainer
+
     property real internalStrokeWidth: strokeWidth
     property string animState
 
@@ -48,6 +52,8 @@ BusyIndicator {
     contentItem: CircularProgress {
         anchors.fill: parent
         strokeWidth: root.internalStrokeWidth
+        fgColour: root.fgColour
+        bgColour: root.bgColour
         padding: root.padding
         startAngle: updater.startFraction * 360
         value: updater.endFraction - updater.startFraction

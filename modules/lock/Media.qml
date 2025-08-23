@@ -19,7 +19,7 @@ Item {
 
     Image {
         anchors.fill: parent
-        source: root.lock.animating ? "" : (Players.active?.trackArtUrl ?? "")
+        source: Players.active?.trackArtUrl ?? ""
 
         asynchronous: true
         fillMode: Image.PreserveAspectCrop

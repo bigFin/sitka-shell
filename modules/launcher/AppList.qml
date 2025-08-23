@@ -50,6 +50,11 @@ StyledListView {
         return "apps";
     }
 
+    onStateChanged: {
+        if (state === "scheme" || state === "variant")
+            Schemes.reload();
+    }
+
     states: [
         State {
             name: "apps"

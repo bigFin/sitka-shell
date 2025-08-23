@@ -48,7 +48,6 @@ Item {
 
         animate: true
         text: root.currentWorkspace === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label
-        // color: Config.bar.workspaces.occupiedBg || root.isOccupied || root.currentWorkspace === root.ws ? Colours.palette.m3onSurface : (Colours.palette.m3outlineVariant, 2)
 
         color: root.currentWorkspace === root.ws ? Colours.palette.m3onPrimary // <--- customize to your active color
          : (root.isOccupied ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant)
@@ -56,8 +55,8 @@ Item {
         horizontalAlignment: StyledText.AlignHCenter
         verticalAlignment: StyledText.AlignVCenter
 
-        width: Config.bar.sizes.innerHeight
-        height: Config.bar.sizes.innerHeight
+        width: Config.bar.sizes.innerWidth
+        height: Config.bar.sizes.innerWidth
 
         MouseArea {
             anchors.fill: parent
@@ -81,7 +80,7 @@ Item {
 
         anchors.horizontalCenter: indicator.horizontalCenter
         anchors.top: indicator.bottom
-        anchors.topMargin: -Config.bar.sizes.innerHeight / 10
+        anchors.topMargin: -Config.bar.sizes.innerWidth / 10
 
         sourceComponent: Item {
             id: cocol

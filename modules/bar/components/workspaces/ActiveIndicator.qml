@@ -44,7 +44,7 @@ StyledRect {
     clip: false
     x: 1
     y: offset + 1 + Appearance.padding.small / 2
-    implicitWidth: Config.bar.sizes.innerHeight
+    implicitWidth: Config.bar.sizes.innerWidth
     implicitHeight: size - Appearance.padding.small
     radius: Config.bar.workspaces.rounded ? Appearance.rounding.full : 0
     color: Colours.palette.m3primary
@@ -69,8 +69,8 @@ StyledRect {
 
         sourceComponent: Rectangle {
             id: activeWindowIndicator
-            width: Niri.focusedWindowId ? Config.bar.sizes.innerHeight + Appearance.padding.normal : Config.bar.sizes.innerHeight
-            height: Niri.focusedWindowId ? Config.bar.sizes.innerHeight + Appearance.padding.normal : 0 // Match window icon height
+            width: Niri.focusedWindowId ? Config.bar.sizes.innerWidth + Appearance.padding.normal : 0
+            height: Niri.focusedWindowId ? Config.bar.sizes.innerWidth + Appearance.padding.normal : 0 // Match window icon height
             color: Colours.palette.m3primary
             radius: Config.bar.workspaces.rounded ? (Niri.focusedWindowId ? Appearance.rounding.large : Appearance.rounding.full) : 0
             y: {
@@ -104,7 +104,7 @@ StyledRect {
                     focusedIndex = firstAppIndex - groupedWindowsBeforeCount;
                 }
 
-                return Appearance.spacing.large + (focusedIndex * Config.bar.sizes.innerHeight);
+                return Config.bar.sizes.innerWidth / 1.7 /* inaccurate af */  + (focusedIndex * (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap));
             }
 
             Behavior on y {

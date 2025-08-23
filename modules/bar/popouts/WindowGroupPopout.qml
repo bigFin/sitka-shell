@@ -14,7 +14,7 @@ RowLayout {
 
     // Centralized constants to avoid repeating expressions
     readonly property real itemH: Config.launcher.sizes.itemHeight / 2
-    readonly property real iconSize: Config.bar.sizes.innerHeight
+    readonly property real iconSize: Config.bar.sizes.innerWidth
     readonly property real expandedW: 550
     readonly property real spacingNormal: Appearance.spacing.normal
 

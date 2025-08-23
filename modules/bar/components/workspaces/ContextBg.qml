@@ -23,7 +23,7 @@ Item {
         property int yOffset: -Appearance.padding.small / 2
         property int extraHeight: 0
         property int zOrder: 0
-        property int cornerPieceSize: Config.bar.sizes.innerHeight + Appearance.padding.small
+        property int cornerPieceSize: Config.bar.sizes.innerWidth + Appearance.padding.small
 
         readonly property Item ws: root.anchorWs
 
@@ -43,8 +43,8 @@ Item {
         x: 0
         y: ws.mapToItem(root, 0, 0).y + yOffset
 
-        implicitWidth: ws ? Config.bar.sizes.innerHeight + Appearance.padding.normal : 0
-        implicitHeight: (ws?.height ?? Config.bar.sizes.innerHeight) + extraHeight + Appearance.padding.small
+        implicitWidth: ws ? Config.bar.sizes.innerWidth + Appearance.padding.normal : 0
+        implicitHeight: (ws?.height ?? Config.bar.sizes.innerWidth) + extraHeight + Appearance.padding.small
 
         Behavior on implicitWidth {
             Anim {}
@@ -76,7 +76,7 @@ Item {
         anchors.left: highlight.left
         anchors.leftMargin: -Appearance.padding.small
 
-        implicitHeight: (ws?.height ?? Config.bar.sizes.innerHeight) + extraHeight + Appearance.padding.small + Appearance.padding.small * 2
+        implicitHeight: (ws?.height ?? Config.bar.sizes.innerWidth) + extraHeight + Appearance.padding.small + Appearance.padding.small * 2
         zOrder: 1
 
         // topRightRadius: Config.bar.workspaces.rounded ? Appearance.padding.small : 0

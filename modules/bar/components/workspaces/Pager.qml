@@ -17,9 +17,9 @@ StyledRect {
     radius: Appearance.rounding.large
 
     // Animate both y and opacity for a smooth effect
-    anchors.topMargin: entered ? 0 : -Config.bar.sizes.innerHeight
+    anchors.topMargin: entered ? 0 : -Config.bar.sizes.innerWidth
 
-    width: Config.bar.sizes.innerHeight + Appearance.spacing.small
+    width: Config.bar.sizes.innerWidth + Appearance.spacing.small
     height: (text.contentHeight + Appearance.spacing.small)
 
     // Animate when 'entered' changes

@@ -48,8 +48,8 @@ Item {
         id: imageIconComp
 
         Rectangle {
-            implicitHeight: Config.bar.sizes.innerHeight
-            implicitWidth: Config.bar.sizes.innerHeight
+            implicitHeight: Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap
+            implicitWidth: Config.bar.workspaces.windowIconSize
 
             color: "transparent"
             radius: Appearance.rounding.small / 2
@@ -59,7 +59,7 @@ Item {
 
                 property var windowData: iconItem.windowData
                 property int windowCount: iconItem.windowCount
-                implicitSize: iconItem.isFocused && iconItem.isWsFocused ? Config.bar.sizes.innerHeight : Config.bar.sizes.innerHeight - Appearance.padding.small
+                implicitSize: iconItem.isFocused && iconItem.isWsFocused ? Config.bar.workspaces.windowIconSize : Config.bar.workspaces.windowIconSize - Appearance.padding.small
 
                 source: Icons.getAppIcon(windowData.app_id ?? "", "image-missing")
 
@@ -82,9 +82,9 @@ Item {
         id: materialIconComp
 
         StyledRect {
-            // implicitHeight: Config.bar.sizes.innerHeight
-            implicitHeight: Config.bar.sizes.innerHeight
-            implicitWidth: Config.bar.sizes.innerHeight
+            // implicitHeight: Config.bar.workspaces.windowIconSize
+            implicitHeight: Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap
+            implicitWidth: Config.bar.workspaces.windowIconSize
 
             // color: iconItem.isFocused ? Colours.palette.m3primaryContainer : "transparent"
             // radius: Appearance.rounding.small / 2
@@ -95,7 +95,7 @@ Item {
 
                 property var windowData: iconItem.windowData
                 property int windowCount: iconItem.windowCount
-                font.pixelSize: (iconItem.isFocused && iconItem.isWsFocused) ? Config.bar.sizes.innerHeight : Config.bar.sizes.innerHeight - Appearance.padding.small
+                font.pixelSize: (iconItem.isFocused && iconItem.isWsFocused) ? Config.bar.workspaces.windowIconSize : Config.bar.workspaces.windowIconSize - Appearance.padding.small
                 grade: 0
                 text: Icons.getAppCategoryIcon(windowData.app_id, "help_center")
                 color: iconItem.popupActive ? Colours.palette.m3tertiary : (iconItem.isWsFocused ? Colours.palette.m3onPrimary : Colours.palette.m3onSurfaceVariant)

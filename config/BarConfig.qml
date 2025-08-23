@@ -55,6 +55,8 @@ JsonObject {
         property bool occupiedBg: true
         property bool showWindows: true
         property bool windowIconImage: true // false -> MaterialIcons, true -> IconImage
+        property int windowIconGap: 5
+        property int windowIconSize: 30
         property bool groupIconsByApp: false
         property bool focusedWindowBlob: true
         property bool windowRighClickContext: true

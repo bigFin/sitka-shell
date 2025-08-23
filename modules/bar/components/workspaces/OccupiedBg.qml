@@ -60,7 +60,7 @@ Item {
 
             x: start?.x ?? 0
             y: start?.y ?? 0
-            implicitWidth: Config.bar.sizes.innerHeight
+            implicitWidth: Config.bar.sizes.innerWidth
             implicitHeight: end?.y + end?.height - start?.y
 
             anchors.horizontalCenter: parent.horizontalCenter

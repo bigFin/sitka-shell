@@ -6,6 +6,13 @@
 > This repo is **ONLY for the desktop shell** of the caelestia dots, ported to work in [`Niri Window Manager`](https://github.com/YaLTeR/niri) instead of [`Hyprland`](https://hyprland.org). If you want installation instructions
 > for the default caelestia dots, head to [the main repo](https://github.com/caelestia-dots/caelestia) instead.
 
+>[!WARNING]
+> **HELP REQUIRED!**
+>
+> Unfortunately, I **skipped** a commit from original shell named: bar: per-monitor workspaces option (#394)
+>
+> - **Reason:** I don't have multi monitor so I'm not sure if this actually works, I might break stuff :/. I need help implementing that feature :)
+
 
 
 <h1 align=center>niri-caelestia-shell</h1>

@@ -423,6 +423,7 @@ You might want to change your default apps.
         "enableDangerousActions": false,
         "maxShown": 8,
         "maxWallpapers": 9,
+        "specialPrefix": "@",
         "useFuzzy": {
             "apps": false,
             "actions": false,

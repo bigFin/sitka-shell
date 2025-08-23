@@ -60,7 +60,7 @@ StyledListView {
             name: "apps"
 
             PropertyChanges {
-                model.values: Apps.query(search.text)
+                model.values: Apps.search(search.text)
                 root.delegate: appItem
             }
         },

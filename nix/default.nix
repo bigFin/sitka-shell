@@ -74,11 +74,6 @@
     nativeBuildInputs = [gcc];
     buildInputs = [aubio pipewire];
 
-    patchPhase = ''
-      substituteInPlace assets/pam.d/fprint \
-        --replace-fail pam_fprintd.so /run/current-system/sw/lib/security/pam_fprintd.so
-    '';
-
     buildPhase = ''
       mkdir -p bin
       g++ -std=c++17 -Wall -Wextra \
@@ -127,6 +122,11 @@ in
     nativeBuildInputs = [gcc makeWrapper qt6.wrapQtAppsHook];
     buildInputs = [quickshell beatDetector idleInhibitor qt6.qtbase];
     propagatedBuildInputs = runtimeDeps;
+
+    patchPhase = ''
+      substituteInPlace assets/pam.d/fprint \
+        --replace-fail pam_fprintd.so /run/current-system/sw/lib/security/pam_fprintd.so
+    '';
 
     installPhase = ''
       mkdir -p $out/share/caelestia-shell

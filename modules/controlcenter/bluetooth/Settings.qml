@@ -363,11 +363,7 @@ ColumnLayout {
                             opacity: root.session.bt.editingAdapterName ? 1 : 0
 
                             Behavior on border.color {
-                                ColorAnimation {
-                                    duration: Appearance.anim.durations.normal
-                                    easing.type: Easing.BezierSpline
-                                    easing.bezierCurve: Appearance.anim.curves.standard
-                                }
+                                CAnim {}
                             }
 
                             Behavior on opacity {

@@ -53,6 +53,9 @@ ColumnLayout {
 
             animate: true
             text: {
+                //TODO: Add config option to choose between name/number/both for workspaces
+
+                const wsName = Niri.getWorkspaceNameByIndex(root.index) || (root.ws);
                 const label = Config.bar.workspaces.label || root.ws;
                 const occupiedLabel = Config.bar.workspaces.occupiedLabel || label;
                 const activeLabel = root.activeWsId || (root.isOccupied ? occupiedLabel : label);

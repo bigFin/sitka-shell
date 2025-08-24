@@ -52,9 +52,15 @@ Item {
 
             required property var modelData
 
-            readonly property Workspace start: root.workspaces.itemAt((modelData.start - 1) % Config.bar.workspaces.shown) ?? null
-            readonly property Workspace end: root.workspaces.itemAt((modelData.end - 1) % Config.bar.workspaces.shown) ?? null
+            readonly property Workspace start: root.workspaces.itemAt(getWsIdx(modelData.start)) ?? null
+            readonly property Workspace end: root.workspaces.itemAt(getWsIdx(modelData.end)) ?? null
             property bool isContextActiveInWs: Niri.wsContextType === "workspaces" && Niri.wsContextAnchor
+            function getWsIdx(ws: int): int {
+                let i = ws - 1;
+                while (i < 0)
+                    i += Config.bar.workspaces.shown;
+                return i % Config.bar.workspaces.shown;
+            }
 
             anchors {
                 // horizontalCenter: root.horizontalCenter

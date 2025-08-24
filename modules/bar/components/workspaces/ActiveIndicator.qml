@@ -12,8 +12,12 @@ StyledRect {
     required property Item mask
     required property int groupOffset
 
-    readonly property int currentWsIdx: Niri.focusedWorkspaceIndex - groupOffset
-
+    readonly property int currentWsIdx: {
+        let i = activeWsId - 1;
+        while (i < 0)
+            i += Config.bar.workspaces.shown;
+        return i % Config.bar.workspaces.shown;
+    }
     onCurrentWsIdxChanged: {
         lastWs = cWs;
         cWs = currentWsIdx;

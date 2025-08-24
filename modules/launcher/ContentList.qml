@@ -55,24 +55,20 @@ Item {
 
     Behavior on state {
         SequentialAnimation {
-            NumberAnimation {
+            Anim {
                 target: root
                 property: "opacity"
                 from: 1
                 to: 0
                 duration: Appearance.anim.durations.small
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
             }
             PropertyAction {}
-            NumberAnimation {
+            Anim {
                 target: root
                 property: "opacity"
                 from: 0
                 to: 1
                 duration: Appearance.anim.durations.small
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
             }
         }
     }
@@ -148,28 +144,19 @@ Item {
         }
 
         Behavior on opacity {
-            NumberAnimation {
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
-            }
+            Anim {}
         }
 
         Behavior on scale {
-            NumberAnimation {
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
-            }
+            Anim {}
         }
     }
 
     Behavior on implicitWidth {
         enabled: root.visibilities.launcher
 
-        NumberAnimation {
+        Anim {
             duration: Appearance.anim.durations.large
-            easing.type: Easing.BezierSpline
             easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
         }
     }
@@ -177,9 +164,8 @@ Item {
     Behavior on implicitHeight {
         enabled: root.visibilities.launcher
 
-        NumberAnimation {
+        Anim {
             duration: Appearance.anim.durations.large
-            easing.type: Easing.BezierSpline
             easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
         }
     }

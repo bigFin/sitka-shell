@@ -39,7 +39,7 @@ Switch {
                 opacity: root.pressed ? 0.1 : root.hovered ? 0.08 : 0
 
                 Behavior on opacity {
-                    NumberAnim {}
+                    Anim {}
                 }
             }
 
@@ -129,11 +129,11 @@ Switch {
             }
 
             Behavior on x {
-                NumberAnim {}
+                Anim {}
             }
 
             Behavior on implicitWidth {
-                NumberAnim {}
+                Anim {}
             }
         }
     }
@@ -142,12 +142,6 @@ Switch {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
         enabled: false
-    }
-
-    component NumberAnim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.standard
     }
 
     component PropAnim: PropertyAnimation {

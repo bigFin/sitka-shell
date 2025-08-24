@@ -56,12 +56,12 @@ StyledRect {
         leftMargin: Appearance.padding.small
         rightMargin: isWorkspacesContextActive ? -Config.bar.workspaces.windowContextWidth + Appearance.padding.small * 2 : Appearance.padding.small
         Behavior on rightMargin {
-            Anim {}
+            EAnim {}
         }
     }
 
     Behavior on radius {
-        Anim {}
+        EAnim {}
     }
 
     Loader {
@@ -174,26 +174,28 @@ StyledRect {
     }
     Behavior on trailing {
         enabled: Config.bar.workspaces.activeTrail
-        Anim {
+
+        EAnim {
             duration: Appearance.anim.durations.normal * 2
         }
     }
     Behavior on currentSize {
         enabled: Config.bar.workspaces.activeTrail
-        Anim {}
+
+        EAnim {}
     }
     Behavior on offset {
         enabled: !Config.bar.workspaces.activeTrail
-        Anim {}
+
+        EAnim {}
     }
     Behavior on size {
         enabled: !Config.bar.workspaces.activeTrail
-        Anim {}
+
+        EAnim {}
     }
 
-    component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
+    component EAnim: Anim {
         easing.bezierCurve: Appearance.anim.curves.emphasized
     }
 }

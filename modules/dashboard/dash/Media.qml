@@ -18,10 +18,8 @@ Item {
     implicitWidth: Config.dashboard.sizes.mediaWidth
 
     Behavior on playerProgress {
-        NumberAnimation {
+        Anim {
             duration: Appearance.anim.durations.large
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.standard
         }
     }
 

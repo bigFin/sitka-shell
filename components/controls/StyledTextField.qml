@@ -60,10 +60,8 @@ TextField {
         }
 
         Behavior on opacity {
-            NumberAnimation {
+            Anim {
                 duration: Appearance.anim.durations.small
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
             }
         }
     }

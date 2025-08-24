@@ -29,9 +29,7 @@ StyledRect {
     Component.onCompleted: x = 0
 
     Behavior on x {
-        NumberAnimation {
-            duration: Appearance.anim.durations.normal
-            easing.type: Easing.BezierSpline
+        Anim {
             easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
         }
     }

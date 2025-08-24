@@ -1,3 +1,4 @@
+import ".."
 import qs.services
 import qs.config
 import QtQuick
@@ -39,11 +40,9 @@ BusyIndicator {
     }
 
     transitions: Transition {
-        NumberAnimation {
+        Anim {
             properties: "opacity,internalStrokeWidth"
             duration: updater.completeEndDuration
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.standard
         }
     }
 

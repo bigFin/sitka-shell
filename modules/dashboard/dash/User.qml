@@ -50,10 +50,8 @@ Row {
                 opacity: parent.containsMouse ? 1 : 0
 
                 Behavior on opacity {
-                    NumberAnimation {
+                    Anim {
                         duration: Appearance.anim.durations.expressiveFastSpatial
-                        easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Appearance.anim.curves.standard
                     }
                 }
             }
@@ -90,18 +88,15 @@ Row {
                 }
 
                 Behavior on scale {
-                    NumberAnimation {
+                    Anim {
                         duration: Appearance.anim.durations.expressiveFastSpatial
-                        easing.type: Easing.BezierSpline
                         easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
                     }
                 }
 
                 Behavior on opacity {
-                    NumberAnimation {
+                    Anim {
                         duration: Appearance.anim.durations.expressiveFastSpatial
-                        easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Appearance.anim.curves.standard
                     }
                 }
             }

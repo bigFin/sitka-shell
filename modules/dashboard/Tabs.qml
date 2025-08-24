@@ -224,11 +224,7 @@ Item {
                 font.pointSize: Appearance.font.size.large
 
                 Behavior on fill {
-                    NumberAnimation {
-                        duration: Appearance.anim.durations.normal
-                        easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Appearance.anim.curves.standard
-                    }
+                    Anim {}
                 }
             }
 

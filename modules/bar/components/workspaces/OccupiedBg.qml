@@ -118,12 +118,6 @@ Item {
         }
     }
 
-    component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.standard
-    }
-
     component Pill: QtObject {
         property int start
         property int end

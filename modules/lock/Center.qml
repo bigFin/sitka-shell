@@ -341,10 +341,4 @@ ColumnLayout {
         duration: Appearance.anim.durations.small
         easing.type: Easing.Linear
     }
-
-    component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.standard
-    }
 }

@@ -7,7 +7,7 @@ import Quickshell
 Singleton {
     id: root
 
-    property real bpm: 1
+    property real bpm: 150
 
     //TODO Enable Beat Detector
 

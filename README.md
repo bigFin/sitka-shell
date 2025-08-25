@@ -457,6 +457,7 @@ You might want to change your default apps.
     "services": {
         "audioIncrement": 0.1,
         "defaultPlayer": "Spotify",
+        "gpuType": "",
         "playerAliases": [{
             "com.github.th_ch.youtube_music": "YT Music"
         }],

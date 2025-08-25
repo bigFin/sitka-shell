@@ -343,7 +343,13 @@ You might want to change your default apps.
         "desktopClock": {
             "enabled": false
         },
-        "enabled": true
+        "enabled": true,
+        "visualiser": {
+            "enabled": true,
+            "autoHide": true,
+            "rounding": 1,
+            "spacing": 1
+        }
     },
     "bar": {
         "dragThreshold": 20,
@@ -389,7 +395,7 @@ You might want to change your default apps.
    	            "enabled": false
    	        }
         ],
-        "persistent": true,
+        "persistent": false,
         "showOnHover": true,
         "status": {
             "showAudio": false,
@@ -426,7 +432,7 @@ You might want to change your default apps.
     },
     "dashboard": {
         "mediaUpdateInterval": 500,
-        "visualiserBars": 45
+        "showOnHover": true
     },
     "launcher": {
         "actionPrefix": ">",
@@ -472,7 +478,8 @@ You might want to change your default apps.
         "weatherLocation": "",
         "useFahrenheit": false,
         "useTwelveHourClock": false,
-        "smartScheme": true
+        "smartScheme": true,
+        "visualiserBars": 45
     },
     "session": {
         "dragThreshold": 30,

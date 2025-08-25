@@ -286,7 +286,8 @@ git pull
 
 ### ⚙️ Configuring
 
-All configuration options are in `~/.config/caelestia/shell.json`.
+All configuration options should be put in `~/.config/caelestia/shell.json`. This file is *not* created by
+default, you must create it manually.
 
 You might want to change your default apps.
 
@@ -405,11 +406,18 @@ You might want to change your default apps.
             "activeIndicator": true,
             "activeLabel": "󰮯",
             "activeTrail": false,
-            "label": "  ",
-            "occupiedBg": false,
-            "occupiedLabel": "󰮯 ",
+            "groupIconsByApp": true,
+            "groupingRespectsLayout": true,
+            "windowRighClickContext": true,
+            "label": "◦",
+            "occupiedBg": true,
+            "occupiedLabel": "⊙",
             "showWindows": true,
-            "shown": 5
+            "shown": 4,
+            "windowIconImage": true,
+            "focusedWindowBlob": true,
+            "windowIconGap": 0,
+            "windowIconSize": 30
         }
     },
     "border": {
@@ -461,7 +469,7 @@ You might want to change your default apps.
         "playerAliases": [{
             "com.github.th_ch.youtube_music": "YT Music"
         }],
-        "weatherLocation": "10,10",
+        "weatherLocation": "",
         "useFahrenheit": false,
         "useTwelveHourClock": false,
         "smartScheme": true

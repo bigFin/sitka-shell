@@ -72,24 +72,24 @@
     pname = "beat-detector";
     version = "1.0";
 
-    src = ./..;
+    src = ./../assets/cpp;
 
     nativeBuildInputs = [gcc];
     buildInputs = [aubio pipewire];
 
     buildPhase = ''
-      mkdir -p bin
       g++ -std=c++17 -Wall -Wextra \
       	-I${pipewire.dev}/include/pipewire-0.3 \
       	-I${pipewire.dev}/include/spa-0.2 \
       	-I${aubio}/include/aubio \
-      	assets/cpp/beat-detector.cpp \
-      	-o bin/beat_detector \
+      	beat-detector.cpp \
+      	-o beat_detector \
       	-lpipewire-0.3 -laubio
     '';
 
     installPhase = ''
-      install -Dm755 bin/beat_detector $out/bin/beat_detector
+      mkdir -p $out/bin
+      install -Dm755 beat_detector $out/bin/beat_detector
     '';
   };
 
@@ -97,7 +97,7 @@
     pname = "wayland-idle-inhibitor";
     version = "1.0";
 
-    src = ./..;
+    src = ./../assets/cpp;
 
     nativeBuildInputs = [gcc wayland-scanner wayland-protocols];
     buildInputs = [wayland];
@@ -105,7 +105,6 @@
     buildPhase = ''
       wayland-scanner client-header < ${wayland-protocols}/share/wayland-protocols/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml > idle-inhibitor.h
       wayland-scanner private-code < ${wayland-protocols}/share/wayland-protocols/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml > idle-inhibitor.c
-      cp assets/cpp/idle-inhibitor.cpp .
 
       gcc -o idle-inhibitor.o -c idle-inhibitor.c
       g++ -o inhibit_idle idle-inhibitor.cpp idle-inhibitor.o -lwayland-client

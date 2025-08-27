@@ -25,17 +25,14 @@
   material-symbols,
   rubik,
   nerd-fonts,
-  gcc,
   qt6,
   quickshell,
   aubio,
   pipewire,
-  wayland,
-  wayland-protocols,
-  wayland-scanner,
   xkeyboard-config,
   cmake,
   ninja,
+  pkg-config,
   caelestia-cli,
   withCli ? false,
   extraRuntimeDeps ? [],
@@ -73,7 +70,7 @@ in
     version = "${rev}";
     src = ./..;
 
-    nativeBuildInputs = [cmake ninja makeWrapper qt6.wrapQtAppsHook];
+    nativeBuildInputs = [cmake ninja pkg-config aubio pipewire makeWrapper qt6.wrapQtAppsHook];
     buildInputs = [quickshell xkeyboard-config qt6.qtbase qt6.qtdeclarative];
     propagatedBuildInputs = runtimeDeps;
 

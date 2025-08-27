@@ -487,6 +487,8 @@ You might want to change your default apps.
         "expire": false
     },
     "osd": {
+        "enabled": true,
+        "enableBrightness": true,
         "hideDelay": 2000
     },
     "paths": {

@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import qs.components.controls
 import qs.services
 import qs.config
@@ -16,6 +18,7 @@ Column {
 
     spacing: Appearance.spacing.normal
 
+    // Speaker volume
     CustomMouseArea {
         implicitWidth: Config.osd.sizes.sliderWidth
         implicitHeight: Config.osd.sizes.sliderHeight
@@ -36,26 +39,35 @@ Column {
         }
     }
 
-    CustomMouseArea {
-        implicitWidth: Config.osd.sizes.sliderWidth
-        implicitHeight: Config.osd.sizes.sliderHeight
+    // Brightness
+    WrappedLoader {
+        active: Config.osd.enableBrightness
 
-        onWheel: event => {
-            const monitor = root.monitor;
-            if (!monitor)
-                return;
-            if (event.angleDelta.y > 0)
-                monitor.setBrightness(monitor.brightness + 0.1);
-            else if (event.angleDelta.y < 0)
-                monitor.setBrightness(monitor.brightness - 0.1);
+        sourceComponent: CustomMouseArea {
+            implicitWidth: Config.osd.sizes.sliderWidth
+            implicitHeight: Config.osd.sizes.sliderHeight
+
+            onWheel: event => {
+                const monitor = root.monitor;
+                if (!monitor)
+                    return;
+                if (event.angleDelta.y > 0)
+                    monitor.setBrightness(monitor.brightness + 0.1);
+                else if (event.angleDelta.y < 0)
+                    monitor.setBrightness(monitor.brightness - 0.1);
+            }
+
+            FilledSlider {
+                anchors.fill: parent
+
+                icon: `brightness_${(Math.round(value * 6) + 1)}`
+                value: root.monitor?.brightness ?? 0
+                onMoved: root.monitor?.setBrightness(value)
+            }
         }
-
-        FilledSlider {
-            anchors.fill: parent
-
-            icon: `brightness_${(Math.round(value * 6) + 1)}`
-            value: root.monitor?.brightness ?? 0
-            onMoved: root.monitor?.setBrightness(value)
-        }
+    }
+    component WrappedLoader: Loader {
+        asynchronous: true
+        visible: active
     }
 }

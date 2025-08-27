@@ -63,3 +63,24 @@ void CUtils::saveItem(QQuickItem* target, const QUrl& path, const QRect& rect, Q
 	    }
 	);
 }
+
+bool CUtils::copyFile(const QUrl& source, const QUrl& target) const {
+    return this->copyFile(source, target, true);
+}
+
+bool CUtils::copyFile(const QUrl& source, const QUrl& target, bool overwrite) const {
+    if (!source.isLocalFile()) {
+        qWarning() << "CUtils::copyFile: source" << source << "is not a local file";
+        return false;
+    }
+    if (!target.isLocalFile()) {
+        qWarning() << "CUtils::copyFile: target" << target << "is not a local file";
+        return false;
+    }
+
+    if (overwrite) {
+        QFile::remove(target.toLocalFile());
+    }
+
+    return QFile::copy(source.toLocalFile(), target.toLocalFile());
+}

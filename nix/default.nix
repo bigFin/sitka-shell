@@ -67,75 +67,36 @@
   fontconfig = makeFontsConf {
     fontDirectories = [material-symbols rubik nerd-fonts.caskaydia-cove];
   };
-
-  beatDetector = stdenv.mkDerivation {
-    pname = "beat-detector";
-    version = "1.0";
-
-    src = ./../assets/cpp;
-
-    nativeBuildInputs = [gcc];
-    buildInputs = [aubio pipewire];
-
-    buildPhase = ''
-      g++ -std=c++17 -Wall -Wextra \
-      	-I${pipewire.dev}/include/pipewire-0.3 \
-      	-I${pipewire.dev}/include/spa-0.2 \
-      	-I${aubio}/include/aubio \
-      	beat-detector.cpp \
-      	-o beat_detector \
-      	-lpipewire-0.3 -laubio
-    '';
-
-    installPhase = ''
-      mkdir -p $out/bin
-      install -Dm755 beat_detector $out/bin/beat_detector
-    '';
-  };
-
-  plugin = stdenv.mkDerivation {
-    pname = "caelestia-qt-plugin";
-    version = "0.0.1";
-
-    src = ./../plugin;
-
-    dontWrapQtApps = true;
-    nativeBuildInputs = [cmake ninja];
-    buildInputs = [qt6.qtbase qt6.qtdeclarative];
-
-    cmakeBuildType = "Release";
-    cmakeFlags = [
-      (lib.cmakeFeature "INSTALL_QMLDIR" qt6.qtbase.qtQmlPrefix)
-      (lib.cmakeFeature "GIT_REVISION" rev)
-    ];
-  };
 in
   stdenv.mkDerivation {
     pname = "caelestia-shell";
     version = "${rev}";
     src = ./..;
 
-    nativeBuildInputs = [gcc makeWrapper qt6.wrapQtAppsHook];
-    buildInputs = [quickshell plugin beatDetector xkeyboard-config qt6.qtbase];
+    nativeBuildInputs = [cmake ninja makeWrapper qt6.wrapQtAppsHook];
+    buildInputs = [quickshell xkeyboard-config qt6.qtbase qt6.qtdeclarative];
     propagatedBuildInputs = runtimeDeps;
+
+    cmakeBuildType = "Release";
+    cmakeFlags = [
+      (lib.cmakeFeature "INSTALL_LIBDIR" "${placeholder "out"}/lib")
+      (lib.cmakeFeature "INSTALL_QMLDIR" qt6.qtbase.qtQmlPrefix)
+      (lib.cmakeFeature "INSTALL_QSCONFDIR" "${placeholder "out"}/share/caelestia-shell)
+      (lib.cmakeFeature "GIT_REVISION" rev)
+    ];
 
     patchPhase = ''
       substituteInPlace assets/pam.d/fprint \
         --replace-fail pam_fprintd.so /run/current-system/sw/lib/security/pam_fprintd.so
     '';
 
-    installPhase = ''
-      mkdir -p $out/share/caelestia-shell
-      cp -r ./* $out/share/caelestia-shell
-
+    postInstall = ''
       makeWrapper ${quickshell}/bin/qs $out/bin/caelestia-shell \
       	--prefix PATH : "${lib.makeBinPath runtimeDeps}" \
       	--set FONTCONFIG_FILE "${fontconfig}" \
-      	--set CAELESTIA_BD_PATH ${beatDetector}/bin/beat_detector \
+      	--set CAELESTIA_BD_PATH $out/lib/beat_detector \
         --set CAELESTIA_XKB_RULES_PATH ${xkeyboard-config}/share/xkeyboard-config-2/rules/base.lst \
       	--add-flags "-p $out/share/caelestia-shell"
-
-      	ln -sf ${beatDetector}/bin/beat_detector $out/bin
     '';
 
     meta = {

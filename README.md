@@ -489,6 +489,7 @@ You might want to change your default apps.
     "osd": {
         "enabled": true,
         "enableBrightness": true,
+        "enableMicrophone": false,
         "hideDelay": 2000
     },
     "paths": {

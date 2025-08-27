@@ -1,7 +1,5 @@
 pragma ComponentBehavior: Bound
 
-// Currently, Niri doesn't have a way to check window sizes and location so this only functions as a standard screenshot tool.
-
 import qs.components
 import qs.services
 import qs.config
@@ -39,8 +37,8 @@ MouseArea {
     property real sh: Math.abs(sy - ey)
 
     property list<var> clients: {
-        const ws = Hyprland.activeToplevel?.workspace?.id ?? Hyprland.activeWsId;
-        return Hyprland.toplevels.values.filter(c => c.workspace?.id === ws).sort((a, b) => {
+        const ws = Hypr.activeToplevel?.workspace?.id ?? Hypr.activeWsId;
+        return Hypr.toplevels.values.filter(c => c.workspace?.id === ws).sort((a, b) => {
             // Pinned first, then fullscreen, then floating, then any other
             const ac = a.lastIpcObject;
             const bc = b.lastIpcObject;
@@ -166,7 +164,7 @@ MouseArea {
     }
 
     Connections {
-        target: Hyprland
+        target: Hypr
 
         function onActiveWsIdChanged(): void {
             root.checkClientRects(root.mouseX, root.mouseY);

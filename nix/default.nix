@@ -70,8 +70,8 @@ in
     version = "${rev}";
     src = ./..;
 
-    nativeBuildInputs = [cmake ninja pkg-config aubio pipewire makeWrapper qt6.wrapQtAppsHook];
-    buildInputs = [quickshell xkeyboard-config qt6.qtbase qt6.qtdeclarative];
+    nativeBuildInputs = [cmake ninja pkg-config makeWrapper qt6.wrapQtAppsHook];
+    buildInputs = [quickshell aubio pipewire xkeyboard-config qt6.qtbase qt6.qtdeclarative];
     propagatedBuildInputs = runtimeDeps;
 
     cmakeBuildType = "Release";

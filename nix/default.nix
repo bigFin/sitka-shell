@@ -81,7 +81,7 @@ in
     cmakeFlags = [
       (lib.cmakeFeature "INSTALL_LIBDIR" "${placeholder "out"}/lib")
       (lib.cmakeFeature "INSTALL_QMLDIR" qt6.qtbase.qtQmlPrefix)
-      (lib.cmakeFeature "INSTALL_QSCONFDIR" "${placeholder "out"}/share/caelestia-shell)
+      (lib.cmakeFeature "INSTALL_QSCONFDIR" "${placeholder "out"}/share/caelestia-shell")
       (lib.cmakeFeature "GIT_REVISION" rev)
     ];
 

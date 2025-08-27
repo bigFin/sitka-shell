@@ -378,6 +378,9 @@ You might want to change your default apps.
         }
     },
     "bar": {
+        "clock": {
+            "showIcon": true
+        },
         "dragThreshold": 20,
         "entries": [
             {

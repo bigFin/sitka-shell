@@ -136,6 +136,7 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 <div align=left>
 
+<<<<<<< HEAD
 > <br>
 >
 >#### Core Dependencies 🖥️
@@ -182,6 +183,31 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 <br>
 <br>
+
+Build dependencies:
+
+-   [`cmake`](https://cmake.org)
+-   [`ninja`](https://github.com/ninja-build/ninja)
+
+To install the shell manually, install all dependencies and clone this repo to `$XDG_CONFIG_HOME/quickshell/caelestia`.
+Then simply build and install using `cmake`.
+
+```sh
+cd $XDG_CONFIG_HOME/quickshell
+git clone https://github.com/caelestia-dots/shell.git caelestia
+
+cd caelestia
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+sudo cmake --install build
+```
+
+> [!TIP]
+> You can customise the installation location via the `cmake` flags `INSTALL_LIBDIR`, `INSTALL_QMLDIR` and
+> `INSTALL_QSCONFDIR` for the libraries (the beat detector), QML plugin and Quickshell config directories
+> respectively. If changing the library directory, remember to set the `CAELESTIA_LIB_DIR` environment
+> variable to the custom directory when launching the shell.
+>>>>>>> 9030634 (readme: update for new cmake build)
 
 # 🔶 Usage 🔶
 
@@ -286,7 +312,7 @@ git pull
 
 ### ⚙️ Configuring
 
-All configuration options should be put in `~/.config/caelestia/shell.json`. This file is *not* created by
+All configuration options should be put in `~/.config/caelestia/shell.json`. This file is _not_ created by
 default, you must create it manually.
 
 You might want to change your default apps.
@@ -322,7 +348,7 @@ You might want to change your default apps.
             "scale": 1
         },
         "rounding": {
-        	"scale": 1
+            "scale": 1
         },
         "spacing": {
             "scale": 1
@@ -354,46 +380,46 @@ You might want to change your default apps.
     "bar": {
         "dragThreshold": 20,
         "entries": [
-        	{
-   	            "id": "logo",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "workspaces",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "spacer",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "activeWindow",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "spacer",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "tray",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "clock",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "statusIcons",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "power",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "idleInhibitor",
-   	            "enabled": false
-   	        }
+            {
+                "id": "logo",
+                "enabled": true
+            },
+            {
+                "id": "workspaces",
+                "enabled": true
+            },
+            {
+                "id": "spacer",
+                "enabled": true
+            },
+            {
+                "id": "activeWindow",
+                "enabled": true
+            },
+            {
+                "id": "spacer",
+                "enabled": true
+            },
+            {
+                "id": "tray",
+                "enabled": true
+            },
+            {
+                "id": "clock",
+                "enabled": true
+            },
+            {
+                "id": "statusIcons",
+                "enabled": true
+            },
+            {
+                "id": "power",
+                "enabled": true
+            },
+            {
+                "id": "idleInhibitor",
+                "enabled": false
+            }
         ],
         "persistent": false,
         "showOnHover": true,
@@ -472,9 +498,11 @@ You might want to change your default apps.
         "audioIncrement": 0.1,
         "defaultPlayer": "Spotify",
         "gpuType": "",
-        "playerAliases": [{
-            "com.github.th_ch.youtube_music": "YT Music"
-        }],
+        "playerAliases": [
+            {
+                "com.github.th_ch.youtube_music": "YT Music"
+            }
+        ],
         "weatherLocation": "",
         "useFahrenheit": false,
         "useTwelveHourClock": false,

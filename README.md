@@ -371,7 +371,7 @@ You might want to change your default apps.
         },
         "enabled": true,
         "visualiser": {
-            "enabled": true,
+            "enabled": false,
             "autoHide": true,
             "rounding": 1,
             "spacing": 1

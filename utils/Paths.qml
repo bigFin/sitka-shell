@@ -15,6 +15,7 @@ Singleton {
     readonly property url config: `${StandardPaths.standardLocations(StandardPaths.GenericConfigLocation)[0]}/caelestia`
 
     readonly property url imagecache: `${cache}/imagecache`
+    readonly property string libdir: Quickshell.env("CAELESTIA_LIB_DIR") || "/usr/lib/caelestia"
 
     function stringify(path: url): string {
         let str = path.toString();

@@ -94,7 +94,7 @@ in
       makeWrapper ${quickshell}/bin/qs $out/bin/caelestia-shell \
       	--prefix PATH : "${lib.makeBinPath runtimeDeps}" \
       	--set FONTCONFIG_FILE "${fontconfig}" \
-      	--set CAELESTIA_BD_PATH $out/lib/beat_detector \
+      	--set CAELESTIA_LIB_DIR $out/lib/beat_detector \
         --set CAELESTIA_XKB_RULES_PATH ${xkeyboard-config}/share/xkeyboard-config-2/rules/base.lst \
       	--add-flags "-p $out/share/caelestia-shell"
     '';

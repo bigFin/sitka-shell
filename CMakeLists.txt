@@ -10,9 +10,9 @@ if(NOT DEFINED VERSION)
     if("${VERSION}" STREQUAL "")
         message(FATAL_ERROR "VERSION is not set and failed to get from git")
     endif()
-
-    string(REGEX REPLACE "^v" "" VERSION "${VERSION}")
 endif()
+
+string(REGEX REPLACE "^v" "" VERSION "${VERSION}")
 
 project(caelestia-shell VERSION ${VERSION} LANGUAGES CXX)
 

@@ -31,7 +31,8 @@ jobs:
       - name: Create latest packages
         run: |
           for f in build/packages/caelestia-shell-*; do
-            cp build/packages/$f build/packages/caelestia-shell-latest.${f#*.}
+            filename=${f##*/}
+            cp $f build/packages/caelestia-shell-latest.${filename#caelestia-shell-[0-9]*.[0-9]*.[0-9]*.}
           done
 
       - name: Create release

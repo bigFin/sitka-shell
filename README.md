@@ -197,7 +197,7 @@ cd $XDG_CONFIG_HOME/quickshell
 git clone https://github.com/caelestia-dots/shell.git caelestia
 
 cd caelestia
-cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/
 cmake --build build
 sudo cmake --install build
 ```

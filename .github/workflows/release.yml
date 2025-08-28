@@ -16,7 +16,12 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v2
+        uses: lukka/get-cmake@latest
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libpipewire-0.3-dev libaubio-dev
 
       - name: Build package
         run: |

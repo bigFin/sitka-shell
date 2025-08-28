@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install libpipewire-0.3-dev libaubio-dev
+          sudo apt-get install libpipewire-0.3-dev libaubio-dev qt6-base-dev qt6-declarative-dev
 
       - name: Build package
         run: |

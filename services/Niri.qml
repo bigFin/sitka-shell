@@ -59,7 +59,13 @@ Singleton {
     signal windowOpenedOrChanged(var windowData)
 
     // Keyboard layout
+
+    // TODO: Add capslock and numlock in the future
+
     property var kbLayoutsArray: []
+    property bool capsLock: false
+    property bool numLock: false
+    property string defaultKbLayout: kbLayouts[0] || "?"
     property int kbLayoutIndex: 0
     property string kbLayouts: "?"
     readonly property string kbLayout: (kbLayoutsArray.length > 0 && kbLayoutIndex >= 0 && kbLayoutIndex < kbLayoutsArray.length) ? kbLayoutsArray[kbLayoutIndex].slice(0, 2).toLowerCase() : "?"

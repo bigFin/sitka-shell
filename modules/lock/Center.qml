@@ -217,18 +217,33 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.topMargin: -Appearance.spacing.large
 
-        implicitHeight: stateMessage.implicitHeight
+        implicitHeight: Math.max(message.implicitHeight, stateMessage.implicitHeight)
+
+        Behavior on implicitHeight {
+            Anim {}
+        }
 
         StyledText {
             id: stateMessage
 
             readonly property string msg: {
-                if (Hypr.capsLock && Hypr.numLock)
+                if (Niri.kbLayout !== Niri.defaultKbLayout) {
+                    if (Niri.capsLock && Niri.numLock)
+                        return qsTr("Caps lock and Num lock are ON.\nKeyboard layout: %1").arg(Niri.kbLayoutFull);
+                    if (Niri.capsLock)
+                        return qsTr("Caps lock is ON. Kb layout: %1").arg(Niri.kbLayoutFull);
+                    if (Niri.numLock)
+                        return qsTr("Num lock is ON. Kb layout: %1").arg(Niri.kbLayoutFull);
+                    return qsTr("Keyboard layout: %1").arg(Niri.kbLayoutFull);
+                }
+
+                if (Niri.capsLock && Niri.numLock)
                     return qsTr("Caps lock and Num lock are ON.");
-                if (Hypr.capsLock)
+                if (Niri.capsLock)
                     return qsTr("Caps lock is ON.");
-                if (Hypr.numLock)
+                if (Niri.numLock)
                     return qsTr("Num lock is ON.");
+
                 return "";
             }
 
@@ -260,6 +275,7 @@ ColumnLayout {
             font.family: Appearance.font.family.mono
             horizontalAlignment: Qt.AlignHCenter
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            lineHeight: 1.2
 
             Behavior on scale {
                 Anim {}

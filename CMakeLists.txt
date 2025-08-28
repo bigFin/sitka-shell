@@ -18,9 +18,6 @@ project(caelestia-shell VERSION ${VERSION} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CPACK_GENERATOR "STGZ;TGZ")
-set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${VERSION}")
-set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/packages")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
 set(INSTALL_LIBDIR "usr/lib/caelestia" CACHE STRING "Library install dir")
@@ -36,5 +33,3 @@ foreach(dir assets components config modules services utils)
     install(DIRECTORY ${dir} DESTINATION "${INSTALL_QSCONFDIR}")
 endforeach()
 install(FILES shell.qml LICENSE DESTINATION "${INSTALL_QSCONFDIR}")
-
-include(CPack)

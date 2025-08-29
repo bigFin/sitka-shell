@@ -53,7 +53,7 @@
           shellHook = ''
             cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
             cmake --build build
-            export CAELESTIA_LIB_DIR="$PWD/build/assets/cpp";
+            export CAELESTIA_LIB_DIR="$PWD/build/lib";
             export QML2_IMPORT_PATH="$PWD/build/qml";
           '';
         };

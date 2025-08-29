@@ -70,7 +70,7 @@
     name = "caelestia-assets";
     src = ./../assets/cpp;
 
-    nativeBuildInputs = [cmake pkg-config];
+    nativeBuildInputs = [cmake ninja pkg-config];
     buildInputs = [aubio pipewire];
 
     cmakeFlags = [(lib.cmakeFeature "INSTALL_LIBDIR" "${placeholder "out"}/lib")];
@@ -79,8 +79,10 @@
   plugin = stdenv.mkDerivation {
     name = "caelestia-qml-plugin";
     src = ./../plugin;
-    nativeBuildInputs = [cmake];
+
+    nativeBuildInputs = [cmake ninja];
     buildInputs = [qt6.qtbase qt6.qtdeclarative];
+
     dontWrapQtApps = true;
     cmakeFlags = [(lib.cmakeFeature "INSTALL_QMLDIR" qt6.qtbase.qtQmlPrefix)];
   };
@@ -97,8 +99,8 @@ in
     cmakeBuildType = "Release";
     cmakeFlags = [
       (lib.cmakeFeature "VERSION" version)
-      (lib.cmakeFeature "DONT_BUILD_PLUGIN" "ON")
-      (lib.cmakeFeature "DONT_BUILD_ASSETS" "ON")
+      (lib.cmakeBool "DONT_BUILD_PLUGIN" true)
+      (lib.cmakeBool "DONT_BUILD_ASSETS" true)
       (lib.cmakeFeature "INSTALL_QSCONFDIR" "${placeholder "out"}/share/caelestia-shell")
     ];
 

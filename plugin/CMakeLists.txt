@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 3.19)
 find_package(Qt6 REQUIRED COMPONENTS Core Qml)
 
 if(QT_KNOWN_POLICY_QTP0001)

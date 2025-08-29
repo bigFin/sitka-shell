@@ -70,28 +70,44 @@
   cmakeVersionFlags = [
     (lib.cmakeFeature "VERSION" version)
     (lib.cmakeFeature "GIT_REVISION" rev)
-    (lib.cmakeFeature "DISTRIBUTOR" "Nix Flake")
+    (lib.cmakeFeature "DISTRIBUTOR" "nix-flake")
   ];
 
   assets = stdenv.mkDerivation {
     name = "caelestia-assets";
-    src = ./../assets/cpp;
+    src = lib.fileset.toSource {
+      root = ./..;
+      fileset = lib.fileset.union ./../CMakeLists.txt ./../assets/cpp;
+    };
 
     nativeBuildInputs = [cmake ninja pkg-config];
     buildInputs = [aubio pipewire];
 
-    cmakeFlags = [(lib.cmakeFeature "INSTALL_LIBDIR" "${placeholder "out"}/lib")] ++ cmakeVersionFlags;
+    cmakeFlags =
+      [
+        (lib.cmakeBool "ASSETS_ONLY" true)
+        (lib.cmakeFeature "INSTALL_LIBDIR" "${placeholder "out"}/lib")
+      ]
+      ++ cmakeVersionFlags;
   };
 
   plugin = stdenv.mkDerivation {
     name = "caelestia-qml-plugin";
-    src = ./../plugin;
+    src = lib.fileset.toSource {
+      root = ./..;
+      fileset = lib.fileset.union ./../CMakeLists.txt ./../plugin;
+    };
 
     nativeBuildInputs = [cmake ninja];
     buildInputs = [qt6.qtbase qt6.qtdeclarative];
 
     dontWrapQtApps = true;
-    cmakeFlags = [(lib.cmakeFeature "INSTALL_QMLDIR" qt6.qtbase.qtQmlPrefix)] ++ cmakeVersionFlags;
+    cmakeFlags =
+      [
+        (lib.cmakeBool "PLUGIN_ONLY" true)
+        (lib.cmakeFeature "INSTALL_QMLDIR" qt6.qtbase.qtQmlPrefix)
+      ]
+      ++ cmakeVersionFlags;
   };
 in
   stdenv.mkDerivation {
@@ -104,11 +120,12 @@ in
     propagatedBuildInputs = runtimeDeps;
 
     cmakeBuildType = "Release";
-    cmakeFlags = [
-      (lib.cmakeBool "DONT_BUILD_PLUGIN" true)
-      (lib.cmakeBool "DONT_BUILD_ASSETS" true)
-      (lib.cmakeFeature "INSTALL_QSCONFDIR" "${placeholder "out"}/share/caelestia-shell")
-    ] ++ cmakeVersionFlags;
+    cmakeFlags =
+      [
+        (lib.cmakeBool "SHELL_ONLY" true)
+        (lib.cmakeFeature "INSTALL_QSCONFDIR" "${placeholder "out"}/share/caelestia-shell")
+      ]
+      ++ cmakeVersionFlags;
 
     prePatch = ''
       substituteInPlace assets/pam.d/fprint \
@@ -122,6 +139,9 @@ in
       	--set CAELESTIA_LIB_DIR ${assets}/lib \
         --set CAELESTIA_XKB_RULES_PATH ${xkeyboard-config}/share/xkeyboard-config-2/rules/base.lst \
       	--add-flags "-p $out/share/caelestia-shell"
+
+      mkdir -p $out/lib
+      ln -s ${assets}/lib/* $out/lib/
     '';
 
     passthru = {

@@ -505,9 +505,7 @@ You might want to change your default apps.
         "defaultPlayer": "Spotify",
         "gpuType": "",
         "playerAliases": [
-            {
-                "com.github.th_ch.youtube_music": "YT Music"
-            }
+            { "from": "com.github.th_ch.youtube_music", "to": "YT Music" }
         ],
         "weatherLocation": "",
         "useFahrenheit": false,

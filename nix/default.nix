@@ -1,4 +1,5 @@
 {
+  rev,
   lib,
   stdenv,
   makeWrapper,
@@ -66,6 +67,12 @@
     fontDirectories = [material-symbols rubik nerd-fonts.caskaydia-cove];
   };
 
+  cmakeVersionFlags = [
+    (lib.cmakeFeature "VERSION" version)
+    (lib.cmakeFeature "GIT_REVISION" rev)
+    (lib.cmakeFeature "DISTRIBUTOR" "Nix Flake")
+  ];
+
   assets = stdenv.mkDerivation {
     name = "caelestia-assets";
     src = ./../assets/cpp;
@@ -73,7 +80,7 @@
     nativeBuildInputs = [cmake ninja pkg-config];
     buildInputs = [aubio pipewire];
 
-    cmakeFlags = [(lib.cmakeFeature "INSTALL_LIBDIR" "${placeholder "out"}/lib")];
+    cmakeFlags = [(lib.cmakeFeature "INSTALL_LIBDIR" "${placeholder "out"}/lib")] ++ cmakeVersionFlags;
   };
 
   plugin = stdenv.mkDerivation {
@@ -84,7 +91,7 @@
     buildInputs = [qt6.qtbase qt6.qtdeclarative];
 
     dontWrapQtApps = true;
-    cmakeFlags = [(lib.cmakeFeature "INSTALL_QMLDIR" qt6.qtbase.qtQmlPrefix)];
+    cmakeFlags = [(lib.cmakeFeature "INSTALL_QMLDIR" qt6.qtbase.qtQmlPrefix)] ++ cmakeVersionFlags;
   };
 in
   stdenv.mkDerivation {
@@ -98,11 +105,10 @@ in
 
     cmakeBuildType = "Release";
     cmakeFlags = [
-      (lib.cmakeFeature "VERSION" version)
       (lib.cmakeBool "DONT_BUILD_PLUGIN" true)
       (lib.cmakeBool "DONT_BUILD_ASSETS" true)
       (lib.cmakeFeature "INSTALL_QSCONFDIR" "${placeholder "out"}/share/caelestia-shell")
-    ];
+    ] ++ cmakeVersionFlags;
 
     prePatch = ''
       substituteInPlace assets/pam.d/fprint \

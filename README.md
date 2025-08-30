@@ -552,7 +552,8 @@ The module automatically adds Caelestia shell to the path with **full functional
             "schemes": false,
             "variants": false,
             "wallpapers": false
-        }
+        },
+        "showOnHover": false
     },
     "lock": {
         "recolourLogo": false

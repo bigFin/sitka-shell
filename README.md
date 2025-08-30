@@ -44,11 +44,13 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 - [🔽 Installation 🔽](#-installation-)
     - [👣 Installation Steps](#-installation-steps)
     - [📦 Dependencies](#-dependencies)
+- [](#)
 - [🔶 Usage 🔶](#-usage-)
     - [⌨️ Custom Shortcuts/IPC](#️-custom-shortcutsipc)
     - [🎭 PFP/Wallpapers](#-pfpwallpapers)
     - [🔃 Updating](#-updating)
     - [⚙️ Configuring](#️-configuring)
+- [](#-1)
 - [➕ My Additions ➕](#-my-additions-)
 - [⛔ Known Issues ⛔](#-known-issues-)
 - [❔ FAQ ❔](#-faq-)
@@ -181,8 +183,54 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 </details>
 
+<<<<<<< HEAD
 <br>
 <br>
+=======
+    caelestia-shell = {
+      url = "github:caelestia-dots/shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+}
+```
+
+The package is available as `caelestia-shell.packages.<system>.default`, which can be added to your
+`environment.systemPackages`, `users.users.<username>.packages`, `home.packages` if using home-manager,
+or a devshell. The shell can then be run via `caelestia-shell`.
+
+> [!TIP]
+> The default package does not have the CLI enabled by default, which is required for full funcionality.
+> To enable the CLI, use the `with-cli` package.
+
+For home-manager, you can also use the Caelestia's home manager module (explained in [configuring](https://github.com/caelestia-dots/shell?tab=readme-ov-file#configuring)) that installs and configures the shell and the CLI.
+
+### Manual installation
+
+Dependencies:
+
+-   [`caelestia-cli`](https://github.com/caelestia-dots/cli)
+-   [`quickshell-git`](https://quickshell.outfoxxed.me) - this has to be the git version, not the latest tagged version
+-   [`ddcutil`](https://github.com/rockowitz/ddcutil)
+-   [`brightnessctl`](https://github.com/Hummer12007/brightnessctl)
+-   [`app2unit`](https://github.com/Vladimir-csp/app2unit)
+-   [`cava`](https://github.com/karlstav/cava)
+-   [`networkmanager`](https://networkmanager.dev)
+-   [`lm-sensors`](https://github.com/lm-sensors/lm-sensors)
+-   [`fish`](https://github.com/fish-shell/fish-shell)
+-   [`aubio`](https://github.com/aubio/aubio)
+-   [`libpipewire`](https://pipewire.org)
+-   `glibc`
+-   `qt6-declarative`
+-   `gcc-libs`
+-   [`material-symbols`](https://fonts.google.com/icons)
+-   [`caskaydia-cove-nerd`](https://www.nerdfonts.com/font-downloads)
+-   [`swappy`](https://github.com/jtheoof/swappy)
+-   [`libqalculate`](https://github.com/Qalculate/libqalculate)
+-   [`bash`](https://www.gnu.org/software/bash)
+-   `qt6-base`
+-   `qt6-declarative`
+>>>>>>> cc80951 (nix/hm: add option to disable systemd service (#526))
 
 Build dependencies:
 
@@ -317,7 +365,34 @@ default, you must create it manually.
 
 You might want to change your default apps.
 
+<<<<<<< HEAD
 <br>
+=======
+<details><summary><code>home.nix</code></summary>
+
+```nix
+programs.caelestia = {
+  enable = true;
+  systemd.enable = false; # if you prefer starting from your compositor
+  settings = {
+    bar.status = {
+      showBattery = false;
+    };
+    paths.wallpaperDir = "~/Images";
+  };
+  cli = {
+    enable = true; # Also add caelestia-cli to path
+    settings = {
+      theme.enableGtk = false;
+    };
+  };
+};
+```
+
+The module automatically adds Caelestia shell to the path with **full functionality**. The CLI is not required, however you have the option to enable and configure it.
+
+</details>
+>>>>>>> cc80951 (nix/hm: add option to disable systemd service (#526))
 
 > [!NOTE]
 > The example configuration only includes recommended configuration options. For more advanced customisation
@@ -621,7 +696,7 @@ which helped me a lot with learning how to use Quickshell.
 
 Finally another thank you to all the configs I took inspiration from (only one for now):
 
--   [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
+- [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
 
 <br>
 <br>

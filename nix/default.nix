@@ -34,6 +34,7 @@
   ninja,
   pkg-config,
   caelestia-cli,
+  debug ? false,
   withCli ? false,
   extraRuntimeDeps ? [],
 }: let
@@ -74,7 +75,7 @@
   ];
 
   assets = stdenv.mkDerivation {
-    name = "caelestia-assets";
+    name = "caelestia-assets${lib.optionalString debug "-debug"}";
     src = lib.fileset.toSource {
       root = ./..;
       fileset = lib.fileset.union ./../CMakeLists.txt ./../assets/cpp;
@@ -92,7 +93,7 @@
   };
 
   plugin = stdenv.mkDerivation {
-    name = "caelestia-qml-plugin";
+    name = "caelestia-qml-plugin${lib.optionalString debug "-debug"}";
     src = lib.fileset.toSource {
       root = ./..;
       fileset = lib.fileset.union ./../CMakeLists.txt ./../plugin;
@@ -112,20 +113,25 @@
 in
   stdenv.mkDerivation {
     inherit version;
-    pname = "caelestia-shell";
+    pname = "caelestia-shell${lib.optionalString debug "-debug"}";
     src = ./..;
 
     nativeBuildInputs = [cmake ninja makeWrapper qt6.wrapQtAppsHook];
     buildInputs = [quickshell assets plugin xkeyboard-config qt6.qtbase];
     propagatedBuildInputs = runtimeDeps;
 
-    cmakeBuildType = "Release";
+    cmakeBuildType =
+      if debug
+      then "Debug"
+      else "RelWithDebInfo";
     cmakeFlags =
       [
         (lib.cmakeFeature "ENABLE_MODULES" "shell")
         (lib.cmakeFeature "INSTALL_QSCONFDIR" "${placeholder "out"}/share/caelestia-shell")
       ]
       ++ cmakeVersionFlags;
+
+    dontStrip = debug;
 
     prePatch = ''
       substituteInPlace assets/pam.d/fprint \

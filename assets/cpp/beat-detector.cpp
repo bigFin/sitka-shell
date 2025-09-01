@@ -246,7 +246,7 @@ private:
             double avg_time = 0;
             for (double t : process_times_)
                 avg_time += t;
-            avg_time /= process_times_.size();
+            avg_time /= static_cast<double>(process_times_.size());
 
             auto max_time = *std::max_element(process_times_.begin(), process_times_.end());
             auto min_time = *std::min_element(process_times_.begin(), process_times_.end());
@@ -268,7 +268,7 @@ private:
         float sum = 0;
         for (float bpm : recent_bpms_)
             sum += bpm;
-        return sum / recent_bpms_.size();
+        return sum / static_cast<float>(recent_bpms_.size());
     }
 
     bool setup_stream() {
@@ -300,7 +300,7 @@ private:
 
         // Audio format parameters
         uint8_t buffer[1024];
-        spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT(buffer, sizeof(buffer));
+        spa_pod_builder pod_builder{ buffer, sizeof(buffer), 0, { 0, 0, NULL }, { NULL, NULL } };
 
         struct spa_audio_info_raw audio_info = {};
         audio_info.format = SPA_AUDIO_FORMAT_F32_LE;
@@ -529,11 +529,12 @@ int main(int argc, char* argv[]) {
         } else if (arg[0] != '-') {
             // Assume it's a buffer size
             try {
-                buffer_size = std::stoul(arg);
-                if (buffer_size < 64 || buffer_size > 8192) {
+                unsigned long size = std::stoul(arg);
+                if (size < 64 || size > 8192) {
                     std::cerr << " Buffer size must be between 64 and 8192" << std::endl;
                     return 1;
                 }
+                buffer_size = static_cast<uint32_t>(size);
             } catch (...) {
                 std::cerr << " Invalid buffer size: " << arg << std::endl;
                 return 1;

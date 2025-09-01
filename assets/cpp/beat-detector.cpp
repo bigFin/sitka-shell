@@ -300,7 +300,8 @@ private:
 
         // Audio format parameters
         uint8_t buffer[1024];
-        spa_pod_builder pod_builder{ buffer, sizeof(buffer), 0, { 0, 0, NULL }, { NULL, NULL } };
+        spa_pod_builder pod_builder;
+        spa_pod_builder_init(&pod_builder, buffer, sizeof(buffer));
 
         struct spa_audio_info_raw audio_info = {};
         audio_info.format = SPA_AUDIO_FORMAT_F32_LE;

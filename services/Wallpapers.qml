@@ -37,9 +37,7 @@ Searcher {
             Colours.showPreview = false;
     }
 
-    reloadableId: "wallpapers"
-
-    list: wallpapers.instances
+    list: wallpapers.entries
     useFuzzy: Config.launcher.useFuzzy.wallpapers
     extraOpts: useFuzzy ? ({}) : ({
             forward: false

@@ -143,15 +143,18 @@ Item {
                 asynchronous: true
                 implicitSize: Sizes.itemWidth - Appearance.padding.normal * 2
                 source: {
-                    if (item.modelData.isImage)
-                        return Qt.resolvedUrl(item.modelData.path);
+                    const file = item.modelData;
+                    if (!file)
+                        return Quickshell.iconPath("application-x-zerosize");
 
-                    if (!item.modelData.isDir)
-                        return Quickshell.iconPath(item.modelData.mimeType.replace("/", "-"), "application-x-zerosize");
+                    if (file.isImage)
+                        return Qt.resolvedUrl(file.path);
 
-                    const name = item.modelData.name;
-                    if (root.dialog.cwd.length === 1 && ["Desktop", "Documents", "Downloads", "Music", "Pictures", "Public", "Templates", "Videos"].includes(name))
-                        return Quickshell.iconPath(`folder-${name.toLowerCase()}`);
+                    if (!file.isDir)
+                        return Quickshell.iconPath(file.mimeType.replace("/", "-"), "application-x-zerosize");
+
+                    if (root.dialog.cwd.length === 1 && ["Desktop", "Documents", "Downloads", "Music", "Pictures", "Public", "Templates", "Videos"].includes(file.name))
+                        return Quickshell.iconPath(`folder-${file.name.toLowerCase()}`);
 
                     return Quickshell.iconPath("inode-directory");
                 }
@@ -167,7 +170,7 @@ Item {
                 anchors.margins: Appearance.padding.normal
 
                 horizontalAlignment: Text.AlignHCenter
-                text: item.modelData.name
+                text: item.modelData?.name ?? ""
                 elide: item.GridView.isCurrentItem ? Text.ElideNone : Text.ElideRight
                 wrapMode: item.GridView.isCurrentItem ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
             }

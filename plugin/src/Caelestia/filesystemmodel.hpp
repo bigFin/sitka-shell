@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QFileSystemWatcher>
 #include <QImageReader>
+#include <QMimeDatabase>
 #include <QObject>
 #include <qqmlintegration.h>
 
@@ -17,22 +18,27 @@ class FileSystemEntry : public QObject {
     Q_PROPERTY(QString relativePath READ relativePath CONSTANT)
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString parentDir READ parentDir CONSTANT)
+    Q_PROPERTY(QString suffix READ suffix CONSTANT)
     Q_PROPERTY(qint64 size READ size CONSTANT)
     Q_PROPERTY(bool isDir READ isDir CONSTANT)
     Q_PROPERTY(bool isImage READ isImage CONSTANT)
+    Q_PROPERTY(QString mimeType READ mimeType CONSTANT)
 
 public:
     explicit FileSystemEntry(const QString& path, const QString& relativePath, QObject* parent = nullptr)
         : QObject(parent)
         , m_fileInfo(QFileInfo(path))
         , m_path(path)
-        , m_relativePath(relativePath) {}
+        , m_relativePath(relativePath)
+        , m_isImageInitialised(false)
+        , m_mimeTypeInitialised(false) {}
 
     QString path() const { return m_path; };
     QString relativePath() const { return m_relativePath; };
 
     QString name() const { return m_fileInfo.fileName(); };
     QString parentDir() const { return m_fileInfo.absolutePath(); };
+    QString suffix() const { return m_fileInfo.completeSuffix(); };
     qint64 size() const { return m_fileInfo.size(); };
     bool isDir() const { return m_fileInfo.isDir(); };
 
@@ -45,6 +51,15 @@ public:
         return m_isImage;
     }
 
+    QString mimeType() {
+        if (!m_mimeTypeInitialised) {
+            const QMimeDatabase db;
+            m_mimeType = db.mimeTypeForFile(m_path).name();
+            m_mimeTypeInitialised = true;
+        }
+        return m_mimeType;
+    }
+
 private:
     const QFileInfo m_fileInfo;
 
@@ -53,6 +68,9 @@ private:
 
     bool m_isImage;
     bool m_isImageInitialised;
+
+    QString m_mimeType;
+    bool m_mimeTypeInitialised;
 };
 
 class FileSystemModel : public QAbstractListModel {
@@ -75,7 +93,13 @@ public:
 
     explicit FileSystemModel(QObject* parent = nullptr)
         : QAbstractListModel(parent)
+<<<<<<< HEAD
         , m_recursive(true)
+=======
+        , m_recursive(false)
+        , m_watchChanges(true)
+        , m_showHidden(false)
+>>>>>>> e70cb28 (internal: use FileSystemModel for FileDialog)
         , m_filter(NoFilter) {
         connect(&m_watcher, &QFileSystemWatcher::directoryChanged, this, &FileSystemModel::watchDirIfRecursive);
         connect(&m_watcher, &QFileSystemWatcher::directoryChanged, this, &FileSystemModel::updateEntries);

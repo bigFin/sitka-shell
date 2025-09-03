@@ -144,8 +144,7 @@ Column {
             month: root.currMonth
             year: root.currYear
 
-            anchors.left: parent.left
-            anchors.right: parent.right
+            anchors.fill: parent
 
             spacing: 3
             locale: Qt.locale()
@@ -179,7 +178,7 @@ Column {
             }
         }
 
-        StyledClippingRect {
+        StyledRect {
             id: todayIndicator
 
             readonly property Item todayItem: grid.contentItem.children.find(c => c.model.today) ?? null
@@ -196,6 +195,7 @@ Column {
             implicitWidth: today?.implicitWidth ?? 0
             implicitHeight: today?.implicitHeight ?? 0
 
+            clip: true
             radius: Appearance.rounding.full
             color: Colours.palette.m3primary
 
@@ -224,13 +224,15 @@ Column {
 
             Behavior on x {
                 Anim {
-                    easing.bezierCurve: Appearance.anim.curves.emphasized
+                    duration: Appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
                 }
             }
 
             Behavior on y {
                 Anim {
-                    easing.bezierCurve: Appearance.anim.curves.emphasized
+                    duration: Appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
                 }
             }
         }

@@ -49,8 +49,11 @@ Item {
 
     Loader {
         anchors.centerIn: parent
-        active: view.count === 0
+
+        opacity: view.count === 0 ? 1 : 0
+        active: opacity > 0
         asynchronous: true
+
         sourceComponent: ColumnLayout {
             MaterialIcon {
                 Layout.alignment: Qt.AlignHCenter
@@ -66,6 +69,10 @@ Item {
                 font.pointSize: Appearance.font.size.large
                 font.weight: 500
             }
+        }
+
+        Behavior on opacity {
+            Anim {}
         }
     }
 

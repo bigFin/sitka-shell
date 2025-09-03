@@ -142,21 +142,17 @@ Item {
 
                 asynchronous: true
                 implicitSize: Sizes.itemWidth - Appearance.padding.normal * 2
-                source: {
+
+                Component.onCompleted: {
                     const file = item.modelData;
-                    if (!file)
-                        return Quickshell.iconPath("application-x-zerosize");
-
                     if (file.isImage)
-                        return Qt.resolvedUrl(file.path);
-
-                    if (!file.isDir)
-                        return Quickshell.iconPath(file.mimeType.replace("/", "-"), "application-x-zerosize");
-
-                    if (root.dialog.cwd.length === 1 && ["Desktop", "Documents", "Downloads", "Music", "Pictures", "Public", "Templates", "Videos"].includes(file.name))
-                        return Quickshell.iconPath(`folder-${file.name.toLowerCase()}`);
-
-                    return Quickshell.iconPath("inode-directory");
+                        source = Qt.resolvedUrl(file.path);
+                    else if (!file.isDir)
+                        source = Quickshell.iconPath(file.mimeType.replace("/", "-"), "application-x-zerosize");
+                    else if (root.dialog.cwd.length === 1 && ["Desktop", "Documents", "Downloads", "Music", "Pictures", "Public", "Templates", "Videos"].includes(file.name))
+                        source = Quickshell.iconPath(`folder-${file.name.toLowerCase()}`);
+                    else
+                        source = Quickshell.iconPath("inode-directory");
                 }
             }
 
@@ -170,9 +166,10 @@ Item {
                 anchors.margins: Appearance.padding.normal
 
                 horizontalAlignment: Text.AlignHCenter
-                text: item.modelData?.name ?? ""
                 elide: item.GridView.isCurrentItem ? Text.ElideNone : Text.ElideRight
                 wrapMode: item.GridView.isCurrentItem ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
+
+                Component.onCompleted: text = item.modelData.name
             }
 
             Behavior on implicitHeight {

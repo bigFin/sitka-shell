@@ -1,12 +1,5 @@
 #include "cutils.hpp"
 
-<<<<<<< HEAD
-#include <qobject.h>
-#include <QtQuick/QQuickItem>
-#include <QtQuick/QQuickItemGrabResult>
-#include <QThreadPool>
-#include <QQmlEngine>
-=======
 #include <QDir>
 #include <QObject>
 #include <QQmlEngine>
@@ -14,7 +7,6 @@
 #include <QtQuick/QQuickItem>
 #include <QtQuick/QQuickItemGrabResult>
 #include <QtQuick/QQuickWindow>
->>>>>>> 8b1f2be (internal: format cpp)
 
 void CUtils::saveItem(QQuickItem* target, const QUrl& path) {
     this->saveItem(target, path, QRect(), QJSValue(), QJSValue());
@@ -49,40 +41,17 @@ void CUtils::saveItem(QQuickItem* target, const QUrl& path, const QRect& rect, Q
 
 	QSharedPointer<QQuickItemGrabResult> grabResult = target->grabToImage();
 
-<<<<<<< HEAD
-	QObject::connect(
-	    grabResult.data(),
-	    &QQuickItemGrabResult::ready,
-	    this,
-	    [grabResult, rect, path, onSaved, onFailed, this]() {
-		    QThreadPool::globalInstance()->start([grabResult, rect, path, onSaved, onFailed, this] {
-			    QImage image = grabResult->image();
-=======
     auto scaledRect = rect;
     const qreal scale = target->window()->devicePixelRatio();
     if (rect.isValid() && scale != 1.0) {
         scaledRect =
             QRectF(rect.left() * scale, rect.top() * scale, rect.width() * scale, rect.height() * scale).toRect();
     }
->>>>>>> 8b1f2be (internal: format cpp)
 
 			    if (!rect.isEmpty()) {
 				    image = image.copy(rect);
 			    }
 
-<<<<<<< HEAD
-				const QString file = path.toLocalFile();
-			    if (image.save(file)) {
-					if (onSaved.isCallable()) {
-						onSaved.call({ QJSValue(file), qmlEngine(this)->toScriptValue(QVariant::fromValue(path)) });
-					}
-				} else if (onFailed.isCallable()) {
-					onFailed.call({ qmlEngine(this)->toScriptValue(QVariant::fromValue(path)) });
-				}
-		    });
-	    }
-	);
-=======
     QObject::connect(grabResult.data(), &QQuickItemGrabResult::ready, this,
         [grabResult, scaledRect, path, onSaved, onFailed, this]() {
             QThreadPool::globalInstance()->start([grabResult, scaledRect, path, onSaved, onFailed, this] {
@@ -114,7 +83,6 @@ void CUtils::saveItem(QQuickItem* target, const QUrl& path, const QRect& rect, Q
                     Qt::QueuedConnection);
             });
         });
->>>>>>> 8b1f2be (internal: format cpp)
 }
 
 bool CUtils::copyFile(const QUrl& source, const QUrl& target) const {
@@ -370,4 +338,16 @@ qreal CUtils::findAverageLuminance(const QImage& image, int rescaleSize) const {
 
     return count == 0 ? 0.0 : totalLuminance / count;
 }
+<<<<<<< HEAD
 >>>>>>> 8b1f2be (internal: format cpp)
+=======
+
+QString CUtils::toLocalFile(const QUrl& url) const {
+    if (!url.isLocalFile()) {
+        qWarning() << "CUtils::toLocalFile: given url is not a local file" << url;
+        return QString();
+    }
+
+    return url.toLocalFile();
+}
+>>>>>>> 1de2467 (internal: refactor Paths util)

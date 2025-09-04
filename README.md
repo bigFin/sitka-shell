@@ -9,7 +9,8 @@
 >[!WARNING]
 > **HELP REQUIRED!**
 >
-> Unfortunately, I **skipped** a commit from original shell named: bar: per-monitor workspaces option (#394)
+> Unfortunately, I **skipped** a commit from original shell named: "bar: per-monitor workspaces option (#394)"
+> I **skipped** another commit from original shell named: "bar/workspaces: add special ws overlay" and "bar/workspaces: better scroll" because there is no special workspace in Niri.
 >
 > - **Reason:** I don't have multi monitor so I'm not sure if this actually works, I might break stuff :/. I need help implementing that feature :)
 

@@ -23,7 +23,6 @@
   qt6,
   quickshell,
   aubio,
-  pipewire,
   xkeyboard-config,
   cmake,
   ninja,
@@ -71,8 +70,7 @@
       fileset = lib.fileset.union ./../CMakeLists.txt ./../assets/cpp;
     };
 
-    nativeBuildInputs = [cmake ninja pkg-config];
-    buildInputs = [aubio pipewire];
+    nativeBuildInputs = [cmake ninja];
 
     cmakeFlags =
       [

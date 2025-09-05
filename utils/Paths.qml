@@ -31,12 +31,4 @@ Singleton {
     function shortenHome(path: string): string {
         return path.replace(home, "~");
     }
-
-    function mkdir(path: url): void {
-        Quickshell.execDetached(["mkdir", "-p", strip(path)]);
-    }
-
-    function copy(from: url, to: url): void {
-        Quickshell.execDetached(["cp", strip(from), strip(to)]);
-    }
 }

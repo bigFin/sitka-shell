@@ -11,7 +11,6 @@
   cava,
   networkmanager,
   lm_sensors,
-  grim,
   swappy,
   wl-clipboard,
   libqalculate,
@@ -43,7 +42,6 @@
       cava
       networkmanager
       lm_sensors
-      grim
       swappy
       wl-clipboard
       libqalculate

@@ -4,8 +4,10 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QFileInfo>
+#include <QFutureWatcher>
 #include <QImageReader>
 #include <QObject>
+#include <QtConcurrent>
 #include <qqmlintegration.h>
 
 int FileSystemModel::rowCount(const QModelIndex& parent) const {
@@ -57,6 +59,36 @@ void FileSystemModel::setRecursive(bool recursive) {
     update();
 }
 
+bool FileSystemModel::watchChanges() const {
+    return m_watchChanges;
+}
+
+void FileSystemModel::setWatchChanges(bool watchChanges) {
+    if (m_watchChanges == watchChanges) {
+        return;
+    }
+
+    m_watchChanges = watchChanges;
+    emit watchChangesChanged();
+
+    update();
+}
+
+bool FileSystemModel::showHidden() const {
+    return m_showHidden;
+}
+
+void FileSystemModel::setShowHidden(bool showHidden) {
+    if (m_showHidden == showHidden) {
+        return;
+    }
+
+    m_showHidden = showHidden;
+    emit showHiddenChanged();
+
+    update();
+}
+
 FileSystemModel::Filter FileSystemModel::filter() const {
     return m_filter;
 }
@@ -77,11 +109,32 @@ QList<FileSystemEntry*> FileSystemModel::entries() const {
 }
 
 void FileSystemModel::watchDirIfRecursive(const QString& path) {
-    if (m_recursive) {
-        QDirIterator iter(path, QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
-        while (iter.hasNext()) {
-            m_watcher.addPath(iter.next());
-        }
+    if (m_recursive && m_watchChanges) {
+        const auto currentDir = m_dir;
+        const bool showHidden = m_showHidden;
+        const auto future = QtConcurrent::run([showHidden, path]() {
+            QDir::Filters filters = QDir::Dirs | QDir::NoDotAndDotDot;
+            if (showHidden) {
+                filters |= QDir::Hidden;
+            }
+
+            QDirIterator iter(path, filters, QDirIterator::Subdirectories);
+            QStringList dirs;
+            while (iter.hasNext()) {
+                dirs << iter.next();
+            }
+            return dirs;
+        });
+        const auto watcher = new QFutureWatcher<QStringList>(this);
+        connect(watcher, &QFutureWatcher<QStringList>::finished, this, [currentDir, showHidden, watcher, this]() {
+            const auto paths = watcher->result();
+            if (currentDir == m_dir && showHidden == m_showHidden && !paths.isEmpty()) {
+                // Ignore if dir or showHidden has changed
+                m_watcher.addPaths(paths);
+            }
+            watcher->deleteLater();
+        });
+        watcher->setFuture(future);
     }
 }
 
@@ -95,7 +148,7 @@ void FileSystemModel::updateWatcher() {
         m_watcher.removePaths(m_watcher.directories());
     }
 
-    if (m_path.isEmpty()) {
+    if (!m_watchChanges || m_path.isEmpty()) {
         return;
     }
 
@@ -116,7 +169,10 @@ void FileSystemModel::updateEntries() {
         return;
     }
 
-    const auto flags = m_recursive ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags;
+    for (auto& future : m_futures) {
+        future.cancel();
+    }
+    m_futures.clear();
 
     updateEntriesForDir(m_path);
 }

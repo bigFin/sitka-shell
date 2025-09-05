@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QFileSystemWatcher>
+#include <QFuture>
 #include <QImageReader>
 #include <QMimeDatabase>
 #include <QObject>
@@ -33,16 +34,16 @@ public:
         , m_isImageInitialised(false)
         , m_mimeTypeInitialised(false) {}
 
-    QString path() const { return m_path; };
-    QString relativePath() const { return m_relativePath; };
+    [[nodiscard]] QString path() const { return m_path; };
+    [[nodiscard]] QString relativePath() const { return m_relativePath; };
 
-    QString name() const { return m_fileInfo.fileName(); };
-    QString parentDir() const { return m_fileInfo.absolutePath(); };
-    QString suffix() const { return m_fileInfo.completeSuffix(); };
-    qint64 size() const { return m_fileInfo.size(); };
-    bool isDir() const { return m_fileInfo.isDir(); };
+    [[nodiscard]] QString name() const { return m_fileInfo.fileName(); };
+    [[nodiscard]] QString parentDir() const { return m_fileInfo.absolutePath(); };
+    [[nodiscard]] QString suffix() const { return m_fileInfo.completeSuffix(); };
+    [[nodiscard]] qint64 size() const { return m_fileInfo.size(); };
+    [[nodiscard]] bool isDir() const { return m_fileInfo.isDir(); };
 
-    bool isImage() {
+    [[nodiscard]] bool isImage() {
         if (!m_isImageInitialised) {
             QImageReader reader(m_path);
             m_isImage = reader.canRead();
@@ -51,7 +52,7 @@ public:
         return m_isImage;
     }
 
-    QString mimeType() {
+    [[nodiscard]] QString mimeType() {
         if (!m_mimeTypeInitialised) {
             const QMimeDatabase db;
             m_mimeType = db.mimeTypeForFile(m_path).name();
@@ -79,6 +80,8 @@ class FileSystemModel : public QAbstractListModel {
 
     Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
     Q_PROPERTY(bool recursive READ recursive WRITE setRecursive NOTIFY recursiveChanged)
+    Q_PROPERTY(bool watchChanges READ watchChanges WRITE setWatchChanges NOTIFY watchChangesChanged)
+    Q_PROPERTY(bool showHidden READ showHidden WRITE setShowHidden NOTIFY showHiddenChanged)
     Q_PROPERTY(Filter filter READ filter WRITE setFilter NOTIFY filterChanged)
 
     Q_PROPERTY(QList<FileSystemEntry*> entries READ entries NOTIFY entriesChanged)
@@ -87,56 +90,70 @@ public:
     enum Filter {
         NoFilter,
         Images,
-        Files
+        Files,
+        Dirs
     };
     Q_ENUM(Filter)
 
     explicit FileSystemModel(QObject* parent = nullptr)
         : QAbstractListModel(parent)
-<<<<<<< HEAD
-        , m_recursive(true)
-=======
         , m_recursive(false)
         , m_watchChanges(true)
         , m_showHidden(false)
->>>>>>> e70cb28 (internal: use FileSystemModel for FileDialog)
         , m_filter(NoFilter) {
         connect(&m_watcher, &QFileSystemWatcher::directoryChanged, this, &FileSystemModel::watchDirIfRecursive);
-        connect(&m_watcher, &QFileSystemWatcher::directoryChanged, this, &FileSystemModel::updateEntries);
+        connect(&m_watcher, &QFileSystemWatcher::directoryChanged, this, &FileSystemModel::updateEntriesForDir);
     }
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    QString path() const;
+    [[nodiscard]] QString path() const;
     void setPath(const QString& path);
 
-    bool recursive() const;
+    [[nodiscard]] bool recursive() const;
     void setRecursive(bool recursive);
 
-    Filter filter() const;
+    [[nodiscard]] bool watchChanges() const;
+    void setWatchChanges(bool watchChanges);
+
+    [[nodiscard]] bool showHidden() const;
+    void setShowHidden(bool showHidden);
+
+    [[nodiscard]] Filter filter() const;
     void setFilter(Filter filter);
 
-    QList<FileSystemEntry*> entries() const;
+    [[nodiscard]] QList<FileSystemEntry*> entries() const;
 
 signals:
     void pathChanged();
     void recursiveChanged();
+    void watchChangesChanged();
+    void showHiddenChanged();
     void filterChanged();
     void entriesChanged();
+
+    void added(const FileSystemEntry* entry);
+    void removed(const QString& path);
 
 private:
     QDir m_dir;
     QFileSystemWatcher m_watcher;
     QList<FileSystemEntry*> m_entries;
+    QHash<QString, QFuture<QPair<QSet<QString>, QSet<QString>>>> m_futures;
 
     QString m_path;
     bool m_recursive;
+    bool m_watchChanges;
+    bool m_showHidden;
     Filter m_filter;
 
     void watchDirIfRecursive(const QString& path);
     void update();
     void updateWatcher();
     void updateEntries();
+    void updateEntriesForDir(const QString& dir);
+    void applyChanges(const QSet<QString>& removedPaths, const QSet<QString>& addedPaths);
+    [[nodiscard]] static bool compareEntries(const FileSystemEntry* a, const FileSystemEntry* b);
 };

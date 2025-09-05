@@ -13,33 +13,36 @@ void CUtils::saveItem(QQuickItem* target, const QUrl& path) {
 }
 
 void CUtils::saveItem(QQuickItem* target, const QUrl& path, const QRect& rect) {
-	this->saveItem(target, path, rect, QJSValue(), QJSValue());
+    this->saveItem(target, path, rect, QJSValue(), QJSValue());
 }
 
 void CUtils::saveItem(QQuickItem* target, const QUrl& path, QJSValue onSaved) {
-	this->saveItem(target, path, QRect(), onSaved, QJSValue());
+    this->saveItem(target, path, QRect(), onSaved, QJSValue());
 }
 
 void CUtils::saveItem(QQuickItem* target, const QUrl& path, QJSValue onSaved, QJSValue onFailed) {
-	this->saveItem(target, path, QRect(), onSaved, onFailed);
+    this->saveItem(target, path, QRect(), onSaved, onFailed);
 }
 
 void CUtils::saveItem(QQuickItem* target, const QUrl& path, const QRect& rect, QJSValue onSaved) {
-	this->saveItem(target, path, rect, onSaved, QJSValue());
+    this->saveItem(target, path, rect, onSaved, QJSValue());
 }
 
 void CUtils::saveItem(QQuickItem* target, const QUrl& path, const QRect& rect, QJSValue onSaved, QJSValue onFailed) {
-	if (!target) {
-		qWarning() << "CUtils::saveItem: a target is required";
-		return;
-	}
+    if (!target) {
+        qWarning() << "CUtils::saveItem: a target is required";
+        return;
+    }
 
-	if (!path.isLocalFile()) {
-		qWarning() << "CUtils::saveItem:" << path << "is not a local file";
-		return;
-	}
+    if (!path.isLocalFile()) {
+        qWarning() << "CUtils::saveItem:" << path << "is not a local file";
+        return;
+    }
 
-	QSharedPointer<QQuickItemGrabResult> grabResult = target->grabToImage();
+    if (!target->window()) {
+        qWarning() << "CUtils::saveItem: unable to save target" << target << "without a window";
+        return;
+    }
 
     auto scaledRect = rect;
     const qreal scale = target->window()->devicePixelRatio();
@@ -48,9 +51,7 @@ void CUtils::saveItem(QQuickItem* target, const QUrl& path, const QRect& rect, Q
             QRectF(rect.left() * scale, rect.top() * scale, rect.width() * scale, rect.height() * scale).toRect();
     }
 
-			    if (!rect.isEmpty()) {
-				    image = image.copy(rect);
-			    }
+    const QSharedPointer<const QQuickItemGrabResult> grabResult = target->grabToImage();
 
     QObject::connect(grabResult.data(), &QQuickItemGrabResult::ready, this,
         [grabResult, scaledRect, path, onSaved, onFailed, this]() {
@@ -105,8 +106,6 @@ bool CUtils::copyFile(const QUrl& source, const QUrl& target, bool overwrite) co
 
     return QFile::copy(source.toLocalFile(), target.toLocalFile());
 }
-<<<<<<< HEAD
-=======
 
 void CUtils::getDominantColour(QQuickItem* item, QJSValue callback) {
     this->getDominantColour(item, 128, callback);
@@ -338,9 +337,6 @@ qreal CUtils::findAverageLuminance(const QImage& image, int rescaleSize) const {
 
     return count == 0 ? 0.0 : totalLuminance / count;
 }
-<<<<<<< HEAD
->>>>>>> 8b1f2be (internal: format cpp)
-=======
 
 QString CUtils::toLocalFile(const QUrl& url) const {
     if (!url.isLocalFile()) {
@@ -350,4 +346,3 @@ QString CUtils::toLocalFile(const QUrl& url) const {
 
     return url.toLocalFile();
 }
->>>>>>> 1de2467 (internal: refactor Paths util)

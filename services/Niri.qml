@@ -5,6 +5,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.config
+import qs.utils
 
 Singleton {
     id: root
@@ -128,6 +129,16 @@ Singleton {
     Component.onCompleted: {
         console.log("NiriService: Component.onCompleted - initializing service");
         checkNiriAvailability();
+
+        console.log("Paths.home:", Paths.home);
+        console.log("Paths.pictures:", Paths.pictures);
+        console.log("Paths.data:", Paths.data);
+        console.log("Paths.state:", Paths.state);
+        console.log("Paths.cache:", Paths.cache);
+        console.log("Paths.config:", Paths.config);
+        console.log("Paths.imagecache:", Paths.imagecache);
+        console.log("Paths.wallsdir:", Paths.wallsdir);
+        console.log("Paths.libdir:", Paths.libdir);
     }
 
     // Check if niri is available

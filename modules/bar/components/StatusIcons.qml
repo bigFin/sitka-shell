@@ -21,7 +21,7 @@ StyledRect {
 
     clip: true
     implicitWidth: Config.bar.sizes.innerWidth
-    implicitHeight: iconColumn.implicitHeight + Appearance.padding.normal * 2 - (Config.bar.status.showLockStatus && !Hypr.capsLock && !Hypr.numLock ? iconColumn.spacing : 0)
+    implicitHeight: iconColumn.implicitHeight + Appearance.padding.normal * 2 - (Config.bar.status.showLockStatus && !Niri.capsLock && !Niri.numLock ? iconColumn.spacing : 0)
 
     ColumnLayout {
         id: iconColumn
@@ -43,15 +43,15 @@ StyledRect {
 
                 Item {
                     implicitWidth: capslockIcon.implicitWidth
-                    implicitHeight: Hypr.capsLock ? capslockIcon.implicitHeight : 0
+                    implicitHeight: Niri.capsLock ? capslockIcon.implicitHeight : 0
 
                     MaterialIcon {
                         id: capslockIcon
 
                         anchors.centerIn: parent
 
-                        scale: Hypr.capsLock ? 1 : 0.5
-                        opacity: Hypr.capsLock ? 1 : 0
+                        scale: Niri.capsLock ? 1 : 0.5
+                        opacity: Niri.capsLock ? 1 : 0
 
                         text: "keyboard_capslock_badge"
                         color: root.colour
@@ -71,18 +71,18 @@ StyledRect {
                 }
 
                 Item {
-                    Layout.topMargin: Hypr.capsLock && Hypr.numLock ? iconColumn.spacing : 0
+                    Layout.topMargin: Niri.capsLock && Niri.numLock ? iconColumn.spacing : 0
 
                     implicitWidth: numlockIcon.implicitWidth
-                    implicitHeight: Hypr.numLock ? numlockIcon.implicitHeight : 0
+                    implicitHeight: Niri.numLock ? numlockIcon.implicitHeight : 0
 
                     MaterialIcon {
                         id: numlockIcon
 
                         anchors.centerIn: parent
 
-                        scale: Hypr.numLock ? 1 : 0.5
-                        opacity: Hypr.numLock ? 1 : 0
+                        scale: Niri.numLock ? 1 : 0.5
+                        opacity: Niri.numLock ? 1 : 0
 
                         text: "looks_one"
                         color: root.colour

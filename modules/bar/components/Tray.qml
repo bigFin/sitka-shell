@@ -48,7 +48,6 @@ StyledRect {
             id: items
 
             model: SystemTray.items
-
             TrayItem {}
         }
     }

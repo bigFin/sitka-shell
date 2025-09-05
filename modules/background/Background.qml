@@ -37,7 +37,7 @@ Loader {
 
             Loader {
                 //TODO MAKE SURE IT WORKS
-                readonly property bool shouldBeActive: Config.background.visualiser.enabled && (!Config.background.visualiser.autoHide || Niri.getActiveWorkspaceWindows.values.every(t => t.is_floating)) ? 1 : 0
+                readonly property bool shouldBeActive: Config.background.visualiser.enabled && (!Config.background.visualiser.autoHide || Niri.getActiveWorkspaceWindows.values.every(w => w.is_floating)) ? 1 : 0
                 property real offset: shouldBeActive ? 0 : win.modelData.height * 0.2
 
                 anchors.fill: parent

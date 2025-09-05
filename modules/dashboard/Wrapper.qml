@@ -8,6 +8,7 @@ import qs.services
 import Quickshell
 import Quickshell.Hyprland
 import QtQuick
+import Caelestia
 
 Item {
     id: root
@@ -25,7 +26,8 @@ Item {
             filterLabel: qsTr("Image files")
             filters: Images.validImageExtensions
             onAccepted: path => {
-                if (CUtils.copyFile(`file://${path}`, `${Paths.home}/.face`))
+                console.log("FileDialog accepted path:", path);
+                if (CUtils.copyFile(Qt.resolvedUrl(path), Qt.resolvedUrl(`${Paths.home}/.face`)))
                     Quickshell.execDetached(["notify-send", "-a", "caelestia-shell", "-u", "low", "-h", `STRING:image-path:${path}`, "Profile picture changed", `Profile picture changed to ${Paths.shortenHome(path)}`]);
                 else
                     Quickshell.execDetached(["notify-send", "-a", "caelestia-shell", "-u", "critical", "Unable to change profile picture", `Failed to change profile picture to ${Paths.shortenHome(path)}`]);

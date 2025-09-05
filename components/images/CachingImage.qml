@@ -1,5 +1,6 @@
 import qs.utils
-import Caelestia
+// wtf is this?
+// import Caelestia
 import Quickshell
 import Quickshell.Io
 import QtQuick
@@ -10,6 +11,7 @@ Image {
     property string path
     property string hash
     readonly property url cachePath: `${Paths.imagecache}/${hash}@${effectiveWidth}x${effectiveHeight}.png`
+    // readonly property url cachePath: `${Paths.stringify(Paths.imagecache)}/${hash}@${effectiveWidth}x${effectiveHeight}.png`
 
     readonly property real effectiveScale: QsWindow.window?.devicePixelRatio ?? 1
     readonly property int effectiveWidth: Math.ceil(width * effectiveScale)

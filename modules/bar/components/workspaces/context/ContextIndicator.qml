@@ -4,6 +4,7 @@ import qs.services
 import qs.config
 import QtQuick
 import qs.components.effects
+import qs.components
 import QtQuick.Shapes
 
 Item {
@@ -23,13 +24,6 @@ Item {
 
     Component.onCompleted: root.activated = true
 
-    // Shared animation
-    component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.emphasized
-    }
-
     // Highlight rectangle component
     component HighlightRect: Item {
         id: hrect
@@ -41,7 +35,9 @@ Item {
         property real roundingEffective: root.activated && Niri.wsContextAnchor ? rounding : 0
 
         Behavior on roundingEffective {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
 
         z: zOrder
@@ -134,16 +130,24 @@ Item {
 
         // Generic animation for geometry
         Behavior on width {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
         Behavior on height {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
         Behavior on x {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
         Behavior on y {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
     }
 
@@ -165,13 +169,19 @@ Item {
         anchors.bottomMargin: cornerType === 3 ? root.padding / 2 - 1 : undefined
 
         Behavior on height {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
         Behavior on width {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
         Behavior on radius {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
     }
 

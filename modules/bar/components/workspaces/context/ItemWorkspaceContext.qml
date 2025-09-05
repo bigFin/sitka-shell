@@ -39,10 +39,13 @@ Rectangle {
     Behavior on implicitWidth {
         Anim {
             duration: Appearance.anim.durations.large
+            easing.bezierCurve: Appearance.anim.curves.emphasized
         }
     }
     Behavior on implicitHeight {
-        Anim {}
+        Anim {
+            easing.bezierCurve: Appearance.anim.curves.emphasized
+        }
     }
 
     ColumnLayout {
@@ -66,7 +69,7 @@ Rectangle {
             radius: root.baseRadius / 2
 
             Behavior on color {
-                ColorAnim {}
+                CAnim {}
             }
 
             AnimatedText {
@@ -83,18 +86,6 @@ Rectangle {
         }
     }
 
-    component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.emphasized
-    }
-
-    component ColorAnim: ColorAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.emphasized
-    }
-
     // Local reusable StyledText with common props
     component AnimatedText: StyledText {
         Layout.preferredWidth: root.textWidth
@@ -102,11 +93,15 @@ Rectangle {
         elide: Text.ElideRight
 
         Behavior on color {
-            ColorAnim {}
+            CAnim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
 
         Behavior on font.pixelSize {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
     }
 }

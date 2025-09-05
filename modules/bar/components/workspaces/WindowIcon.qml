@@ -46,7 +46,9 @@ Item {
     z: popupActive ? 90 : 0
 
     Behavior on scale {
-        Anim {}
+        Anim {
+            easing.bezierCurve: Appearance.anim.curves.emphasized
+        }
     }
 
     Loader {
@@ -84,7 +86,9 @@ Item {
                 implicitSize: (iconItem.isFocused && iconItem.isWsFocused) ? Config.bar.workspaces.windowIconSize : Config.bar.workspaces.windowIconSize - Appearance.padding.small
                 source: Icons.getAppIcon(windowData.app_id ?? "", "image-missing")
                 Behavior on implicitSize {
-                    Anim {}
+                    Anim {
+                        easing.bezierCurve: Appearance.anim.curves.emphasized
+                    }
                 }
 
                 WindowGroupBadge {}
@@ -109,7 +113,9 @@ Item {
                 text: Icons.getAppCategoryIcon(windowData.app_id, "help_center")
                 color: (iconItem.isWsFocused ? Colours.palette.m3onPrimary : Colours.palette.m3onSurfaceVariant)
                 Behavior on font.pointSize {
-                    Anim {}
+                    Anim {
+                        easing.bezierCurve: Appearance.anim.curves.emphasized
+                    }
                 }
 
                 WindowGroupBadge {}
@@ -255,10 +261,14 @@ Item {
             bottomMargin: calculateMargins().bottom
 
             Behavior on rightMargin {
-                Anim {}
+                Anim {
+                    easing.bezierCurve: Appearance.anim.curves.emphasized
+                }
             }
             Behavior on bottomMargin {
-                Anim {}
+                Anim {
+                    easing.bezierCurve: Appearance.anim.curves.emphasized
+                }
             }
         }
 
@@ -279,14 +289,5 @@ Item {
                 font.pixelSize: badgeLoader.calculateMargins().size - 3
             }
         }
-    }
-
-    // --------------------------
-    // Animation components
-    // --------------------------
-    component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.emphasized
     }
 }

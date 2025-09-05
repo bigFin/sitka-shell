@@ -33,7 +33,9 @@ Rectangle {
     implicitHeight: root.popupActive && Niri.wsContextAnchor && root.activated ? windowsColumn.height + root.hPadding * 4 : 0
 
     Behavior on border.color {
-        ColorAnim {}
+        CAnim {
+            easing.bezierCurve: Appearance.anim.curves.emphasized
+        }
     }
 
     clip: true
@@ -43,13 +45,19 @@ Rectangle {
     anchors.verticalCenter: parent.verticalCenter
 
     Behavior on implicitWidth {
-        Anim {}
+        Anim {
+            easing.bezierCurve: Appearance.anim.curves.emphasized
+        }
     }
     Behavior on implicitHeight {
-        Anim {}
+        Anim {
+            easing.bezierCurve: Appearance.anim.curves.emphasized
+        }
     }
     Behavior on anchors.leftMargin {
-        Anim {}
+        Anim {
+            easing.bezierCurve: Appearance.anim.curves.emphasized
+        }
     }
 
     ColumnLayout {
@@ -77,7 +85,9 @@ Rectangle {
         color: itemIsFocused ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHighest
 
         Behavior on color {
-            ColorAnim {}
+            CAnim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
 
         // implicitHeight: column.height
@@ -89,10 +99,14 @@ Rectangle {
         implicitHeight: root.popupActive && Niri.wsContextAnchor && root.activated ? root.itemH : 0
 
         Behavior on implicitHeight {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
         Behavior on implicitWidth {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
 
         radius: Appearance.rounding.small / 2
@@ -125,7 +139,9 @@ Rectangle {
                 Layout.alignment: Qt.AlignVCenter
 
                 Behavior on color {
-                    ColorAnim {}
+                    CAnim {
+                        easing.bezierCurve: Appearance.anim.curves.emphasized
+                    }
                 }
                 radius: root.baseRadius
                 Layout.preferredHeight: root.itemH / 2
@@ -166,7 +182,9 @@ Rectangle {
                     radius: root.baseRadius / 2
 
                     Behavior on color {
-                        ColorAnim {}
+                        CAnim {
+                            easing.bezierCurve: Appearance.anim.curves.emphasized
+                        }
                     }
 
                     AnimatedText {
@@ -193,18 +211,6 @@ Rectangle {
         }
     }
 
-    component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.emphasized
-    }
-
-    component ColorAnim: ColorAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.emphasized
-    }
-
     // Local reusable StyledText with common props
     component AnimatedText: StyledText {
         Layout.preferredWidth: root.textWidth - root.sideMargin * 3
@@ -212,11 +218,15 @@ Rectangle {
         elide: Text.ElideRight
 
         Behavior on color {
-            ColorAnim {}
+            CAnim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
 
         Behavior on font.pointSize {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
     }
 }

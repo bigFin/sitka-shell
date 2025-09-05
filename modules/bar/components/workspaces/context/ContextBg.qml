@@ -4,6 +4,7 @@ import qs.services
 import qs.config
 import QtQuick
 import qs.components.effects
+import qs.components
 
 Item {
     id: root
@@ -45,38 +46,52 @@ Item {
         bottomRightRadius: Appearance.rounding.normal
 
         Behavior on color {
-            ColorAnimation {
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
+            CAnim {
                 easing.bezierCurve: Appearance.anim.curves.emphasized
             }
         }
 
         Behavior on radius {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
         Behavior on topRightRadius {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
         Behavior on bottomRightRadius {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
 
         Behavior on width {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
         Behavior on height {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
         Behavior on opacity {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
 
         Behavior on x {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
         Behavior on y {
-            Anim {}
+            Anim {
+                easing.bezierCurve: Appearance.anim.curves.emphasized
+            }
         }
     }
 
@@ -145,27 +160,20 @@ Item {
 
         Behavior on height {
             Anim {
-                duration: Appearance.anim.durations.normal
+                easing.bezierCurve: Appearance.anim.curves.emphasized
             }
         }
 
         Behavior on width {
             Anim {
-                duration: Appearance.anim.durations.normal
+                easing.bezierCurve: Appearance.anim.curves.emphasized
             }
         }
 
         Behavior on anchors.leftMargin {
             Anim {
-                duration: Appearance.anim.durations.normal
+                easing.bezierCurve: Appearance.anim.curves.emphasized
             }
         }
-    }
-
-    // --- Reusable animation ---
-    component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.emphasized
     }
 }

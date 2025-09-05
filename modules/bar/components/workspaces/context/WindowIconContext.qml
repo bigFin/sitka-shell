@@ -4,6 +4,7 @@ import QtQuick
 import qs.services
 import qs.config
 import qs.components.widgets
+import qs.components
 
 Item {
     id: root
@@ -39,13 +40,9 @@ Item {
     // clip: true
 
     Behavior on width {
-        Anim {}
-    }
-
-    component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.emphasized
+        Anim {
+            easing.bezierCurve: Appearance.anim.curves.emphasized
+        }
     }
 
     // Component wrappers

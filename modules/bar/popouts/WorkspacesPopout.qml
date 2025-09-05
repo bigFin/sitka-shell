@@ -1,5 +1,7 @@
 pragma ComponentBehavior: Bound
 
+// TODO: do not forget this :D
+
 import qs.services
 import qs.utils
 import qs.config
@@ -37,13 +39,6 @@ StyledRect {
 
             delegate: WorkspaceDelegate {}
         }
-    }
-
-    // Shared animation component
-    component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.standard
     }
 
     // =====================================================

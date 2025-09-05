@@ -6,6 +6,8 @@ import Quickshell.Io
 import QtQuick
 import qs.services
 
+//TODO FOR NIRI
+
 Singleton {
     id: root
 

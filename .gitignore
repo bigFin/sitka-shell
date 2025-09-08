@@ -7,3 +7,4 @@
 .github/chatmodes/janitor.chatmode.md
 .github/chatmodes/prompt-engineer.chatmode.md
 build/
+.cache/

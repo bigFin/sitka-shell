@@ -6,12 +6,10 @@ import qs.utils
 import qs.config
 import QtQuick
 import Quickshell.Widgets
-
 import "context"
 
 Item {
     id: iconItem
-    anchors.horizontalCenter: parent.horizontalCenter
 
     required property Item workspace
     required property var windowData
@@ -40,19 +38,23 @@ Item {
     signal dragUpdate(var iconItem, real mouseY, real mouseX)
     signal dragEnd(var iconItem)
 
-    width: iconLoader.implicitWidth
-    height: iconLoader.implicitHeight
+    anchors.left: parent.left
+
+    implicitWidth: iconLoader.implicitWidth + (popupActive ? Config.bar.workspaces.windowContextWidth : 0)
+    implicitHeight: iconLoader.implicitHeight
 
     z: popupActive ? 90 : 0
 
-    Behavior on scale {
+    Behavior on implicitWidth {
         Anim {
             easing.bezierCurve: Appearance.anim.curves.emphasized
         }
     }
 
     Loader {
-        anchors.left: parent.right
+        id: contextLoader
+        anchors.left: parent.left
+        anchors.leftMargin: iconLoader.implicitWidth + Appearance.padding.small
         anchors.verticalCenter: parent.verticalCenter
         active: (Niri.wsContextType !== "none" && Config.bar.workspaces.windowRighClickContext)
         sourceComponent: WindowIconContext {
@@ -62,11 +64,15 @@ Item {
 
     Loader {
         id: iconLoader
-        anchors.horizontalCenter: parent.horizontalCenter
+
+        // anchors.centerIn: parent
+        anchors.left: parent.left
+
+        // anchors.horizontalCenter: parent.horizontalCenter
         sourceComponent: iconItem.useImageIcon ? imageIconComp : materialIconComp
         property var windowData: iconItem.windowData
         property var windowCount: iconItem.windowCount
-        anchors.margins: Appearance.padding.small
+        // anchors.margins: Appearance.padding.small
     }
 
     Component {
@@ -157,12 +163,14 @@ Item {
     // --------------------------
     // Interaction / Drag Handling
     // --------------------------
-    component Interaction: MouseArea {
+    component Interaction: StateLayer {
         id: mouseArea
-        anchors.fill: parent
+        anchors.fill: iconItem
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         cursorShape: (iconItem.dragActive ? Qt.ClosedHandCursor : (Qt.PointingHandCursor))
         pressAndHoldInterval: Appearance.anim.durations.small
+
+        radius: Appearance.rounding.small
 
         hoverEnabled: true
 
@@ -286,7 +294,7 @@ Item {
                 text: iconItem.windowCount
                 font.family: Appearance.font.family.mono
                 color: iconItem.isWsFocused ? Colours.palette.m3onTertiary : Colours.palette.m3onTertiaryContainer
-                font.pixelSize: badgeLoader.calculateMargins().size - 3
+                font.pointSize: badgeLoader.calculateMargins().size - 3
             }
         }
     }

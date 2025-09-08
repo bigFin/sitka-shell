@@ -67,7 +67,7 @@ StyledRect {
         }
     }
 
-    //For Niri, workspace context menu on right click.
+    //TODO, For Niri, workspace context menu on right click.
     // Loader {
     //     active: Config.bar.workspaces.windowRighClickContext && Niri.wsContextType !== "none"
     //     asynchronous: true
@@ -102,7 +102,9 @@ StyledRect {
 
         z: 1
 
-        anchors.centerIn: parent
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.leftMargin: Appearance.padding.small
         spacing: Math.floor(Appearance.spacing.small)
 
         Repeater {

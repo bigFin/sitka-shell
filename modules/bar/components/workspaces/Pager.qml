@@ -10,42 +10,35 @@ StyledRect {
 
     required property int groupOffset
 
-    // Start hidden and below, animate in when loaded
-    property bool entered: Config.bar.workspaces.shown < Niri.getWorkspaceCount() ? true : false
+    Component.onCompleted: active = true
+    property bool active: false
+    property bool entered: Config.bar.workspaces.shown < Niri.getWorkspaceCount() && active
 
     color: Colours.palette.m3surfaceContainer
-    radius: entered ? Appearance.rounding.small : Appearance.rounding.full
+    radius: entered ? Appearance.rounding.small / 2 : Appearance.rounding.full
 
     // Animate both y and opacity for a smooth effect
-    anchors.topMargin: entered ? -Appearance.padding.small : -Config.bar.sizes.innerWidth
+    anchors.topMargin: entered ? -Appearance.padding.normal : -Config.bar.sizes.innerWidth
 
     width: Config.bar.sizes.innerWidth - Appearance.spacing.small
-    height: (text.contentHeight + Appearance.spacing.small)
+    height: (text.contentHeight + Appearance.spacing.normal)
 
     // Animate when 'entered' changes
     Behavior on anchors.topMargin {
-        NumberAnimation {
-            duration: Appearance.anim.durations.normal
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.standard
-        }
+        Anim {}
     }
-
-    // // Trigger animation when loaded
-    // Component.onCompleted: entered = true
 
     StyledText {
         id: text
 
         opacity: root.entered ? 1 : 0
         Behavior on opacity {
-            NumberAnimation {
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
-            }
+            Anim {}
         }
-        anchors.centerIn: parent
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: Appearance.spacing.small / 2
 
         font.family: Appearance.font.family.mono
         font.pointSize: Appearance.font.size.extraSmall

@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.services
 import qs.config
 import QtQuick
+import qs.components
 
 Item {
     id: root
@@ -152,8 +153,10 @@ Item {
         Niri.moveGroupColumnsSequential(Niri.focusedWindowId, draggedWindows.map(w => w.id), flatIndex + 1, 5);
     }
 
-    height: column.height
-    width: column.width
+    // height: column.height
+    // width: column.width
+    implicitWidth: column.implicitWidth
+    implicitHeight: column.implicitHeight
 
     // Drop indicator
     Rectangle {
@@ -167,9 +170,7 @@ Item {
         z: 200
 
         Behavior on y {
-            NumberAnimation {
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
+            Anim {
                 easing.bezierCurve: Appearance.anim.curves.emphasized
             }
         }
@@ -216,12 +217,12 @@ Item {
             }
         }
 
-        anchors.horizontalCenter: parent.horizontalCenter
+        // anchors.horizontalCenter: parent.horizontalCenter
 
         Repeater {
             id: repeater
             model: root.model
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.left: parent.left
 
             delegate: WindowIcon {
                 id: icon

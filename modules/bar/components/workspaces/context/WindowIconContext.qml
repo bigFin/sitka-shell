@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.services
 import qs.config
-import qs.components.widgets
 import qs.components
 
 Item {
@@ -54,6 +53,8 @@ Item {
             isFocused: root.fokus.true
             itemH: root.itemH
 
+            mainWindow: root.mainWindow
+
             displayTitle: Niri.cleanWindowTitle(root.mainWindow.title || "Untitled")
             displaySubtitle: (root.mainWindow.app_id || "Untitled")  /* + (root.windowCount > 1 ? " (" + root.windowCount + " windows)" : "") */
 
@@ -82,22 +83,5 @@ Item {
         // active: root.activated && !(Niri.wsContextType === "none") && root.popupActive
 
         sourceComponent: root.multiWindow ? multiComp : singleComp
-    }
-
-    Rectangle {
-        anchors.verticalCenter: contextLoader.verticalCenter
-        anchors.right: contextLoader.right
-        anchors.margins: Appearance.spacing.normal
-        color: "transparent"
-        visible: contextLoader.active && root.mainWindow
-
-        width: 70
-        height: root.itemH
-        radius: Appearance.rounding.small
-
-        WindowDecorations {
-            id: windowDecs
-            anchors.centerIn: parent
-        }
     }
 }

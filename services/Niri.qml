@@ -81,12 +81,15 @@ Singleton {
             // Only update if a window is truly focused
             root.lastFocusedWindow = focusedWindow;
             // Track scroll direction
-            if (focusedWindow.layout?.pos_in_scrolling_layout) {
-                const currentCol = focusedWindow.layout.pos_in_scrolling_layout[0];
+            const pos = focusedWindow.layout?.pos_in_scrolling_layout;
+            if (Array.isArray(pos)) {
+                const currentCol = pos[0];
                 if (lastFocusedColumn >= 0) {
                     scrollDirection = currentCol > lastFocusedColumn ? "right" : currentCol < lastFocusedColumn ? "left" : "none";
                 }
                 lastFocusedColumn = currentCol;
+            } else {
+                scrollDirection = "none";
             }
         }
     }
@@ -388,10 +391,12 @@ Singleton {
 
     function sortWindows(windows) {
         return windows.slice().sort(function (a, b) {
-            const aCol = a.layout?.pos_in_scrolling_layout[0] ?? 0;
-            const bCol = b.layout?.pos_in_scrolling_layout[0] ?? 0;
-            const aRow = a.layout?.pos_in_scrolling_layout[1] ?? 0;
-            const bRow = b.layout?.pos_in_scrolling_layout[1] ?? 0;
+            const aPos = Array.isArray(a.layout?.pos_in_scrolling_layout) ? a.layout.pos_in_scrolling_layout : [0, 0];
+            const bPos = Array.isArray(b.layout?.pos_in_scrolling_layout) ? b.layout.pos_in_scrolling_layout : [0, 0];
+            const aCol = aPos[0];
+            const bCol = bPos[0];
+            const aRow = aPos[1];
+            const bRow = bPos[1];
             if (aCol !== bCol) {
                 return aCol - bCol;
             }
@@ -549,10 +554,10 @@ Singleton {
         return true;
     }
 
-    function toggleWindowFloating() {
+    function toggleWindowFloating(windowId) {
         if (!niriAvailable)
             return false;
-        Quickshell.execDetached(["niri", "msg", "action", `toggle-window-floating`]);
+        Quickshell.execDetached(["niri", "msg", "action", `toggle-window-floating`, `--id`, windowId ? windowId.toString() : focusedWindowId.toString()]);
         return true;
     }
 
@@ -573,6 +578,13 @@ Singleton {
         if (!niriAvailable)
             return false;
         Quickshell.execDetached(["niri", "msg", "action", `close-window`]);
+        return true;
+    }
+
+    function closeWindow(windowId) {
+        if (!niriAvailable)
+            return false;
+        Quickshell.execDetached(["niri", "msg", "action", `close-window`, `--id`, windowId ? windowId.toString() : focusedWindowId.toString()]);
         return true;
     }
 

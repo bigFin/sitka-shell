@@ -23,18 +23,13 @@ StyledRect {
     MaterialIcon {
         id: icon
         color: parent.onColor
-        font.pointSize: Appearance.font.size.normal
+        font.pointSize: Appearance.font.size.small
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
 
-        opacity: icon.text ? stateLayer.containsMouse : true
+        opacity: icon.text && stateLayer.containsMouse ? 1 : 0
         Behavior on opacity {
-            PropertyAnimation {
-                property: "opacity"
-                duration: Appearance.anim.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
-            }
+            Anim {}
         }
     }
 

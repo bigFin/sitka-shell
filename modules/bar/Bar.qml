@@ -78,7 +78,7 @@ ColumnLayout {
 
     function handleWheel(y: real, angleDelta: point): void {
         const ch = childAt(width / 2, y) as WrappedLoader;
-        if (ch?.id === "workspaces") {
+        if (ch?.id === "workspaces" && Config.bar.scrollActions.workspaces) {
             // Workspace scroll (No special workspaces for niri yet.)
 
             Niri.switchToWorkspaceUpDown(angleDelta.y > 0 ? "up" : "down");
@@ -88,13 +88,13 @@ ColumnLayout {
             // Hyprland.dispatch(`togglespecialworkspace ${activeWs.slice(8)}`);
             // else if (angleDelta.y < 0 || Hyprland.activeWsId > 1)
             // Hyprland.dispatch(`workspace r${angleDelta.y > 0 ? "-" : "+"}1`);
-        } else if (y < screen.height / 2) {
+        } else if (y < screen.height / 2 && Config.bar.scrollActions.workspaces) {
             // Volume scroll on top half
             if (angleDelta.y > 0)
                 Audio.incrementVolume();
             else if (angleDelta.y < 0)
                 Audio.decrementVolume();
-        } else {
+        } else if (Config.bar.scrollActions.brightness) {
             // Brightness scroll on bottom half
             const monitor = Brightness.getMonitorForScreen(screen);
             if (angleDelta.y > 0)

@@ -368,6 +368,7 @@ Config lives in:
             "showAudio": false,
             "showBattery": true,
             "showBluetooth": true,
+            "showMicrophone": false,
             "showKbLayout": false,
             "showNetwork": true
         },

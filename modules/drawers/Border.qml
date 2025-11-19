@@ -1,5 +1,3 @@
-pragma ComponentBehavior: Bound
-
 import qs.components
 import qs.services
 import qs.config
@@ -16,6 +14,9 @@ Item {
     StyledRect {
         anchors.fill: parent
         color: Colours.palette.m3surface
+        
+        // Apply large fillets for primary elements
+        filletSize: Appearance.fillet.large
 
         layer.enabled: true
         layer.effect: MultiEffect {
@@ -34,10 +35,16 @@ Item {
         layer.enabled: true
         visible: false
 
-        Rectangle {
+        StyledRect {
             anchors.fill: parent
             anchors.margins: Config.border.thickness
             anchors.leftMargin: root.bar.implicitWidth
+            
+            color: "black"
+            
+            // Match fillet size for inner mask (maybe slightly smaller?)
+            // Using same size for now
+            filletSize: Appearance.fillet.large
             radius: Config.border.rounding
         }
     }

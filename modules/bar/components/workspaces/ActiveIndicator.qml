@@ -11,6 +11,9 @@ StyledRect {
     required property Repeater workspaces
     required property Item mask
     required property int groupOffset
+    
+    // Apply small fillets for tertiary elements
+    filletSize: Appearance.fillet.small
 
     readonly property int currentWsIdx: {
         let i = activeWsId - 1;

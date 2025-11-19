@@ -196,6 +196,9 @@ WlSessionLockSurface {
             color: Colours.palette.m3surface
             radius: parent.radius
             opacity: Colours.transparency.enabled ? Colours.transparency.base : 1
+            
+            // Apply large fillets for primary elements
+            filletSize: Appearance.fillet.large
 
             layer.enabled: true
             layer.effect: MultiEffect {

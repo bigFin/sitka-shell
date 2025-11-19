@@ -85,6 +85,9 @@ Item {
             implicitWidth: Config.bar.workspaces.windowIconSize
             color: "transparent"
             radius: 0
+            
+            // Apply small fillets for tertiary elements
+            filletSize: Appearance.fillet.small
 
             IconImage {
                 anchors.centerIn: parent
@@ -141,6 +144,9 @@ Item {
 
         color: iconItem.isWsFocused ? Colours.palette.m3primaryContainer : Colours.palette.m3surfaceContainer
         radius: 0
+        
+        // Apply small fillets for tertiary elements
+        filletSize: Appearance.fillet.small
 
         MouseArea {
             anchors.fill: parent

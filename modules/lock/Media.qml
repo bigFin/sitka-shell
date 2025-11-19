@@ -164,6 +164,9 @@ Item {
 
         color: active ? Colours.palette[`m3${colour.toLowerCase()}`] : Colours.palette[`m3${colour.toLowerCase()}Container`]
         radius: 0
+        
+        // Apply normal fillets for secondary elements
+        filletSize: Appearance.fillet.normal
 
         Elevation {
             anchors.fill: parent

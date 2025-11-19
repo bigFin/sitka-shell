@@ -8,9 +8,8 @@ import qs.modules.dashboard as Dashboard
 import qs.modules.bar.popouts as BarPopouts
 import qs.modules.utilities as Utilities
 import QtQuick
-import QtQuick.Shapes
 
-Shape {
+Item {
     id: root
 
     required property Panels panels
@@ -19,55 +18,61 @@ Shape {
     anchors.fill: parent
     anchors.margins: Config.border.thickness
     anchors.leftMargin: bar.implicitWidth
-    preferredRendererType: Shape.CurveRenderer
 
     Osd.Background {
         wrapper: root.panels.osd
-
-        startX: root.width - root.panels.session.width
-        startY: (root.height - wrapper.height) / 2 - rounding
+        x: root.width - root.panels.session.width
+        y: (root.height - wrapper.height) / 2
+        width: wrapper.width
+        height: wrapper.height
     }
 
     Notifications.Background {
         wrapper: root.panels.notifications
-
-        startX: root.width
-        startY: 0
+        x: root.width
+        y: 0
+        width: wrapper.width
+        height: wrapper.height
     }
 
     Session.Background {
         wrapper: root.panels.session
-
-        startX: root.width
-        startY: (root.height - wrapper.height) / 2 - rounding
+        x: root.width
+        y: (root.height - wrapper.height) / 2
+        width: wrapper.width
+        height: wrapper.height
     }
 
     Launcher.Background {
         wrapper: root.panels.launcher
-
-        startX: (root.width - wrapper.width) / 2 - rounding
-        startY: root.height
+        x: (root.width - wrapper.width) / 2
+        y: root.height
+        width: wrapper.width
+        height: wrapper.height
     }
 
     Dashboard.Background {
         wrapper: root.panels.dashboard
-
-        startX: (root.width - wrapper.width) / 2 - rounding
-        startY: 0
+        x: (root.width - wrapper.width) / 2
+        y: 0
+        width: wrapper.width
+        height: wrapper.height
     }
 
     BarPopouts.Background {
         wrapper: root.panels.popouts
         invertBottomRounding: wrapper.y + wrapper.height + 1 >= root.height
-
-        startX: wrapper.x
-        startY: wrapper.y - rounding * sideRounding
+        x: wrapper.x
+        y: wrapper.y
+        width: wrapper.width
+        height: wrapper.height
     }
 
     Utilities.Background {
         wrapper: root.panels.utilities
-
-        startX: root.width
-        startY: root.height
+        x: root.width
+        y: root.height
+        width: wrapper.width
+        height: wrapper.height
     }
 }

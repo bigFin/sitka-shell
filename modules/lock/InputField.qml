@@ -92,6 +92,9 @@ Item {
 
             color: Colours.palette.m3onSurface
             radius: 0
+            
+            // Apply small fillets for tertiary elements
+            filletSize: Appearance.fillet.small
 
             opacity: 0
             scale: 0

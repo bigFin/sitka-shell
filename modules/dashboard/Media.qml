@@ -233,6 +233,9 @@ Item {
                 implicitHeight: implicitWidth
 
                 radius: 0
+                
+                // Apply normal fillets for secondary elements
+                filletSize: Appearance.fillet.normal
                 color: {
                     if (!Players.active?.canTogglePlaying)
                         return Qt.alpha(Colours.palette.m3onSurface, 0.1);

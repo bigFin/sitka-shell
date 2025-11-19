@@ -261,7 +261,7 @@ Item {
                             implicitWidth: implicitHeight
                             implicitHeight: editIcon.implicitHeight + Appearance.padding.smaller * 2
 
-                            radius: root.session.bt.editingDeviceName ? Appearance.rounding.small : implicitHeight / 2 * Math.min(1, Appearance.rounding.scale)
+                            radius: 0
                             color: Qt.alpha(Colours.palette.m3primary, root.session.bt.editingDeviceName ? 1 : 0)
 
                             StateLayer {
@@ -587,7 +587,7 @@ Item {
                 PropertyChanges {
                     fabBg.implicitWidth: 48
                     fabBg.implicitHeight: 48
-                    fabBg.radius: 48 / 2
+                    fabBg.radius: 0
                     fab.font.pointSize: Appearance.font.size.larger
                 }
             }

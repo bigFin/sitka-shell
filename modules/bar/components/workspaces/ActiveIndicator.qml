@@ -104,7 +104,7 @@ StyledRect {
             id: activeWindowIndicator
             height: Niri.focusedWindowId ? Config.bar.workspaces.windowIconSize + Appearance.padding.small + Config.bar.workspaces.windowIconGap * 2 : 0
             color: Colours.palette.m3primary
-            radius: Niri.focusedWindowId ? Appearance.rounding.small / 2 : Appearance.rounding.large
+            radius: 0
             // bottomRightRadius: root.isContextActiveInWs ? Appearance.rounding.large : radius
             // topRightRadius: root.isContextActiveInWs ? Appearance.rounding.large : radius
             anchors.horizontalCenter: parent.horizontalCenter

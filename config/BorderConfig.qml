@@ -1,6 +1,6 @@
 import Quickshell.Io
 
 JsonObject {
-    property int thickness: Appearance.padding.small
+    property int thickness: 2
     property int rounding: Appearance.rounding.large
 }

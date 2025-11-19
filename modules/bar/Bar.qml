@@ -15,6 +15,8 @@ ColumnLayout {
     required property ShellScreen screen
     required property PersistentProperties visibilities
     required property BarPopouts.Wrapper popouts
+
+
     readonly property int vPadding: Appearance.padding.large
 
     // Handle Workspace Popouts for Niri

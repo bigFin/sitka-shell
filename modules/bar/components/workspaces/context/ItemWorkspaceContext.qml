@@ -66,7 +66,7 @@ Rectangle {
                 implicitHeight: classText.height
                 color: root.onPrimary ? Colours.palette.m3tertiary : "transparent"
 
-                radius: root.baseRadius / 2
+                radius: 0
 
                 Behavior on color {
                     CAnim {}

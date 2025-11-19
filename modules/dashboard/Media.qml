@@ -232,7 +232,7 @@ Item {
                 implicitWidth: Math.max(playIcon.implicitWidth, playIcon.implicitHeight) + padding * 2
                 implicitHeight: implicitWidth
 
-                radius: Players.active?.isPlaying ? Appearance.rounding.small : implicitHeight / 2 * Math.min(1, Appearance.rounding.scale)
+                radius: 0
                 color: {
                     if (!Players.active?.canTogglePlaying)
                         return Qt.alpha(Colours.palette.m3onSurface, 0.1);

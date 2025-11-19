@@ -146,7 +146,7 @@ ColumnLayout {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: 6
                                 Layout.preferredWidth: 60
-                                radius: 3
+                                radius: 0
                                 color: Colours.palette.m3surfaceContainerLowest
                                 Layout.alignment: Qt.AlignVCenter
 
@@ -268,7 +268,7 @@ ColumnLayout {
                         AnimatedBar {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 16
-                            radius: 8
+                            radius: 0
                             value: (videocard.gpu.memoryTotal > 0) ? (videocard.gpu.memoryUsed / videocard.gpu.memoryTotal) : 0
                             barColor: {
                                 const usage = videocard.gpu.memoryTotal > 0 ? (videocard.gpu.memoryUsed / videocard.gpu.memoryTotal) : 0;

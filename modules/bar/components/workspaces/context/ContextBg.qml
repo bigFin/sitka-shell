@@ -147,7 +147,7 @@ Item {
         property int cornerType: 0 // 1 = bottom, 3 = top
         width: root.activated && !root.isWorkspaces && Niri.wsContextAnchor ? root.cornerPieceSize : 0
         height: root.cornerPieceSize
-        radius: Appearance.padding.large * 1.3
+        radius: 0
         orientation: cornerType
         color: parent.color
 

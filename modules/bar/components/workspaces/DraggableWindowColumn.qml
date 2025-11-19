@@ -227,9 +227,11 @@ Item {
             delegate: WindowIcon {
                 id: icon
                 workspace: root.workspace
-
+                
                 required property var modelData
                 required property int index
+                
+
 
                 property var fullGroup: root.groupedWindowsArray[index]
 

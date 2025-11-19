@@ -169,7 +169,7 @@ StyledRect {
 
         implicitWidth: ListView.view.width
         implicitHeight: Config.bar.sizes.innerWidth
-        radius: Appearance.rounding.small / 2
+        radius: 0
 
         readonly property bool isFocused: Number(Niri.focusedWindowId) === Number(modelData.id)
         color: isFocused ? Colours.palette.m3primary : "transparent"

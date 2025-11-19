@@ -9,11 +9,11 @@ JsonObject {
     property Transparency transparency: Transparency {}
 
     component Rounding: JsonObject {
-        property real scale: 1
-        property int small: 12 * scale
-        property int normal: 17 * scale
-        property int large: 25 * scale
-        property int full: 1000 * scale
+        property real scale: 0
+        property int small: 0 * scale
+        property int normal: 0 * scale
+        property int large: 0 * scale
+        property int full: 0 * scale
     }
 
     component Spacing: JsonObject {
@@ -35,10 +35,10 @@ JsonObject {
     }
 
     component FontFamily: JsonObject {
-        property string sans: "Rubik"
-        property string mono: "CaskaydiaCove NF"
-        property string material: "Material Symbols Rounded"
-        property string clock: "Rubik"
+        property string sans: "Iosevka Term"
+        property string mono: "Iosevka Term"
+        property string material: "MaterialSymbolsSharp"
+        property string clock: "Iosevka Term"
     }
 
     component FontSize: JsonObject {
@@ -59,19 +59,19 @@ JsonObject {
     }
 
     component AnimCurves: JsonObject {
-        property list<real> emphasized: [0.05, 0, 2 / 15, 0.06, 1 / 6, 0.4, 5 / 24, 0.82, 0.25, 1, 1, 1]
-        property list<real> emphasizedAccel: [0.3, 0, 0.8, 0.15, 1, 1]
-        property list<real> emphasizedDecel: [0.05, 0.7, 0.1, 1, 1, 1]
-        property list<real> standard: [0.2, 0, 0, 1, 1, 1]
-        property list<real> standardAccel: [0.3, 0, 1, 1, 1, 1]
-        property list<real> standardDecel: [0, 0, 0, 1, 1, 1]
-        property list<real> expressiveFastSpatial: [0.42, 1.67, 0.21, 0.9, 1, 1]
-        property list<real> expressiveDefaultSpatial: [0.38, 1.21, 0.22, 1, 1, 1]
-        property list<real> expressiveEffects: [0.34, 0.8, 0.34, 1, 1, 1]
+        property list<real> emphasized: [0, 0, 0.1, 1, 1, 1]
+        property list<real> emphasizedAccel: [0.5, 0, 1, 1, 1, 1]
+        property list<real> emphasizedDecel: [0, 0, 0.8, 1, 1, 1]
+        property list<real> standard: [0, 0, 0.2, 1, 1, 1]
+        property list<real> standardAccel: [0.5, 0, 1, 1, 1, 1]
+        property list<real> standardDecel: [0, 0, 0.8, 1, 1, 1]
+        property list<real> expressiveFastSpatial: [0.3, 0, 0.7, 1, 1, 1]
+        property list<real> expressiveDefaultSpatial: [0.2, 0, 0.6, 1, 1, 1]
+        property list<real> expressiveEffects: [0.1, 0, 0.5, 1, 1, 1]
     }
 
     component AnimDurations: JsonObject {
-        property real scale: 1
+        property real scale: 0.5
         property int small: 200 * scale
         property int normal: 400 * scale
         property int large: 600 * scale

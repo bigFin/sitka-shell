@@ -12,7 +12,8 @@ Item {
     id: iconItem
 
     required property Item workspace
-    required property var windowData
+    property var windowData
+    property var modelData
     required property var groupWindowData
     required property int wsWindowCount
     required property int windowCount
@@ -83,14 +84,14 @@ Item {
             implicitHeight: Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap
             implicitWidth: Config.bar.workspaces.windowIconSize
             color: "transparent"
-            radius: Appearance.rounding.small / 2
+            radius: 0
 
             IconImage {
                 anchors.centerIn: parent
                 property var windowData: iconItem.windowData
                 property int windowCount: iconItem.windowCount
                 implicitSize: (iconItem.isFocused && iconItem.isWsFocused) ? Config.bar.workspaces.windowIconSize : Config.bar.workspaces.windowIconSize - Appearance.padding.small
-                source: Icons.getAppIcon(windowData.app_id ?? "", "image-missing")
+                source: Icons.getAppIcon(windowData?.app_id ?? modelData?.app_id ?? "", "image-missing")
                 Behavior on implicitSize {
                     Anim {
                         easing.bezierCurve: Appearance.anim.curves.emphasized
@@ -139,7 +140,7 @@ Item {
         height: iconLoader.height + Appearance.padding.small
 
         color: iconItem.isWsFocused ? Colours.palette.m3primaryContainer : Colours.palette.m3surfaceContainer
-        radius: Appearance.rounding.small / 2
+        radius: 0
 
         MouseArea {
             anchors.fill: parent

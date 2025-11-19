@@ -6,7 +6,7 @@ Item {
     height: 48
 
     property color color: "red"
-    property int radius: 16
+    property int radius: 0
     property int orientation: 0 // 0=TOP_LEFT, 1=TOP_RIGHT, 2=BOTTOM_LEFT, 3=BOTTOM_RIGHT
     property bool invertH: false
     property bool invertV: false

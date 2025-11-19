@@ -15,7 +15,7 @@ StyledRect {
     property bool entered: Config.bar.workspaces.shown < Niri.getWorkspaceCount() && active
 
     color: Colours.palette.m3surfaceContainer
-    radius: entered ? Appearance.rounding.small / 2 : Appearance.rounding.full
+    radius: 0
 
     // Animate both y and opacity for a smooth effect
     anchors.topMargin: entered ? -Appearance.padding.normal : -Config.bar.sizes.innerWidth

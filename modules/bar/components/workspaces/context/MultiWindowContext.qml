@@ -109,7 +109,7 @@ Rectangle {
             }
         }
 
-        radius: Appearance.rounding.small / 2
+        radius: 0
 
         // anchors.left: parent.left
         Layout.leftMargin: root.hPadding * 2
@@ -179,7 +179,7 @@ Rectangle {
                     implicitHeight: classText.height
                     color: multiWindowContent.itemIsFocused ? Colours.palette.m3tertiary : "transparent"
 
-                    radius: root.baseRadius / 2
+                    radius: 0
 
                     Behavior on color {
                         CAnim {

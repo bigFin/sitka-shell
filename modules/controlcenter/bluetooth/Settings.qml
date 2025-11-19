@@ -421,7 +421,7 @@ ColumnLayout {
                     implicitWidth: implicitHeight
                     implicitHeight: editIcon.implicitHeight + Appearance.padding.smaller * 2
 
-                    radius: root.session.bt.editingAdapterName ? Appearance.rounding.small : implicitHeight / 2 * Math.min(1, Appearance.rounding.scale)
+                    radius: 0
                     color: Qt.alpha(Colours.palette.m3primary, root.session.bt.editingAdapterName ? 1 : 0)
 
                     StateLayer {

@@ -99,14 +99,17 @@ Singleton {
 
     function getAppIcon(name: string, fallback: string): string {
         const icon = DesktopEntries.heuristicLookup(name)?.icon;
-
-        //Temp fix until I find a better solution
-        if (String(icon) === "undefined")
+        
+        // Try IconImage first (PNG/SVG files)
+        if (String(icon) !== "undefined")
             return Quickshell.iconPath(icon, name);
-
+        
+        // Fallback to MaterialIcon with text label
         if (fallback !== "undefined")
             return Quickshell.iconPath(icon, fallback);
-        return Quickshell.iconPath(icon);
+        
+        // Final fallback to MaterialIcon
+        return Quickshell.iconPath(icon, fallback);
     }
 
     function getAppCategoryIcon(name: string, fallback: string): string {

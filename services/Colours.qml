@@ -21,6 +21,11 @@ Singleton {
     readonly property M3TPalette tPalette: M3TPalette {}
     readonly property M3Palette current: M3Palette {}
     readonly property M3Palette preview: M3Palette {}
+    
+    // Tactical color palettes
+    readonly property EverforestLightPalette everforestLight: EverforestLightPalette {}
+    readonly property EverforestDarkPalette everforestDark: EverforestDarkPalette {}
+    readonly property RosePinePalette rosepine: RosePinePalette {}
     readonly property Transparency transparency: Transparency {}
     property real wallLuminance
 
@@ -252,5 +257,110 @@ Singleton {
         property color sapphire: "#BDC2FF"
         property color blue: "#C7BFFF"
         property color lavender: "#EAB5ED"
+    }
+
+    component EverforestLightPalette: QtObject {
+        // Everforest Light theme colors
+        property color bg: "#fdf6e3"
+        property color fg: "#5c6a72"
+        property color bg0: "#fdf6e3"
+        property color bg1: "#f3ead3"
+        property color bg2: "#edeada"
+        property color bg3: "#e6dfc4"
+        property color bg4: "#dfd8c1"
+        property color bg5: "#d8d1bd"
+        property color bg_visual: "#e6dfc4"
+        property color bg_red: "#e8c4c4"
+        property color bg_green: "#d0e8c8"
+        property color bg_blue: "#c8d8e8"
+        property color bg_yellow: "#e8dcc4"
+        property color fg0: "#5c6a72"
+        property color fg1: "#526068"
+        property color fg2: "#4a555b"
+        property color fg3: "#424a50"
+        property color red: "#f85552"
+        property color orange: "#f57d26"
+        property color yellow: "#dfa000"
+        property color green: "#8da101"
+        property color cyan: "#35a77c"
+        property color blue: "#3a94c5"
+        property color purple: "#df69ba"
+        property color aqua: "#4db899"
+        property color grey0: "#a6b0a0"
+        property color grey1: "#939f91"
+        property color grey2: "#828e80"
+        property color statusline1: "#d0d8c8"
+        property color statusline2: "#e0e8d8"
+        property color statusline3: "#f0f8e8"
+    }
+
+    component EverforestDarkPalette: QtObject {
+        // Everforest Dark theme colors
+        property color bg: "#2d353b"
+        property color fg: "#d3c6aa"
+        property color bg0: "#2d353b"
+        property color bg1: "#323d44"
+        property color bg2: "#3a464c"
+        property color bg3: "#424f55"
+        property color bg4: "#4a585e"
+        property color bg5: "#526068"
+        property color bg_visual: "#424f55"
+        property color bg_red: "#543a48"
+        property color bg_green: "#3d5239"
+        property color bg_blue: "#394f60"
+        property color bg_yellow: "#524c3a"
+        property color fg0: "#d3c6aa"
+        property color fg1: "#e0ccc2"
+        property color fg2: "#edddd4"
+        property color fg3: "#faede4"
+        property color red: "#e67e80"
+        property color orange: "#e69875"
+        property color yellow: "#dbbc7f"
+        property color green: "#a7c080"
+        property color cyan: "#83c092"
+        property color blue: "#7fbbb3"
+        property color purple: "#d699b6"
+        property color aqua: "#83c092"
+        property color grey0: "#859289"
+        property color grey1: "#9da9a0"
+        property color grey2: "#a6b0a0"
+        property color statusline1: "#3a464c"
+        property color statusline2: "#424f55"
+        property color statusline3: "#4a585e"
+    }
+
+    component RosePinePalette: QtObject {
+        // Rose Pine theme colors
+        property color bg: "#191724"
+        property color fg: "#e0def4"
+        property color bg0: "#191724"
+        property color bg1: "#1f1d2e"
+        property color bg2: "#26233a"
+        property color bg3: "#2a2743"
+        property color bg4: "#302d4a"
+        property color bg5: "#393552"
+        property color bg_visual: "#2a2743"
+        property color bg_red: "#322841"
+        property color bg_green: "#282b3d"
+        property color bg_blue: "#282e45"
+        property color bg_yellow: "#2d2a3e"
+        property color fg0: "#e0def4"
+        property color fg1: "#f2e9e1"
+        property color fg2: "#fffaf3"
+        property color fg3: "#ffffff"
+        property color red: "#eb6f92"
+        property color orange: "#f6c177"
+        property color yellow: "#f6c177"
+        property color green: "#a3be8c"
+        property color cyan: "#9ccfd8"
+        property color blue: "#8bbec7"
+        property color purple: "#c4a7e7"
+        property color aqua: "#9ccfd8"
+        property color grey0: "#6e6a86"
+        property color grey1: "#908caa"
+        property color grey2: "#a6a3c1"
+        property color statusline1: "#26233a"
+        property color statusline2: "#2a2743"
+        property color statusline3: "#302d4a"
     }
 }

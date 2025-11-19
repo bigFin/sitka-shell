@@ -16,6 +16,14 @@ JsonObject {
         property int full: 0 * scale
     }
 
+    component FilletConfig: JsonObject {
+        property real scale: 1
+        property int small: 2 * scale    // 2px fillet for small elements
+        property int normal: 4 * scale   // 4px fillet for normal elements  
+        property int large: 6 * scale     // 6px fillet for large elements
+        property int style: 0             // 0=chamfer, 1=fillet, 2=bevel
+    }
+
     component Spacing: JsonObject {
         property real scale: 1
         property int small: 7 * scale
@@ -57,6 +65,10 @@ JsonObject {
         property FontFamily family: FontFamily {}
         property FontSize size: FontSize {}
     }
+
+    property FilletConfig fillet: FilletConfig {}
+    property int filletStyle: 0  // 0=chamfer, 1=fillet, 2=mixed
+    property bool enableFilletEffects: true
 
     component AnimCurves: JsonObject {
         property list<real> emphasized: [0, 0, 0.1, 1, 1, 1]

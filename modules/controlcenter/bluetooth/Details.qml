@@ -263,6 +263,9 @@ Item {
 
                             radius: 0
                             color: Qt.alpha(Colours.palette.m3primary, root.session.bt.editingDeviceName ? 1 : 0)
+                            
+                            // Apply small fillets for tertiary elements
+                            filletSize: Appearance.fillet.small
 
                             StateLayer {
                                 color: root.session.bt.editingDeviceName ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface

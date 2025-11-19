@@ -16,6 +16,9 @@ StyledRect {
 
     color: Colours.palette.m3surfaceContainer
     radius: 0
+    
+    // Apply small fillets for tertiary elements
+    filletSize: Appearance.fillet.small
 
     // Animate both y and opacity for a smooth effect
     anchors.topMargin: entered ? -Appearance.padding.normal : -Config.bar.sizes.innerWidth

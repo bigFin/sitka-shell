@@ -1,5 +1,3 @@
-pragma ComponentBehavior: Bound
-
 import "bluetooth"
 import qs.components
 import qs.services
@@ -7,19 +5,44 @@ import qs.config
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 
-ClippingRectangle {
+Item {
     id: root
 
     required property Session session
-
-    color: "transparent"
+    
+    // Mimic ClippingRectangle properties used by ControlCenter.qml
+    property alias topRightRadius: mask.radius // Dummy for compatibility
+    property alias bottomRightRadius: mask.radius // Dummy
+    
+    // Actually control fillets
+    property bool topRightFillet: true
+    property bool bottomRightFillet: true
+    
+    StyledRect {
+        id: mask
+        anchors.fill: parent
+        visible: false
+        color: "black"
+        filletSize: Appearance.fillet.large
+        
+        // Logic: if radius (from parent binding) is > 0, enable fillets.
+        property bool effectiveEnabled: radius > 0
+        
+        topLeftFillet: false
+        bottomLeftFillet: false
+        topRightFillet: effectiveEnabled
+        bottomRightFillet: effectiveEnabled
+    }
 
     ColumnLayout {
         id: layout
 
         spacing: 0
         y: -root.session.activeIndex * root.height
+        width: parent.width
+        // Height matches content
 
         Pane {
             index: 0
@@ -56,6 +79,15 @@ ClippingRectangle {
 
         Behavior on y {
             Anim {}
+        }
+        
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            maskSource: mask
+            maskEnabled: true
+            maskInverted: false
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 1
         }
     }
 

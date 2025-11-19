@@ -12,6 +12,9 @@ StyledRect {
     id: root
 
     // required property ShellScreen screen
+    
+    // Apply large fillets for primary elements
+    filletSize: Appearance.fillet.large
 
     readonly property int activeWsId: Niri.focusedWorkspaceIndex + 1
     readonly property var occupied: Niri.workspaceHasWindows

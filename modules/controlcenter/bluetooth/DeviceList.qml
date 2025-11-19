@@ -115,6 +115,9 @@ ColumnLayout {
 
             radius: 0
             color: Bluetooth.defaultAdapter?.discovering ? Colours.palette.m3secondary : Colours.palette.m3secondaryContainer
+            
+            // Apply normal fillets for secondary elements
+            filletSize: Appearance.fillet.normal
 
             StateLayer {
                 color: Bluetooth.defaultAdapter?.discovering ? Colours.palette.m3onSecondary : Colours.palette.m3onSecondaryContainer
@@ -292,6 +295,9 @@ ColumnLayout {
 
         radius: 0
         color: toggled ? Colours.palette[`m3${accent.toLowerCase()}`] : Colours.palette[`m3${accent.toLowerCase()}Container`]
+        
+        // Apply normal fillets for secondary elements
+        filletSize: Appearance.fillet.normal
 
         StateLayer {
             id: toggleStateLayer

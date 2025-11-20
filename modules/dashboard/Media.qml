@@ -5,7 +5,7 @@ import qs.components.controls
 import qs.services
 import qs.utils
 import "../../config"
-import Caelestia
+import Sitka
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Mpris

@@ -3,7 +3,7 @@ import qs.components.misc
 import qs.services
 import "../../../config"
 import qs.utils
-import Caelestia
+import Sitka
 import QtQuick
 import QtQuick.Shapes
 

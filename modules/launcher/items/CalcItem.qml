@@ -1,7 +1,7 @@
 import qs.components
 import qs.services
 import "../../../config"
-import Caelestia
+import Sitka
 import Quickshell
 import QtQuick
 import QtQuick.Layouts

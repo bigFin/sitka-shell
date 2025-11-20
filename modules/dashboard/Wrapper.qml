@@ -8,7 +8,7 @@ import qs.services
 import Quickshell
 import Quickshell.Hyprland
 import QtQuick
-import Caelestia
+import Sitka
 
 Item {
     id: root

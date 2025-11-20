@@ -18,7 +18,7 @@ Singleton {
 
     Process {
         running: root.enabled
-        command: ["systemd-inhibit", "--what=idle", "--who=caelestia-shell", "--why=Idle inhibitor active", "--mode=block", "sleep", "inf"]
+        command: ["systemd-inhibit", "--what=idle", "--who=sitka-shell", "--why=Idle inhibitor active", "--mode=block", "sleep", "inf"]
     }
 
     IpcHandler {

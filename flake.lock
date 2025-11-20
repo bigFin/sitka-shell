@@ -1,26 +1,5 @@
 {
   "nodes": {
-    "caelestia-cli": {
-      "inputs": {
-        "caelestia-shell": [],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1763431121,
-        "narHash": "sha256-VoLCzq8zUmYKeuxAxNA6GiTFo8H9mHUySU5k2719P8s=",
-        "owner": "caelestia-dots",
-        "repo": "cli",
-        "rev": "03d485ec07235e3ba10356ad8bf8cbd08c7061af",
-        "type": "github"
-      },
-      "original": {
-        "owner": "caelestia-dots",
-        "repo": "cli",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1763421233,
@@ -59,7 +38,6 @@
     },
     "root": {
       "inputs": {
-        "caelestia-cli": "caelestia-cli",
         "nixpkgs": "nixpkgs",
         "quickshell": "quickshell"
       }

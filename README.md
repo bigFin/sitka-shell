@@ -21,25 +21,14 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 > [!CAUTION]
 > This is my personal thingy and it's **STILL WORK IN PROGRESS.**
 >
-> Due to civil unrest in my country I don't have much time to boot up my PC so I update slowly :/
->
-> This repo is **ONLY for the desktop shell** of the caelestia dots. For the default caelestia dots, head to [the main repo](https://github.com/caelestia-dots/caelestia) instead.
-
->[!WARNING]
-> **HELP REQUIRED!**
->
-> I **skipped** unneccesary commit from original shell named: "bar/workspaces: add special ws overlay" and "bar/workspaces: better scroll" because there is no special workspace in Niri.
->
-> Unfortunately, I **skipped** an important commit from original shell named: "bar: per-monitor workspaces option (#394)"
-> - **Reason:** I don't have multi monitor so I'm not sure if this actually works, I might break stuff :/. I need help implementing that feature :)
-
-
+> This repo is a standalone shell, removing the "dots" management and CLI from the original Caelestia project.
 
 ---
 
 ## ✨ What’s Different in This Fork?
 
 Replaces **`Hyprland`** with **`Niri`** as the window manager.
+Removes declarative dotfiles management in favor of a standalone shell.
 
 ### `Dashboard`
 
@@ -70,9 +59,6 @@ Replaces **`Hyprland`** with **`Niri`** as the window manager.
 - * [ ]  Application dock
 - * [ ]  Searching programs in Niri overview
 
-> [!NOTE]
-> Some Caelestia features are dropped or WIP due to Niri limitations. See [ known issues](#-known-issues)
-
 ---
 
 ## 📦 Dependencies
@@ -83,11 +69,6 @@ You need both runtime dependencies and development headers.
 
 * All dependencies in plain text:
    * `quickshell-git networkmanager fish glibc qt6-declarative gcc-libs cava libcava aubio libpipewire lm-sensors ddcutil brightnessctl material-symbols caskaydia-cove-nerd grim swappy app2unit libqalculate`
-
-> [!NOTE]
->
-> Unlike the default shell,
-> [`caelestia-cli`](https://github.com/caelestia-dots/cli) is **not required for Niri**.
 
 <details><summary> <b> Detailed info about all dependencies </b></summary>
 
@@ -145,7 +126,7 @@ You need both runtime dependencies and development headers.
 
 ### Manual installation
 
-To install the shell manually, install all dependencies and clone this repo to `$XDG_CONFIG_HOME/quickshell/niri-caelestia-shell`.
+To install the shell manually, install all dependencies and clone this repo to `$XDG_CONFIG_HOME/quickshell/sitka-shell`.
 Then simply build and install using `cmake`.
 
 
@@ -155,9 +136,6 @@ Then simply build and install using `cmake`.
 
 ## ⚡ Installation
 
-> [!NOTE]
-> There is **NO** package manager installation support yet because... 🤔
-
 ### Manual Build
 
 1. Install dependencies.
@@ -165,29 +143,25 @@ Then simply build and install using `cmake`.
 
     ```sh
     cd $XDG_CONFIG_HOME/quickshell
-    git clone https://github.com/jutraim/niri-caelestia-shell
+    git clone https://github.com/sitka-shell/sitka-shell
     ```
 3. Build:
 
     ```sh
-    cd $XDG_CONFIG_HOME/quickshell/niri-caelestia-shell
+    cd $XDG_CONFIG_HOME/quickshell/sitka-shell
     cmake -B build -G Ninja \
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX=$HOME \
-      -DINSTALL_QSCONFDIR=$HOME/.config/quickshell/niri-caelestia-shell
+      -DINSTALL_QSCONFDIR=$HOME/.config/quickshell/sitka-shell
     cmake --build build
     cmake --install build
     ```
-    It's trying to install into system paths (`/usr/lib/caelestia/...`),
-    so grab the necessary permissions or use sudo while installing.
-
-    If you get `VERSION is not set and failed to get from git` error, that means I forgot to tag version. You can do `git tag 1.1.1` to work around it :)
 
 ### 🔃 Updating
-You can update by running `git pull` in `$XDG_CONFIG_HOME/quickshell/niri-caelestia-shell`.
+You can update by running `git pull` in `$XDG_CONFIG_HOME/quickshell/sitka-shell`.
 
 ```sh
-cd $XDG_CONFIG_HOME/quickshell/niri-caelestia-shell
+cd $XDG_CONFIG_HOME/quickshell/sitka-shell
 git pull
 ```
 
@@ -197,35 +171,31 @@ git pull
 
 ## 🚀 Usage
 
-The shell can be started via the `quickshell -c niri-caelestia-shell -n` command or `qs -c niri-caelestia-shell -n` on your preferred terminal.
+The shell can be started via the `quickshell -c sitka-shell -n` command or `qs -c sitka-shell -n` on your preferred terminal.
 ><sub> (`qs` and `quickshell` are interchangable.) </sub>
 
 
 * Example line for niri `config.kdl` to launch the shell at startup:
 
    ```
-   spawn-at-startup "quickshell" "-c" "niri-caelestia-shell" "-n"
+   spawn-at-startup "quickshell" "-c" "sitka-shell" "-n"
    ```
 
 ### Custom Shortcuts/IPC
 
 All keybinds are accessible via [Quickshell IPC msg](https://quickshell.org/docs/v0.1.0/types/Quickshell.Io/IpcHandler/).
 
-All IPC commands can be called via `quickshell -c niri-caelestia-shell ipc call ...`
+All IPC commands can be called via `quickshell -c sitka-shell ipc call ...`
 
 * For example:
 
    ```sh
-   qs -c niri-caelestia-shell ipc call mpris getActive <trackTitle>
+   qs -c sitka-shell ipc call mpris getActive <trackTitle>
    ```
 
 * Example shortcut in `config.kdl` to toggle the launcher drawer:
     ```sh
-    Mod+Space { spawn  "qs" "-c" "niri-caelestia-shell" "ipc" "call" "drawers" "toggle" "launcher"; }
-    ```
-
-    ```sh
-    Mod+Space hotkey-overlay-title="Caelestia app launcher" { spawn-sh "qs -c niri-caelestia-shell ipc call drawers toggle launcher"; }
+    Mod+Space { spawn  "qs" "-c" "sitka-shell" "ipc" "call" "drawers" "toggle" "launcher"; }
     ```
 
 <br>
@@ -506,13 +476,10 @@ An example configuration file with comments is available at `config/shell.json.e
 
 <details><summary> <b> Example Nix Home Manager </b></summary>
 
-I don't have nix, plz help :D
-
 ```nix
 {
   programs.sitka-shell = {
     enable = true;
-    with-cli = true;
     settings.theme.accent = "#ffb86c";
   };
 }
@@ -532,6 +499,7 @@ To set the wallpaper, you can use the app launcher command `> wallpaper`.
 
 ---
 
+
 ## 🧪 Known Issues
 
 1. Multi-monitor support is currently hardcoded :(
@@ -540,22 +508,6 @@ To set the wallpaper, you can use the app launcher command `> wallpaper`.
 4. Picker (screenshot tool) window grabbing is WIP due to Niri limitations.
 5. Focus grabbing for Quickshell windows (power menu, task manager, settings) behaves awkwardly because of Niri limitations.
 6. Quickshell may occasionally crash because of upstream issues (it re-opens automagically)
-7. I'm not happy that you have to build it to be able to use it, so I might revert.
-8. Some dependencies aren't actually required but I keep them because the original repo still has them.
-9. I haven't touched theming, be cautious.
-
----
-
-## ❓ FAQ
-
-**Q: Can I theme it?**
-A: Yes, via `shell.json` (or Nix options if you use Home Manager).
-
-**Q: Why does my task manager Intel GPU messed-up?**
-A: GPU monitoring is limited; Intel isn’t supported yet.
-
-**Q: Why does it take so long for you to update?**
-A: Civil unrest in my country 😥
 
 ---
 
@@ -565,9 +517,3 @@ A: Civil unrest in my country 😥
 * [Caelestia](https://github.com/caelestia-shell/caelestia-shell) – Original project
 * [Niri](https://github.com/YaLTeR/niri) – Window manager backend
 * All upstream contributors :)
-
----
-
-## 📈 Useless chart
-
-[![Star History Chart](https://api.star-history.com/svg?repos=jutraim/niri-caelestia-shell\&type=Date)](https://star-history.com/#jutraim/niri-caelestia-shell&Date)

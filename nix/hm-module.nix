@@ -6,38 +6,34 @@ self: {
 }: let
   inherit (pkgs.stdenv.hostPlatform) system;
 
-  cli-default = self.inputs.caelestia-cli.packages.${system}.default;
-  shell-default = self.packages.${system}.with-cli;
+  shell-default = self.packages.${system}.sitka-shell;
 
-  cfg = config.programs.caelestia;
+  cfg = config.programs.sitka;
 in {
-  imports = [
-    (lib.mkRenamedOptionModule ["programs" "caelestia" "environment"] ["programs" "caelestia" "systemd" "environment"])
-  ];
   options = with lib; {
-    programs.caelestia = {
-      enable = mkEnableOption "Enable Caelestia shell";
+    programs.sitka = {
+      enable = mkEnableOption "Enable Sitka shell";
       package = mkOption {
         type = types.package;
         default = shell-default;
-        description = "The package of Caelestia shell";
+        description = "The package of Sitka shell";
       };
       systemd = {
         enable = mkOption {
           type = types.bool;
           default = true;
-          description = "Enable the systemd service for Caelestia shell";
+          description = "Enable the systemd service for Sitka shell";
         };
         target = mkOption {
           type = types.str;
           description = ''
-            The systemd target that will automatically start the Caelestia shell.
+            The systemd target that will automatically start the Sitka shell.
           '';
           default = config.wayland.systemd.target;
         };
         environment = mkOption {
           type = types.listOf types.str;
-          description = "Extra Environment variables to pass to the Caelestia shell systemd service.";
+          description = "Extra Environment variables to pass to the Sitka shell systemd service.";
           default = [];
           example = [
             "QT_QPA_PLATFORMTHEME=gtk3"
@@ -47,42 +43,23 @@ in {
       settings = mkOption {
         type = types.attrsOf types.anything;
         default = {};
-        description = "Caelestia shell settings";
+        description = "Sitka shell settings";
       };
       extraConfig = mkOption {
         type = types.str;
         default = "";
-        description = "Caelestia shell extra configs written to shell.json";
-      };
-      cli = {
-        enable = mkEnableOption "Enable Caelestia CLI";
-        package = mkOption {
-          type = types.package;
-          default = cli-default;
-          description = "The package of Caelestia CLI"; # Doesn't override the shell's CLI, only change from home.packages
-        };
-        settings = mkOption {
-          type = types.attrsOf types.anything;
-          default = {};
-          description = "Caelestia CLI settings";
-        };
-        extraConfig = mkOption {
-          type = types.str;
-          default = "{}";
-          description = "Caelestia CLI extra configs written to cli.json";
-        };
+        description = "Sitka shell extra configs written to shell.json";
       };
     };
   };
 
   config = let
-    cli = cfg.cli.package;
     shell = cfg.package;
   in
     lib.mkIf cfg.enable {
-      systemd.user.services.caelestia = lib.mkIf cfg.systemd.enable {
+      systemd.user.services.sitka-shell = lib.mkIf cfg.systemd.enable {
         Unit = {
-          Description = "Caelestia Shell Service";
+          Description = "Sitka Shell Service";
           After = [cfg.systemd.target];
           PartOf = [cfg.systemd.target];
           X-Restart-Triggers = lib.mkIf (cfg.settings != {}) [
@@ -123,9 +100,8 @@ in {
           ];
       in {
         "sitka/shell.json".text = mkConfig cfg;
-        "sitka/cli.json".text = mkConfig cfg.cli;
       };
 
-      home.packages = [shell] ++ lib.optional cfg.cli.enable cli;
+      home.packages = [shell];
     };
 }

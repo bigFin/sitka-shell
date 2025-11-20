@@ -21,7 +21,8 @@ Searcher {
 
     function setWallpaper(path: string): void {
         actualCurrent = path;
-        Quickshell.execDetached(["caelestia", "wallpaper", "-f", path, ...smartArg]);
+        console.log("Wallpaper setting not implemented without caelestia-cli");
+        // Quickshell.execDetached(["caelestia", "wallpaper", "-f", path, ...smartArg]);
     }
 
     function preview(path: string): void {
@@ -29,7 +30,8 @@ Searcher {
         showPreview = true;
 
         if (Colours.scheme === "dynamic")
-            getPreviewColoursProc.running = true;
+             console.log("Preview colours not implemented without caelestia-cli");
+             // getPreviewColoursProc.running = true;
     }
 
     function stopPreview(): void {
@@ -81,7 +83,7 @@ Searcher {
     Process {
         id: getPreviewColoursProc
 
-        command: ["caelestia", "wallpaper", "-p", root.previewPath, ...root.smartArg]
+        // command: ["caelestia", "wallpaper", "-p", root.previewPath, ...root.smartArg]
         stdout: StdioCollector {
             onStreamFinished: {
                 Colours.load(text, true);

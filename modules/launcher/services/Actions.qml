@@ -64,7 +64,8 @@ Searcher {
 
             function onClicked(list: AppList): void {
                 list.visibilities.launcher = false;
-                Quickshell.execDetached(["caelestia", "wallpaper", "-r"]);
+                console.log("Random wallpaper not implemented without caelestia-cli");
+                // Quickshell.execDetached(["caelestia", "wallpaper", "-r"]);
             }
         },
         Action {

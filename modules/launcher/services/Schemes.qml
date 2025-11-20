@@ -39,8 +39,8 @@ Searcher {
     Process {
         id: getSchemes
 
-        running: true
-        command: ["caelestia", "scheme", "list"]
+        // running: true
+        // command: ["caelestia", "scheme", "list"]
         stdout: StdioCollector {
             onStreamFinished: {
                 const schemeData = JSON.parse(text);
@@ -63,8 +63,8 @@ Searcher {
     Process {
         id: getCurrent
 
-        running: true
-        command: ["caelestia", "scheme", "get", "-nfv"]
+        // running: true
+        // command: ["caelestia", "scheme", "get", "-nfv"]
         stdout: StdioCollector {
             onStreamFinished: {
                 const [name, flavour, variant] = text.trim().split("\n");
@@ -82,7 +82,8 @@ Searcher {
 
         function onClicked(list: AppList): void {
             list.visibilities.launcher = false;
-            Quickshell.execDetached(["caelestia", "scheme", "set", "-n", name, "-f", flavour]);
+            console.log("Scheme setting not implemented without caelestia-cli");
+            // Quickshell.execDetached(["caelestia", "scheme", "set", "-n", name, "-f", flavour]);
         }
     }
 }

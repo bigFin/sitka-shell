@@ -42,7 +42,7 @@ ColumnLayout {
 
         MonoText {
             Layout.fillWidth: true
-            text: "caelestiafetch.sh"
+            text: "sitka-shell"
             font.pointSize: root.width > 400 ? Config.appearance.font.size.larger : Config.appearance.font.size.normal
             elide: Text.ElideRight
         }

@@ -186,6 +186,12 @@ ColumnLayout {
                 }
             }
             DelegateChoice {
+                roleValue: "pin"
+                delegate: WrappedLoader {
+                    sourceComponent: Pin {}
+                }
+            }
+            DelegateChoice {
                 roleValue: "power"
                 delegate: WrappedLoader {
                     sourceComponent: Power {

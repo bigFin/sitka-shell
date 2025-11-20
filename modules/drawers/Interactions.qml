@@ -100,7 +100,7 @@ CustomMouseArea {
         const y = event.y;
 
         // Show bar in non-exclusive mode on hover
-        if (!visibilities.bar && Config.bar.showOnHover && x < bar.implicitWidth)
+        if (!visibilities.bar && Config.bar.showOnHover && x < Math.max(bar.implicitWidth, Config.bar.dragThreshold))
             bar.isHovered = true;
         // console.log("Bar hovered!")
 
@@ -127,12 +127,17 @@ CustomMouseArea {
         }
 
         // Show/hide session on drag
+        // Ensure we don't trigger session drag if we are interacting with OSD (which is also on the right)
         if (pressed && inRightPanel(panels.session, dragStart.x, dragStart.y) && withinPanelHeight(panels.session, x, y)) {
-            const dragX = x - dragStart.x;
-            if (dragX < -Config.session.dragThreshold)
-                visibilities.session = true;
-            else if (dragX > Config.session.dragThreshold)
-                visibilities.session = false;
+            const draggingOnOsd = visibilities.osd && inRightPanel(panels.osd, dragStart.x, dragStart.y);
+            
+            if (!draggingOnOsd) {
+                const dragX = x - dragStart.x;
+                if (dragX < -Config.session.dragThreshold)
+                    visibilities.session = true;
+                else if (dragX > Config.session.dragThreshold)
+                    visibilities.session = false;
+            }
         }
 
         // Show launcher on hover, or show/hide on drag if hover is disabled

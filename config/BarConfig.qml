@@ -4,6 +4,7 @@ JsonObject {
     property bool persistent: true
     property bool showOnHover: true
     property int dragThreshold: 20
+    property int hoverThreshold: 50
     property ScrollActions scrollActions: ScrollActions {}
     property Workspaces workspaces: Workspaces {}
     property Tray tray: Tray {}

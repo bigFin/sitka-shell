@@ -15,6 +15,10 @@ Item {
     property bool topRightFillet: true
     property bool bottomLeftFillet: true
     property bool bottomRightFillet: true
+    property int topLeftFilletStyle: filletStyle
+    property int topRightFilletStyle: filletStyle
+    property int bottomLeftFilletStyle: filletStyle
+    property int bottomRightFilletStyle: filletStyle
     
     // Radius support (fallback if fillets disabled)
     property int radius: 0
@@ -69,7 +73,7 @@ Item {
             width: root.filletSize
             height: root.filletSize
             color: root.color
-            filletStyle: root.filletStyle
+            filletStyle: root.topLeftFilletStyle
             filletSize: root.filletSize
             orientation: 0 // TOP_LEFT
             anchors.top: parent.top
@@ -81,7 +85,7 @@ Item {
             width: root.filletSize
             height: root.filletSize
             color: root.color
-            filletStyle: root.filletStyle
+            filletStyle: root.topRightFilletStyle
             filletSize: root.filletSize
             orientation: 1 // TOP_RIGHT
             anchors.top: parent.top
@@ -93,7 +97,7 @@ Item {
             width: root.filletSize
             height: root.filletSize
             color: root.color
-            filletStyle: root.filletStyle
+            filletStyle: root.bottomLeftFilletStyle
             filletSize: root.filletSize
             orientation: 2 // BOTTOM_LEFT
             anchors.bottom: parent.bottom
@@ -105,7 +109,7 @@ Item {
             width: root.filletSize
             height: root.filletSize
             color: root.color
-            filletStyle: root.filletStyle
+            filletStyle: root.bottomRightFilletStyle
             filletSize: root.filletSize
             orientation: 3 // BOTTOM_RIGHT
             anchors.bottom: parent.bottom

@@ -86,13 +86,13 @@ in {
           After = [cfg.systemd.target];
           PartOf = [cfg.systemd.target];
           X-Restart-Triggers = lib.mkIf (cfg.settings != {}) [
-            "${config.xdg.configFile."caelestia/shell.json".source}"
+            "${config.xdg.configFile."sitka/shell.json".source}"
           ];
         };
 
         Service = {
           Type = "exec";
-          ExecStart = "${shell}/bin/caelestia-shell";
+          ExecStart = "${shell}/bin/sitka-shell";
           Restart = "on-failure";
           RestartSec = "5s";
           TimeoutStopSec = "5s";
@@ -122,8 +122,8 @@ in {
             builtins.toJSON
           ];
       in {
-        "caelestia/shell.json".text = mkConfig cfg;
-        "caelestia/cli.json".text = mkConfig cfg.cli;
+        "sitka/shell.json".text = mkConfig cfg;
+        "sitka/cli.json".text = mkConfig cfg.cli;
       };
 
       home.packages = [shell] ++ lib.optional cfg.cli.enable cli;

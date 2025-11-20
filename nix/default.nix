@@ -100,7 +100,7 @@
 in
   stdenv.mkDerivation {
     inherit version;
-    pname = "caelestia-shell${lib.optionalString debug "-debug"}";
+    pname = "sitka-shell${lib.optionalString debug "-debug"}";
     src = ./..;
 
     nativeBuildInputs = [cmake ninja makeWrapper qt6.wrapQtAppsHook];
@@ -114,7 +114,7 @@ in
     cmakeFlags =
       [
         (lib.cmakeFeature "ENABLE_MODULES" "shell")
-        (lib.cmakeFeature "INSTALL_QSCONFDIR" "${placeholder "out"}/share/caelestia-shell")
+        (lib.cmakeFeature "INSTALL_QSCONFDIR" "${placeholder "out"}/share/sitka-shell")
       ]
       ++ cmakeVersionFlags;
 
@@ -128,12 +128,12 @@ in
     '';
 
     postInstall = ''
-      makeWrapper ${quickshell}/bin/qs $out/bin/caelestia-shell \
+      makeWrapper ${quickshell}/bin/qs $out/bin/sitka-shell \
       	--prefix PATH : "${lib.makeBinPath runtimeDeps}" \
       	--set FONTCONFIG_FILE "${fontconfig}" \
-      	--set CAELESTIA_LIB_DIR ${extras}/lib \
-        --set CAELESTIA_XKB_RULES_PATH ${xkeyboard-config}/share/xkeyboard-config-2/rules/base.lst \
-      	--add-flags "-p $out/share/caelestia-shell"
+      	--set SITKA_LIB_DIR ${extras}/lib \
+        --set SITKA_XKB_RULES_PATH ${xkeyboard-config}/share/xkeyboard-config-2/rules/base.lst \
+      	--add-flags "-p $out/share/sitka-shell"
 
       mkdir -p $out/lib
       ln -s ${extras}/lib/* $out/lib/
@@ -147,6 +147,6 @@ in
       description = "A very segsy desktop shell";
       homepage = "https://github.com/caelestia-dots/shell";
       license = lib.licenses.gpl3Only;
-      mainProgram = "caelestia-shell";
+      mainProgram = "sitka-shell";
     };
   }

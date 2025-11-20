@@ -12,10 +12,11 @@ StyledRect {
     
     // Apply large fillets for main containers
     filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
+    filletStyle: 1 // Chamfer
     
-    // Enable top-left fillet only
+    // Enable fillets for corners facing the screen (assuming right anchor)
     topLeftFillet: true
     topRightFillet: false
-    bottomLeftFillet: false
+    bottomLeftFillet: true
     bottomRightFillet: false
 }

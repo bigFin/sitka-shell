@@ -1,10 +1,10 @@
-<h1 align=center>🌌 Niri-Caelestia Shell</h1>
+<h1 align=center>🌌 Sitka Shell</h1>
 
 <div align=center>
 
-![GitHub last commit](https://img.shields.io/github/last-commit/jutraim/niri-caelestia-shell?style=for-the-badge&labelColor=101418&color=9ccbfb)
-![GitHub Repo stars](https://img.shields.io/github/stars/jutraim/niri-caelestia-shell?style=for-the-badge&labelColor=101418&color=b9c8da)
-![GitHub repo size](https://img.shields.io/github/repo-size/jutraim/niri-caelestia-shell?style=for-the-badge&labelColor=101418&color=d3bfe6)
+![GitHub last commit](https://img.shields.io/github/last-commit/jutraim/sitka-shell?style=for-the-badge&labelColor=101418&color=9ccbfb)
+![GitHub Repo stars](https://img.shields.io/github/stars/jutraim/sitka-shell?style=for-the-badge&labelColor=101418&color=b9c8da)
+![GitHub repo size](https://img.shields.io/github/repo-size/jutraim/sitka-shell?style=for-the-badge&labelColor=101418&color=d3bfe6)
 
 </div>
 
@@ -274,8 +274,9 @@ All IPC commands can be called via `quickshell -c niri-caelestia-shell ipc call 
 Config lives in:
 
 ```
-~/.config/caelestia/shell.json
+~/.config/sitka/shell.json
 ```
+An example configuration file with comments is available at `config/shell.json.example`.
 <details><summary> <b> Example JSON </b></summary>
 
 ```json
@@ -509,7 +510,7 @@ I don't have nix, plz help :D
 
 ```nix
 {
-  programs.niri-caelestia-shell = {
+  programs.sitka-shell = {
     enable = true;
     with-cli = true;
     settings.theme.accent = "#ffb86c";
@@ -524,7 +525,7 @@ The profile picture for the dashboard is read from the file `~/.face`, so to set
 it you can copy your image to there or set it via the dashboard. **It's not a directory.**
 
 The wallpapers for the wallpaper switcher are read from `~/Pictures/Wallpapers`
-by default. To change it, change the wallpapers path in `~/.config/caelestia/shell.json`.
+by default. To change it, change the wallpapers path in `~/.config/sitka/shell.json`.
 
 To set the wallpaper, you can use the app launcher command `> wallpaper`.
 

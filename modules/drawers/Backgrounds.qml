@@ -21,7 +21,7 @@ Item {
 
     Osd.Background {
         wrapper: root.panels.osd
-        x: root.width - root.panels.session.width
+        x: wrapper.x
         y: (root.height - wrapper.height) / 2
         width: wrapper.width
         height: wrapper.height

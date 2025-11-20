@@ -21,7 +21,7 @@ JsonObject {
         property int small: 2 * scale    // 2px fillet for small elements
         property int normal: 4 * scale   // 4px fillet for normal elements  
         property int large: 6 * scale     // 6px fillet for large elements
-        property int style: 0             // 0=chamfer, 1=fillet, 2=bevel
+        property int style: 1             // 0=radius, 1=chamfer, 2=fillet
     }
 
     component Spacing: JsonObject {
@@ -67,7 +67,7 @@ JsonObject {
     }
 
     property FilletConfig fillet: FilletConfig {}
-    property int filletStyle: 0  // 0=chamfer, 1=fillet, 2=mixed
+    property int filletStyle: 1  // 0=radius, 1=chamfer, 2=fillet
     property bool enableFilletEffects: true
 
     component AnimCurves: JsonObject {

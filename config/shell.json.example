@@ -1,0 +1,23 @@
+{
+    "general": {
+        // "theme": "EverforestDark"
+        // Available themes: "EverforestDark", "EverforestLight", "RosePine"
+        "theme": "EverforestDark"
+    },
+    "appearance": {
+        // Corner style: 0=radius, 1=chamfer, 2=fillet
+        "filletStyle": 1,
+        "font": {
+            "family": {
+                // Font for sans-serif text.
+                "sans": "Iosevka Term",
+                // Font for monospaced text.
+                "mono": "Iosevka Term",
+                // Icon font.
+                "material": "MaterialSymbolsSharp",
+                // Font for the clock.
+                "clock": "Iosevka Term"
+            }
+        }
+    }
+}

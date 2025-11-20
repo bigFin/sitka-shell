@@ -60,34 +60,27 @@ Singleton {
         return Qt.hsla(c.hslHue, c.hslSaturation, 0.1, 1);
     }
 
-    function load(data: string, isPreview: bool): void {
-        const colours = isPreview ? preview : current;
-        const scheme = JSON.parse(data);
-
-        if (!isPreview) {
-            root.scheme = scheme.name;
-            flavour = scheme.flavour;
-            currentLight = scheme.mode === "light";
-        } else {
-            previewLight = scheme.mode === "light";
-        }
-
-        for (const [name, colour] of Object.entries(scheme.colours)) {
-            const propName = name.startsWith("term") ? name : `m3${name}`;
-            if (colours.hasOwnProperty(propName))
-                colours[propName] = `#${colour}`;
-        }
+    readonly property string themeName: Config.general.theme || "EverforestDark"
+    
+    readonly property var paletteSource: {
+        if (themeName === "EverforestLight") return everforestLight;
+        if (themeName === "RosePine") return rosepine;
+        return everforestDark;
+    }
+    
+    onPaletteSourceChanged: {
+        currentLight = (themeName === "EverforestLight");
+        
+        current.m3surface = paletteSource.bg;
+        current.m3onSurface = paletteSource.fg;
+        current.m3primary = paletteSource.red;
+        current.m3secondary = paletteSource.green;
+        current.m3tertiary = paletteSource.blue;
     }
 
-    function setMode(mode: string): void {
-        Quickshell.execDetached(["sitka", "scheme", "set", "--notify", "-m", mode]);
-    }
-
-    FileView {
-        path: `${Paths.state}/scheme.json`
-        watchChanges: true
-        onFileChanged: reload()
-        onLoaded: root.load(text(), false)
+    Component.onCompleted: {
+        // Trigger initial setup
+        paletteSourceChanged();
     }
 
     Connections {

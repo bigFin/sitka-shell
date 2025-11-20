@@ -17,6 +17,16 @@ Item {
         
         // Apply large fillets for primary elements
         filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
+        
+        // Top corners: Sharp/Square (Disabled fillet) - "Extends" fully
+        topLeftFillet: false
+        topRightFillet: false
+        
+        // Bottom corners: Fillet (2) - "Inward folding" look
+        bottomLeftFillet: true
+        bottomRightFillet: true
+        bottomLeftFilletStyle: 2
+        bottomRightFilletStyle: 2
 
         layer.enabled: true
         layer.effect: MultiEffect {
@@ -45,6 +55,14 @@ Item {
             // Match fillet size for inner mask (maybe slightly smaller?)
             // Using same size for now
             filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
+            
+            // Match outer border styles
+            topLeftFillet: false
+            topRightFillet: false
+            bottomLeftFillet: true
+            bottomRightFillet: true
+            bottomLeftFilletStyle: 2
+            bottomRightFilletStyle: 2
         }
     }
 }

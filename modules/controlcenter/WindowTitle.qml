@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import QtQuick
 
@@ -10,7 +10,7 @@ StyledRect {
     required property ShellScreen screen
     required property Session session
 
-    implicitHeight: text.implicitHeight + Appearance.padding.normal
+    implicitHeight: text.implicitHeight + Config.appearance.padding.normal
     color: Colours.tPalette.m3surfaceContainer
 
     StyledText {
@@ -21,20 +21,20 @@ StyledRect {
 
         text: qsTr("Caelestia Settings - %1").arg(root.session.active)
         font.capitalization: Font.Capitalize
-        font.pointSize: Appearance.font.size.larger
+        font.pointSize: Config.appearance.font.size.larger
         font.weight: 500
     }
 
     Item {
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.margins: Appearance.padding.normal
+        anchors.margins: Config.appearance.padding.normal
 
         implicitWidth: implicitHeight
-        implicitHeight: closeIcon.implicitHeight + Appearance.padding.small
+        implicitHeight: closeIcon.implicitHeight + Config.appearance.padding.small
 
         StateLayer {
-            radius: Appearance.rounding.full
+            radius: Config.appearance.rounding.full
 
             function onClicked(): void {
                 QsWindow.window.destroy();

@@ -1,5 +1,6 @@
 import QtQuick
 import "effects"
+import "../config"
 
 Item {
     id: root
@@ -7,9 +8,9 @@ Item {
     property color color: "transparent"
     
     // Fillet/chamfer support
-    property bool enableFillets: Appearance.enableFilletEffects
-    property int filletStyle: Appearance.filletStyle
-    property int filletSize: Appearance.fillet.normal
+    property bool enableFillets: Config.appearance ? Config.appearance.enableFilletEffects : true
+    property int filletStyle: Config.appearance ? Config.appearance.filletStyle : 0
+    property int filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.normal : 4
     property bool topLeftFillet: true
     property bool topRightFillet: true
     property bool bottomLeftFillet: true

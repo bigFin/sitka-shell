@@ -5,7 +5,7 @@ import QtQuick.Layouts
 import qs.services
 import qs.components
 import qs.components.misc
-import qs.config
+import "../../../config"
 
 Item {
     id: processListItem
@@ -16,7 +16,7 @@ Item {
     width: 900
     height: 680
     // color: Colours.palette.m3surfaceContainerLow
-    // radius: Appearance.rounding.small
+    // radius: Config.appearance.rounding.small
     Layout.fillHeight: true
     // Remove enableShadow and keyboardFocus, unless you want to reimplement them
 
@@ -49,18 +49,18 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: Appearance.padding.normal
+        spacing: Config.appearance.padding.normal
 
         StyledRect {
             Layout.fillWidth: true
             implicitHeight: 52
             color: Colours.palette.m3surfaceContainer
-            radius: Appearance.rounding.small
+            radius: Config.appearance.rounding.small
 
             RowLayout {
                 anchors.fill: parent
-                anchors.margins: Appearance.padding.small
-                spacing: Appearance.padding.small
+                anchors.margins: Config.appearance.padding.small
+                spacing: Config.appearance.padding.small
 
                 Repeater {
                     model: processListItem.tabNames
@@ -75,14 +75,14 @@ Item {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
 
-                        radius: Appearance.rounding.small
+                        radius: Config.appearance.rounding.small
                         color: processListItem.currentTab === index ? Colours.palette.m3primaryContainer : (tabMouseArea.containsMouse ? Qt.rgba(Colours.palette.m3primaryContainer.r, Colours.palette.m3primaryContainer.g, Colours.palette.m3primaryContainer.b, 0.12) : "transparent")
                         border.color: processListItem.currentTab === index ? Colours.palette.m3primaryContainer : "transparent"
                         border.width: processListItem.currentTab === index ? 1 : 0
 
                         RowLayout {
                             anchors.centerIn: parent
-                            spacing: Appearance.padding.small
+                            spacing: Config.appearance.padding.small
 
                             MaterialIcon {
                                 text: {
@@ -97,21 +97,21 @@ Item {
                                         return "tab";
                                     }
                                 }
-                                font.pointSize: Appearance.font.size.small * 2
+                                font.pointSize: Config.appearance.font.size.small * 2
                                 color: processListItem.currentTab === individualTab.index ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3onSurfaceVariant
                                 opacity: processListItem.currentTab === individualTab.index ? 1 : 0.7
                                 // anchors.verticalCenter: parent.verticalCenter
 
                                 Behavior on color {
                                     ColorAnimation {
-                                        duration: Appearance.anim.durations.small
+                                        duration: Config.appearance.anim.durations.small
                                     }
                                 }
                             }
 
                             StyledText {
                                 text: individualTab.modelData
-                                font.pointSize: Appearance.font.size.normal
+                                font.pointSize: Config.appearance.font.size.normal
                                 font.weight: Font.Medium
                                 color: processListItem.currentTab === individualTab.index ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3onSurfaceVariant
                                 // anchors.verticalCenter: parent.verticalCenter
@@ -119,7 +119,7 @@ Item {
 
                                 Behavior on color {
                                     ColorAnimation {
-                                        duration: Appearance.anim.durations.small
+                                        duration: Config.appearance.anim.durations.small
                                     }
                                 }
                             }
@@ -138,13 +138,13 @@ Item {
 
                         Behavior on color {
                             ColorAnimation {
-                                duration: Appearance.anim.durations.small
+                                duration: Config.appearance.anim.durations.small
                             }
                         }
 
                         Behavior on border.color {
                             ColorAnimation {
-                                duration: Appearance.anim.durations.small
+                                duration: Config.appearance.anim.durations.small
                             }
                         }
                     }
@@ -155,14 +155,14 @@ Item {
         StyledRect {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            radius: Appearance.rounding.small
+            radius: Config.appearance.rounding.small
             color: Colours.palette.m3surfaceContainerLow
 
             Loader {
                 id: processesTab
 
                 anchors.fill: parent
-                anchors.margins: Appearance.padding.small
+                anchors.margins: Config.appearance.padding.small
                 active: processListItem.currentTab === 0
                 visible: processListItem.currentTab === 0
                 opacity: processListItem.currentTab === 0 ? 1 : 0
@@ -170,8 +170,8 @@ Item {
 
                 Behavior on opacity {
                     NumberAnimation {
-                        duration: Appearance.anim.durations.normal
-                        easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
+                        duration: Config.appearance.anim.durations.normal
+                        easing.bezierCurve: Config.appearance.anim.curves.emphasizedDecel
                     }
                 }
             }
@@ -180,7 +180,7 @@ Item {
                 id: performanceTab
 
                 anchors.fill: parent
-                anchors.margins: Appearance.padding.small
+                anchors.margins: Config.appearance.padding.small
                 active: processListItem.currentTab === 1
                 visible: processListItem.currentTab === 1
                 opacity: processListItem.currentTab === 1 ? 1 : 0
@@ -188,8 +188,8 @@ Item {
 
                 Behavior on opacity {
                     NumberAnimation {
-                        duration: Appearance.anim.durations.normal
-                        easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
+                        duration: Config.appearance.anim.durations.normal
+                        easing.bezierCurve: Config.appearance.anim.curves.emphasizedDecel
                     }
                 }
             }
@@ -198,7 +198,7 @@ Item {
                 id: systemTab
 
                 anchors.fill: parent
-                anchors.margins: Appearance.padding.small
+                anchors.margins: Config.appearance.padding.small
                 active: processListItem.currentTab === 2
                 visible: processListItem.currentTab === 2
                 opacity: processListItem.currentTab === 2 ? 1 : 0
@@ -206,8 +206,8 @@ Item {
 
                 Behavior on opacity {
                     NumberAnimation {
-                        duration: Appearance.anim.durations.normal
-                        easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
+                        duration: Config.appearance.anim.durations.normal
+                        easing.bezierCurve: Config.appearance.anim.curves.emphasizedDecel
                     }
                 }
             }

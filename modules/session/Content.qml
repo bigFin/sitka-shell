@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import qs.utils
 import Quickshell
 import QtQuick
@@ -12,12 +12,12 @@ Column {
 
     required property PersistentProperties visibilities
 
-    padding: Appearance.padding.large
+    padding: Config.appearance.padding.large
 
     anchors.verticalCenter: parent.verticalCenter
     anchors.left: parent.left
 
-    spacing: Appearance.spacing.large
+    spacing: Config.appearance.spacing.large
 
     SessionButton {
         id: logout
@@ -92,7 +92,7 @@ Column {
         implicitWidth: Config.session.sizes.button
         implicitHeight: Config.session.sizes.button
 
-        radius: Appearance.rounding.large
+        radius: Config.appearance.rounding.large
         color: button.activeFocus ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainer
 
         Keys.onEnterPressed: Quickshell.execDetached(button.command)
@@ -135,7 +135,7 @@ Column {
 
             text: button.icon
             color: button.activeFocus ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
-            font.pointSize: Appearance.font.size.extraLarge
+            font.pointSize: Config.appearance.font.size.extraLarge
             font.weight: 500
         }
     }

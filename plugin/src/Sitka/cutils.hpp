@@ -4,7 +4,7 @@
 #include <qobject.h>
 #include <qqmlintegration.h>
 
-namespace caelestia {
+namespace sitka {
 
 class CUtils : public QObject {
     Q_OBJECT
@@ -41,4 +41,4 @@ private:
     qreal findAverageLuminance(const QImage& image, int rescaleSize) const;
 };
 
-} // namespace caelestia
+} // namespace sitka

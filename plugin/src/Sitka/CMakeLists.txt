@@ -4,8 +4,8 @@ pkg_check_modules(Pipewire IMPORTED_TARGET libpipewire-0.3 REQUIRED)
 pkg_check_modules(Aubio IMPORTED_TARGET aubio REQUIRED)
 pkg_check_modules(Cava IMPORTED_TARGET cava REQUIRED)
 
-qt_add_qml_module(caelestia
-    URI Caelestia
+qt_add_qml_module(sitka
+    URI Sitka
     VERSION ${VERSION_SHORT}
     SOURCES
         cutils.hpp cutils.cpp
@@ -20,7 +20,7 @@ qt_add_qml_module(caelestia
         cavaprovider.hpp cavaprovider.cpp
 )
 
-qt_query_qml_module(caelestia
+qt_query_qml_module(sitka
     URI module_uri
     VERSION module_version
     PLUGIN_TARGET module_plugin_target
@@ -32,12 +32,12 @@ qt_query_qml_module(caelestia
 message(STATUS "Created QML module ${module_uri}, version ${module_version}")
 
 set(module_dir "${INSTALL_QMLDIR}/${module_target_path}")
-install(TARGETS caelestia LIBRARY DESTINATION "${module_dir}" RUNTIME DESTINATION "${module_dir}")
+install(TARGETS sitka LIBRARY DESTINATION "${module_dir}" RUNTIME DESTINATION "${module_dir}")
 install(TARGETS "${module_plugin_target}" LIBRARY DESTINATION "${module_dir}" RUNTIME DESTINATION "${module_dir}")
 install(FILES "${module_qmldir}" DESTINATION "${module_dir}")
 install(FILES "${module_typeinfo}" DESTINATION "${module_dir}")
 
-target_link_libraries(caelestia PRIVATE
+target_link_libraries(sitka PRIVATE
     Qt::Core Qt::Qml Qt::Gui Qt::Concurrent Qt::Multimedia
     PkgConfig::Qalculate PkgConfig::Pipewire PkgConfig::Aubio PkgConfig::Cava
 )

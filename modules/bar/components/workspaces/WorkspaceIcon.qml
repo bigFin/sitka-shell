@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.services
 import qs.components
-import qs.config
+import "../../../../config"
 import QtQuick
 import QtQuick.Layouts
 
@@ -18,7 +18,7 @@ Item {
     implicitWidth: Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap + (popupActive ? Config.bar.workspaces.windowContextWidth : 0)
     Behavior on implicitWidth {
         Anim {
-            easing.bezierCurve: Appearance.anim.curves.emphasized
+            easing.bezierCurve: Config.appearance.anim.curves.emphasized
         }
     }
 
@@ -27,7 +27,7 @@ Item {
     RowLayout {
         id: content
         anchors.left: parent.left
-        spacing: Appearance.padding.small
+        spacing: Config.appearance.padding.small
 
         Item {
             Layout.alignment: Qt.AlignVCenter
@@ -58,13 +58,13 @@ Item {
         Loader {
             // anchors.verticalCenter: parent.verticalCenter
             // anchors.left: parent.right
-            // anchors.leftMargin: Appearance.padding.large
+            // anchors.leftMargin: Config.appearance.padding.large
             active: root.popupActive
             sourceComponent: StyledText {
                 color: root.workspace.activeWsId === root.workspace.ws ? Colours.palette.m3onPrimary // <--- customize to your active color
                  : (root.workspace.isOccupied ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant)
 
-                font.family: Appearance.font.family.mono
+                font.family: Config.appearance.font.family.mono
                 text: Niri.getWorkspaceNameByIndex(root.workspace.index) || "Workspace " + (root.workspace.index + 1)
             }
         }
@@ -83,9 +83,9 @@ Item {
         anchors.fill: root
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         cursorShape: (Qt.PointingHandCursor)
-        pressAndHoldInterval: Appearance.anim.durations.small
+        pressAndHoldInterval: Config.appearance.anim.durations.small
 
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
 
         hoverEnabled: true
 

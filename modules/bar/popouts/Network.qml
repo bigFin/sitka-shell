@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.components.controls
 import qs.services
-import qs.config
+import "../../../config"
 import qs.utils
 import Quickshell
 import QtQuick
@@ -14,12 +14,12 @@ ColumnLayout {
 
     property string connectingToSsid: ""
 
-    spacing: Appearance.spacing.small
+    spacing: Config.appearance.spacing.small
     width: Config.bar.sizes.networkWidth
 
     StyledText {
-        Layout.topMargin: Appearance.padding.normal
-        Layout.rightMargin: Appearance.padding.small
+        Layout.topMargin: Config.appearance.padding.normal
+        Layout.rightMargin: Config.appearance.padding.small
         text: qsTr("Wifi %1").arg(Network.wifiEnabled ? "enabled" : "disabled")
         font.weight: 500
     }
@@ -31,11 +31,11 @@ ColumnLayout {
     }
 
     StyledText {
-        Layout.topMargin: Appearance.spacing.small
-        Layout.rightMargin: Appearance.padding.small
+        Layout.topMargin: Config.appearance.spacing.small
+        Layout.rightMargin: Config.appearance.padding.small
         text: qsTr("%1 networks available").arg(Network.networks.length)
         color: Colours.palette.m3onSurfaceVariant
-        font.pointSize: Appearance.font.size.small
+        font.pointSize: Config.appearance.font.size.small
     }
 
     Repeater {
@@ -55,8 +55,8 @@ ColumnLayout {
             readonly property bool loading: networkItem.isConnecting
 
             Layout.fillWidth: true
-            Layout.rightMargin: Appearance.padding.small
-            spacing: Appearance.spacing.small
+            Layout.rightMargin: Config.appearance.padding.small
+            spacing: Config.appearance.spacing.small
 
             opacity: 0
             scale: 0.7
@@ -82,12 +82,12 @@ ColumnLayout {
             MaterialIcon {
                 visible: networkItem.modelData.isSecure
                 text: "lock"
-                font.pointSize: Appearance.font.size.small
+                font.pointSize: Config.appearance.font.size.small
             }
 
             StyledText {
-                Layout.leftMargin: Appearance.spacing.small / 2
-                Layout.rightMargin: Appearance.spacing.small / 2
+                Layout.leftMargin: Config.appearance.spacing.small / 2
+                Layout.rightMargin: Config.appearance.spacing.small / 2
                 Layout.fillWidth: true
                 text: networkItem.modelData.ssid
                 elide: Text.ElideRight
@@ -99,9 +99,9 @@ ColumnLayout {
                 id: connectBtn
 
                 implicitWidth: implicitHeight
-                implicitHeight: connectIcon.implicitHeight + Appearance.padding.small
+                implicitHeight: connectIcon.implicitHeight + Config.appearance.padding.small
 
-                radius: Appearance.rounding.full
+                radius: Config.appearance.rounding.full
                 color: Qt.alpha(Colours.palette.m3primary, networkItem.modelData.active ? 1 : 0)
 
                 StyledBusyIndicator {
@@ -142,11 +142,11 @@ ColumnLayout {
     }
 
     StyledRect {
-        Layout.topMargin: Appearance.spacing.small
+        Layout.topMargin: Config.appearance.spacing.small
         Layout.fillWidth: true
-        implicitHeight: rescanBtn.implicitHeight + Appearance.padding.small * 2
+        implicitHeight: rescanBtn.implicitHeight + Config.appearance.padding.small * 2
 
-        radius: Appearance.rounding.full
+        radius: Config.appearance.rounding.full
         color: Colours.palette.m3primaryContainer
 
         StateLayer {
@@ -162,7 +162,7 @@ ColumnLayout {
             id: rescanBtn
 
             anchors.centerIn: parent
-            spacing: Appearance.spacing.small
+            spacing: Config.appearance.spacing.small
             opacity: Network.scanning ? 0 : 1
 
             MaterialIcon {
@@ -185,9 +185,9 @@ ColumnLayout {
 
         StyledBusyIndicator {
             anchors.centerIn: parent
-            strokeWidth: Appearance.padding.small / 2
+            strokeWidth: Config.appearance.padding.small / 2
             bgColour: "transparent"
-            implicitHeight: parent.implicitHeight - Appearance.padding.smaller * 2
+            implicitHeight: parent.implicitHeight - Config.appearance.padding.smaller * 2
             running: Network.scanning
         }
     }
@@ -214,8 +214,8 @@ ColumnLayout {
         property alias toggle: toggle
 
         Layout.fillWidth: true
-        Layout.rightMargin: Appearance.padding.small
-        spacing: Appearance.spacing.normal
+        Layout.rightMargin: Config.appearance.padding.small
+        spacing: Config.appearance.spacing.normal
 
         StyledText {
             Layout.fillWidth: true

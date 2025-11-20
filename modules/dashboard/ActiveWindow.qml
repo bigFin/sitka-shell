@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.services
 import qs.utils
-import qs.config
+import "../../config"
 import QtQuick
 
 Item {
@@ -16,7 +16,7 @@ Item {
     // The width available for text (excluding icon and spacing)
     // TODO: Fix change window when panel open, still overflows.
 
-    property int textAvailableWidth: Math.max(0, width - icon.width - Appearance.spacing.small)
+    property int textAvailableWidth: Math.max(0, width - icon.width - Config.appearance.spacing.small)
 
     implicitWidth: child.implicitWidth
     implicitHeight: child.implicitHeight
@@ -72,8 +72,8 @@ Item {
             property string separator: " -> "
 
             text: classPart + separator + cleanedTitlePart
-            font.pointSize: Appearance.font.size.smaller
-            font.family: Appearance.font.family.mono
+            font.pointSize: Config.appearance.font.size.smaller
+            font.family: Config.appearance.font.family.mono
             elide: Qt.ElideRight
             elideWidth: root.textAvailableWidth
 
@@ -111,17 +111,17 @@ Item {
 
         Behavior on implicitWidth {
             NumberAnimation {
-                duration: Appearance.anim.durations.large
+                duration: Config.appearance.anim.durations.large
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
 
         Behavior on implicitHeight {
             NumberAnimation {
-                duration: Appearance.anim.durations.normal
+                duration: Config.appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
     }
@@ -136,7 +136,7 @@ Item {
 
         anchors.verticalCenter: icon.verticalCenter
         anchors.left: icon.right
-        anchors.leftMargin: Appearance.spacing.small
+        anchors.leftMargin: Config.appearance.spacing.small
 
         spacing: 0 // Remove extra spacing
 
@@ -160,9 +160,9 @@ Item {
 
             Behavior on opacity {
                 NumberAnimation {
-                    duration: Appearance.anim.durations.normal
+                    duration: Config.appearance.anim.durations.normal
                     easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
+                    easing.bezierCurve: Config.appearance.anim.curves.standard
                 }
             }
         }

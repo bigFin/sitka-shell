@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../../config"
 import Quickshell
 import QtQuick
 
@@ -9,7 +9,7 @@ Item {
 
     required property PersistentProperties visibilities
 
-    implicitWidth: icon.implicitHeight + Appearance.padding.small * 2
+    implicitWidth: icon.implicitHeight + Config.appearance.padding.small * 2
     implicitHeight: icon.implicitHeight
 
     StateLayer {
@@ -17,9 +17,9 @@ Item {
         anchors.fill: undefined
         anchors.centerIn: parent
         implicitWidth: implicitHeight
-        implicitHeight: icon.implicitHeight + Appearance.padding.small * 2
+        implicitHeight: icon.implicitHeight + Config.appearance.padding.small * 2
 
-        radius: Appearance.rounding.full
+        radius: Config.appearance.rounding.full
 
         function onClicked(): void {
             root.visibilities.session = !root.visibilities.session;
@@ -35,6 +35,6 @@ Item {
         text: "power_settings_new"
         color: Colours.palette.m3error
         font.bold: true
-        font.pointSize: Appearance.font.size.normal
+        font.pointSize: Config.appearance.font.size.normal
     }
 }

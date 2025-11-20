@@ -1,7 +1,7 @@
 import QtQuick
 import qs.services
 import qs.components
-import qs.config
+import "../../../config"
 
 StyledRect {
     id: processItem
@@ -11,7 +11,7 @@ StyledRect {
 
     width: parent ? parent.width : 0
     height: 40
-    radius: Appearance.rounding.large
+    radius: Config.appearance.rounding.large
     color: processMouseArea.containsMouse ? Qt.rgba(Colours.palette.m3onSurfaceVariant.r, Colours.palette.m3onSurfaceVariant.g, Colours.palette.m3onSurfaceVariant.b, 0.08) : "transparent"
 
     MouseArea {
@@ -48,7 +48,7 @@ StyledRect {
             id: processIcon
 
             text: SysMonitorService.getProcessIcon(processItem.process ? processItem.process.command : "")
-            font.pointSize: Appearance.font.size.small * 2
+            font.pointSize: Config.appearance.font.size.small * 2
             color: {
                 if (processItem.process && processItem.process.cpu > 80)
                     return Colours.palette.error;
@@ -65,8 +65,8 @@ StyledRect {
 
         StyledText {
             text: processItem.process ? processItem.process.displayName : ""
-            font.pointSize: Appearance.font.size.small
-            font.family: Appearance.font.family.mono
+            font.pointSize: Config.appearance.font.size.small
+            font.family: Config.appearance.font.family.mono
             font.weight: Font.Medium
             color: Colours.palette.m3onSurface
             width: 250
@@ -81,7 +81,7 @@ StyledRect {
 
             width: 80
             height: 20
-            radius: Appearance.rounding.normal
+            radius: Config.appearance.rounding.normal
             color: {
                 if (processItem.process && processItem.process.cpu > 80)
                     return Qt.rgba(Colours.palette.m3onErrorContainer.r, Colours.palette.m3onErrorContainer.g, Colours.palette.m3onErrorContainer.b, 0.12);
@@ -97,8 +97,8 @@ StyledRect {
 
             StyledText {
                 text: SysMonitorService.formatCpuUsage(processItem.process ? processItem.process.cpu : 0)
-                font.pointSize: Appearance.font.size.small
-                font.family: Appearance.font.family.mono
+                font.pointSize: Config.appearance.font.size.small
+                font.family: Config.appearance.font.family.mono
                 font.weight: Font.Bold
                 color: {
                     if (processItem.process && processItem.process.cpu > 80)
@@ -118,7 +118,7 @@ StyledRect {
 
             width: 80
             height: 20
-            radius: Appearance.rounding.normal
+            radius: Config.appearance.rounding.normal
             color: {
                 if (processItem.process && processItem.process.memoryKB > 1024 * 1024)
                     return Qt.rgba(Colours.palette.m3onErrorContainer.r, Colours.palette.m3onErrorContainer.g, Colours.palette.m3onErrorContainer.b, 0.12);
@@ -134,8 +134,8 @@ StyledRect {
 
             StyledText {
                 text: SysMonitorService.formatMemoryUsage(processItem.process ? processItem.process.memoryKB : 0)
-                font.pointSize: Appearance.font.size.small
-                font.family: Appearance.font.family.mono
+                font.pointSize: Config.appearance.font.size.small
+                font.family: Config.appearance.font.family.mono
                 font.weight: Font.Bold
                 color: {
                     if (processItem.process && processItem.process.memoryKB > 1024 * 1024)
@@ -152,8 +152,8 @@ StyledRect {
 
         StyledText {
             text: processItem.process ? processItem.process.pid.toString() : ""
-            font.pointSize: Appearance.font.size.small
-            font.family: Appearance.font.family.mono
+            font.pointSize: Config.appearance.font.size.small
+            font.family: Config.appearance.font.family.mono
             color: Colours.palette.m3onSurface
             opacity: 0.7
             width: 50
@@ -168,14 +168,14 @@ StyledRect {
 
             width: 28
             height: 28
-            radius: Appearance.rounding.normal
+            radius: Config.appearance.rounding.normal
             color: menuButtonArea.containsMouse ? Qt.rgba(Colours.palette.m3onSurface.r, Colours.palette.m3onSurface.g, Colours.palette.m3onSurface.b, 0.08) : "transparent"
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
 
             MaterialIcon {
                 text: "more_vert"
-                font.pointSize: Appearance.font.size.small * 2
+                font.pointSize: Config.appearance.font.size.small * 2
                 color: Colours.palette.m3onSurface
                 opacity: 0.6
                 anchors.centerIn: parent
@@ -199,7 +199,7 @@ StyledRect {
 
             Behavior on color {
                 ColorAnimation {
-                    duration: Appearance.anim.durations.small
+                    duration: Config.appearance.anim.durations.small
                 }
             }
         }

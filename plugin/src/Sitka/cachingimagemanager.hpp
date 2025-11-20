@@ -4,7 +4,7 @@
 #include <qobject.h>
 #include <qqmlintegration.h>
 
-namespace caelestia {
+namespace sitka {
 
 class CachingImageManager : public QObject {
     Q_OBJECT
@@ -62,4 +62,4 @@ private:
     [[nodiscard]] static QString sha256sum(const QString& path);
 };
 
-} // namespace caelestia
+} // namespace sitka

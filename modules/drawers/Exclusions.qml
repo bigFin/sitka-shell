@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.components.containers
-import qs.config
+import "../../config"
 import Quickshell
 import QtQuick
 

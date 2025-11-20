@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.config
+import "../../../../config"
 import Quickshell
 import QtQuick
 
@@ -66,45 +66,45 @@ Item {
                 // horizontalCenter: root.horizontalCenter
                 left: root.left
                 right: root.right
-                rightMargin: isContextActiveInWs ? -Config.bar.workspaces.windowContextWidth + Appearance.padding.small : 0
+                rightMargin: isContextActiveInWs ? -Config.bar.workspaces.windowContextWidth + Config.appearance.padding.small : 0
             }
 
-            topRightRadius: isContextActiveInWs ? Appearance.rounding.normal : radius
-            bottomRightRadius: isContextActiveInWs ? Appearance.rounding.normal : radius
+            topRightRadius: isContextActiveInWs ? Config.appearance.rounding.normal : radius
+            bottomRightRadius: isContextActiveInWs ? Config.appearance.rounding.normal : radius
 
             y: (start?.y ?? 0)
-            // implicitWidth: Config.bar.sizes.innerWidth - Appearance.padding.small * 2 + 2
+            // implicitWidth: Config.bar.sizes.innerWidth - Config.appearance.padding.small * 2 + 2
             implicitHeight: start && end ? end.y + end.size - start.y : 0
             // implicitHeight: end?.y + end?.height - start?.y
 
             color: Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
-            radius: Appearance.rounding.small
+            radius: Config.appearance.rounding.small
 
             scale: 0
             Component.onCompleted: scale = 1.0
 
             Behavior on topRightRadius {
                 Anim {
-                    easing.bezierCurve: Appearance.anim.curves.emphasized
+                    easing.bezierCurve: Config.appearance.anim.curves.emphasized
                 }
             }
             Behavior on bottomRightRadius {
                 Anim {
-                    easing.bezierCurve: Appearance.anim.curves.emphasized
+                    easing.bezierCurve: Config.appearance.anim.curves.emphasized
                 }
             }
 
             Behavior on scale {
                 Anim {
-                    easing.bezierCurve: Appearance.anim.curves.standardDecel
+                    easing.bezierCurve: Config.appearance.anim.curves.standardDecel
                 }
             }
 
             Behavior on anchors.rightMargin {
                 Anim {
-                    duration: Appearance.anim.durations.normal
+                    duration: Config.appearance.anim.durations.normal
                     easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.emphasized
+                    easing.bezierCurve: Config.appearance.anim.curves.emphasized
                 }
             }
 

@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.services
-import qs.config
+import "../../../config"
 import QtQuick
 
 Item {
@@ -13,6 +13,6 @@ Item {
     readonly property real itemH: anchorWs.height + Config.bar.workspaces.windowIconGap * 2
     readonly property real expandedW: Config.bar.workspaces.windowContextWidth - Config.bar.workspaces.windowIconSize
 
-    implicitHeight: anchorWs ? ((itemH + Appearance.padding.small) * anchorWsCount) : itemH - Appearance.padding.normal
+    implicitHeight: anchorWs ? ((itemH + Config.appearance.padding.small) * anchorWsCount) : itemH - Config.appearance.padding.normal
     implicitWidth: root.expandedW
 }

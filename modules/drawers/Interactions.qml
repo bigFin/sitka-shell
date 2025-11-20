@@ -1,6 +1,6 @@
 import qs.components.controls
 import qs.services
-import qs.config
+import "../../config"
 import qs.modules.bar.popouts as BarPopouts
 import qs.modules.osd as Osd
 import Quickshell

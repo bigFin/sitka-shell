@@ -6,7 +6,7 @@ import qs.components
 import qs.components.controls
 import qs.components.containers
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import QtQuick
 import QtQuick.Controls
@@ -23,15 +23,15 @@ StyledListView {
         onValuesChanged: root.currentIndex = 0
     }
 
-    spacing: Appearance.spacing.small
+    spacing: Config.appearance.spacing.small
     orientation: Qt.Vertical
     implicitHeight: (Config.launcher.sizes.itemHeight + spacing) * Math.min(Config.launcher.maxShown, count) - spacing
 
-    highlightMoveDuration: Appearance.anim.durations.normal
+    highlightMoveDuration: Config.appearance.anim.durations.normal
     highlightResizeDuration: 0
 
     highlight: StyledRect {
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
         color: Colours.palette.m3onSurface
         opacity: 0.08
     }
@@ -106,16 +106,16 @@ StyledListView {
                     property: "opacity"
                     from: 1
                     to: 0
-                    duration: Appearance.anim.durations.small
-                    easing.bezierCurve: Appearance.anim.curves.standardAccel
+                    duration: Config.appearance.anim.durations.small
+                    easing.bezierCurve: Config.appearance.anim.curves.standardAccel
                 }
                 Anim {
                     target: root
                     property: "scale"
                     from: 1
                     to: 0.9
-                    duration: Appearance.anim.durations.small
-                    easing.bezierCurve: Appearance.anim.curves.standardAccel
+                    duration: Config.appearance.anim.durations.small
+                    easing.bezierCurve: Config.appearance.anim.curves.standardAccel
                 }
             }
             PropertyAction {
@@ -128,16 +128,16 @@ StyledListView {
                     property: "opacity"
                     from: 0
                     to: 1
-                    duration: Appearance.anim.durations.small
-                    easing.bezierCurve: Appearance.anim.curves.standardDecel
+                    duration: Config.appearance.anim.durations.small
+                    easing.bezierCurve: Config.appearance.anim.curves.standardDecel
                 }
                 Anim {
                     target: root
                     property: "scale"
                     from: 0.9
                     to: 1
-                    duration: Appearance.anim.durations.small
-                    easing.bezierCurve: Appearance.anim.curves.standardDecel
+                    duration: Config.appearance.anim.durations.small
+                    easing.bezierCurve: Config.appearance.anim.curves.standardDecel
                 }
             }
             PropertyAction {
@@ -183,7 +183,7 @@ StyledListView {
     addDisplaced: Transition {
         Anim {
             property: "y"
-            duration: Appearance.anim.durations.small
+            duration: Config.appearance.anim.durations.small
         }
         Anim {
             properties: "opacity,scale"

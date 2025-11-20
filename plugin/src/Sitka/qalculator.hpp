@@ -3,7 +3,7 @@
 #include <qobject.h>
 #include <qqmlintegration.h>
 
-namespace caelestia {
+namespace sitka {
 
 class Qalculator : public QObject {
     Q_OBJECT
@@ -16,4 +16,4 @@ public:
     Q_INVOKABLE QString eval(const QString& expr, bool printExpr = true) const;
 };
 
-} // namespace caelestia
+} // namespace sitka

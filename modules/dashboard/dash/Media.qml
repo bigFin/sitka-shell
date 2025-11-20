@@ -1,7 +1,7 @@
 import qs.components
 import qs.components.misc
 import qs.services
-import qs.config
+import "../../../config"
 import qs.utils
 import Caelestia
 import QtQuick
@@ -21,7 +21,7 @@ Item {
 
     Behavior on playerProgress {
         Anim {
-            duration: Appearance.anim.durations.large
+            duration: Config.appearance.anim.durations.large
         }
     }
 
@@ -44,13 +44,13 @@ Item {
             fillColor: "transparent"
             strokeColor: Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
             strokeWidth: Config.dashboard.sizes.mediaProgressThickness
-            capStyle: Appearance.rounding.scale === 0 ? ShapePath.SquareCap : ShapePath.RoundCap
+            capStyle: Config.appearance.rounding.scale === 0 ? ShapePath.SquareCap : ShapePath.RoundCap
 
             PathAngleArc {
                 centerX: cover.x + cover.width / 2
                 centerY: cover.y + cover.height / 2
-                radiusX: (cover.width + Config.dashboard.sizes.mediaProgressThickness) / 2 + Appearance.spacing.small
-                radiusY: (cover.height + Config.dashboard.sizes.mediaProgressThickness) / 2 + Appearance.spacing.small
+                radiusX: (cover.width + Config.dashboard.sizes.mediaProgressThickness) / 2 + Config.appearance.spacing.small
+                radiusY: (cover.height + Config.dashboard.sizes.mediaProgressThickness) / 2 + Config.appearance.spacing.small
                 startAngle: -90 - Config.dashboard.sizes.mediaProgressSweep / 2
                 sweepAngle: Config.dashboard.sizes.mediaProgressSweep
             }
@@ -64,13 +64,13 @@ Item {
             fillColor: "transparent"
             strokeColor: Colours.palette.m3primary
             strokeWidth: Config.dashboard.sizes.mediaProgressThickness
-            capStyle: Appearance.rounding.scale === 0 ? ShapePath.SquareCap : ShapePath.RoundCap
+            capStyle: Config.appearance.rounding.scale === 0 ? ShapePath.SquareCap : ShapePath.RoundCap
 
             PathAngleArc {
                 centerX: cover.x + cover.width / 2
                 centerY: cover.y + cover.height / 2
-                radiusX: (cover.width + Config.dashboard.sizes.mediaProgressThickness) / 2 + Appearance.spacing.small
-                radiusY: (cover.height + Config.dashboard.sizes.mediaProgressThickness) / 2 + Appearance.spacing.small
+                radiusX: (cover.width + Config.dashboard.sizes.mediaProgressThickness) / 2 + Config.appearance.spacing.small
+                radiusY: (cover.height + Config.dashboard.sizes.mediaProgressThickness) / 2 + Config.appearance.spacing.small
                 startAngle: -90 - Config.dashboard.sizes.mediaProgressSweep / 2
                 sweepAngle: Config.dashboard.sizes.mediaProgressSweep * root.playerProgress
             }
@@ -87,7 +87,7 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: Appearance.padding.large + Config.dashboard.sizes.mediaProgressThickness + Appearance.spacing.small
+        anchors.margins: Config.appearance.padding.large + Config.dashboard.sizes.mediaProgressThickness + Config.appearance.spacing.small
 
         implicitHeight: width
         color: Colours.tPalette.m3surfaceContainerHigh
@@ -120,15 +120,15 @@ Item {
 
         anchors.top: cover.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: Appearance.spacing.normal
+        anchors.topMargin: Config.appearance.spacing.normal
 
         animate: true
         horizontalAlignment: Text.AlignHCenter
         text: (Players.active?.trackTitle ?? qsTr("No media")) || qsTr("Unknown title")
         color: Colours.palette.m3primary
-        font.pointSize: Appearance.font.size.normal
+        font.pointSize: Config.appearance.font.size.normal
 
-        width: parent.implicitWidth - Appearance.padding.large * 2
+        width: parent.implicitWidth - Config.appearance.padding.large * 2
         elide: Text.ElideRight
     }
 
@@ -137,15 +137,15 @@ Item {
 
         anchors.top: title.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: Appearance.spacing.small
+        anchors.topMargin: Config.appearance.spacing.small
 
         animate: true
         horizontalAlignment: Text.AlignHCenter
         text: (Players.active?.trackAlbum ?? qsTr("No media")) || qsTr("Unknown album")
         color: Colours.palette.m3outline
-        font.pointSize: Appearance.font.size.small
+        font.pointSize: Config.appearance.font.size.small
 
-        width: parent.implicitWidth - Appearance.padding.large * 2
+        width: parent.implicitWidth - Config.appearance.padding.large * 2
         elide: Text.ElideRight
     }
 
@@ -154,14 +154,14 @@ Item {
 
         anchors.top: album.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: Appearance.spacing.small
+        anchors.topMargin: Config.appearance.spacing.small
 
         animate: true
         horizontalAlignment: Text.AlignHCenter
         text: (Players.active?.trackArtist ?? qsTr("No media")) || qsTr("Unknown artist")
         color: Colours.palette.m3secondary
 
-        width: parent.implicitWidth - Appearance.padding.large * 2
+        width: parent.implicitWidth - Config.appearance.padding.large * 2
         elide: Text.ElideRight
     }
 
@@ -170,9 +170,9 @@ Item {
 
         anchors.top: artist.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: Appearance.spacing.smaller
+        anchors.topMargin: Config.appearance.spacing.smaller
 
-        spacing: Appearance.spacing.small
+        spacing: Config.appearance.spacing.small
 
         Control {
             icon: "skip_previous"
@@ -209,9 +209,9 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.topMargin: Appearance.spacing.small
-        anchors.bottomMargin: Appearance.padding.large
-        anchors.margins: Appearance.padding.large * 2
+        anchors.topMargin: Config.appearance.spacing.small
+        anchors.bottomMargin: Config.appearance.padding.large
+        anchors.margins: Config.appearance.padding.large * 2
 
         playing: Players.active?.isPlaying ?? false
         speed: BeatTracker.bpm / 300
@@ -228,12 +228,12 @@ Item {
         function onClicked(): void {
         }
 
-        implicitWidth: Math.max(icon.implicitHeight, icon.implicitHeight) + Appearance.padding.small
+        implicitWidth: Math.max(icon.implicitHeight, icon.implicitHeight) + Config.appearance.padding.small
         implicitHeight: implicitWidth
 
         StateLayer {
             disabled: !control.canUse
-            radius: Appearance.rounding.full
+            radius: Config.appearance.rounding.full
 
             function onClicked(): void {
                 control.onClicked();
@@ -249,7 +249,7 @@ Item {
             animate: true
             text: control.icon
             color: control.canUse ? Colours.palette.m3onSurface : Colours.palette.m3outline
-            font.pointSize: Appearance.font.size.large
+            font.pointSize: Config.appearance.font.size.large
         }
     }
 }

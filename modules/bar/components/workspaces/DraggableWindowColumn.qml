@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.services
-import qs.config
+import "../../../../config"
 import QtQuick
 import qs.components
 
@@ -162,16 +162,16 @@ Item {
     Rectangle {
         id: dropIndicator
         anchors.horizontalCenter: parent.horizontalCenter
-        width: parent.width - Appearance.padding.small
-        height: Appearance.padding.small
+        width: parent.width - Config.appearance.padding.small
+        height: Config.appearance.padding.small
         color: root.isWsFocused ? Colours.palette.m3primaryContainer : Colours.palette.m3primaryContainer
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
         visible: false
         z: 200
 
         Behavior on y {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
     }
@@ -184,9 +184,9 @@ Item {
                 properties: "scale"
                 from: 0
                 to: 1
-                duration: Appearance.anim.durations.normal
+                duration: Config.appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standardDecel
+                easing.bezierCurve: Config.appearance.anim.curves.standardDecel
             }
         }
 
@@ -194,15 +194,15 @@ Item {
             NumberAnimation {
                 properties: "scale"
                 to: 1
-                duration: Appearance.anim.durations.normal
+                duration: Config.appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standardDecel
+                easing.bezierCurve: Config.appearance.anim.curves.standardDecel
             }
             NumberAnimation {
                 properties: "x,y"
-                duration: Appearance.anim.durations.normal
+                duration: Config.appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
 
@@ -211,9 +211,9 @@ Item {
                 properties: "scale"
                 from: 0
                 to: 1
-                duration: Appearance.anim.durations.normal
+                duration: Config.appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standardDecel
+                easing.bezierCurve: Config.appearance.anim.curves.standardDecel
             }
         }
 

@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.components.effects
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import QtQuick
 import QtQuick.Layouts
@@ -38,7 +38,7 @@ Item {
 
         Behavior on opacity {
             Anim {
-                duration: Appearance.anim.durations.extraLarge
+                duration: Config.appearance.anim.durations.extraLarge
             }
         }
     }
@@ -73,14 +73,14 @@ Item {
 
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: Appearance.padding.large
+        anchors.margins: Config.appearance.padding.large
 
         StyledText {
-            Layout.topMargin: Appearance.padding.large
-            Layout.bottomMargin: Appearance.spacing.larger
+            Layout.topMargin: Config.appearance.padding.large
+            Layout.bottomMargin: Config.appearance.spacing.larger
             text: qsTr("Now playing")
             color: Colours.palette.m3onSurfaceVariant
-            font.family: Appearance.font.family.mono
+            font.family: Config.appearance.font.family.mono
             font.weight: 500
         }
 
@@ -90,8 +90,8 @@ Item {
             text: Players.active?.trackArtist ?? qsTr("No media")
             color: Colours.palette.m3primary
             horizontalAlignment: Text.AlignHCenter
-            font.pointSize: Appearance.font.size.large
-            font.family: Appearance.font.family.mono
+            font.pointSize: Config.appearance.font.size.large
+            font.family: Config.appearance.font.family.mono
             font.weight: 600
             elide: Text.ElideRight
         }
@@ -101,17 +101,17 @@ Item {
             animate: true
             text: Players.active?.trackTitle ?? qsTr("No media")
             horizontalAlignment: Text.AlignHCenter
-            font.pointSize: Appearance.font.size.larger
-            font.family: Appearance.font.family.mono
+            font.pointSize: Config.appearance.font.size.larger
+            font.family: Config.appearance.font.family.mono
             elide: Text.ElideRight
         }
 
         RowLayout {
             Layout.alignment: Qt.AlignHCenter
-            Layout.topMargin: Appearance.spacing.large * 1.2
-            Layout.bottomMargin: Appearance.padding.large
+            Layout.topMargin: Config.appearance.spacing.large * 1.2
+            Layout.bottomMargin: Config.appearance.padding.large
 
-            spacing: Appearance.spacing.large
+            spacing: Config.appearance.spacing.large
 
             PlayerControl {
                 icon: "skip_previous"
@@ -158,15 +158,15 @@ Item {
         function onClicked(): void {
         }
 
-        Layout.preferredWidth: implicitWidth + (controlState.pressed ? Appearance.padding.normal * 2 : active ? Appearance.padding.small * 2 : 0)
-        implicitWidth: controlIcon.implicitWidth + Appearance.padding.large * 2
-        implicitHeight: controlIcon.implicitHeight + Appearance.padding.normal * 2
+        Layout.preferredWidth: implicitWidth + (controlState.pressed ? Config.appearance.padding.normal * 2 : active ? Config.appearance.padding.small * 2 : 0)
+        implicitWidth: controlIcon.implicitWidth + Config.appearance.padding.large * 2
+        implicitHeight: controlIcon.implicitHeight + Config.appearance.padding.normal * 2
 
         color: active ? Colours.palette[`m3${colour.toLowerCase()}`] : Colours.palette[`m3${colour.toLowerCase()}Container`]
         radius: 0
         
         // Apply normal fillets for secondary elements
-        filletSize: Appearance.fillet.normal
+        filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.normal : 4
 
         Elevation {
             anchors.fill: parent
@@ -190,7 +190,7 @@ Item {
 
             anchors.centerIn: parent
             color: control.active ? Colours.palette[`m3on${control.colour}`] : Colours.palette[`m3on${control.colour}Container`]
-            font.pointSize: Appearance.font.size.large
+            font.pointSize: Config.appearance.font.size.large
             fill: control.active ? 1 : 0
 
             Behavior on fill {
@@ -200,15 +200,15 @@ Item {
 
         Behavior on Layout.preferredWidth {
             Anim {
-                duration: Appearance.anim.durations.expressiveFastSpatial
-                easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                duration: Config.appearance.anim.durations.expressiveFastSpatial
+                easing.bezierCurve: Config.appearance.anim.curves.expressiveFastSpatial
             }
         }
 
         Behavior on radius {
             Anim {
-                duration: Appearance.anim.durations.expressiveFastSpatial
-                easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                duration: Config.appearance.anim.durations.expressiveFastSpatial
+                easing.bezierCurve: Config.appearance.anim.curves.expressiveFastSpatial
             }
         }
     }

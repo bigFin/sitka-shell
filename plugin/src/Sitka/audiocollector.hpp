@@ -10,7 +10,7 @@
 #include <thread>
 #include <vector>
 
-namespace caelestia {
+namespace sitka {
 
 class AudioCollector;
 
@@ -74,4 +74,4 @@ private:
     void stop() override;
 };
 
-} // namespace caelestia
+} // namespace sitka

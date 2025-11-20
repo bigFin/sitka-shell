@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.services
 import qs.utils
-import qs.config
+import "../../../../config"
 import QtQuick
 import Quickshell.Widgets
 import "context"
@@ -48,14 +48,14 @@ Item {
 
     Behavior on implicitWidth {
         Anim {
-            easing.bezierCurve: Appearance.anim.curves.emphasized
+            easing.bezierCurve: Config.appearance.anim.curves.emphasized
         }
     }
 
     Loader {
         id: contextLoader
         anchors.left: parent.left
-        anchors.leftMargin: iconLoader.implicitWidth + Appearance.padding.small
+        anchors.leftMargin: iconLoader.implicitWidth + Config.appearance.padding.small
         anchors.verticalCenter: parent.verticalCenter
         active: (Niri.wsContextType !== "none" && Config.bar.workspaces.windowRighClickContext)
         sourceComponent: WindowIconContext {
@@ -73,7 +73,7 @@ Item {
         sourceComponent: iconItem.useImageIcon ? imageIconComp : materialIconComp
         property var windowData: iconItem.windowData
         property var windowCount: iconItem.windowCount
-        // anchors.margins: Appearance.padding.small
+        // anchors.margins: Config.appearance.padding.small
     }
 
     Component {
@@ -87,17 +87,17 @@ Item {
             radius: 0
             
             // Apply small fillets for tertiary elements
-            filletSize: Appearance.fillet.small
+            filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.small : 2
 
             IconImage {
                 anchors.centerIn: parent
                 property var windowData: iconItem.windowData
                 property int windowCount: iconItem.windowCount
-                implicitSize: (iconItem.isFocused && iconItem.isWsFocused) ? Config.bar.workspaces.windowIconSize : Config.bar.workspaces.windowIconSize - Appearance.padding.small
+                implicitSize: (iconItem.isFocused && iconItem.isWsFocused) ? Config.bar.workspaces.windowIconSize : Config.bar.workspaces.windowIconSize - Config.appearance.padding.small
                 source: Icons.getAppIcon(windowData?.app_id ?? modelData?.app_id ?? "", "image-missing")
                 Behavior on implicitSize {
                     Anim {
-                        easing.bezierCurve: Appearance.anim.curves.emphasized
+                        easing.bezierCurve: Config.appearance.anim.curves.emphasized
                     }
                 }
 
@@ -118,13 +118,13 @@ Item {
                 anchors.centerIn: parent
                 property var windowData: iconItem.windowData
                 property int windowCount: iconItem.windowCount
-                font.pointSize: ((iconItem.isFocused && iconItem.isWsFocused)) ? Config.bar.workspaces.windowIconSize - Appearance.padding.small : Config.bar.workspaces.windowIconSize - Appearance.padding.small * 2
+                font.pointSize: ((iconItem.isFocused && iconItem.isWsFocused)) ? Config.bar.workspaces.windowIconSize - Config.appearance.padding.small : Config.bar.workspaces.windowIconSize - Config.appearance.padding.small * 2
                 grade: 0
                 text: Icons.getAppCategoryIcon(windowData.app_id, "help_center")
                 color: (iconItem.isWsFocused ? Colours.palette.m3onPrimary : Colours.palette.m3onSurfaceVariant)
                 Behavior on font.pointSize {
                     Anim {
-                        easing.bezierCurve: Appearance.anim.curves.emphasized
+                        easing.bezierCurve: Config.appearance.anim.curves.emphasized
                     }
                 }
 
@@ -139,14 +139,14 @@ Item {
         id: dragPreview
         visible: false
         z: 999
-        width: iconLoader.width + Appearance.padding.small
-        height: iconLoader.height + Appearance.padding.small
+        width: iconLoader.width + Config.appearance.padding.small
+        height: iconLoader.height + Config.appearance.padding.small
 
         color: iconItem.isWsFocused ? Colours.palette.m3primaryContainer : Colours.palette.m3surfaceContainer
         radius: 0
         
         // Apply small fillets for tertiary elements
-        filletSize: Appearance.fillet.small
+        filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.small : 2
 
         MouseArea {
             anchors.fill: parent
@@ -175,9 +175,9 @@ Item {
         anchors.fill: iconItem
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         cursorShape: (iconItem.dragActive ? Qt.ClosedHandCursor : (Qt.PointingHandCursor))
-        pressAndHoldInterval: Appearance.anim.durations.small
+        pressAndHoldInterval: Config.appearance.anim.durations.small
 
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
 
         hoverEnabled: true
 
@@ -252,20 +252,20 @@ Item {
         function calculateMargins() {
             if (iconItem.popupActive && Niri.wsContextType === "item")
                 return {
-                    right: -Appearance.padding.large,
-                    bottom: (iconLoader.implicitHeight - badgeLoader.height) / 2 - (!iconItem.isFocused ? Appearance.padding.small / 2 : Config.bar.workspaces.windowIconGap),
-                    size: Appearance.padding.large
+                    right: -Config.appearance.padding.large,
+                    bottom: (iconLoader.implicitHeight - badgeLoader.height) / 2 - (!iconItem.isFocused ? Config.appearance.padding.small / 2 : Config.bar.workspaces.windowIconGap),
+                    size: Config.appearance.padding.large
                 };
             else if (iconItem.isFocused)
                 return {
                     right: 0,
                     bottom: 0,
-                    size: Appearance.padding.larger
+                    size: Config.appearance.padding.larger
                 };
             return {
-                right: -Appearance.padding.small / 2,
-                bottom: -Appearance.padding.small / 2,
-                size: Appearance.padding.larger
+                right: -Config.appearance.padding.small / 2,
+                bottom: -Config.appearance.padding.small / 2,
+                size: Config.appearance.padding.larger
             };
         }
 
@@ -277,12 +277,12 @@ Item {
 
             Behavior on rightMargin {
                 Anim {
-                    easing.bezierCurve: Appearance.anim.curves.emphasized
+                    easing.bezierCurve: Config.appearance.anim.curves.emphasized
                 }
             }
             Behavior on bottomMargin {
                 Anim {
-                    easing.bezierCurve: Appearance.anim.curves.emphasized
+                    easing.bezierCurve: Config.appearance.anim.curves.emphasized
                 }
             }
         }
@@ -291,7 +291,7 @@ Item {
             visible: (iconItem.windowCount > 1)
             color: iconItem.isWsFocused ? (Colours.palette.m3tertiary) : Colours.palette.m3tertiaryContainer
             anchors.centerIn: parent
-            radius: Appearance.rounding.small
+            radius: Config.appearance.rounding.small
             width: badgeLoader.calculateMargins().size
             height: badgeLoader.calculateMargins().size
 
@@ -299,7 +299,7 @@ Item {
                 animate: true
                 anchors.centerIn: parent
                 text: iconItem.windowCount
-                font.family: Appearance.font.family.mono
+                font.family: Config.appearance.font.family.mono
                 color: iconItem.isWsFocused ? Colours.palette.m3onTertiary : Colours.palette.m3onTertiaryContainer
                 font.pointSize: badgeLoader.calculateMargins().size - 3
             }

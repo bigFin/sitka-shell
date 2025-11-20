@@ -2,7 +2,7 @@ import qs.components
 // import qs.components.controls
 import qs.services
 import qs.utils
-import qs.config
+import "../../../config"
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
@@ -16,14 +16,14 @@ Item {
 
     required property Item wrapper
 
-    implicitWidth: Niri.focusedWindowTitle /*Niri.activeToplevel*/  ? child.implicitWidth : -Appearance.padding.large * 2
+    implicitWidth: Niri.focusedWindowTitle /*Niri.activeToplevel*/  ? child.implicitWidth : -Config.appearance.padding.large * 2
     implicitHeight: child.implicitHeight
 
     ColumnLayout {
         id: child
 
         anchors.left: parent.left
-        spacing: Appearance.spacing.normal
+        spacing: Config.appearance.spacing.normal
 
         // height: 20
         // width: Config.bar.sizes.windowPreviewSize - 100
@@ -34,7 +34,7 @@ Item {
             Layout.alignment: Qt.AlignLeft
             // anchors.left: parent.left
             // anchors.right: parent.right
-            spacing: Appearance.spacing.normal
+            spacing: Config.appearance.spacing.normal
 
             IconImage {
                 id: icon
@@ -53,7 +53,7 @@ Item {
                 StyledText {
                     Layout.fillWidth: true
                     text: Niri.focusedWindowTitle ?? ""
-                    font.pointSize: Appearance.font.size.normal
+                    font.pointSize: Config.appearance.font.size.normal
                     elide: Text.ElideRight
                     Layout.preferredWidth: 200
                 }
@@ -67,13 +67,13 @@ Item {
             }
 
             Item {
-                implicitWidth: expandIcon.implicitHeight + Appearance.padding.small * 2
-                implicitHeight: expandIcon.implicitHeight + Appearance.padding.small * 2
+                implicitWidth: expandIcon.implicitHeight + Config.appearance.padding.small * 2
+                implicitHeight: expandIcon.implicitHeight + Config.appearance.padding.small * 2
 
                 Layout.alignment: Qt.AlignVCenter
 
                 StateLayer {
-                    radius: Appearance.rounding.normal
+                    radius: Config.appearance.rounding.normal
 
                     function onClicked(): void {
                         root.wrapper.detach("winfo");
@@ -88,7 +88,7 @@ Item {
 
                     text: "chevron_right"
 
-                    font.pointSize: Appearance.font.size.large
+                    font.pointSize: Config.appearance.font.size.large
                 }
             }
         }
@@ -105,7 +105,7 @@ Item {
 
         //     width: Config.bar.sizes.windowPreviewSize
         //     // color: Colours.palette.m3surfaceContainer
-        //     radius: Appearance.rounding.normal
+        //     radius: Config.appearance.rounding.normal
 
         //     Flickable {
         //         id: flick
@@ -126,7 +126,7 @@ Item {
 
         // ClippingWrapperRectangle {
         //     color: "transparent"
-        //     radius: Appearance.rounding.small
+        //     radius: Config.appearance.rounding.small
         //
         //     ScreencopyView {
         //         id: preview

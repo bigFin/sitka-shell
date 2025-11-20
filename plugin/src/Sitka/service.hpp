@@ -2,7 +2,7 @@
 
 #include <qmutex.h>
 #include <qobject.h>
-namespace caelestia {
+namespace sitka {
 
 class Service : public QObject {
     Q_OBJECT
@@ -28,4 +28,4 @@ private:
     virtual void stop() = 0;
 };
 
-} // namespace caelestia
+} // namespace sitka

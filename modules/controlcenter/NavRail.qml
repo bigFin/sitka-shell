@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import QtQuick
 import QtQuick.Layouts
@@ -13,23 +13,23 @@ Item {
     required property ShellScreen screen
     required property Session session
 
-    implicitWidth: layout.implicitWidth + Appearance.padding.larger * 4
-    implicitHeight: layout.implicitHeight + Appearance.padding.large * 2
+    implicitWidth: layout.implicitWidth + Config.appearance.padding.larger * 4
+    implicitHeight: layout.implicitHeight + Config.appearance.padding.large * 2
 
     ColumnLayout {
         id: layout
 
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        anchors.leftMargin: Appearance.padding.larger * 2
-        spacing: Appearance.spacing.normal
+        anchors.leftMargin: Config.appearance.padding.larger * 2
+        spacing: Config.appearance.spacing.normal
 
         states: State {
             name: "expanded"
             when: root.session.navExpanded
 
             PropertyChanges {
-                layout.spacing: Appearance.spacing.small
+                layout.spacing: Config.appearance.spacing.small
                 menuIcon.opacity: 0
                 menuIconExpanded.opacity: 1
                 menuIcon.rotation: 180
@@ -46,12 +46,12 @@ Item {
         Item {
             id: menuBtn
 
-            Layout.topMargin: Appearance.spacing.large
+            Layout.topMargin: Config.appearance.spacing.large
             implicitWidth: menuIcon.implicitWidth + menuIcon.anchors.leftMargin * 2
-            implicitHeight: menuIcon.implicitHeight + Appearance.padding.normal * 2
+            implicitHeight: menuIcon.implicitHeight + Config.appearance.padding.normal * 2
 
             StateLayer {
-                radius: Appearance.rounding.small
+                radius: Config.appearance.rounding.small
 
                 function onClicked(): void {
                     root.session.navExpanded = !root.session.navExpanded;
@@ -63,10 +63,10 @@ Item {
 
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.leftMargin: Appearance.padding.large
+                anchors.leftMargin: Config.appearance.padding.large
 
                 text: "menu"
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: Config.appearance.font.size.large
             }
 
             MaterialIcon {
@@ -89,10 +89,10 @@ Item {
                 readonly property int nonAnimWidth: normalWinIcon.implicitWidth + (root.session.navExpanded ? normalWinLabel.anchors.leftMargin + normalWinLabel.implicitWidth : 0) + normalWinIcon.anchors.leftMargin * 2
 
                 implicitWidth: nonAnimWidth
-                implicitHeight: root.session.navExpanded ? normalWinIcon.implicitHeight + Appearance.padding.normal * 2 : nonAnimWidth
+                implicitHeight: root.session.navExpanded ? normalWinIcon.implicitHeight + Config.appearance.padding.normal * 2 : nonAnimWidth
 
                 color: Colours.palette.m3primaryContainer
-                radius: Appearance.rounding.small
+                radius: Config.appearance.rounding.small
 
                 StateLayer {
                     id: normalWinState
@@ -114,11 +114,11 @@ Item {
 
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: Appearance.padding.large
+                    anchors.leftMargin: Config.appearance.padding.large
 
                     text: "select_window"
                     color: Colours.palette.m3onPrimaryContainer
-                    font.pointSize: Appearance.font.size.large
+                    font.pointSize: Config.appearance.font.size.large
                     fill: 1
                 }
 
@@ -127,7 +127,7 @@ Item {
 
                     anchors.left: normalWinIcon.right
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: Appearance.spacing.normal
+                    anchors.leftMargin: Config.appearance.spacing.normal
 
                     text: qsTr("Float window")
                     color: Colours.palette.m3onPrimaryContainer
@@ -135,29 +135,29 @@ Item {
 
                     Behavior on opacity {
                         Anim {
-                            duration: Appearance.anim.durations.small
+                            duration: Config.appearance.anim.durations.small
                         }
                     }
                 }
 
                 Behavior on implicitWidth {
                     Anim {
-                        duration: Appearance.anim.durations.expressiveDefaultSpatial
-                        easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                        duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
                     }
                 }
 
                 Behavior on implicitHeight {
                     Anim {
-                        duration: Appearance.anim.durations.expressiveDefaultSpatial
-                        easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                        duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
                     }
                 }
             }
         }
 
         NavItem {
-            Layout.topMargin: Appearance.spacing.large * 2
+            Layout.topMargin: Config.appearance.spacing.large * 2
             icon: "network_manage"
             label: "network"
         }
@@ -191,7 +191,7 @@ Item {
                 expandedLabel.opacity: 1
                 smallLabel.opacity: 0
                 background.implicitWidth: icon.implicitWidth + icon.anchors.leftMargin * 2 + expandedLabel.anchors.leftMargin + expandedLabel.implicitWidth
-                background.implicitHeight: icon.implicitHeight + Appearance.padding.normal * 2
+                background.implicitHeight: icon.implicitHeight + Config.appearance.padding.normal * 2
                 item.implicitHeight: background.implicitHeight
             }
         }
@@ -199,24 +199,24 @@ Item {
         transitions: Transition {
             Anim {
                 property: "opacity"
-                duration: Appearance.anim.durations.small
+                duration: Config.appearance.anim.durations.small
             }
 
             Anim {
                 properties: "implicitWidth,implicitHeight"
-                duration: Appearance.anim.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
             }
         }
 
         StyledRect {
             id: background
 
-            radius: Appearance.rounding.full
+            radius: Config.appearance.rounding.full
             color: item.active ? Colours.palette.m3secondaryContainer : "transparent"
 
             implicitWidth: icon.implicitWidth + icon.anchors.leftMargin * 2
-            implicitHeight: icon.implicitHeight + Appearance.padding.small
+            implicitHeight: icon.implicitHeight + Config.appearance.padding.small
 
             StateLayer {
                 color: item.active ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
@@ -231,11 +231,11 @@ Item {
 
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.leftMargin: Appearance.padding.large
+                anchors.leftMargin: Config.appearance.padding.large
 
                 text: item.icon
                 color: item.active ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: Config.appearance.font.size.large
                 fill: item.active ? 1 : 0
 
                 Behavior on fill {
@@ -248,7 +248,7 @@ Item {
 
                 anchors.left: icon.right
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.leftMargin: Appearance.spacing.normal
+                anchors.leftMargin: Config.appearance.spacing.normal
 
                 opacity: 0
                 text: item.label
@@ -261,10 +261,10 @@ Item {
 
                 anchors.horizontalCenter: icon.horizontalCenter
                 anchors.top: icon.bottom
-                anchors.topMargin: Appearance.spacing.small / 2
+                anchors.topMargin: Config.appearance.spacing.small / 2
 
                 text: item.label
-                font.pointSize: Appearance.font.size.small
+                font.pointSize: Config.appearance.font.size.small
                 font.capitalization: Font.Capitalize
             }
         }

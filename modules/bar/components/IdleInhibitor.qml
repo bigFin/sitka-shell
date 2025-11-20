@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../../config"
 import Quickshell
 import QtQuick
 
@@ -8,9 +8,9 @@ StyledRect {
     id: root
 
     implicitWidth: implicitHeight
-    implicitHeight: icon.implicitHeight + Appearance.padding.small * 2
+    implicitHeight: icon.implicitHeight + Config.appearance.padding.small * 2
 
-    radius: Appearance.rounding.full
+    radius: Config.appearance.rounding.full
     color: Qt.alpha(Colours.palette.m3primaryContainer, IdleInhibitor.enabled ? 1 : 0)
 
     StateLayer {
@@ -28,6 +28,6 @@ StyledRect {
         text: "coffee"
         color: IdleInhibitor.enabled ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3secondary
         font.bold: true
-        font.pointSize: Appearance.font.size.normal
+        font.pointSize: Config.appearance.font.size.normal
     }
 }

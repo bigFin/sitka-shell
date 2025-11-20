@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 // import qs.components.effects
-import qs.config
+import "../../../../config"
 import QtQuick
 import QtQuick.Layouts
 
@@ -18,7 +18,7 @@ ColumnLayout {
     required property Item windowPopoutSignal
 
     readonly property bool isWorkspace: true // Flag for finding workspace children
-    readonly property int size: isWorkspace ? implicitHeight + (hasWindows ? Appearance.padding.small : 0) : 0
+    readonly property int size: isWorkspace ? implicitHeight + (hasWindows ? Config.appearance.padding.small : 0) : 0
     readonly property int ws: groupOffset + index + 1
     readonly property bool isOccupied: occupied[ws] ?? false
     readonly property bool hasWindows: isOccupied && Config.bar.workspaces.showWindows

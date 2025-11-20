@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Controls
 
@@ -18,7 +18,7 @@ Slider {
             implicitWidth: root.handle.x - root.implicitHeight / 6
 
             color: Colours.palette.m3primary
-            radius: Appearance.rounding.full
+            radius: Config.appearance.rounding.full
             topRightRadius: root.implicitHeight / 15
             bottomRightRadius: root.implicitHeight / 15
         }
@@ -33,7 +33,7 @@ Slider {
             implicitWidth: parent.width - root.handle.x - root.handle.implicitWidth - root.implicitHeight / 6
 
             color: Colours.tPalette.m3surfaceContainer
-            radius: Appearance.rounding.full
+            radius: Config.appearance.rounding.full
             topLeftRadius: root.implicitHeight / 15
             bottomLeftRadius: root.implicitHeight / 15
         }
@@ -46,7 +46,7 @@ Slider {
         implicitHeight: root.implicitHeight
 
         color: Colours.palette.m3primary
-        radius: Appearance.rounding.full
+        radius: Config.appearance.rounding.full
 
         MouseArea {
             anchors.fill: parent

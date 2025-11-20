@@ -1,6 +1,6 @@
 import ".."
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Shapes
@@ -14,21 +14,21 @@ Switch {
     implicitHeight: implicitIndicatorHeight
 
     indicator: StyledRect {
-        radius: Appearance.rounding.full
+        radius: Config.appearance.rounding.full
         color: root.checked ? Colours.palette.m3primary : Colours.layer(Colours.palette.m3surfaceContainerHighest, root.cLayer)
 
         implicitWidth: implicitHeight * 1.7
-        implicitHeight: Appearance.font.size.normal + Appearance.padding.smaller * 2
+        implicitHeight: Config.appearance.font.size.normal + Config.appearance.padding.smaller * 2
 
         StyledRect {
             readonly property real nonAnimWidth: root.pressed ? implicitHeight * 1.3 : implicitHeight
 
-            radius: Appearance.rounding.full
+            radius: Config.appearance.rounding.full
             color: root.checked ? Colours.palette.m3onPrimary : Colours.layer(Colours.palette.m3outline, root.cLayer + 1)
 
-            x: root.checked ? parent.implicitWidth - nonAnimWidth - Appearance.padding.small / 2 : Appearance.padding.small / 2
+            x: root.checked ? parent.implicitWidth - nonAnimWidth - Config.appearance.padding.small / 2 : Config.appearance.padding.small / 2
             implicitWidth: nonAnimWidth
-            implicitHeight: parent.implicitHeight - Appearance.padding.small
+            implicitHeight: parent.implicitHeight - Config.appearance.padding.small
             anchors.verticalCenter: parent.verticalCenter
 
             StyledRect {
@@ -83,15 +83,15 @@ Switch {
 
                 anchors.centerIn: parent
                 width: height
-                height: parent.implicitHeight - Appearance.padding.small * 2
+                height: parent.implicitHeight - Config.appearance.padding.small * 2
                 preferredRendererType: Shape.CurveRenderer
                 asynchronous: true
 
                 ShapePath {
-                    strokeWidth: Appearance.font.size.larger * 0.15
+                    strokeWidth: Config.appearance.font.size.larger * 0.15
                     strokeColor: root.checked ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHighest
                     fillColor: "transparent"
-                    capStyle: Appearance.rounding.scale === 0 ? ShapePath.SquareCap : ShapePath.RoundCap
+                    capStyle: Config.appearance.rounding.scale === 0 ? ShapePath.SquareCap : ShapePath.RoundCap
 
                     startX: icon.start1.x
                     startY: icon.start1.y
@@ -145,8 +145,8 @@ Switch {
     }
 
     component PropAnim: PropertyAnimation {
-        duration: Appearance.anim.durations.normal
+        duration: Config.appearance.anim.durations.normal
         easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.standard
+        easing.bezierCurve: Config.appearance.anim.curves.standard
     }
 }

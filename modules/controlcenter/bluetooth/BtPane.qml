@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import ".."
 import qs.components.effects
 import qs.components.containers
-import qs.config
+import "../../../config"
 import Quickshell.Widgets
 import Quickshell.Bluetooth
 import QtQuick
@@ -25,16 +25,16 @@ RowLayout {
 
         DeviceList {
             anchors.fill: parent
-            anchors.margins: Appearance.padding.large + Appearance.padding.normal
-            anchors.leftMargin: Appearance.padding.large
-            anchors.rightMargin: Appearance.padding.large + Appearance.padding.normal / 2
+            anchors.margins: Config.appearance.padding.large + Config.appearance.padding.normal
+            anchors.leftMargin: Config.appearance.padding.large
+            anchors.rightMargin: Config.appearance.padding.large + Config.appearance.padding.normal / 2
 
             session: root.session
         }
 
         InnerBorder {
             leftThickness: 0
-            rightThickness: Appearance.padding.normal / 2
+            rightThickness: Config.appearance.padding.normal / 2
         }
     }
 
@@ -44,9 +44,9 @@ RowLayout {
 
         ClippingRectangle {
             anchors.fill: parent
-            anchors.margins: Appearance.padding.normal
+            anchors.margins: Config.appearance.padding.normal
             anchors.leftMargin: 0
-            anchors.rightMargin: Appearance.padding.normal / 2
+            anchors.rightMargin: Config.appearance.padding.normal / 2
 
             radius: rightBorder.innerRadius
             color: "transparent"
@@ -57,7 +57,7 @@ RowLayout {
                 property BluetoothDevice pane: root.session.bt.active
 
                 anchors.fill: parent
-                anchors.margins: Appearance.padding.large * 2
+                anchors.margins: Config.appearance.padding.large * 2
 
                 asynchronous: true
                 sourceComponent: pane ? details : settings
@@ -68,12 +68,12 @@ RowLayout {
                             Anim {
                                 property: "opacity"
                                 to: 0
-                                easing.bezierCurve: Appearance.anim.curves.standardAccel
+                                easing.bezierCurve: Config.appearance.anim.curves.standardAccel
                             }
                             Anim {
                                 property: "scale"
                                 to: 0.8
-                                easing.bezierCurve: Appearance.anim.curves.standardAccel
+                                easing.bezierCurve: Config.appearance.anim.curves.standardAccel
                             }
                         }
                         PropertyAction {}
@@ -81,12 +81,12 @@ RowLayout {
                             Anim {
                                 property: "opacity"
                                 to: 1
-                                easing.bezierCurve: Appearance.anim.curves.standardDecel
+                                easing.bezierCurve: Config.appearance.anim.curves.standardDecel
                             }
                             Anim {
                                 property: "scale"
                                 to: 1
-                                easing.bezierCurve: Appearance.anim.curves.standardDecel
+                                easing.bezierCurve: Config.appearance.anim.curves.standardDecel
                             }
                         }
                     }
@@ -97,7 +97,7 @@ RowLayout {
         InnerBorder {
             id: rightBorder
 
-            leftThickness: Appearance.padding.normal / 2
+            leftThickness: Config.appearance.padding.normal / 2
         }
 
         Component {
@@ -128,7 +128,7 @@ RowLayout {
 
     component Anim: NumberAnimation {
         target: loader
-        duration: Appearance.anim.durations.normal / 2
+        duration: Config.appearance.anim.durations.normal / 2
         easing.type: Easing.BezierSpline
     }
 }

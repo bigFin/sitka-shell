@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Layouts
 
@@ -169,7 +169,7 @@ ColumnLayout {
     // ***************************************************
 
     component Rect: StyledRect {
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
         color: Colours.palette.m3surfaceContainerLow
     }
 
@@ -185,10 +185,10 @@ ColumnLayout {
 
         Layout.fillWidth: true
 
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
 
-        implicitHeight: (icon.implicitHeight + Appearance.padding.small * 2)
-        implicitWidth: (52 + Appearance.padding.small * 2)
+        implicitHeight: (icon.implicitHeight + Config.appearance.padding.small * 2)
+        implicitWidth: (52 + Config.appearance.padding.small * 2)
 
         RowLayout {
             anchors.verticalCenter: parent.verticalCenter
@@ -202,7 +202,7 @@ ColumnLayout {
             MaterialIcon {
                 id: icon
                 color: parent.parent.onColor
-                // font.pointSize: Appearance.font.size.large
+                // font.pointSize: Config.appearance.font.size.large
                 text: "radio_button_unchecked"
                 font.pointSize: label.font.pointSize * 3.0
 
@@ -213,16 +213,16 @@ ColumnLayout {
                 // Behavior on opacity {
                 //     PropertyAnimation {w
                 //         property: "opacity"
-                //         duration: Appearance.anim.durations.normal
+                //         duration: Config.appearance.anim.durations.normal
                 //         easing.type: Easing.BezierSpline
-                //         easing.bezierCurve: Appearance.anim.curves.standard
+                //         easing.bezierCurve: Config.appearance.anim.curves.standard
                 //     }
                 // }
             }
             StyledText {
                 id: label
                 color: parent.parent.onColor
-                font.pointSize: Appearance.font.size.small
+                font.pointSize: Config.appearance.font.size.small
                 wrapMode: Text.WordWrap
                 maximumLineCount: 2
                 Layout.preferredWidth: 90 // Adjust as needed for your layout
@@ -234,9 +234,9 @@ ColumnLayout {
                 // Behavior on opacity {
                 //     PropertyAnimation {
                 //         property: "opacity"
-                //         duration: Appearance.anim.durations.normal
+                //         duration: Config.appearance.anim.durations.normal
                 //         easing.type: Easing.BezierSpline
-                //         easing.bezierCurve: Appearance.anim.curves.standard
+                //         easing.bezierCurve: Config.appearance.anim.curves.standard
                 //     }
                 // }
             }

@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import qs.services
 import qs.widgets
-import qs.config
+import "../../../config"
 
 Item {
     id: processListPanel
@@ -37,24 +37,24 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: Appearance.padding.normal
+        spacing: Config.appearance.padding.normal
 
         SystemOverview {
             id: systemOverview
             // anchors.centerIn: parent
-            // width: parent.width - Appearance.padding.normal * 2
+            // width: parent.width - Config.appearance.padding.normal * 2
             Layout.fillWidth: true
         }
 
         StyledRect {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            radius: Appearance.rounding.normal
+            radius: Config.appearance.rounding.normal
             color: Colours.palette.m3surfaceContainer
 
             ProcessListView {
                 anchors.fill: parent
-                anchors.margins: Appearance.padding.small
+                anchors.margins: Config.appearance.padding.small
                 contextMenu: processContextMenu // keep if you want context menu
             }
         }

@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.components.containers
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
@@ -66,7 +66,7 @@ Loader {
             Loader {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                anchors.margins: Appearance.padding.large
+                anchors.margins: Config.appearance.padding.large
 
                 active: Config.background.desktopClock.enabled
                 asynchronous: true

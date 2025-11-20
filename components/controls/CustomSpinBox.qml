@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import ".."
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Layouts
 
@@ -16,30 +16,30 @@ RowLayout {
 
     signal valueModified(value: int)
 
-    spacing: Appearance.spacing.small
+    spacing: Config.appearance.spacing.small
 
     StyledTextField {
         inputMethodHints: Qt.ImhFormattedNumbersOnly
         text: root.value
         onAccepted: root.valueModified(text)
 
-        padding: Appearance.padding.small
-        leftPadding: Appearance.padding.normal
-        rightPadding: Appearance.padding.normal
+        padding: Config.appearance.padding.small
+        leftPadding: Config.appearance.padding.normal
+        rightPadding: Config.appearance.padding.normal
 
         background: StyledRect {
             implicitWidth: 100
-            radius: Appearance.rounding.small
+            radius: Config.appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainerHigh
         }
     }
 
     StyledRect {
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
         color: Colours.palette.m3primary
 
         implicitWidth: implicitHeight
-        implicitHeight: upIcon.implicitHeight + Appearance.padding.small * 2
+        implicitHeight: upIcon.implicitHeight + Config.appearance.padding.small * 2
 
         StateLayer {
             id: upState
@@ -64,11 +64,11 @@ RowLayout {
     }
 
     StyledRect {
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
         color: Colours.palette.m3primary
 
         implicitWidth: implicitHeight
-        implicitHeight: downIcon.implicitHeight + Appearance.padding.small * 2
+        implicitHeight: downIcon.implicitHeight + Config.appearance.padding.small * 2
 
         StateLayer {
             id: downState

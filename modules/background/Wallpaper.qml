@@ -4,7 +4,7 @@ import qs.components
 import qs.components.images
 import qs.components.filedialog
 import qs.services
-import qs.config
+import "../../config"
 import qs.utils
 import QtQuick
 
@@ -36,30 +36,30 @@ Item {
 
             Row {
                 anchors.centerIn: parent
-                spacing: Appearance.spacing.large
+                spacing: Config.appearance.spacing.large
 
                 MaterialIcon {
                     text: "sentiment_stressed"
                     color: Colours.palette.m3onSurfaceVariant
-                    font.pointSize: Appearance.font.size.extraLarge * 5
+                    font.pointSize: Config.appearance.font.size.extraLarge * 5
                 }
 
                 Column {
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: Appearance.spacing.small
+                    spacing: Config.appearance.spacing.small
 
                     StyledText {
                         text: qsTr("Wallpaper missing?")
                         color: Colours.palette.m3onSurfaceVariant
-                        font.pointSize: Appearance.font.size.extraLarge * 2
+                        font.pointSize: Config.appearance.font.size.extraLarge * 2
                         font.bold: true
                     }
 
                     StyledRect {
-                        implicitWidth: selectWallText.implicitWidth + Appearance.padding.large * 2
-                        implicitHeight: selectWallText.implicitHeight + Appearance.padding.small * 2
+                        implicitWidth: selectWallText.implicitWidth + Config.appearance.padding.large * 2
+                        implicitHeight: selectWallText.implicitHeight + Config.appearance.padding.small * 2
 
-                        radius: Appearance.rounding.full
+                        radius: Config.appearance.rounding.full
                         color: Colours.palette.m3primary
 
                         FileDialog {
@@ -87,7 +87,7 @@ Item {
 
                             text: qsTr("Set it now!")
                             color: Colours.palette.m3onPrimary
-                            font.pointSize: Appearance.font.size.large
+                            font.pointSize: Config.appearance.font.size.large
                         }
                     }
                 }

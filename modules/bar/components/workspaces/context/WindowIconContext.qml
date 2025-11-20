@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.services
-import qs.config
+import "../../../../../config"
 import qs.components
 
 Item {
@@ -40,7 +40,7 @@ Item {
 
     Behavior on width {
         Anim {
-            easing.bezierCurve: Appearance.anim.curves.emphasized
+            easing.bezierCurve: Config.appearance.anim.curves.emphasized
         }
     }
 

@@ -1,5 +1,5 @@
 import qs.services
-import qs.config
+import "../../config"
 import qs.modules.osd as Osd
 import qs.modules.notifications as Notifications
 import qs.modules.session as Session

@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import QtQuick
 
@@ -31,7 +31,7 @@ Item {
             Anim {
                 target: root
                 property: "implicitWidth"
-                easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
             }
         },
         Transition {
@@ -41,7 +41,7 @@ Item {
             Anim {
                 target: root
                 property: "implicitWidth"
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
     ]

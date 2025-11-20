@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
@@ -28,7 +28,7 @@ Item {
         root.client = Niri.focusedWindow || Niri.lastFocusedWindow;
     }
 
-    Layout.preferredWidth: preview.implicitWidth + Appearance.padding.large * 2
+    Layout.preferredWidth: preview.implicitWidth + Config.appearance.padding.large * 2
     Layout.fillHeight: true
 
     StyledClippingRect {
@@ -37,13 +37,13 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.bottom: label.top
-        anchors.topMargin: Appearance.padding.large
-        anchors.bottomMargin: Appearance.spacing.normal
+        anchors.topMargin: Config.appearance.padding.large
+        anchors.bottomMargin: Config.appearance.spacing.normal
 
         implicitWidth: view.implicitWidth
 
         color: Colours.tPalette.m3surfaceContainer
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
 
         Loader {
             anchors.centerIn: parent
@@ -57,14 +57,14 @@ Item {
                     Layout.alignment: Qt.AlignHCenter
                     text: "web_asset_off"
                     color: Colours.palette.m3outline
-                    font.pointSize: Appearance.font.size.extraLarge * 3
+                    font.pointSize: Config.appearance.font.size.extraLarge * 3
                 }
 
                 StyledText {
                     Layout.alignment: Qt.AlignHCenter
                     text: qsTr("No active client")
                     color: Colours.palette.m3outline
-                    font.pointSize: Appearance.font.size.extraLarge
+                    font.pointSize: Config.appearance.font.size.extraLarge
                     font.weight: 500
                 }
 
@@ -72,7 +72,7 @@ Item {
                     Layout.alignment: Qt.AlignHCenter
                     text: qsTr("Try switching to a window")
                     color: Colours.palette.m3outline
-                    font.pointSize: Appearance.font.size.large
+                    font.pointSize: Config.appearance.font.size.large
                 }
             }
         }
@@ -118,7 +118,7 @@ Item {
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: Appearance.padding.large
+        anchors.bottomMargin: Config.appearance.padding.large
 
         animate: true
         text: {

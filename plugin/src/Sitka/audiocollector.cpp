@@ -11,7 +11,7 @@
 #include <stop_token>
 #include <vector>
 
-namespace caelestia {
+namespace sitka {
 
 PipeWireWorker::PipeWireWorker(std::stop_token token, AudioCollector* collector)
     : m_loop(nullptr)
@@ -64,7 +64,7 @@ PipeWireWorker::PipeWireWorker(std::stop_token token, AudioCollector* collector)
         self->processStream();
     };
 
-    m_stream = pw_stream_new_simple(pw_main_loop_get_loop(m_loop), "caelestia-shell", props, &events, this);
+    m_stream = pw_stream_new_simple(pw_main_loop_get_loop(m_loop), "sitka-shell", props, &events, this);
 
     pw_stream_connect(m_stream, PW_DIRECTION_INPUT, PW_ID_ANY,
         static_cast<pw_stream_flags>(
@@ -249,4 +249,4 @@ void AudioCollector::stop() {
     }
 }
 
-} // namespace caelestia
+} // namespace sitka

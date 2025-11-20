@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.components
-import qs.config
+import "../../config"
 import Quickshell
 import Quickshell.Widgets
 import QtQuick
@@ -27,8 +27,8 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.topMargin: Appearance.padding.normal
-        anchors.margins: Appearance.padding.large
+        anchors.topMargin: Config.appearance.padding.normal
+        anchors.margins: Config.appearance.padding.large
 
         nonAnimWidth: root.nonAnimWidth - anchors.margins * 2
         state: root.state
@@ -41,9 +41,9 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: Appearance.padding.large
+        anchors.margins: Config.appearance.padding.large
 
-        radius: Appearance.rounding.normal
+        radius: Config.appearance.rounding.normal
         color: "transparent"
 
         ColumnLayout {
@@ -135,7 +135,7 @@ Item {
             StyledRect {
                 id: separator
 
-                Layout.topMargin: Appearance.spacing.normal
+                Layout.topMargin: Config.appearance.spacing.normal
                 Layout.alignment: Qt.AlignHCenter
                 Layout.fillWidth: true
 
@@ -146,9 +146,9 @@ Item {
             RowLayout {
                 id: styledRadialButton
                 Layout.alignment: Qt.AlignLeft
-                Layout.topMargin: Appearance.spacing.small
-                Layout.leftMargin: Appearance.spacing.small
-                Layout.rightMargin: Appearance.spacing.small
+                Layout.topMargin: Config.appearance.spacing.small
+                Layout.leftMargin: Config.appearance.spacing.small
+                Layout.rightMargin: Config.appearance.spacing.small
 
                 ActiveWindow {
                     //TODO Add a way to mitigate overflow, I implemented a solution in dashboard/ActiveWindow but it's meh.
@@ -167,15 +167,15 @@ Item {
 
     Behavior on implicitWidth {
         Anim {
-            duration: Appearance.anim.durations.large
-            easing.bezierCurve: Appearance.anim.curves.emphasized
+            duration: Config.appearance.anim.durations.large
+            easing.bezierCurve: Config.appearance.anim.curves.emphasized
         }
     }
 
     Behavior on implicitHeight {
         Anim {
-            duration: Appearance.anim.durations.large
-            easing.bezierCurve: Appearance.anim.curves.emphasized
+            duration: Config.appearance.anim.durations.large
+            easing.bezierCurve: Config.appearance.anim.curves.emphasized
         }
     }
 

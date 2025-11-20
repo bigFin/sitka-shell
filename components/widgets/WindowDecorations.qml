@@ -4,15 +4,15 @@ import qs.services
 import qs.components.controls
 import QtQuick
 import QtQuick.Layouts
-import qs.config
+import "../../config"
 
 // 3 Styled Radial buttons
 RowLayout {
     id: root
     property var client: Niri.focusedWindow
-    property int implicitSize: Appearance.font.size.normal
+    property int implicitSize: Config.appearance.font.size.normal
 
-    spacing: Appearance.padding.small / 2
+    spacing: Config.appearance.padding.small / 2
 
     Loader {
         active: root.client?.is_floating

@@ -1,5 +1,5 @@
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import QtQuick
 

@@ -1,7 +1,7 @@
 import "../services"
 import qs.components
 import qs.services
-import qs.config
+import "../../../config"
 import Quickshell
 import Quickshell.Widgets
 import QtQuick
@@ -18,7 +18,7 @@ Item {
     anchors.right: parent?.right
 
     StateLayer {
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
 
         function onClicked(): void {
             Apps.launch(root.modelData);
@@ -28,9 +28,9 @@ Item {
 
     Item {
         anchors.fill: parent
-        anchors.leftMargin: Appearance.padding.larger
-        anchors.rightMargin: Appearance.padding.larger
-        anchors.margins: Appearance.padding.smaller
+        anchors.leftMargin: Config.appearance.padding.larger
+        anchors.rightMargin: Config.appearance.padding.larger
+        anchors.margins: Config.appearance.padding.smaller
 
         IconImage {
             id: icon
@@ -43,7 +43,7 @@ Item {
 
         Item {
             anchors.left: icon.right
-            anchors.leftMargin: Appearance.spacing.normal
+            anchors.leftMargin: Config.appearance.spacing.normal
             anchors.verticalCenter: icon.verticalCenter
 
             implicitWidth: parent.width - icon.width
@@ -53,18 +53,18 @@ Item {
                 id: name
 
                 text: root.modelData?.name ?? ""
-                font.pointSize: Appearance.font.size.normal
+                font.pointSize: Config.appearance.font.size.normal
             }
 
             StyledText {
                 id: comment
 
                 text: (root.modelData?.comment || root.modelData?.genericName || root.modelData?.name) ?? ""
-                font.pointSize: Appearance.font.size.small
+                font.pointSize: Config.appearance.font.size.small
                 color: Colours.palette.m3outline
 
                 elide: Text.ElideRight
-                width: root.width - icon.width - Appearance.rounding.normal * 2
+                width: root.width - icon.width - Config.appearance.rounding.normal * 2
 
                 anchors.top: name.bottom
             }

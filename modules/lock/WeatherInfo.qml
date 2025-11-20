@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import qs.utils
 import QtQuick
 import QtQuick.Layouts
@@ -14,13 +14,13 @@ ColumnLayout {
 
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.margins: Appearance.padding.large * 2
+    anchors.margins: Config.appearance.padding.large * 2
 
-    spacing: Appearance.spacing.small
+    spacing: Config.appearance.spacing.small
 
     Loader {
-        Layout.topMargin: Appearance.padding.large * 2
-        Layout.bottomMargin: -Appearance.padding.large
+        Layout.topMargin: Config.appearance.padding.large * 2
+        Layout.bottomMargin: -Config.appearance.padding.large
         Layout.alignment: Qt.AlignHCenter
 
         asynchronous: true
@@ -30,24 +30,24 @@ ColumnLayout {
         sourceComponent: StyledText {
             text: qsTr("Weather")
             color: Colours.palette.m3primary
-            font.pointSize: Appearance.font.size.extraLarge
+            font.pointSize: Config.appearance.font.size.extraLarge
             font.weight: 500
         }
     }
 
     RowLayout {
         Layout.fillWidth: true
-        spacing: Appearance.spacing.large
+        spacing: Config.appearance.spacing.large
 
         MaterialIcon {
             animate: true
             text: Weather.icon
             color: Colours.palette.m3secondary
-            font.pointSize: Appearance.font.size.extraLarge * 2.5
+            font.pointSize: Config.appearance.font.size.extraLarge * 2.5
         }
 
         ColumnLayout {
-            spacing: Appearance.spacing.small
+            spacing: Config.appearance.spacing.small
 
             StyledText {
                 Layout.fillWidth: true
@@ -55,7 +55,7 @@ ColumnLayout {
                 animate: true
                 text: Weather.description
                 color: Colours.palette.m3secondary
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: Config.appearance.font.size.large
                 font.weight: 500
                 elide: Text.ElideRight
             }
@@ -66,19 +66,19 @@ ColumnLayout {
                 animate: true
                 text: qsTr("Humidity: %1%").arg(Weather.humidity)
                 color: Colours.palette.m3onSurfaceVariant
-                font.pointSize: Appearance.font.size.normal
+                font.pointSize: Config.appearance.font.size.normal
                 elide: Text.ElideRight
             }
         }
 
         Loader {
-            Layout.rightMargin: Appearance.padding.smaller
+            Layout.rightMargin: Config.appearance.padding.smaller
             asynchronous: true
             active: root.width > 400
             visible: active
 
             sourceComponent: ColumnLayout {
-                spacing: Appearance.spacing.small
+                spacing: Config.appearance.spacing.small
 
                 StyledText {
                     Layout.fillWidth: true
@@ -87,7 +87,7 @@ ColumnLayout {
                     text: Weather.temp
                     color: Colours.palette.m3primary
                     horizontalAlignment: Text.AlignRight
-                    font.pointSize: Appearance.font.size.extraLarge
+                    font.pointSize: Config.appearance.font.size.extraLarge
                     font.weight: 500
                     elide: Text.ElideLeft
                 }
@@ -99,7 +99,7 @@ ColumnLayout {
                     text: qsTr("Feels like: %1").arg(Weather.feelsLike)
                     color: Colours.palette.m3outline
                     horizontalAlignment: Text.AlignRight
-                    font.pointSize: Appearance.font.size.smaller
+                    font.pointSize: Config.appearance.font.size.smaller
                     elide: Text.ElideLeft
                 }
             }
@@ -109,8 +109,8 @@ ColumnLayout {
     Loader {
         id: forecastLoader
 
-        Layout.topMargin: Appearance.spacing.smaller
-        Layout.bottomMargin: Appearance.padding.large * 2
+        Layout.topMargin: Config.appearance.spacing.smaller
+        Layout.bottomMargin: Config.appearance.padding.large * 2
         Layout.fillWidth: true
 
         asynchronous: true
@@ -118,7 +118,7 @@ ColumnLayout {
         visible: active
 
         sourceComponent: RowLayout {
-            spacing: Appearance.spacing.large
+            spacing: Config.appearance.spacing.large
 
             Repeater {
                 model: {
@@ -155,7 +155,7 @@ ColumnLayout {
                     required property var modelData
 
                     Layout.fillWidth: true
-                    spacing: Appearance.spacing.small
+                    spacing: Config.appearance.spacing.small
 
                     StyledText {
                         Layout.fillWidth: true
@@ -167,13 +167,13 @@ ColumnLayout {
                         }
                         color: Colours.palette.m3outline
                         horizontalAlignment: Text.AlignHCenter
-                        font.pointSize: Appearance.font.size.larger
+                        font.pointSize: Config.appearance.font.size.larger
                     }
 
                     MaterialIcon {
                         Layout.alignment: Qt.AlignHCenter
                         text: forecastHour.modelData ? Icons.getWeatherIcon(forecastHour.modelData.weatherCode) : "cloud_alert"
-                        font.pointSize: Appearance.font.size.extraLarge * 1.5
+                        font.pointSize: Config.appearance.font.size.extraLarge * 1.5
                         font.weight: 500
                     }
 
@@ -181,7 +181,7 @@ ColumnLayout {
                         Layout.alignment: Qt.AlignHCenter
                         text: Config.services.useFahrenheit ? `${forecastHour.modelData?.tempF ?? 0}°F` : `${forecastHour.modelData?.tempC ?? 0}°C`
                         color: Colours.palette.m3secondary
-                        font.pointSize: Appearance.font.size.larger
+                        font.pointSize: Config.appearance.font.size.larger
                     }
                 }
             }

@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 
 StyledRect {
@@ -11,7 +11,7 @@ StyledRect {
     color: Colours.palette.m3surface
     
     // Apply large fillets for main containers
-    filletSize: Appearance.fillet.large
+    filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
     
     // Enable left fillets only
     topLeftFillet: true

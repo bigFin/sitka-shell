@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.components.containers
 import qs.services
-import qs.config
+import "../../config"
 import qs.modules.bar
 import Quickshell
 import Quickshell.Wayland

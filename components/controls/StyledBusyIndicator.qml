@@ -1,14 +1,14 @@
 import ".."
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Controls
 
 BusyIndicator {
     id: root
 
-    property real implicitSize: Appearance.font.size.normal * 3
-    property real strokeWidth: Appearance.padding.small
+    property real implicitSize: Config.appearance.font.size.normal * 3
+    property real strokeWidth: Config.appearance.padding.small
     property color fgColour: Colours.palette.m3primary
     property color bgColour: Colours.palette.m3secondaryContainer
 
@@ -86,15 +86,15 @@ BusyIndicator {
     }
 
     component Updater: QtObject {
-        readonly property int duration: 5400 * Appearance.anim.durations.scale
-        readonly property int expandDuration: 667 * Appearance.anim.durations.scale
-        readonly property int collapseDuration: 667 * Appearance.anim.durations.scale
-        readonly property int completeEndDuration: 333 * Appearance.anim.durations.scale
+        readonly property int duration: 5400 * Config.appearance.anim.durations.scale
+        readonly property int expandDuration: 667 * Config.appearance.anim.durations.scale
+        readonly property int collapseDuration: 667 * Config.appearance.anim.durations.scale
+        readonly property int completeEndDuration: 333 * Config.appearance.anim.durations.scale
         readonly property int tailDegOffset: -20
         readonly property int extraDegPerCycle: 250
         readonly property int constantRotDeg: 1520
-        readonly property list<int> expandDelay: [0, 1350, 2700, 4050].map(d => d * Appearance.anim.durations.scale)
-        readonly property list<int> collapseDelay: [667, 2017, 3367, 4717].map(d => d * Appearance.anim.durations.scale)
+        readonly property list<int> expandDelay: [0, 1350, 2700, 4050].map(d => d * Config.appearance.anim.durations.scale)
+        readonly property list<int> collapseDelay: [667, 2017, 3367, 4717].map(d => d * Config.appearance.anim.durations.scale)
 
         property real progress: 0
         property real startFraction: 0

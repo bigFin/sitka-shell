@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import "dash"
 import Quickshell
 import QtQuick.Layouts
@@ -11,8 +11,8 @@ GridLayout {
     required property PersistentProperties visibilities
     required property PersistentProperties state
 
-    rowSpacing: Appearance.spacing.normal
-    columnSpacing: Appearance.spacing.normal
+    rowSpacing: Config.appearance.spacing.normal
+    columnSpacing: Config.appearance.spacing.normal
 
     Rect {
         Layout.column: 2
@@ -85,7 +85,7 @@ GridLayout {
     }
 
     component Rect: StyledRect {
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
         color: Colours.tPalette.m3surfaceContainer
     }
 }

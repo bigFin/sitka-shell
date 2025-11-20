@@ -4,7 +4,7 @@ pragma ComponentBehavior: Bound
 
 import qs.services
 import qs.utils
-import qs.config
+import "../../../config"
 import QtQuick
 import Quickshell.Widgets
 import QtQuick.Layouts
@@ -35,7 +35,7 @@ StyledRect {
             model: Niri.getWorkspaceCount()
             implicitHeight: contentHeight
 
-            // spacing: Appearance.spacing.small
+            // spacing: Config.appearance.spacing.small
 
             delegate: WorkspaceDelegate {}
         }
@@ -51,7 +51,7 @@ StyledRect {
 
         required property int index
 
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
         color: groupMenu.bgColor
         Layout.fillWidth: true
 
@@ -76,7 +76,7 @@ StyledRect {
 
         ColumnLayout {
             id: col
-            // spacing: Appearance.spacing.small
+            // spacing: Config.appearance.spacing.small
             spacing: 0
 
             StyledText {
@@ -86,7 +86,7 @@ StyledRect {
                     return wsRect.windows.length > 0 ? baseName : `${baseName} (empty)`;
                 }
                 text: wsName
-                font.pointSize: Appearance.font.size.small
+                font.pointSize: Config.appearance.font.size.small
                 elide: Text.ElideRight
                 color: Colours.palette.m3tertiary
             }
@@ -96,9 +96,9 @@ StyledRect {
                 Layout.fillWidth: true
                 model: wsRect.groupedWindows
                 implicitHeight: contentHeight + spacing
-                spacing: Appearance.spacing.small
+                spacing: Config.appearance.spacing.small
                 Layout.alignment: Qt.AlignCenter
-                Layout.leftMargin: Appearance.spacing.small
+                Layout.leftMargin: Config.appearance.spacing.small
 
                 Behavior on implicitHeight {
                     Anim {}
@@ -116,13 +116,13 @@ StyledRect {
         required property var modelData // { app_id, windows }
         readonly property bool isFocused: Number(Niri.focusedWorkspaceId) === Number(modelData.workspace_id)
 
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
         color: isFocused ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHigh
 
         clip: true
 
         implicitHeight: appCol.implicitHeight
-        implicitWidth: groupMenu.width - Appearance.spacing.small * 2
+        implicitWidth: groupMenu.width - Config.appearance.spacing.small * 2
 
         ColumnLayout {
             id: appCol
@@ -134,7 +134,7 @@ StyledRect {
                 id: winList
                 Layout.fillWidth: true
                 model: appGroup.modelData.windows
-                spacing: Appearance.spacing.small
+                spacing: Config.appearance.spacing.small
                 boundsBehavior: Flickable.DragAndOvershootBounds
                 implicitHeight: contentHeight + spacing
                 reuseItems: true // ✅ enable reuse
@@ -150,9 +150,9 @@ StyledRect {
 
                 // footer: StyledText {
                 // anchors.right: parent.right
-                // anchors.rightMargin: Appearance.spacing.small
+                // anchors.rightMargin: Config.appearance.spacing.small
                 // text: `${appGroup.modelData.app_id} (${winList.count})`
-                // font.pointSize: Appearance.font.size.extraSmall
+                // font.pointSize: Config.appearance.font.size.extraSmall
                 // color: Colours.palette.m3primary
                 // }
 
@@ -176,8 +176,8 @@ StyledRect {
 
         RowLayout {
             anchors.verticalCenter: parent.verticalCenter
-            anchors.margins: Appearance.spacing.small
-            spacing: Appearance.spacing.normal
+            anchors.margins: Config.appearance.spacing.small
+            spacing: Config.appearance.spacing.normal
 
             Loader {
                 id: iconLoader
@@ -191,7 +191,7 @@ StyledRect {
                 MaterialIcon {
                     grade: 0
                     text: Icons.getAppCategoryIcon(itemMain.modelData?.app_id, "help_center")
-                    font.pointSize: Appearance.font.size.large
+                    font.pointSize: Config.appearance.font.size.large
                     color: itemMain.isFocused ? Colours.palette.m3onPrimary : groupMenu.onColor
                 }
             }

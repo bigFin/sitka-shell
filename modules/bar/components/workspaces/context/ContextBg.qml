@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.services
-import qs.config
+import "../../../../../config"
 import QtQuick
 import qs.components.effects
 import qs.components
@@ -20,9 +20,9 @@ Item {
     readonly property bool hasWindows: (isItem && anchorWs.wsWindowCount > 0) || (isWorkspace && anchorWs.isOccupied)
     readonly property bool isFocused: (isItem && anchorWs.isWsFocused) || (isWorkspace && (Number(anchorWs.index) === Number(Niri.focusedWorkspaceIndex)))
 
-    readonly property int rounding: Appearance.rounding.small
-    readonly property int gPadding: isItem ? Appearance.padding.small / 2 : 0
-    readonly property int cornerPieceSize: Config.bar.workspaces.windowIconSize + Appearance.padding.small
+    readonly property int rounding: Config.appearance.rounding.small
+    readonly property int gPadding: isItem ? Config.appearance.padding.small / 2 : 0
+    readonly property int cornerPieceSize: Config.bar.workspaces.windowIconSize + Config.appearance.padding.small
 
     property bool activated: false
     Component.onCompleted: root.activated = true
@@ -42,55 +42,55 @@ Item {
         y: root.anchorWs?.mapToItem(root, 0, 0).y - root.gPadding
 
         radius: root.rounding
-        topRightRadius: Appearance.rounding.normal
-        bottomRightRadius: Appearance.rounding.normal
+        topRightRadius: Config.appearance.rounding.normal
+        bottomRightRadius: Config.appearance.rounding.normal
 
         Behavior on color {
             CAnim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
 
         Behavior on radius {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
         Behavior on topRightRadius {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
         Behavior on bottomRightRadius {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
 
         Behavior on width {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
         Behavior on height {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
         Behavior on opacity {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
 
         Behavior on x {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
         Behavior on y {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
     }
@@ -101,7 +101,7 @@ Item {
 
         anchors.fill: highlight
 
-        anchors.margins: -Appearance.padding.small
+        anchors.margins: -Config.appearance.padding.small
 
         anchors.leftMargin: Config.bar.workspaces.windowIconSize
         topLeftRadius: 0
@@ -125,8 +125,8 @@ Item {
     HighlightRect {
         id: highlight
 
-        topRightRadius: Appearance.rounding.small
-        bottomRightRadius: Appearance.rounding.small
+        topRightRadius: Config.appearance.rounding.small
+        bottomRightRadius: Config.appearance.rounding.small
 
         Corner {
             cornerType: 2
@@ -152,7 +152,7 @@ Item {
         color: parent.color
 
         anchors.left: parent.left
-        anchors.leftMargin: Appearance.padding.small
+        anchors.leftMargin: Config.appearance.padding.small
         anchors.top: cornerType === 0 ? parent.bottom : undefined
         anchors.bottom: cornerType === 2 ? parent.top : undefined
         anchors.topMargin: cornerType === 0 ? -1 : undefined
@@ -160,19 +160,19 @@ Item {
 
         Behavior on height {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
 
         Behavior on width {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
 
         Behavior on anchors.leftMargin {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
     }

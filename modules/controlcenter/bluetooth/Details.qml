@@ -6,7 +6,7 @@ import qs.components.controls
 import qs.components.effects
 import qs.components.containers
 import qs.services
-import qs.config
+import "../../../config"
 import qs.utils
 import Quickshell.Bluetooth
 import QtQuick
@@ -29,13 +29,13 @@ Item {
 
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: Appearance.spacing.normal
+            spacing: Config.appearance.spacing.normal
 
             MaterialIcon {
                 Layout.alignment: Qt.AlignHCenter
                 animate: true
                 text: Icons.getBluetoothIcon(root.device.icon)
-                font.pointSize: Appearance.font.size.extraLarge * 3
+                font.pointSize: Config.appearance.font.size.extraLarge * 3
                 font.bold: true
             }
 
@@ -43,14 +43,14 @@ Item {
                 Layout.alignment: Qt.AlignHCenter
                 animate: true
                 text: root.device?.name ?? ""
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: Config.appearance.font.size.large
                 font.bold: true
             }
 
             StyledText {
-                Layout.topMargin: Appearance.spacing.large
+                Layout.topMargin: Config.appearance.spacing.large
                 text: qsTr("Connection status")
-                font.pointSize: Appearance.font.size.larger
+                font.pointSize: Config.appearance.font.size.larger
                 font.weight: 500
             }
 
@@ -61,9 +61,9 @@ Item {
 
             StyledRect {
                 Layout.fillWidth: true
-                implicitHeight: deviceStatus.implicitHeight + Appearance.padding.large * 2
+                implicitHeight: deviceStatus.implicitHeight + Config.appearance.padding.large * 2
 
-                radius: Appearance.rounding.normal
+                radius: Config.appearance.rounding.normal
                 color: Colours.tPalette.m3surfaceContainer
 
                 ColumnLayout {
@@ -72,9 +72,9 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.margins: Appearance.padding.large
+                    anchors.margins: Config.appearance.padding.large
 
-                    spacing: Appearance.spacing.larger
+                    spacing: Config.appearance.spacing.larger
 
                     Toggle {
                         label: qsTr("Connected")
@@ -102,9 +102,9 @@ Item {
             }
 
             StyledText {
-                Layout.topMargin: Appearance.spacing.large
+                Layout.topMargin: Config.appearance.spacing.large
                 text: qsTr("Device properties")
-                font.pointSize: Appearance.font.size.larger
+                font.pointSize: Config.appearance.font.size.larger
                 font.weight: 500
             }
 
@@ -115,9 +115,9 @@ Item {
 
             StyledRect {
                 Layout.fillWidth: true
-                implicitHeight: deviceProps.implicitHeight + Appearance.padding.large * 2
+                implicitHeight: deviceProps.implicitHeight + Config.appearance.padding.large * 2
 
-                radius: Appearance.rounding.normal
+                radius: Config.appearance.rounding.normal
                 color: Colours.tPalette.m3surfaceContainer
 
                 ColumnLayout {
@@ -126,19 +126,19 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.margins: Appearance.padding.large
+                    anchors.margins: Config.appearance.padding.large
 
-                    spacing: Appearance.spacing.larger
+                    spacing: Config.appearance.spacing.larger
 
                     RowLayout {
                         Layout.fillWidth: true
-                        spacing: Appearance.spacing.small
+                        spacing: Config.appearance.spacing.small
 
                         Item {
                             id: renameDevice
 
                             Layout.fillWidth: true
-                            Layout.rightMargin: Appearance.spacing.small
+                            Layout.rightMargin: Config.appearance.spacing.small
 
                             implicitHeight: renameLabel.implicitHeight + deviceNameEdit.implicitHeight
 
@@ -153,15 +153,15 @@ Item {
                                 PropertyChanges {
                                     renameDevice.implicitHeight: deviceNameEdit.implicitHeight
                                     renameLabel.opacity: 0
-                                    deviceNameEdit.padding: Appearance.padding.normal
+                                    deviceNameEdit.padding: Config.appearance.padding.normal
                                 }
                             }
 
                             transitions: Transition {
                                 AnchorAnimation {
-                                    duration: Appearance.anim.durations.normal
+                                    duration: Config.appearance.anim.durations.normal
                                     easing.type: Easing.BezierSpline
-                                    easing.bezierCurve: Appearance.anim.curves.standard
+                                    easing.bezierCurve: Config.appearance.anim.curves.standard
                                 }
                                 Anim {
                                     properties: "implicitHeight,opacity,padding"
@@ -175,7 +175,7 @@ Item {
 
                                 text: qsTr("Device name")
                                 color: Colours.palette.m3outline
-                                font.pointSize: Appearance.font.size.small
+                                font.pointSize: Config.appearance.font.size.small
                             }
 
                             StyledTextField {
@@ -184,7 +184,7 @@ Item {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.top: renameLabel.bottom
-                                anchors.leftMargin: root.session.bt.editingDeviceName ? 0 : -Appearance.padding.normal
+                                anchors.leftMargin: root.session.bt.editingDeviceName ? 0 : -Config.appearance.padding.normal
 
                                 text: root.device?.name ?? ""
                                 readOnly: !root.session.bt.editingDeviceName
@@ -193,11 +193,11 @@ Item {
                                     root.device.name = text;
                                 }
 
-                                leftPadding: Appearance.padding.normal
-                                rightPadding: Appearance.padding.normal
+                                leftPadding: Config.appearance.padding.normal
+                                rightPadding: Config.appearance.padding.normal
 
                                 background: StyledRect {
-                                    radius: Appearance.rounding.small
+                                    radius: Config.appearance.rounding.small
                                     border.width: 2
                                     border.color: Colours.palette.m3primary
                                     opacity: root.session.bt.editingDeviceName ? 1 : 0
@@ -219,9 +219,9 @@ Item {
 
                         StyledRect {
                             implicitWidth: implicitHeight
-                            implicitHeight: cancelEditIcon.implicitHeight + Appearance.padding.smaller * 2
+                            implicitHeight: cancelEditIcon.implicitHeight + Config.appearance.padding.smaller * 2
 
-                            radius: Appearance.rounding.small
+                            radius: Config.appearance.rounding.small
                             color: Colours.palette.m3secondaryContainer
                             opacity: root.session.bt.editingDeviceName ? 1 : 0
                             scale: root.session.bt.editingDeviceName ? 1 : 0.5
@@ -251,21 +251,21 @@ Item {
 
                             Behavior on scale {
                                 Anim {
-                                    duration: Appearance.anim.durations.expressiveFastSpatial
-                                    easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                                    duration: Config.appearance.anim.durations.expressiveFastSpatial
+                                    easing.bezierCurve: Config.appearance.anim.curves.expressiveFastSpatial
                                 }
                             }
                         }
 
                         StyledRect {
                             implicitWidth: implicitHeight
-                            implicitHeight: editIcon.implicitHeight + Appearance.padding.smaller * 2
+                            implicitHeight: editIcon.implicitHeight + Config.appearance.padding.smaller * 2
 
                             radius: 0
                             color: Qt.alpha(Colours.palette.m3primary, root.session.bt.editingDeviceName ? 1 : 0)
                             
                             // Apply small fillets for tertiary elements
-                            filletSize: Appearance.fillet.small
+                            filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.small : 2
 
                             StateLayer {
                                 color: root.session.bt.editingDeviceName ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
@@ -309,9 +309,9 @@ Item {
             }
 
             StyledText {
-                Layout.topMargin: Appearance.spacing.large
+                Layout.topMargin: Config.appearance.spacing.large
                 text: qsTr("Device information")
-                font.pointSize: Appearance.font.size.larger
+                font.pointSize: Config.appearance.font.size.larger
                 font.weight: 500
             }
 
@@ -322,9 +322,9 @@ Item {
 
             StyledRect {
                 Layout.fillWidth: true
-                implicitHeight: deviceInfo.implicitHeight + Appearance.padding.large * 2
+                implicitHeight: deviceInfo.implicitHeight + Config.appearance.padding.large * 2
 
-                radius: Appearance.rounding.normal
+                radius: Config.appearance.rounding.normal
                 color: Colours.tPalette.m3surfaceContainer
 
                 ColumnLayout {
@@ -333,31 +333,31 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.margins: Appearance.padding.large
+                    anchors.margins: Config.appearance.padding.large
 
-                    spacing: Appearance.spacing.small / 2
+                    spacing: Config.appearance.spacing.small / 2
 
                     StyledText {
                         text: root.device?.batteryAvailable ? qsTr("Device battery (%1%)").arg(root.device.battery * 100) : qsTr("Battery unavailable")
                     }
 
                     RowLayout {
-                        Layout.topMargin: Appearance.spacing.small / 2
+                        Layout.topMargin: Config.appearance.spacing.small / 2
                         Layout.fillWidth: true
-                        Layout.preferredHeight: Appearance.padding.smaller
-                        spacing: Appearance.spacing.small / 2
+                        Layout.preferredHeight: Config.appearance.padding.smaller
+                        spacing: Config.appearance.spacing.small / 2
 
                         StyledRect {
                             Layout.fillHeight: true
                             implicitWidth: root.device?.batteryAvailable ? parent.width * root.device.battery : 0
-                            radius: Appearance.rounding.full
+                            radius: Config.appearance.rounding.full
                             color: Colours.palette.m3primary
                         }
 
                         StyledRect {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            radius: Appearance.rounding.full
+                            radius: Config.appearance.rounding.full
                             color: Colours.palette.m3secondaryContainer
 
                             StyledRect {
@@ -367,54 +367,55 @@ Item {
                                 anchors.margins: parent.height * 0.25
 
                                 implicitWidth: height
-                                radius: Appearance.rounding.full
+                                radius: Config.appearance.rounding.full
                                 color: Colours.palette.m3primary
                             }
                         }
                     }
 
                     StyledText {
-                        Layout.topMargin: Appearance.spacing.normal
+                        Layout.topMargin: Config.appearance.spacing.normal
                         text: qsTr("Dbus path")
                     }
 
                     StyledText {
                         text: root.device?.dbusPath ?? ""
                         color: Colours.palette.m3outline
-                        font.pointSize: Appearance.font.size.small
+                        font.pointSize: Config.appearance.font.size.small
                     }
 
                     StyledText {
-                        Layout.topMargin: Appearance.spacing.normal
+                        Layout.topMargin: Config.appearance.spacing.normal
                         text: qsTr("MAC address")
                     }
+
 
                     StyledText {
                         text: root.device?.address ?? ""
                         color: Colours.palette.m3outline
-                        font.pointSize: Appearance.font.size.small
+                        font.pointSize: Config.appearance.font.size.small
                     }
 
                     StyledText {
-                        Layout.topMargin: Appearance.spacing.normal
+                        Layout.topMargin: Config.appearance.spacing.normal
                         text: qsTr("Bonded")
                     }
 
                     StyledText {
                         text: root.device?.bonded ? qsTr("Yes") : qsTr("No")
                         color: Colours.palette.m3outline
-                        font.pointSize: Appearance.font.size.small
+                        font.pointSize: Config.appearance.font.size.small
                     }
 
                     StyledText {
-                        Layout.topMargin: Appearance.spacing.normal
+                        Layout.topMargin: Config.appearance.spacing.normal
                         text: qsTr("System name")
                     }
 
                     StyledText {
                         text: root.device?.deviceName ?? ""
                         color: Colours.palette.m3outline
-                        font.pointSize: Appearance.font.size.small
+                        font.pointSize: Config.appearance.font.size.small
                     }
                 }
             }
@@ -424,7 +425,7 @@ Item {
     ColumnLayout {
         anchors.right: fabRoot.right
         anchors.bottom: fabRoot.top
-        anchors.bottomMargin: Appearance.padding.normal
+        anchors.bottomMargin: Config.appearance.padding.normal
 
         Repeater {
             id: fabMenu
@@ -456,9 +457,9 @@ Item {
 
                 Layout.alignment: Qt.AlignRight
 
-                implicitHeight: fabMenuItemInner.implicitHeight + Appearance.padding.larger * 2
+                implicitHeight: fabMenuItemInner.implicitHeight + Config.appearance.padding.larger * 2
 
-                radius: Appearance.rounding.full
+                radius: Config.appearance.rounding.full
                 color: Colours.palette.m3primaryContainer
 
                 opacity: 0
@@ -468,7 +469,7 @@ Item {
                     when: root.session.bt.fabMenuOpen
 
                     PropertyChanges {
-                        fabMenuItem.implicitWidth: fabMenuItemInner.implicitWidth + Appearance.padding.large * 2
+                        fabMenuItem.implicitWidth: fabMenuItemInner.implicitWidth + Config.appearance.padding.large * 2
                         fabMenuItem.opacity: 1
                         fabMenuItemInner.opacity: 1
                     }
@@ -480,17 +481,17 @@ Item {
 
                         SequentialAnimation {
                             PauseAnimation {
-                                duration: (fabMenu.count - 1 - fabMenuItem.index) * Appearance.anim.durations.small / 8
+                                duration: (fabMenu.count - 1 - fabMenuItem.index) * Config.appearance.anim.durations.small / 8
                             }
                             ParallelAnimation {
                                 Anim {
                                     property: "implicitWidth"
-                                    duration: Appearance.anim.durations.expressiveFastSpatial
-                                    easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                                    duration: Config.appearance.anim.durations.expressiveFastSpatial
+                                    easing.bezierCurve: Config.appearance.anim.curves.expressiveFastSpatial
                                 }
                                 Anim {
                                     property: "opacity"
-                                    duration: Appearance.anim.durations.small
+                                    duration: Config.appearance.anim.durations.small
                                 }
                             }
                         }
@@ -500,17 +501,17 @@ Item {
 
                         SequentialAnimation {
                             PauseAnimation {
-                                duration: fabMenuItem.index * Appearance.anim.durations.small / 8
+                                duration: fabMenuItem.index * Config.appearance.anim.durations.small / 8
                             }
                             ParallelAnimation {
                                 Anim {
                                     property: "implicitWidth"
-                                    duration: Appearance.anim.durations.expressiveFastSpatial
-                                    easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                                    duration: Config.appearance.anim.durations.expressiveFastSpatial
+                                    easing.bezierCurve: Config.appearance.anim.curves.expressiveFastSpatial
                                 }
                                 Anim {
                                     property: "opacity"
-                                    duration: Appearance.anim.durations.small
+                                    duration: Config.appearance.anim.durations.small
                                 }
                             }
                         }
@@ -535,7 +536,7 @@ Item {
                     id: fabMenuItemInner
 
                     anchors.centerIn: parent
-                    spacing: Appearance.spacing.normal
+                    spacing: Config.appearance.spacing.normal
                     opacity: 0
 
                     MaterialIcon {
@@ -553,7 +554,7 @@ Item {
 
                         Behavior on Layout.preferredWidth {
                             Anim {
-                                duration: Appearance.anim.durations.small
+                                duration: Config.appearance.anim.durations.small
                             }
                         }
                     }
@@ -580,7 +581,7 @@ Item {
             implicitWidth: 64
             implicitHeight: 64
 
-            radius: Appearance.rounding.normal
+            radius: Config.appearance.rounding.normal
             color: root.session.bt.fabMenuOpen ? Colours.palette.m3primary : Colours.palette.m3primaryContainer
 
             states: State {
@@ -591,15 +592,15 @@ Item {
                     fabBg.implicitWidth: 48
                     fabBg.implicitHeight: 48
                     fabBg.radius: 0
-                    fab.font.pointSize: Appearance.font.size.larger
+                    fab.font.pointSize: Config.appearance.font.size.larger
                 }
             }
 
             transitions: Transition {
                 Anim {
                     properties: "implicitWidth,implicitHeight"
-                    duration: Appearance.anim.durations.expressiveFastSpatial
-                    easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                    duration: Config.appearance.anim.durations.expressiveFastSpatial
+                    easing.bezierCurve: Config.appearance.anim.curves.expressiveFastSpatial
                 }
                 Anim {
                     properties: "radius,font.pointSize"
@@ -630,7 +631,7 @@ Item {
                 animate: true
                 text: root.session.bt.fabMenuOpen ? "close" : "settings"
                 color: root.session.bt.fabMenuOpen ? Colours.palette.m3onPrimary : Colours.palette.m3onPrimaryContainer
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: Config.appearance.font.size.large
                 fill: 1
             }
         }
@@ -642,7 +643,7 @@ Item {
         property alias toggle: toggle
 
         Layout.fillWidth: true
-        spacing: Appearance.spacing.normal
+        spacing: Config.appearance.spacing.normal
 
         StyledText {
             Layout.fillWidth: true
@@ -656,3 +657,4 @@ Item {
         }
     }
 }
+

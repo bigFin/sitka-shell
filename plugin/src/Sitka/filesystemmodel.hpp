@@ -9,7 +9,7 @@
 #include <qobject.h>
 #include <qqmlintegration.h>
 
-namespace caelestia {
+namespace sitka {
 
 class FileSystemEntry : public QObject {
     Q_OBJECT
@@ -159,4 +159,4 @@ private:
     [[nodiscard]] static bool compareEntries(const FileSystemEntry* a, const FileSystemEntry* b);
 };
 
-} // namespace caelestia
+} // namespace sitka

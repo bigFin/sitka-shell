@@ -2,7 +2,7 @@
 
 #include <qdebug.h>
 
-namespace caelestia {
+namespace sitka {
 
 Service::Service(QObject* parent)
     : QObject(parent)
@@ -51,4 +51,4 @@ void Service::unref() {
     }
 }
 
-} // namespace caelestia
+} // namespace sitka

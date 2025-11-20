@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Effects
 
@@ -16,7 +16,7 @@ Item {
         color: Colours.palette.m3surface
         
         // Apply large fillets for primary elements
-        filletSize: Appearance.fillet.large
+        filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
 
         layer.enabled: true
         layer.effect: MultiEffect {
@@ -44,8 +44,7 @@ Item {
             
             // Match fillet size for inner mask (maybe slightly smaller?)
             // Using same size for now
-            filletSize: Appearance.fillet.large
-            radius: Config.border.rounding
+            filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
         }
     }
 }

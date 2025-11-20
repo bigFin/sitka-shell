@@ -1,6 +1,6 @@
 import ".."
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Controls
 
@@ -10,7 +10,7 @@ ScrollBar {
     contentItem: StyledRect {
         implicitWidth: 6
         opacity: root.pressed ? 1 : root.policy === ScrollBar.AlwaysOn || (root.active && root.size < 1) ? 0.8 : 0
-        radius: Appearance.rounding.full
+        radius: Config.appearance.rounding.full
         color: Colours.palette.m3secondary
 
         Behavior on opacity {

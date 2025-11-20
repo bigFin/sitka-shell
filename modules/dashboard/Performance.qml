@@ -1,20 +1,20 @@
 import qs.components
 import qs.components.misc
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Layouts
 
 RowLayout {
     id: root
 
-    readonly property int padding: Appearance.padding.large
+    readonly property int padding: Config.appearance.padding.large
 
     function displayTemp(temp: real): string {
         return `${Math.ceil(Config.services.useFahrenheit ? temp * 1.8 + 32 : temp)}°${Config.services.useFahrenheit ? "F" : "C"}`;
     }
 
-    spacing: Appearance.spacing.large * 3
+    spacing: Config.appearance.spacing.large * 3
 
     Ref {
         service: SystemUsage
@@ -112,7 +112,7 @@ RowLayout {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 text: res.label1
-                font.pointSize: Appearance.font.size.extraLarge * res.primaryMult
+                font.pointSize: Config.appearance.font.size.extraLarge * res.primaryMult
             }
 
             StyledText {
@@ -120,7 +120,7 @@ RowLayout {
 
                 text: res.sublabel1
                 color: Colours.palette.m3onSurfaceVariant
-                font.pointSize: Appearance.font.size.smaller * res.primaryMult
+                font.pointSize: Config.appearance.font.size.smaller * res.primaryMult
             }
         }
 
@@ -128,13 +128,13 @@ RowLayout {
             anchors.horizontalCenter: parent.right
             anchors.top: parent.verticalCenter
             anchors.horizontalCenterOffset: -res.thickness / 2
-            anchors.topMargin: res.thickness / 2 + Appearance.spacing.small
+            anchors.topMargin: res.thickness / 2 + Config.appearance.spacing.small
 
             StyledText {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 text: res.label2
-                font.pointSize: Appearance.font.size.smaller * res.primaryMult
+                font.pointSize: Config.appearance.font.size.smaller * res.primaryMult
             }
 
             StyledText {
@@ -142,7 +142,7 @@ RowLayout {
 
                 text: res.sublabel2
                 color: Colours.palette.m3onSurfaceVariant
-                font.pointSize: Appearance.font.size.small * res.primaryMult
+                font.pointSize: Config.appearance.font.size.small * res.primaryMult
             }
         }
 
@@ -168,7 +168,7 @@ RowLayout {
                 ctx.reset();
 
                 ctx.lineWidth = res.thickness;
-                ctx.lineCap = Appearance.rounding.scale === 0 ? "square" : "round";
+                ctx.lineCap = Config.appearance.rounding.scale === 0 ? "square" : "round";
 
                 const radius = (Math.min(width, height) - ctx.lineWidth) / 2;
                 const cx = centerX;

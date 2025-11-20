@@ -5,7 +5,7 @@
 #include <qqmlintegration.h>
 #include <qtimer.h>
 
-namespace caelestia {
+namespace sitka {
 
 class AudioProcessor : public QObject {
     Q_OBJECT
@@ -48,4 +48,4 @@ private:
     void stop() override;
 };
 
-} // namespace caelestia
+} // namespace sitka

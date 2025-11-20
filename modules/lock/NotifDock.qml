@@ -4,7 +4,7 @@ import qs.components
 import qs.components.containers
 import qs.components.effects
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import Quickshell.Widgets
 import QtQuick
@@ -16,15 +16,15 @@ ColumnLayout {
     required property var lock
 
     anchors.fill: parent
-    anchors.margins: Appearance.padding.large
+    anchors.margins: Config.appearance.padding.large
 
-    spacing: Appearance.spacing.smaller
+    spacing: Config.appearance.spacing.smaller
 
     StyledText {
         Layout.fillWidth: true
         text: Notifs.list.length > 0 ? qsTr("%1 notification%2").arg(Notifs.list.length).arg(Notifs.list.length === 1 ? "" : "s") : qsTr("Notifications")
         color: Colours.palette.m3outline
-        font.family: Appearance.font.family.mono
+        font.family: Config.appearance.font.family.mono
         font.weight: 500
         elide: Text.ElideRight
     }
@@ -35,7 +35,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
         color: "transparent"
 
         Loader {
@@ -45,7 +45,7 @@ ColumnLayout {
             opacity: Notifs.list.length > 0 ? 0 : 1
 
             sourceComponent: ColumnLayout {
-                spacing: Appearance.spacing.large
+                spacing: Config.appearance.spacing.large
 
                 Image {
                     asynchronous: true
@@ -64,15 +64,15 @@ ColumnLayout {
                     Layout.alignment: Qt.AlignHCenter
                     text: qsTr("No Notifications")
                     color: Colours.palette.m3outlineVariant
-                    font.pointSize: Appearance.font.size.large
-                    font.family: Appearance.font.family.mono
+                    font.pointSize: Config.appearance.font.size.large
+                    font.family: Config.appearance.font.family.mono
                     font.weight: 500
                 }
             }
 
             Behavior on opacity {
                 Anim {
-                    duration: Appearance.anim.durations.extraLarge
+                    duration: Config.appearance.anim.durations.extraLarge
                 }
             }
         }
@@ -80,7 +80,7 @@ ColumnLayout {
         StyledListView {
             anchors.fill: parent
 
-            spacing: Appearance.spacing.small
+            spacing: Config.appearance.spacing.small
             clip: true
 
             model: ScriptModel {
@@ -99,8 +99,8 @@ ColumnLayout {
                     property: "scale"
                     from: 0
                     to: 1
-                    duration: Appearance.anim.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                    duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
                 }
             }
 
@@ -122,8 +122,8 @@ ColumnLayout {
                 }
                 Anim {
                     property: "y"
-                    duration: Appearance.anim.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                    duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
                 }
             }
 
@@ -134,8 +134,8 @@ ColumnLayout {
                 }
                 Anim {
                     property: "y"
-                    duration: Appearance.anim.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                    duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
                 }
             }
         }

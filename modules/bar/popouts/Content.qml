@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.components
-import qs.config
+import "../../../config"
 import Quickshell
 import Quickshell.Services.SystemTray
 import QtQuick
@@ -13,14 +13,14 @@ Item {
 
     anchors.centerIn: parent
 
-    implicitWidth: (content.children.find(c => c.shouldBeActive)?.implicitWidth ?? 0) + Appearance.padding.large * 2
-    implicitHeight: (content.children.find(c => c.shouldBeActive)?.implicitHeight ?? 0) + Appearance.padding.large * 2
+    implicitWidth: (content.children.find(c => c.shouldBeActive)?.implicitWidth ?? 0) + Config.appearance.padding.large * 2
+    implicitHeight: (content.children.find(c => c.shouldBeActive)?.implicitHeight ?? 0) + Config.appearance.padding.large * 2
 
     Item {
         id: content
 
         anchors.fill: parent
-        anchors.margins: Appearance.padding.large
+        anchors.margins: Config.appearance.padding.large
 
         Popout {
             name: "wsWindow"
@@ -144,7 +144,7 @@ Item {
                 SequentialAnimation {
                     Anim {
                         properties: "opacity,scale"
-                        duration: Appearance.anim.durations.small
+                        duration: Config.appearance.anim.durations.small
                     }
                     PropertyAction {
                         target: popout

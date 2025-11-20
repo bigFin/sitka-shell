@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components.effects
 import qs.services
-import qs.config
+import "../../../config"
 import Quickshell.Services.SystemTray
 import QtQuick
 
@@ -12,8 +12,8 @@ MouseArea {
     required property SystemTrayItem modelData
 
     acceptedButtons: Qt.LeftButton | Qt.RightButton
-    implicitWidth: Appearance.font.size.small * 2
-    implicitHeight: Appearance.font.size.small * 2
+    implicitWidth: Config.appearance.font.size.small * 2
+    implicitHeight: Config.appearance.font.size.small * 2
 
     onClicked: event => {
         if (event.button === Qt.LeftButton)

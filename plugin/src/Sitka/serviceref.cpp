@@ -2,7 +2,7 @@
 
 #include "service.hpp"
 
-namespace caelestia {
+namespace sitka {
 
 ServiceRef::ServiceRef(Service* service, QObject* parent)
     : QObject(parent)
@@ -39,4 +39,4 @@ void ServiceRef::setService(Service* service) {
     }
 }
 
-} // namespace caelestia
+} // namespace sitka

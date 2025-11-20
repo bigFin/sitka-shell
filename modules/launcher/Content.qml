@@ -4,7 +4,7 @@ import "services"
 import qs.components
 import qs.components.controls
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import QtQuick
 
@@ -15,8 +15,8 @@ Item {
     required property PersistentProperties visibilities
     required property var panels
 
-    readonly property int padding: Appearance.padding.large
-    readonly property int rounding: Appearance.rounding.large
+    readonly property int padding: Config.appearance.padding.large
+    readonly property int rounding: Config.appearance.rounding.large
 
     implicitWidth: listWrapper.width + padding * 2
     implicitHeight: searchWrapper.height + listWrapper.height + padding * 2
@@ -50,7 +50,7 @@ Item {
         id: searchWrapper
 
         color: Colours.tPalette.m3surfaceContainer
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
 
         anchors.left: parent.left
         anchors.right: parent.right
@@ -75,11 +75,11 @@ Item {
 
             anchors.left: searchIcon.right
             anchors.right: clearIcon.left
-            anchors.leftMargin: Appearance.spacing.small
-            anchors.rightMargin: Appearance.spacing.small
+            anchors.leftMargin: Config.appearance.spacing.small
+            anchors.rightMargin: Config.appearance.spacing.small
 
-            topPadding: Appearance.padding.larger
-            bottomPadding: Appearance.padding.larger
+            topPadding: Config.appearance.padding.larger
+            bottomPadding: Config.appearance.padding.larger
 
             placeholderText: qsTr("Type \"%1\" for commands").arg(Config.launcher.actionPrefix)
 
@@ -182,13 +182,13 @@ Item {
 
             Behavior on width {
                 Anim {
-                    duration: Appearance.anim.durations.small
+                    duration: Config.appearance.anim.durations.small
                 }
             }
 
             Behavior on opacity {
                 Anim {
-                    duration: Appearance.anim.durations.small
+                    duration: Config.appearance.anim.durations.small
                 }
             }
         }

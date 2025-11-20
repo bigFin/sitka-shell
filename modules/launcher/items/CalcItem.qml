@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../../config"
 import Caelestia
 import Quickshell
 import QtQuick
@@ -23,7 +23,7 @@ Item {
     anchors.right: parent?.right
 
     StateLayer {
-        radius: Appearance.rounding.full
+        radius: Config.appearance.rounding.full
 
         function onClicked(): void {
             root.onClicked();
@@ -34,13 +34,13 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        anchors.margins: Appearance.padding.larger
+        anchors.margins: Config.appearance.padding.larger
 
-        spacing: Appearance.spacing.normal
+        spacing: Config.appearance.spacing.normal
 
         MaterialIcon {
             text: "function"
-            font.pointSize: Appearance.font.size.extraLarge
+            font.pointSize: Config.appearance.font.size.extraLarge
             Layout.alignment: Qt.AlignVCenter
         }
 
@@ -64,11 +64,11 @@ Item {
 
         StyledRect {
             color: Colours.palette.m3tertiary
-            radius: Appearance.rounding.normal
+            radius: Config.appearance.rounding.normal
             clip: true
 
-            implicitWidth: (stateLayer.containsMouse ? label.implicitWidth + label.anchors.rightMargin : 0) + icon.implicitWidth + Appearance.padding.normal * 2
-            implicitHeight: Math.max(label.implicitHeight, icon.implicitHeight) + Appearance.padding.small * 2
+            implicitWidth: (stateLayer.containsMouse ? label.implicitWidth + label.anchors.rightMargin : 0) + icon.implicitWidth + Config.appearance.padding.normal * 2
+            implicitHeight: Math.max(label.implicitHeight, icon.implicitHeight) + Config.appearance.padding.small * 2
 
             Layout.alignment: Qt.AlignVCenter
 
@@ -88,11 +88,11 @@ Item {
 
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: icon.left
-                anchors.rightMargin: Appearance.spacing.small
+                anchors.rightMargin: Config.appearance.spacing.small
 
                 text: qsTr("Open in calculator")
                 color: Colours.palette.m3onTertiary
-                font.pointSize: Appearance.font.size.normal
+                font.pointSize: Config.appearance.font.size.normal
 
                 opacity: stateLayer.containsMouse ? 1 : 0
 
@@ -106,16 +106,16 @@ Item {
 
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
-                anchors.rightMargin: Appearance.padding.normal
+                anchors.rightMargin: Config.appearance.padding.normal
 
                 text: "open_in_new"
                 color: Colours.palette.m3onTertiary
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: Config.appearance.font.size.large
             }
 
             Behavior on implicitWidth {
                 Anim {
-                    easing.bezierCurve: Appearance.anim.curves.emphasized
+                    easing.bezierCurve: Config.appearance.anim.curves.emphasized
                 }
             }
         }

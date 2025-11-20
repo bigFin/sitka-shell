@@ -4,7 +4,7 @@ import qs.components
 import qs.components.effects
 import qs.components.controls
 import qs.services
-import qs.config
+import "../../../config"
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -35,23 +35,23 @@ CustomMouseArea {
         id: inner
 
         anchors.fill: parent
-        anchors.margins: Appearance.padding.large
-        spacing: Appearance.spacing.small
+        anchors.margins: Config.appearance.padding.large
+        spacing: Config.appearance.spacing.small
 
         RowLayout {
             id: monthNavigationRow
 
             Layout.fillWidth: true
-            spacing: Appearance.spacing.small
+            spacing: Config.appearance.spacing.small
 
             Item {
                 implicitWidth: implicitHeight
-                implicitHeight: prevMonthText.implicitHeight + Appearance.padding.small * 2
+                implicitHeight: prevMonthText.implicitHeight + Config.appearance.padding.small * 2
 
                 StateLayer {
                     id: prevMonthStateLayer
 
-                    radius: Appearance.rounding.full
+                    radius: Config.appearance.rounding.full
 
                     function onClicked(): void {
                         root.state.currentDate = new Date(root.currYear, root.currMonth - 1, 1);
@@ -64,7 +64,7 @@ CustomMouseArea {
                     anchors.centerIn: parent
                     text: "chevron_left"
                     color: Colours.palette.m3tertiary
-                    font.pointSize: Appearance.font.size.normal
+                    font.pointSize: Config.appearance.font.size.normal
                     font.weight: 700
                 }
             }
@@ -72,16 +72,16 @@ CustomMouseArea {
             Item {
                 Layout.fillWidth: true
 
-                implicitWidth: monthYearDisplay.implicitWidth + Appearance.padding.small * 2
-                implicitHeight: monthYearDisplay.implicitHeight + Appearance.padding.small * 2
+                implicitWidth: monthYearDisplay.implicitWidth + Config.appearance.padding.small * 2
+                implicitHeight: monthYearDisplay.implicitHeight + Config.appearance.padding.small * 2
 
                 StateLayer {
                     anchors.fill: monthYearDisplay
-                    anchors.margins: -Appearance.padding.small
-                    anchors.leftMargin: -Appearance.padding.normal
-                    anchors.rightMargin: -Appearance.padding.normal
+                    anchors.margins: -Config.appearance.padding.small
+                    anchors.leftMargin: -Config.appearance.padding.normal
+                    anchors.rightMargin: -Config.appearance.padding.normal
 
-                    radius: Appearance.rounding.full
+                    radius: Config.appearance.rounding.full
                     disabled: {
                         const now = new Date();
                         return root.currMonth === now.getMonth() && root.currYear === now.getFullYear();
@@ -98,7 +98,7 @@ CustomMouseArea {
                     anchors.centerIn: parent
                     text: grid.title
                     color: Colours.palette.m3primary
-                    font.pointSize: Appearance.font.size.normal
+                    font.pointSize: Config.appearance.font.size.normal
                     font.weight: 500
                     font.capitalization: Font.Capitalize
                 }
@@ -106,12 +106,12 @@ CustomMouseArea {
 
             Item {
                 implicitWidth: implicitHeight
-                implicitHeight: nextMonthText.implicitHeight + Appearance.padding.small * 2
+                implicitHeight: nextMonthText.implicitHeight + Config.appearance.padding.small * 2
 
                 StateLayer {
                     id: nextMonthStateLayer
 
-                    radius: Appearance.rounding.full
+                    radius: Config.appearance.rounding.full
 
                     function onClicked(): void {
                         root.state.currentDate = new Date(root.currYear, root.currMonth + 1, 1);
@@ -124,7 +124,7 @@ CustomMouseArea {
                     anchors.centerIn: parent
                     text: "chevron_right"
                     color: Colours.palette.m3tertiary
-                    font.pointSize: Appearance.font.size.normal
+                    font.pointSize: Config.appearance.font.size.normal
                     font.weight: 700
                 }
             }
@@ -167,7 +167,7 @@ CustomMouseArea {
                     required property var model
 
                     implicitWidth: implicitHeight
-                    implicitHeight: text.implicitHeight + Appearance.padding.small * 2
+                    implicitHeight: text.implicitHeight + Config.appearance.padding.small * 2
 
                     StyledText {
                         id: text
@@ -184,7 +184,7 @@ CustomMouseArea {
                             return Colours.palette.m3onSurfaceVariant;
                         }
                         opacity: dayItem.model.today || dayItem.model.month === grid.month ? 1 : 0.4
-                        font.pointSize: Appearance.font.size.normal
+                        font.pointSize: Config.appearance.font.size.normal
                         font.weight: 500
                     }
                 }
@@ -208,7 +208,7 @@ CustomMouseArea {
                 implicitHeight: today?.implicitHeight ?? 0
 
                 clip: true
-                radius: Appearance.rounding.full
+                radius: Config.appearance.rounding.full
                 color: Colours.palette.m3primary
 
                 opacity: todayItem ? 1 : 0
@@ -236,15 +236,15 @@ CustomMouseArea {
 
                 Behavior on x {
                     Anim {
-                        duration: Appearance.anim.durations.expressiveDefaultSpatial
-                        easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                        duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
                     }
                 }
 
                 Behavior on y {
                     Anim {
-                        duration: Appearance.anim.durations.expressiveDefaultSpatial
-                        easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                        duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
                     }
                 }
             }

@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.components.effects
 import qs.services
-import qs.config
+import "../../config"
 import qs.utils
 import Quickshell
 import Quickshell.Widgets
@@ -21,7 +21,7 @@ StyledRect {
     property bool expanded
 
     color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainer
-    radius: Appearance.rounding.normal
+    radius: Config.appearance.rounding.normal
     implicitWidth: Config.notifs.sizes.width
     implicitHeight: inner.implicitHeight
 
@@ -30,7 +30,7 @@ StyledRect {
 
     Behavior on x {
         Anim {
-            easing.bezierCurve: Appearance.anim.curves.emphasizedDecel
+            easing.bezierCurve: Config.appearance.anim.curves.emphasizedDecel
         }
     }
 
@@ -94,14 +94,14 @@ StyledRect {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.margins: Appearance.padding.normal
+            anchors.margins: Config.appearance.padding.normal
 
             implicitHeight: root.nonAnimHeight
 
             Behavior on implicitHeight {
                 Anim {
-                    duration: Appearance.anim.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                    duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
                 }
             }
 
@@ -118,7 +118,7 @@ StyledRect {
                 visible: root.hasImage || root.hasAppIcon
 
                 sourceComponent: ClippingRectangle {
-                    radius: Appearance.rounding.full
+                    radius: Config.appearance.rounding.full
                     implicitWidth: Config.notifs.sizes.image
                     implicitHeight: Config.notifs.sizes.image
 
@@ -144,7 +144,7 @@ StyledRect {
                 anchors.bottom: root.hasImage ? image.bottom : undefined
 
                 sourceComponent: StyledRect {
-                    radius: Appearance.rounding.full
+                    radius: Config.appearance.rounding.full
                     color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData.urgency === NotificationUrgency.Low ? Colours.layer(Colours.palette.m3surfaceContainerHighest, 2) : Colours.palette.m3secondaryContainer
                     implicitWidth: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
                     implicitHeight: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
@@ -172,14 +172,14 @@ StyledRect {
                         active: !root.hasAppIcon
                         asynchronous: true
                         anchors.centerIn: parent
-                        anchors.horizontalCenterOffset: -Appearance.font.size.large * 0.02
-                        anchors.verticalCenterOffset: Appearance.font.size.large * 0.02
+                        anchors.horizontalCenterOffset: -Config.appearance.font.size.large * 0.02
+                        anchors.verticalCenterOffset: Config.appearance.font.size.large * 0.02
 
                         sourceComponent: MaterialIcon {
                             text: Icons.getNotifIcon(root.modelData.summary, root.modelData.urgency)
 
                             color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
-                            font.pointSize: Appearance.font.size.large
+                            font.pointSize: Config.appearance.font.size.large
                         }
                     }
                 }
@@ -190,13 +190,13 @@ StyledRect {
 
                 anchors.top: parent.top
                 anchors.left: image.right
-                anchors.leftMargin: Appearance.spacing.smaller
+                anchors.leftMargin: Config.appearance.spacing.smaller
 
                 animate: true
                 text: appNameMetrics.elidedText
                 maximumLineCount: 1
                 color: Colours.palette.m3onSurfaceVariant
-                font.pointSize: Appearance.font.size.small
+                font.pointSize: Config.appearance.font.size.small
 
                 opacity: root.expanded ? 1 : 0
 
@@ -212,7 +212,7 @@ StyledRect {
                 font.family: appName.font.family
                 font.pointSize: appName.font.pointSize
                 elide: Text.ElideRight
-                elideWidth: expandBtn.x - time.width - timeSep.width - summary.x - Appearance.spacing.small * 3
+                elideWidth: expandBtn.x - time.width - timeSep.width - summary.x - Config.appearance.spacing.small * 3
             }
 
             StyledText {
@@ -220,7 +220,7 @@ StyledRect {
 
                 anchors.top: parent.top
                 anchors.left: image.right
-                anchors.leftMargin: Appearance.spacing.smaller
+                anchors.leftMargin: Config.appearance.spacing.smaller
 
                 animate: true
                 text: summaryMetrics.elidedText
@@ -247,9 +247,9 @@ StyledRect {
                         property: "maximumLineCount"
                     }
                     AnchorAnimation {
-                        duration: Appearance.anim.durations.normal
+                        duration: Config.appearance.anim.durations.normal
                         easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Appearance.anim.curves.standard
+                        easing.bezierCurve: Config.appearance.anim.curves.standard
                     }
                 }
 
@@ -265,7 +265,7 @@ StyledRect {
                 font.family: summary.font.family
                 font.pointSize: summary.font.pointSize
                 elide: Text.ElideRight
-                elideWidth: expandBtn.x - time.width - timeSep.width - summary.x - Appearance.spacing.small * 3
+                elideWidth: expandBtn.x - time.width - timeSep.width - summary.x - Config.appearance.spacing.small * 3
             }
 
             StyledText {
@@ -273,11 +273,11 @@ StyledRect {
 
                 anchors.top: parent.top
                 anchors.left: summary.right
-                anchors.leftMargin: Appearance.spacing.small
+                anchors.leftMargin: Config.appearance.spacing.small
 
                 text: "•"
                 color: Colours.palette.m3onSurfaceVariant
-                font.pointSize: Appearance.font.size.small
+                font.pointSize: Config.appearance.font.size.small
 
                 states: State {
                     name: "expanded"
@@ -291,9 +291,9 @@ StyledRect {
 
                 transitions: Transition {
                     AnchorAnimation {
-                        duration: Appearance.anim.durations.normal
+                        duration: Config.appearance.anim.durations.normal
                         easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Appearance.anim.curves.standard
+                        easing.bezierCurve: Config.appearance.anim.curves.standard
                     }
                 }
             }
@@ -303,13 +303,13 @@ StyledRect {
 
                 anchors.top: parent.top
                 anchors.left: timeSep.right
-                anchors.leftMargin: Appearance.spacing.small
+                anchors.leftMargin: Config.appearance.spacing.small
 
                 animate: true
                 horizontalAlignment: Text.AlignLeft
                 text: root.modelData.timeStr
                 color: Colours.palette.m3onSurfaceVariant
-                font.pointSize: Appearance.font.size.small
+                font.pointSize: Config.appearance.font.size.small
             }
 
             Item {
@@ -322,7 +322,7 @@ StyledRect {
                 implicitHeight: expandIcon.height
 
                 StateLayer {
-                    radius: Appearance.rounding.full
+                    radius: Config.appearance.rounding.full
                     color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
 
                     function onClicked() {
@@ -337,7 +337,7 @@ StyledRect {
 
                     animate: true
                     text: root.expanded ? "expand_less" : "expand_more"
-                    font.pointSize: Appearance.font.size.normal
+                    font.pointSize: Config.appearance.font.size.normal
                 }
             }
 
@@ -347,13 +347,13 @@ StyledRect {
                 anchors.left: summary.left
                 anchors.right: expandBtn.left
                 anchors.top: summary.bottom
-                anchors.rightMargin: Appearance.spacing.small
+                anchors.rightMargin: Config.appearance.spacing.small
 
                 animate: true
                 textFormat: Text.MarkdownText
                 text: bodyPreviewMetrics.elidedText
                 color: Colours.palette.m3onSurfaceVariant
-                font.pointSize: Appearance.font.size.small
+                font.pointSize: Config.appearance.font.size.small
 
                 opacity: root.expanded ? 0 : 1
 
@@ -378,13 +378,13 @@ StyledRect {
                 anchors.left: summary.left
                 anchors.right: expandBtn.left
                 anchors.top: summary.bottom
-                anchors.rightMargin: Appearance.spacing.small
+                anchors.rightMargin: Config.appearance.spacing.small
 
                 animate: true
                 textFormat: Text.MarkdownText
                 text: root.modelData.body
                 color: Colours.palette.m3onSurfaceVariant
-                font.pointSize: Appearance.font.size.small
+                font.pointSize: Config.appearance.font.size.small
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 height: text ? implicitHeight : 0
 
@@ -408,9 +408,9 @@ StyledRect {
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: body.bottom
-                anchors.topMargin: Appearance.spacing.small
+                anchors.topMargin: Config.appearance.spacing.small
 
-                spacing: Appearance.spacing.smaller
+                spacing: Config.appearance.spacing.smaller
 
                 opacity: root.expanded ? 1 : 0
 
@@ -443,16 +443,16 @@ StyledRect {
 
         required property var modelData
 
-        radius: Appearance.rounding.full
+        radius: Config.appearance.rounding.full
         color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
 
-        Layout.preferredWidth: actionText.width + Appearance.padding.normal * 2
-        Layout.preferredHeight: actionText.height + Appearance.padding.small * 2
-        implicitWidth: actionText.width + Appearance.padding.normal * 2
-        implicitHeight: actionText.height + Appearance.padding.small * 2
+        Layout.preferredWidth: actionText.width + Config.appearance.padding.normal * 2
+        Layout.preferredHeight: actionText.height + Config.appearance.padding.small * 2
+        implicitWidth: actionText.width + Config.appearance.padding.normal * 2
+        implicitHeight: actionText.height + Config.appearance.padding.small * 2
 
         StateLayer {
-            radius: Appearance.rounding.full
+            radius: Config.appearance.rounding.full
             color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurface
 
             function onClicked(): void {
@@ -466,7 +466,7 @@ StyledRect {
             anchors.centerIn: parent
             text: actionTextMetrics.elidedText
             color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
-            font.pointSize: Appearance.font.size.small
+            font.pointSize: Config.appearance.font.size.small
         }
 
         TextMetrics {
@@ -478,7 +478,7 @@ StyledRect {
             elide: Text.ElideRight
             elideWidth: {
                 const numActions = root.modelData.actions.length + 1;
-                return (inner.width - actions.spacing * (numActions - 1)) / numActions - Appearance.padding.normal * 2;
+                return (inner.width - actions.spacing * (numActions - 1)) / numActions - Config.appearance.padding.normal * 2;
             }
         }
     }

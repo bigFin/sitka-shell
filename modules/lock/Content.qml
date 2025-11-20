@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Layouts
 
@@ -9,18 +9,18 @@ RowLayout {
 
     required property var lock
 
-    spacing: Appearance.spacing.large * 2
+    spacing: Config.appearance.spacing.large * 2
 
     ColumnLayout {
         Layout.fillWidth: true
-        spacing: Appearance.spacing.normal
+        spacing: Config.appearance.spacing.normal
 
         StyledRect {
             Layout.fillWidth: true
             implicitHeight: weather.implicitHeight
 
-            topLeftRadius: Appearance.rounding.large
-            radius: Appearance.rounding.small
+            topLeftRadius: Config.appearance.rounding.large
+            radius: Config.appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
 
             WeatherInfo {
@@ -34,7 +34,7 @@ RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            radius: Appearance.rounding.small
+            radius: Config.appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
 
             Fetch {}
@@ -44,8 +44,8 @@ RowLayout {
             Layout.fillWidth: true
             implicitHeight: media.implicitHeight
 
-            bottomLeftRadius: Appearance.rounding.large
-            radius: Appearance.rounding.small
+            bottomLeftRadius: Config.appearance.rounding.large
+            radius: Config.appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
 
             Media {
@@ -62,14 +62,14 @@ RowLayout {
 
     ColumnLayout {
         Layout.fillWidth: true
-        spacing: Appearance.spacing.normal
+        spacing: Config.appearance.spacing.normal
 
         StyledRect {
             Layout.fillWidth: true
             implicitHeight: resources.implicitHeight
 
-            topRightRadius: Appearance.rounding.large
-            radius: Appearance.rounding.small
+            topRightRadius: Config.appearance.rounding.large
+            radius: Config.appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
 
             Resources {
@@ -81,8 +81,8 @@ RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            bottomRightRadius: Appearance.rounding.large
-            radius: Appearance.rounding.small
+            bottomRightRadius: Config.appearance.rounding.large
+            radius: Config.appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
 
             NotifDock {

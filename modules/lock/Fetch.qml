@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.components.effects
 import qs.services
-import qs.config
+import "../../config"
 import qs.utils
 import Quickshell.Services.UPower
 import QtQuick
@@ -13,29 +13,29 @@ ColumnLayout {
     id: root
 
     anchors.fill: parent
-    anchors.margins: Appearance.padding.large * 2
-    anchors.topMargin: Appearance.padding.large
+    anchors.margins: Config.appearance.padding.large * 2
+    anchors.topMargin: Config.appearance.padding.large
 
-    spacing: Appearance.spacing.small
+    spacing: Config.appearance.spacing.small
 
     RowLayout {
         Layout.fillWidth: true
         Layout.fillHeight: false
-        spacing: Appearance.spacing.normal
+        spacing: Config.appearance.spacing.normal
 
         StyledRect {
-            implicitWidth: prompt.implicitWidth + Appearance.padding.normal * 2
-            implicitHeight: prompt.implicitHeight + Appearance.padding.normal * 2
+            implicitWidth: prompt.implicitWidth + Config.appearance.padding.normal * 2
+            implicitHeight: prompt.implicitHeight + Config.appearance.padding.normal * 2
 
             color: Colours.palette.m3primary
-            radius: Appearance.rounding.small
+            radius: Config.appearance.rounding.small
 
             MonoText {
                 id: prompt
 
                 anchors.centerIn: parent
                 text: ">"
-                font.pointSize: root.width > 400 ? Appearance.font.size.larger : Appearance.font.size.normal
+                font.pointSize: root.width > 400 ? Config.appearance.font.size.larger : Config.appearance.font.size.normal
                 color: Colours.palette.m3onPrimary
             }
         }
@@ -43,7 +43,7 @@ ColumnLayout {
         MonoText {
             Layout.fillWidth: true
             text: "caelestiafetch.sh"
-            font.pointSize: root.width > 400 ? Appearance.font.size.larger : Appearance.font.size.normal
+            font.pointSize: root.width > 400 ? Config.appearance.font.size.larger : Config.appearance.font.size.normal
             elide: Text.ElideRight
         }
 
@@ -71,10 +71,10 @@ ColumnLayout {
 
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.topMargin: Appearance.padding.normal
-            Layout.bottomMargin: Appearance.padding.normal
+            Layout.topMargin: Config.appearance.padding.normal
+            Layout.bottomMargin: Config.appearance.padding.normal
             Layout.leftMargin: iconLoader.active ? 0 : width * 0.1
-            spacing: Appearance.spacing.normal
+            spacing: Config.appearance.spacing.normal
 
             WrappedLoader {
                 Layout.fillWidth: true
@@ -125,18 +125,18 @@ ColumnLayout {
         active: root.height > 180
 
         sourceComponent: RowLayout {
-            spacing: Appearance.spacing.large
+            spacing: Config.appearance.spacing.large
 
             Repeater {
-                model: Math.max(0, Math.min(8, root.width / (Appearance.font.size.larger * 2 + Appearance.spacing.large)))
+                model: Math.max(0, Math.min(8, root.width / (Config.appearance.font.size.larger * 2 + Config.appearance.spacing.large)))
 
                 StyledRect {
                     required property int index
 
                     implicitWidth: implicitHeight
-                    implicitHeight: Appearance.font.size.larger * 2
+                    implicitHeight: Config.appearance.font.size.larger * 2
                     color: Colours.palette[`term${index}`]
-                    radius: Appearance.rounding.small
+                    radius: Config.appearance.rounding.small
                 }
             }
         }
@@ -156,11 +156,11 @@ ColumnLayout {
 
     component FetchText: MonoText {
         Layout.fillWidth: true
-        font.pointSize: root.width > 400 ? Appearance.font.size.larger : Appearance.font.size.normal
+        font.pointSize: root.width > 400 ? Config.appearance.font.size.larger : Config.appearance.font.size.normal
         elide: Text.ElideRight
     }
 
     component MonoText: StyledText {
-        font.family: Appearance.font.family.mono
+        font.family: Config.appearance.font.family.mono
     }
 }

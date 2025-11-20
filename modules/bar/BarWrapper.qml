@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.components
-import qs.config
+import "../../config"
 import "popouts" as BarPopouts
 import Quickshell
 import QtQuick
@@ -13,7 +13,7 @@ Item {
     required property PersistentProperties visibilities
     required property BarPopouts.Wrapper popouts
 
-    readonly property int padding: Math.max(Appearance.padding.smaller, Config.border.thickness)
+    readonly property int padding: Math.max(Config.appearance.padding.smaller, Config.border.thickness)
     readonly property int contentWidth: Config.bar.sizes.innerWidth + padding * 2
     readonly property int exclusiveZone: Config.bar.persistent || visibilities.bar ? contentWidth : Config.border.thickness
     readonly property bool shouldBeVisible: Config.bar.persistent || visibilities.bar || isHovered
@@ -47,8 +47,8 @@ Item {
             Anim {
                 target: root
                 property: "implicitWidth"
-                duration: Appearance.anim.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
             }
         },
         Transition {
@@ -58,7 +58,7 @@ Item {
             Anim {
                 target: root
                 property: "implicitWidth"
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
     ]

@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
@@ -136,7 +136,7 @@ MouseArea {
                 target: root
                 property: "opacity"
                 to: 0
-                duration: Appearance.anim.durations.large
+                duration: Config.appearance.anim.durations.large
             }
             Anim {
                 target: root
@@ -241,16 +241,16 @@ MouseArea {
 
         Behavior on border.color {
             ColorAnimation {
-                duration: Appearance.anim.durations.normal
+                duration: Config.appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
+                easing.bezierCurve: Config.appearance.anim.curves.standard
             }
         }
     }
 
     Behavior on opacity {
         Anim {
-            duration: Appearance.anim.durations.large
+            duration: Config.appearance.anim.durations.large
         }
     }
 
@@ -279,8 +279,8 @@ MouseArea {
     }
 
     component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.expressiveDefaultSpatial
+        duration: Config.appearance.anim.durations.expressiveDefaultSpatial
         easing.type: Easing.BezierSpline
-        easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+        easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
     }
 }

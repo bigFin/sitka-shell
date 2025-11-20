@@ -1,5 +1,5 @@
 import qs.components
-import qs.config
+import "../../config"
 import QtQuick
 
 Item {
@@ -28,8 +28,8 @@ Item {
             Anim {
                 target: root
                 property: "implicitHeight"
-                duration: Appearance.anim.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
             }
         },
         Transition {
@@ -39,7 +39,7 @@ Item {
             Anim {
                 target: root
                 property: "implicitHeight"
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
     ]

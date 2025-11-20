@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.config
+import "../../../config"
 import QtQuick
 
 Column {
@@ -10,7 +10,7 @@ Column {
 
     property color colour: Colours.palette.m3tertiary
 
-    spacing: Appearance.spacing.small
+    spacing: Config.appearance.spacing.small
 
     Loader {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -32,8 +32,8 @@ Column {
 
         horizontalAlignment: StyledText.AlignHCenter
         text: Time.format(Config.services.useTwelveHourClock ? "hh\nmm\nA" : "hh\nmm")
-        font.pointSize: Appearance.font.size.smaller
-        font.family: Appearance.font.family.mono
+        font.pointSize: Config.appearance.font.size.smaller
+        font.family: Config.appearance.font.family.mono
         color: root.colour
     }
 }

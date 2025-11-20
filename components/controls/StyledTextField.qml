@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import ".."
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Controls
 
@@ -11,8 +11,8 @@ TextField {
 
     color: Colours.palette.m3onSurface
     placeholderTextColor: Colours.palette.m3outline
-    font.family: Appearance.font.family.sans
-    font.pointSize: Appearance.font.size.smaller
+    font.family: Config.appearance.font.family.sans
+    font.pointSize: Config.appearance.font.size.smaller
     renderType: TextField.NativeRendering
     cursorVisible: !readOnly
 
@@ -25,7 +25,7 @@ TextField {
 
         implicitWidth: 2
         color: Colours.palette.m3primary
-        radius: Appearance.rounding.normal
+        radius: Config.appearance.rounding.normal
 
         Connections {
             target: root
@@ -61,7 +61,7 @@ TextField {
 
         Behavior on opacity {
             Anim {
-                duration: Appearance.anim.durations.small
+                duration: Config.appearance.anim.durations.small
             }
         }
     }

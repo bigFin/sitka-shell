@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Layouts
 
@@ -23,7 +23,7 @@ ColumnLayout {
     }
 
     anchors.fill: parent
-    spacing: Appearance.spacing.small
+    spacing: Config.appearance.spacing.small
 
     // ***************************************************
     // Using the new CollapsibleSection component
@@ -35,8 +35,8 @@ ColumnLayout {
         GridLayout {
             id: wsGrid
 
-            // rowSpacing: Appearance.spacing.smaller
-            // columnSpacing: Appearance.spacing.smaller
+            // rowSpacing: Config.appearance.spacing.smaller
+            // columnSpacing: Config.appearance.spacing.smaller
             columns: 5
 
             Repeater {
@@ -77,8 +77,8 @@ ColumnLayout {
         //  toggleMaximize
         RowLayout {
             Layout.fillWidth: true
-            // Layout.leftMargin: Appearance.padding.large
-            // Layout.rightMargin: Appearance.padding.large
+            // Layout.leftMargin: Config.appearance.padding.large
+            // Layout.rightMargin: Config.appearance.padding.large
 
             Button {
                 color: Colours.palette.m3secondaryContainer
@@ -122,9 +122,9 @@ ColumnLayout {
         asynchronous: true
         Layout.fillWidth: active
         visible: active
-        Layout.leftMargin: Appearance.padding.large
-        Layout.rightMargin: Appearance.padding.large
-        Layout.bottomMargin: Appearance.padding.large
+        Layout.leftMargin: Config.appearance.padding.large
+        Layout.rightMargin: Config.appearance.padding.large
+        Layout.bottomMargin: Config.appearance.padding.large
 
         sourceComponent: RowLayout {
             // Layout.fillWidth: true
@@ -198,15 +198,15 @@ ColumnLayout {
 
         Layout.fillWidth: true
 
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
 
-        implicitHeight: (icon.implicitHeight + Appearance.padding.small * 2)
-        implicitWidth: (52 + Appearance.padding.small * 2)
+        implicitHeight: (icon.implicitHeight + Config.appearance.padding.small * 2)
+        implicitWidth: (52 + Config.appearance.padding.small * 2)
 
         MaterialIcon {
             id: icon
             color: parent.onColor
-            font.pointSize: Appearance.font.size.large
+            font.pointSize: Config.appearance.font.size.large
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
 
@@ -214,9 +214,9 @@ ColumnLayout {
             Behavior on opacity {
                 PropertyAnimation {
                     property: "opacity"
-                    duration: Appearance.anim.durations.normal
+                    duration: Config.appearance.anim.durations.normal
                     easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
+                    easing.bezierCurve: Config.appearance.anim.curves.standard
                 }
             }
         }
@@ -224,7 +224,7 @@ ColumnLayout {
         StyledText {
             id: label
             color: parent.onColor
-            font.pointSize: Appearance.font.size.small
+            font.pointSize: Config.appearance.font.size.small
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
 
@@ -232,9 +232,9 @@ ColumnLayout {
             Behavior on opacity {
                 PropertyAnimation {
                     property: "opacity"
-                    duration: Appearance.anim.durations.normal
+                    duration: Config.appearance.anim.durations.normal
                     easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
+                    easing.bezierCurve: Config.appearance.anim.curves.standard
                 }
             }
         }

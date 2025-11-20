@@ -4,7 +4,7 @@
 #include <cava/cavacore.h>
 #include <qqmlintegration.h>
 
-namespace caelestia {
+namespace sitka {
 
 class CavaProcessor : public AudioProcessor {
     Q_OBJECT
@@ -60,4 +60,4 @@ private:
     void updateValues(QVector<double> values);
 };
 
-} // namespace caelestia
+} // namespace sitka

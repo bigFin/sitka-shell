@@ -4,7 +4,7 @@
 #include <qfuturewatcher.h>
 #include <qtconcurrentrun.h>
 
-namespace caelestia {
+namespace sitka {
 
 int FileSystemModel::rowCount(const QModelIndex& parent) const {
     if (parent != QModelIndex()) {
@@ -363,4 +363,4 @@ bool FileSystemModel::compareEntries(const FileSystemEntry* a, const FileSystemE
     return a->relativePath().localeAwareCompare(b->relativePath()) < 0;
 }
 
-} // namespace caelestia
+} // namespace sitka

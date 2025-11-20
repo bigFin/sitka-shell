@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import ".."
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Layouts
 
@@ -11,8 +11,8 @@ StyledRect {
 
     required property var dialog
 
-    implicitWidth: inner.implicitWidth + Appearance.padding.normal * 2
-    implicitHeight: inner.implicitHeight + Appearance.padding.normal * 2
+    implicitWidth: inner.implicitWidth + Config.appearance.padding.normal * 2
+    implicitHeight: inner.implicitHeight + Config.appearance.padding.normal * 2
 
     color: Colours.tPalette.m3surfaceContainer
 
@@ -20,15 +20,15 @@ StyledRect {
         id: inner
 
         anchors.fill: parent
-        anchors.margins: Appearance.padding.normal
-        spacing: Appearance.spacing.small
+        anchors.margins: Config.appearance.padding.normal
+        spacing: Config.appearance.spacing.small
 
         Item {
             implicitWidth: implicitHeight
-            implicitHeight: upIcon.implicitHeight + Appearance.padding.small * 2
+            implicitHeight: upIcon.implicitHeight + Config.appearance.padding.small * 2
 
             StateLayer {
-                radius: Appearance.rounding.small
+                radius: Config.appearance.rounding.small
                 disabled: root.dialog.cwd.length === 1
 
                 function onClicked(): void {
@@ -49,7 +49,7 @@ StyledRect {
         StyledRect {
             Layout.fillWidth: true
 
-            radius: Appearance.rounding.small
+            radius: Config.appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainerHigh
 
             implicitHeight: pathComponents.implicitHeight + pathComponents.anchors.margins * 2
@@ -58,10 +58,10 @@ StyledRect {
                 id: pathComponents
 
                 anchors.fill: parent
-                anchors.margins: Appearance.padding.small / 2
+                anchors.margins: Config.appearance.padding.small / 2
                 anchors.leftMargin: 0
 
-                spacing: Appearance.spacing.small
+                spacing: Config.appearance.spacing.small
 
                 Repeater {
                     model: root.dialog.cwd
@@ -75,7 +75,7 @@ StyledRect {
                         spacing: 0
 
                         Loader {
-                            Layout.rightMargin: Appearance.spacing.small
+                            Layout.rightMargin: Config.appearance.spacing.small
                             active: folder.index > 0
                             asynchronous: true
                             sourceComponent: StyledText {
@@ -86,15 +86,15 @@ StyledRect {
                         }
 
                         Item {
-                            implicitWidth: homeIcon.implicitWidth + (homeIcon.active ? Appearance.padding.small : 0) + folderName.implicitWidth + Appearance.padding.normal * 2
-                            implicitHeight: folderName.implicitHeight + Appearance.padding.small * 2
+                            implicitWidth: homeIcon.implicitWidth + (homeIcon.active ? Config.appearance.padding.small : 0) + folderName.implicitWidth + Config.appearance.padding.normal * 2
+                            implicitHeight: folderName.implicitHeight + Config.appearance.padding.small * 2
 
                             Loader {
                                 anchors.fill: parent
                                 active: folder.index < root.dialog.cwd.length - 1
                                 asynchronous: true
                                 sourceComponent: StateLayer {
-                                    radius: Appearance.rounding.small
+                                    radius: Config.appearance.rounding.small
 
                                     function onClicked(): void {
                                         root.dialog.cwd = root.dialog.cwd.slice(0, folder.index + 1);
@@ -107,7 +107,7 @@ StyledRect {
 
                                 anchors.left: parent.left
                                 anchors.verticalCenter: parent.verticalCenter
-                                anchors.leftMargin: Appearance.padding.normal
+                                anchors.leftMargin: Config.appearance.padding.normal
 
                                 active: folder.index === 0 && folder.modelData === "Home"
                                 asynchronous: true
@@ -123,7 +123,7 @@ StyledRect {
 
                                 anchors.left: homeIcon.right
                                 anchors.verticalCenter: parent.verticalCenter
-                                anchors.leftMargin: homeIcon.active ? Appearance.padding.small : 0
+                                anchors.leftMargin: homeIcon.active ? Config.appearance.padding.small : 0
 
                                 text: folder.modelData
                                 color: folder.index < root.dialog.cwd.length - 1 ? Colours.palette.m3onSurfaceVariant : Colours.palette.m3onSurface

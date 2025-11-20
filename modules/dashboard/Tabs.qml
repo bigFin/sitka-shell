@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.components.controls
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import Quickshell.Widgets
 import QtQuick
@@ -75,7 +75,7 @@ Item {
             implicitHeight: parent.implicitHeight * 2
 
             color: Colours.palette.m3primary
-            radius: Appearance.rounding.full
+            radius: Config.appearance.rounding.full
         }
 
         Behavior on x {
@@ -161,16 +161,16 @@ Item {
                     properties: "implicitWidth,implicitHeight"
                     from: 0
                     to: rippleAnim.radius * 2
-                    duration: Appearance.anim.durations.normal
-                    easing.bezierCurve: Appearance.anim.curves.standardDecel
+                    duration: Config.appearance.anim.durations.normal
+                    easing.bezierCurve: Config.appearance.anim.curves.standardDecel
                 }
                 Anim {
                     target: ripple
                     property: "opacity"
                     to: 0
-                    duration: Appearance.anim.durations.normal
+                    duration: Config.appearance.anim.durations.normal
                     easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
+                    easing.bezierCurve: Config.appearance.anim.curves.standard
                 }
             }
 
@@ -183,7 +183,7 @@ Item {
                 implicitHeight: parent.height + Config.dashboard.sizes.tabIndicatorSpacing * 2
 
                 color: "transparent"
-                radius: Appearance.rounding.small
+                radius: Config.appearance.rounding.small
 
                 StyledRect {
                     id: stateLayer
@@ -201,7 +201,7 @@ Item {
                 StyledRect {
                     id: ripple
 
-                    radius: Appearance.rounding.full
+                    radius: Config.appearance.rounding.full
                     color: tab.current ? Colours.palette.m3primary : Colours.palette.m3onSurface
                     opacity: 0
 
@@ -221,7 +221,7 @@ Item {
                 text: tab.iconName
                 color: tab.current ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
                 fill: tab.current ? 1 : 0
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: Config.appearance.font.size.large
 
                 Behavior on fill {
                     Anim {}

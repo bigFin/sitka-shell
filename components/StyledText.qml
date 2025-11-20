@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.services
-import qs.config
+import "../config"
 import QtQuick
 
 Text {
@@ -11,13 +11,13 @@ Text {
     property string animateProp: "scale"
     property real animateFrom: 0
     property real animateTo: 1
-    property int animateDuration: Appearance.anim.durations.normal
+    property int animateDuration: Config.appearance.anim.durations.normal
 
     renderType: Text.NativeRendering
     textFormat: Text.PlainText
     color: Colours.palette.m3onSurface
-    font.family: Appearance.font.family.sans
-    font.pointSize: Appearance.font.size.smaller
+    font.family: Config.appearance.font.family.sans
+    font.pointSize: Config.appearance.font.size.smaller
 
     Behavior on color {
         CAnim {}
@@ -29,12 +29,12 @@ Text {
         SequentialAnimation {
             Anim {
                 to: root.animateFrom
-                easing.bezierCurve: Appearance.anim.curves.standardAccel
+                easing.bezierCurve: Config.appearance.anim.curves.standardAccel
             }
             PropertyAction {}
             Anim {
                 to: root.animateTo
-                easing.bezierCurve: Appearance.anim.curves.standardDecel
+                easing.bezierCurve: Config.appearance.anim.curves.standardDecel
             }
         }
     }

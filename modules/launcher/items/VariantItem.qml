@@ -1,7 +1,7 @@
 import qs.modules.launcher.services
 import qs.components
 import qs.services
-import qs.config
+import "../../../config"
 import QtQuick
 
 Item {
@@ -16,7 +16,7 @@ Item {
     anchors.right: parent?.right
 
     StateLayer {
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
 
         function onClicked(): void {
             root.modelData?.onClicked(root.list);
@@ -25,35 +25,35 @@ Item {
 
     Item {
         anchors.fill: parent
-        anchors.leftMargin: Appearance.padding.larger
-        anchors.rightMargin: Appearance.padding.larger
-        anchors.margins: Appearance.padding.smaller
+        anchors.leftMargin: Config.appearance.padding.larger
+        anchors.rightMargin: Config.appearance.padding.larger
+        anchors.margins: Config.appearance.padding.smaller
 
         MaterialIcon {
             id: icon
 
             text: root.modelData?.icon ?? ""
-            font.pointSize: Appearance.font.size.extraLarge
+            font.pointSize: Config.appearance.font.size.extraLarge
 
             anchors.verticalCenter: parent.verticalCenter
         }
 
         Column {
             anchors.left: icon.right
-            anchors.leftMargin: Appearance.spacing.larger
+            anchors.leftMargin: Config.appearance.spacing.larger
             anchors.verticalCenter: icon.verticalCenter
 
-            width: parent.width - icon.width - anchors.leftMargin - (current.active ? current.width + Appearance.spacing.normal : 0)
+            width: parent.width - icon.width - anchors.leftMargin - (current.active ? current.width + Config.appearance.spacing.normal : 0)
             spacing: 0
 
             StyledText {
                 text: root.modelData?.name ?? ""
-                font.pointSize: Appearance.font.size.normal
+                font.pointSize: Config.appearance.font.size.normal
             }
 
             StyledText {
                 text: root.modelData?.description ?? ""
-                font.pointSize: Appearance.font.size.small
+                font.pointSize: Config.appearance.font.size.small
                 color: Colours.palette.m3outline
 
                 elide: Text.ElideRight
@@ -74,7 +74,7 @@ Item {
             sourceComponent: MaterialIcon {
                 text: "check"
                 color: Colours.palette.m3onSurfaceVariant
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: Config.appearance.font.size.large
             }
         }
     }

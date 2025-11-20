@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.services
-import qs.config
+import "../../config"
 import "popouts" as BarPopouts
 import "components"
 import "components/workspaces"
@@ -17,7 +17,7 @@ ColumnLayout {
     required property BarPopouts.Wrapper popouts
 
 
-    readonly property int vPadding: Appearance.padding.large
+    readonly property int vPadding: Config.appearance.padding.large
 
     // Handle Workspace Popouts for Niri
 
@@ -106,7 +106,7 @@ ColumnLayout {
         }
     }
 
-    spacing: Appearance.spacing.normal
+    spacing: Config.appearance.spacing.normal
 
     Repeater {
         id: repeater

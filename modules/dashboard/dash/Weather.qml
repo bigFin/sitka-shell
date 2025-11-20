@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../../config"
 import qs.utils
 import QtQuick
 
@@ -22,7 +22,7 @@ Item {
         animate: true
         text: Weather.icon
         color: Colours.palette.m3secondary
-        font.pointSize: Appearance.font.size.extraLarge * 2
+        font.pointSize: Config.appearance.font.size.extraLarge * 2
     }
 
     Column {
@@ -30,9 +30,9 @@ Item {
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: icon.right
-        anchors.leftMargin: Appearance.spacing.large
+        anchors.leftMargin: Config.appearance.spacing.large
 
-        spacing: Appearance.spacing.small
+        spacing: Config.appearance.spacing.small
 
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
@@ -40,7 +40,7 @@ Item {
             animate: true
             text: Weather.temp
             color: Colours.palette.m3primary
-            font.pointSize: Appearance.font.size.extraLarge
+            font.pointSize: Config.appearance.font.size.extraLarge
             font.weight: 500
         }
 
@@ -51,7 +51,7 @@ Item {
             text: Weather.description
 
             elide: Text.ElideRight
-            width: Math.min(implicitWidth, root.parent.width - icon.implicitWidth - info.anchors.leftMargin - Appearance.padding.large * 2)
+            width: Math.min(implicitWidth, root.parent.width - icon.implicitWidth - info.anchors.leftMargin - Config.appearance.padding.large * 2)
         }
     }
 }

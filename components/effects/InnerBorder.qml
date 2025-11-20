@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import ".."
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Effects
 
@@ -37,8 +37,8 @@ StyledRect {
             id: maskInner
 
             anchors.fill: parent
-            anchors.margins: Appearance.padding.normal
-            radius: Appearance.rounding.small
+            anchors.margins: Config.appearance.padding.normal
+            radius: Config.appearance.rounding.small
         }
     }
 }

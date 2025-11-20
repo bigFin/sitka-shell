@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.config
+import "../../../config"
 import qs.modules.windowinfo
 import qs.modules.controlcenter
 import Quickshell
@@ -25,11 +25,11 @@ Item {
     property string queuedMode
     readonly property bool isDetached: detachedMode.length > 0
 
-    property int animLength: Appearance.anim.durations.normal
-    property list<real> animCurve: Appearance.anim.curves.emphasized
+    property int animLength: Config.appearance.anim.durations.normal
+    property list<real> animCurve: Config.appearance.anim.curves.emphasized
 
     function detach(mode: string): void {
-        animLength = Appearance.anim.durations.large;
+        animLength = Config.appearance.anim.durations.large;
         if (mode === "winfo") {
             detachedMode = mode;
         } else {
@@ -41,10 +41,10 @@ Item {
 
     function close(): void {
         hasCurrent = false;
-        animCurve = Appearance.anim.curves.emphasizedAccel;
-        animLength = Appearance.anim.durations.normal;
+        animCurve = Config.appearance.anim.curves.emphasizedAccel;
+        animLength = Config.appearance.anim.durations.normal;
         detachedMode = "";
-        animCurve = Appearance.anim.curves.emphasized;
+        animCurve = Config.appearance.anim.curves.emphasized;
     }
 
     visible: width > 0 && height > 0

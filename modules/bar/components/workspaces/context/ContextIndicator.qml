@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.services
-import qs.config
+import "../../../../../config"
 import QtQuick
 import qs.components.effects
 import qs.components
@@ -15,8 +15,8 @@ Item {
     required property Item anchorWs
 
     readonly property int anchorWsCount: (Niri.wsContextType === "item") ? Niri.wsContextAnchor?.windowCount : 1
-    readonly property real rounding: Appearance.rounding.small
-    readonly property real padding: Appearance.padding.small
+    readonly property real rounding: Config.appearance.rounding.small
+    readonly property real padding: Config.appearance.padding.small
     readonly property color bgColor: (Niri.wsContextType === "workspaces" && Niri.wsContextAnchor ? Colours.palette.m3surfaceContainer : Colours.palette.m3surfaceContainerHigh)
 
     property real cornerPieceSize: Config.bar.workspaces.windowIconSize + padding
@@ -36,7 +36,7 @@ Item {
 
         Behavior on roundingEffective {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
 
@@ -131,22 +131,22 @@ Item {
         // Generic animation for geometry
         Behavior on width {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
         Behavior on height {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
         Behavior on x {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
         Behavior on y {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
     }
@@ -156,7 +156,7 @@ Item {
         property int cornerType: 0 // 1 = bottom, 3 = top
         width: root.activated && Niri.wsContextAnchor ? root.cornerPieceSize : 0
         height: root.activated && Niri.wsContextAnchor ? root.cornerPieceSize / 2 : 0
-        radius: Appearance.padding.normal
+        radius: Config.appearance.padding.normal
         orientation: cornerType
         color: parent.highlightColor
         opacity: parent.opacity
@@ -170,17 +170,17 @@ Item {
 
         Behavior on height {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
         Behavior on width {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
         Behavior on radius {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
     }
@@ -196,7 +196,7 @@ Item {
         anchors.leftMargin: -root.padding
         anchors.topMargin: -root.padding + 1
         anchors.bottomMargin: -root.padding + 1
-        rounding: Appearance.rounding.normal
+        rounding: Config.appearance.rounding.normal
     }
 
     HighlightRect {

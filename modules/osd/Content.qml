@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.components.controls
 import qs.services
-import qs.config
+import "../../config"
 import qs.utils
 import QtQuick
 import QtQuick.Layouts
@@ -17,14 +17,14 @@ Item {
     anchors.verticalCenter: parent.verticalCenter
     anchors.left: parent.left
 
-    implicitWidth: layout.implicitWidth + Appearance.padding.large * 2
-    implicitHeight: layout.implicitHeight + Appearance.padding.large * 2
+    implicitWidth: layout.implicitWidth + Config.appearance.padding.large * 2
+    implicitHeight: layout.implicitHeight + Config.appearance.padding.large * 2
 
     ColumnLayout {
         id: layout
 
         anchors.centerIn: parent
-        spacing: Appearance.spacing.normal
+        spacing: Config.appearance.spacing.normal
 
         // Speaker volume
         CustomMouseArea {
@@ -112,7 +112,7 @@ Item {
 
         Behavior on Layout.preferredHeight {
             Anim {
-                easing.bezierCurve: Appearance.anim.curves.emphasized
+                easing.bezierCurve: Config.appearance.anim.curves.emphasized
             }
         }
 

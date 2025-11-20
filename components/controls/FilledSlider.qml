@@ -1,7 +1,7 @@
 import ".."
 import "../effects"
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Controls
 
@@ -15,7 +15,7 @@ Slider {
 
     background: StyledRect {
         color: Colours.tPalette.m3surfaceContainer
-        radius: Appearance.rounding.full
+        radius: Config.appearance.rounding.full
 
         StyledRect {
             anchors.left: parent.left
@@ -50,7 +50,7 @@ Slider {
             anchors.fill: parent
 
             color: Colours.palette.m3inverseSurface
-            radius: Appearance.rounding.full
+            radius: Config.appearance.rounding.full
 
             MouseArea {
                 id: handleInteraction
@@ -69,8 +69,8 @@ Slider {
                 function update(): void {
                     animate = !moving;
                     text = moving ? Qt.binding(() => Math.round(root.value * 100)) : Qt.binding(() => root.icon);
-                    font.pointSize = moving ? Appearance.font.size.small : Appearance.font.size.larger;
-                    font.family = moving ? Appearance.font.family.sans : Appearance.font.family.material;
+                    font.pointSize = moving ? Config.appearance.font.size.small : Config.appearance.font.size.larger;
+                    font.family = moving ? Config.appearance.font.family.sans : Config.appearance.font.family.material;
                 }
 
                 animate: true
@@ -85,8 +85,8 @@ Slider {
                             property: "scale"
                             from: 1
                             to: 0
-                            duration: Appearance.anim.durations.normal / 2
-                            easing.bezierCurve: Appearance.anim.curves.standardAccel
+                            duration: Config.appearance.anim.durations.normal / 2
+                            easing.bezierCurve: Config.appearance.anim.curves.standardAccel
                         }
                         ScriptAction {
                             script: icon.update()
@@ -96,8 +96,8 @@ Slider {
                             property: "scale"
                             from: 0
                             to: 1
-                            duration: Appearance.anim.durations.normal / 2
-                            easing.bezierCurve: Appearance.anim.curves.standardDecel
+                            duration: Config.appearance.anim.durations.normal / 2
+                            easing.bezierCurve: Config.appearance.anim.curves.standardDecel
                         }
                     }
                 }
@@ -127,7 +127,7 @@ Slider {
 
     Behavior on value {
         Anim {
-            duration: Appearance.anim.durations.large
+            duration: Config.appearance.anim.durations.large
         }
     }
 }

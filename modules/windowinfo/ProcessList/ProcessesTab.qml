@@ -1,11 +1,11 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.config
+import "../../../config"
 
 ColumnLayout {
     id: processesTab
     anchors.fill: parent
-    spacing: Appearance.padding.normal
+    spacing: Config.appearance.padding.normal
 
     property var contextMenu: null
 

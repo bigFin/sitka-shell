@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 import qs.components
 import qs.services
-import qs.config
+import "../../../../config"
 import QtQuick
 
 StyledRect {
@@ -13,7 +13,7 @@ StyledRect {
     required property int groupOffset
     
     // Apply small fillets for tertiary elements
-    filletSize: Appearance.fillet.small
+    filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.small : 2
 
     readonly property int currentWsIdx: {
         let i = activeWsId - 1;
@@ -50,14 +50,14 @@ StyledRect {
     clip: false
     y: offset + mask.y
     implicitHeight: size
-    radius: Appearance.rounding.small
+    radius: Config.appearance.rounding.small
     color: Qt.alpha(Colours.palette.m3primary, 0.95)
 
     anchors {
         left: parent.left
         right: parent.right
-        leftMargin: Appearance.padding.small
-        rightMargin: isWorkspacesContextActive ? -Config.bar.workspaces.windowContextWidth + Appearance.padding.small * 2 : Appearance.padding.small
+        leftMargin: Config.appearance.padding.small
+        rightMargin: isWorkspacesContextActive ? -Config.bar.workspaces.windowContextWidth + Config.appearance.padding.small * 2 : Config.appearance.padding.small
         Behavior on rightMargin {
             EAnim {}
         }
@@ -87,29 +87,29 @@ StyledRect {
         function computeMargins() {
             if (!Niri.focusedWindowId)
                 return {
-                    left: Appearance.padding.small,
-                    right: Appearance.padding.small
+                    left: Config.appearance.padding.small,
+                    right: Config.appearance.padding.small
                 };
 
             if (root.isContextActiveInWs && !root.isWorkspacesContextActive)
                 return {
-                    left: -Appearance.padding.small / 2,
-                    right: -Config.bar.workspaces.windowContextWidth - Appearance.padding.small / 2
+                    left: -Config.appearance.padding.small / 2,
+                    right: -Config.bar.workspaces.windowContextWidth - Config.appearance.padding.small / 2
                 };
 
             return {
-                left: -Appearance.padding.small / 2,
-                right: -Appearance.padding.small / 2
+                left: -Config.appearance.padding.small / 2,
+                right: -Config.appearance.padding.small / 2
             };
         }
 
         sourceComponent: Rectangle {
             id: activeWindowIndicator
-            height: Niri.focusedWindowId ? Config.bar.workspaces.windowIconSize + Appearance.padding.small + Config.bar.workspaces.windowIconGap * 2 : 0
+            height: Niri.focusedWindowId ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.small + Config.bar.workspaces.windowIconGap * 2 : 0
             color: Colours.palette.m3primary
             radius: 0
-            // bottomRightRadius: root.isContextActiveInWs ? Appearance.rounding.large : radius
-            // topRightRadius: root.isContextActiveInWs ? Appearance.rounding.large : radius
+            // bottomRightRadius: root.isContextActiveInWs ? Config.appearance.rounding.large : radius
+            // topRightRadius: root.isContextActiveInWs ? Config.appearance.rounding.large : radius
             anchors.horizontalCenter: parent.horizontalCenter
 
             y: computeFocusedY()
@@ -128,7 +128,7 @@ StyledRect {
             function computeFocusedY() {
                 const focusedWindow = Niri.focusedWindow;
                 if (!focusedWindow)
-                    return Appearance.spacing.large / 2;
+                    return Config.appearance.spacing.large / 2;
 
                 // Get windows for the current workspace and sort them by layout position
                 // This matches the sorting logic used in Workspace.qml
@@ -165,7 +165,7 @@ StyledRect {
                     focusedIndex = 0;
                 }
 
-                return (Config.bar.sizes.innerWidth - Appearance.padding.small * 2.5) + focusedIndex * (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap);
+                return (Config.bar.sizes.innerWidth - Config.appearance.padding.small * 2.5) + focusedIndex * (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap);
             }
         }
     }
@@ -179,7 +179,7 @@ StyledRect {
         enabled: Config.bar.workspaces.activeTrail
 
         EAnim {
-            duration: Appearance.anim.durations.normal * 2
+            duration: Config.appearance.anim.durations.normal * 2
         }
     }
     Behavior on currentSize {
@@ -199,6 +199,6 @@ StyledRect {
     }
 
     component EAnim: Anim {
-        easing.bezierCurve: Appearance.anim.curves.emphasized
+        easing.bezierCurve: Config.appearance.anim.curves.emphasized
     }
 }

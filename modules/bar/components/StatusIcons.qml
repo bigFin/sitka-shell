@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.services
 import qs.utils
-import qs.config
+import "../../../config"
 import Quickshell
 import Quickshell.Bluetooth
 import Quickshell.Services.UPower
@@ -17,11 +17,11 @@ StyledRect {
     readonly property alias items: iconColumn
 
     color: Colours.tPalette.m3surfaceContainer
-    radius: Appearance.rounding.full
+    radius: Config.appearance.rounding.full
 
     clip: true
     implicitWidth: Config.bar.sizes.innerWidth
-    implicitHeight: iconColumn.implicitHeight + Appearance.padding.normal * 2 - (Config.bar.status.showLockStatus && !Niri.capsLock && !Niri.numLock ? iconColumn.spacing : 0)
+    implicitHeight: iconColumn.implicitHeight + Config.appearance.padding.normal * 2 - (Config.bar.status.showLockStatus && !Niri.capsLock && !Niri.numLock ? iconColumn.spacing : 0)
 
     ColumnLayout {
         id: iconColumn
@@ -29,9 +29,9 @@ StyledRect {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: Appearance.padding.normal
+        anchors.bottomMargin: Config.appearance.padding.normal
 
-        spacing: Appearance.spacing.smaller / 2
+        spacing: Config.appearance.spacing.smaller / 2
 
         // Lock keys status
         WrappedLoader {
@@ -136,7 +136,7 @@ StyledRect {
                 animate: true
                 text: Niri.kbLayout
                 color: root.colour
-                font.family: Appearance.font.family.mono
+                font.family: Config.appearance.font.family.mono
             }
         }
 
@@ -160,7 +160,7 @@ StyledRect {
             active: Config.bar.status.showBluetooth
 
             sourceComponent: ColumnLayout {
-                spacing: Appearance.spacing.smaller / 2
+                spacing: Config.appearance.spacing.smaller / 2
 
                 // Bluetooth icon
                 MaterialIcon {
@@ -199,14 +199,14 @@ StyledRect {
                             Anim {
                                 from: 1
                                 to: 0
-                                duration: Appearance.anim.durations.large
-                                easing.bezierCurve: Appearance.anim.curves.standardAccel
+                                duration: Config.appearance.anim.durations.large
+                                easing.bezierCurve: Config.appearance.anim.curves.standardAccel
                             }
                             Anim {
                                 from: 0
                                 to: 1
-                                duration: Appearance.anim.durations.large
-                                easing.bezierCurve: Appearance.anim.curves.standardDecel
+                                duration: Config.appearance.anim.durations.large
+                                easing.bezierCurve: Config.appearance.anim.curves.standardDecel
                             }
                         }
                     }

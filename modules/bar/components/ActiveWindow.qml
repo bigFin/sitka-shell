@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.services
 import qs.utils
-import qs.config
+import "../../../config"
 import QtQuick
 
 Item {
@@ -47,8 +47,8 @@ Item {
         id: metrics
 
         text: Niri.focusedWindowTitle ?? qsTr("Desktop")
-        font.pointSize: Appearance.font.size.smaller
-        font.family: Appearance.font.family.mono
+        font.pointSize: Config.appearance.font.size.smaller
+        font.family: Config.appearance.font.family.mono
         elide: Qt.ElideRight
         elideWidth: root.maxHeight - icon.height
 
@@ -62,7 +62,7 @@ Item {
 
     Behavior on implicitHeight {
         Anim {
-            easing.bezierCurve: Appearance.anim.curves.emphasized
+            easing.bezierCurve: Config.appearance.anim.curves.emphasized
         }
     }
 
@@ -71,7 +71,7 @@ Item {
 
         anchors.horizontalCenter: icon.horizontalCenter
         anchors.top: icon.bottom
-        anchors.topMargin: Appearance.spacing.small
+        anchors.topMargin: Config.appearance.spacing.small
 
         font.pointSize: metrics.font.pointSize
         font.family: metrics.font.family

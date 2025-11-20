@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Controls
 import qs.services
 import qs.components
-import qs.config
+import "../../../config"
 
 Column {
     id: root
@@ -22,22 +22,22 @@ Column {
         id: columnHeaders
 
         width: parent.width
-        anchors.leftMargin: Appearance.padding.small
-        height: 24 + Appearance.padding.large
+        anchors.leftMargin: Config.appearance.padding.small
+        height: 24 + Config.appearance.padding.large
 
         StyledRect {
             width: 80
             height: 20
             color: processHeaderArea.containsMouse ? Qt.rgba(Colours.palette.m3onSurface.r, Colours.palette.m3onSurface.g, Colours.palette.m3onSurface.b, 0.08) : "transparent"
-            radius: Appearance.rounding.small
+            radius: Config.appearance.rounding.small
             anchors.left: parent.left
-            anchors.leftMargin: Appearance.padding.normal
+            anchors.leftMargin: Config.appearance.padding.normal
             anchors.verticalCenter: parent.verticalCenter
 
             StyledText {
                 text: "Process"
-                font.pointSize: Appearance.font.size.small
-                font.family: Appearance.font.family.mono
+                font.pointSize: Config.appearance.font.size.small
+                font.family: Config.appearance.font.family.mono
                 font.weight: SysMonitorService.sortBy === "name" ? Font.Bold : Font.Medium
                 color: Colours.palette.m3onSurface
                 opacity: SysMonitorService.sortBy === "name" ? 1.0 : 0.7
@@ -58,7 +58,7 @@ Column {
 
             Behavior on color {
                 ColorAnimation {
-                    duration: Appearance.anim.durations.small
+                    duration: Config.appearance.anim.durations.small
                 }
             }
         }
@@ -67,15 +67,15 @@ Column {
             width: 80
             height: 20
             color: cpuHeaderArea.containsMouse ? Qt.rgba(Colours.palette.m3onSurface.r, Colours.palette.m3onSurface.g, Colours.palette.m3onSurface.b, 0.08) : "transparent"
-            radius: Appearance.rounding.normal
+            radius: Config.appearance.rounding.normal
             anchors.right: parent.right
             anchors.rightMargin: 200
             anchors.verticalCenter: parent.verticalCenter
 
             StyledText {
                 text: "CPU"
-                font.pointSize: Appearance.font.size.small
-                font.family: Appearance.font.family.mono
+                font.pointSize: Config.appearance.font.size.small
+                font.family: Config.appearance.font.family.mono
                 font.weight: SysMonitorService.sortBy === "cpu" ? Font.Bold : Font.Medium
                 color: Colours.palette.m3primary
                 opacity: SysMonitorService.sortBy === "cpu" ? 1.0 : 0.7
@@ -96,7 +96,7 @@ Column {
 
             Behavior on color {
                 ColorAnimation {
-                    duration: Appearance.anim.durations.small
+                    duration: Config.appearance.anim.durations.small
                 }
             }
         }
@@ -105,15 +105,15 @@ Column {
             width: 80
             height: 20
             color: memoryHeaderArea.containsMouse ? Qt.rgba(Colours.palette.m3onSurface.r, Colours.palette.m3onSurface.g, Colours.palette.m3onSurface.b, 0.08) : "transparent"
-            radius: Appearance.rounding.normal
+            radius: Config.appearance.rounding.normal
             anchors.right: parent.right
             anchors.rightMargin: 112
             anchors.verticalCenter: parent.verticalCenter
 
             StyledText {
                 text: "RAM"
-                font.pointSize: Appearance.font.size.small
-                font.family: Appearance.font.family.mono
+                font.pointSize: Config.appearance.font.size.small
+                font.family: Config.appearance.font.family.mono
                 font.weight: SysMonitorService.sortBy === "memory" ? Font.Bold : Font.Medium
                 color: Colours.palette.m3tertiary
                 opacity: SysMonitorService.sortBy === "memory" ? 1.0 : 0.7
@@ -134,7 +134,7 @@ Column {
 
             Behavior on color {
                 ColorAnimation {
-                    duration: Appearance.anim.durations.small
+                    duration: Config.appearance.anim.durations.small
                 }
             }
         }
@@ -143,15 +143,15 @@ Column {
             width: 50
             height: 20
             color: pidHeaderArea.containsMouse ? Qt.rgba(Colours.palette.m3onSurface.r, Colours.palette.m3onSurface.g, Colours.palette.m3onSurface.b, 0.08) : "transparent"
-            radius: Appearance.rounding.normal
+            radius: Config.appearance.rounding.normal
             anchors.right: parent.right
             anchors.rightMargin: 48
             anchors.verticalCenter: parent.verticalCenter
 
             StyledText {
                 text: "PID"
-                font.pointSize: Appearance.font.size.small
-                font.family: Appearance.font.family.mono
+                font.pointSize: Config.appearance.font.size.small
+                font.family: Config.appearance.font.family.mono
                 font.weight: SysMonitorService.sortBy === "pid" ? Font.Bold : Font.Medium
                 color: Colours.palette.m3onSurface
                 opacity: SysMonitorService.sortBy === "pid" ? 1.0 : 0.7
@@ -173,7 +173,7 @@ Column {
 
             Behavior on color {
                 ColorAnimation {
-                    duration: Appearance.anim.durations.small
+                    duration: Config.appearance.anim.durations.small
                 }
             }
         }
@@ -181,7 +181,7 @@ Column {
         StyledRect {
             width: 28
             height: 28
-            radius: Appearance.rounding.normal
+            radius: Config.appearance.rounding.normal
             color: sortOrderArea.containsMouse ? Qt.rgba(Colours.palette.m3onSurface.r, Colours.palette.m3onSurface.g, Colours.palette.m3onSurface.b, 0.08) : "transparent"
             anchors.right: parent.right
             anchors.rightMargin: 8
@@ -189,7 +189,7 @@ Column {
 
             StyledText {
                 text: SysMonitorService.sortDescending ? "↓" : "↑"
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: Config.appearance.font.size.large
                 color: Colours.palette.m3onSurface
                 anchors.centerIn: parent
             }
@@ -209,7 +209,7 @@ Column {
 
             Behavior on color {
                 ColorAnimation {
-                    duration: Appearance.anim.durations.small
+                    duration: Config.appearance.anim.durations.small
                 }
             }
         }

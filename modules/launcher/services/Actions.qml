@@ -2,7 +2,7 @@ pragma Singleton
 
 import qs.modules.launcher
 import qs.services
-import qs.config
+import "../../../config"
 import qs.utils
 import Quickshell
 import QtQuick

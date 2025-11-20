@@ -5,7 +5,7 @@ import qs.components
 import qs.components.controls
 import qs.components.containers
 import qs.services
-import qs.config
+import "../../../config"
 import qs.utils
 import Quickshell
 import Quickshell.Bluetooth
@@ -20,14 +20,14 @@ ColumnLayout {
     readonly property bool smallDiscoverable: width <= 540
     readonly property bool smallPairable: width <= 480
 
-    spacing: Appearance.spacing.small
+    spacing: Config.appearance.spacing.small
 
     RowLayout {
-        spacing: Appearance.spacing.smaller
+        spacing: Config.appearance.spacing.smaller
 
         StyledText {
             text: qsTr("Settings")
-            font.pointSize: Appearance.font.size.large
+            font.pointSize: Config.appearance.font.size.large
             font.weight: 500
         }
 
@@ -87,18 +87,18 @@ ColumnLayout {
     }
 
     RowLayout {
-        Layout.topMargin: Appearance.spacing.large
+        Layout.topMargin: Config.appearance.spacing.large
         Layout.fillWidth: true
-        spacing: Appearance.spacing.normal
+        spacing: Config.appearance.spacing.normal
 
         ColumnLayout {
             Layout.fillWidth: true
-            spacing: Appearance.spacing.small
+            spacing: Config.appearance.spacing.small
 
             StyledText {
                 Layout.fillWidth: true
                 text: qsTr("Devices (%1)").arg(Bluetooth.devices.values.length)
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: Config.appearance.font.size.large
                 font.weight: 500
             }
 
@@ -111,13 +111,13 @@ ColumnLayout {
 
         StyledRect {
             implicitWidth: implicitHeight
-            implicitHeight: scanIcon.implicitHeight + Appearance.padding.normal * 2
+            implicitHeight: scanIcon.implicitHeight + Config.appearance.padding.normal * 2
 
             radius: 0
             color: Bluetooth.defaultAdapter?.discovering ? Colours.palette.m3secondary : Colours.palette.m3secondaryContainer
             
             // Apply normal fillets for secondary elements
-            filletSize: Appearance.fillet.normal
+            filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.normal : 4
 
             StateLayer {
                 color: Bluetooth.defaultAdapter?.discovering ? Colours.palette.m3onSecondary : Colours.palette.m3onSecondaryContainer
@@ -154,7 +154,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
         clip: true
-        spacing: Appearance.spacing.small / 2
+        spacing: Config.appearance.spacing.small / 2
 
         ScrollBar.vertical: StyledScrollBar {}
 
@@ -167,10 +167,10 @@ ColumnLayout {
 
             anchors.left: parent.left
             anchors.right: parent.right
-            implicitHeight: deviceInner.implicitHeight + Appearance.padding.normal * 2
+            implicitHeight: deviceInner.implicitHeight + Config.appearance.padding.normal * 2
 
             color: Qt.alpha(Colours.tPalette.m3surfaceContainer, root.session.bt.active === modelData ? Colours.tPalette.m3surfaceContainer.a : 0)
-            radius: Appearance.rounding.normal
+            radius: Config.appearance.rounding.normal
 
             StateLayer {
                 id: stateLayer
@@ -184,15 +184,15 @@ ColumnLayout {
                 id: deviceInner
 
                 anchors.fill: parent
-                anchors.margins: Appearance.padding.normal
+                anchors.margins: Config.appearance.padding.normal
 
-                spacing: Appearance.spacing.normal
+                spacing: Config.appearance.spacing.normal
 
                 StyledRect {
                     implicitWidth: implicitHeight
-                    implicitHeight: icon.implicitHeight + Appearance.padding.normal * 2
+                    implicitHeight: icon.implicitHeight + Config.appearance.padding.normal * 2
 
-                    radius: Appearance.rounding.normal
+                    radius: Config.appearance.rounding.normal
                     color: device.connected ? Colours.palette.m3primaryContainer : device.modelData.bonded ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainerHigh
 
                     StyledRect {
@@ -207,7 +207,7 @@ ColumnLayout {
                         anchors.centerIn: parent
                         text: Icons.getBluetoothIcon(device.modelData.icon)
                         color: device.connected ? Colours.palette.m3onPrimaryContainer : device.modelData.bonded ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
-                        font.pointSize: Appearance.font.size.large
+                        font.pointSize: Config.appearance.font.size.large
                         fill: device.connected ? 1 : 0
 
                         Behavior on fill {
@@ -231,7 +231,7 @@ ColumnLayout {
                         Layout.fillWidth: true
                         text: device.modelData.address + (device.connected ? qsTr(" (Connected)") : device.modelData.bonded ? qsTr(" (Paired)") : "")
                         color: Colours.palette.m3outline
-                        font.pointSize: Appearance.font.size.small
+                        font.pointSize: Config.appearance.font.size.small
                         elide: Text.ElideRight
                     }
                 }
@@ -240,9 +240,9 @@ ColumnLayout {
                     id: connectBtn
 
                     implicitWidth: implicitHeight
-                    implicitHeight: connectIcon.implicitHeight + Appearance.padding.smaller * 2
+                    implicitHeight: connectIcon.implicitHeight + Config.appearance.padding.smaller * 2
 
-                    radius: Appearance.rounding.full
+                    radius: Config.appearance.rounding.full
                     color: device.connected ? Colours.palette.m3primaryContainer : "transparent"
 
                     StyledBusyIndicator {
@@ -289,15 +289,15 @@ ColumnLayout {
         function onClicked(): void {
         }
 
-        Layout.preferredWidth: implicitWidth + (toggleStateLayer.pressed ? Appearance.padding.normal * 2 : toggled ? Appearance.padding.small * 2 : 0)
-        implicitWidth: toggleBtnInner.implicitWidth + Appearance.padding.large * 2
-        implicitHeight: toggleBtnIcon.implicitHeight + Appearance.padding.normal * 2
+        Layout.preferredWidth: implicitWidth + (toggleStateLayer.pressed ? Config.appearance.padding.normal * 2 : toggled ? Config.appearance.padding.small * 2 : 0)
+        implicitWidth: toggleBtnInner.implicitWidth + Config.appearance.padding.large * 2
+        implicitHeight: toggleBtnIcon.implicitHeight + Config.appearance.padding.normal * 2
 
         radius: 0
         color: toggled ? Colours.palette[`m3${accent.toLowerCase()}`] : Colours.palette[`m3${accent.toLowerCase()}Container`]
         
         // Apply normal fillets for secondary elements
-        filletSize: Appearance.fillet.normal
+        filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.normal : 4
 
         StateLayer {
             id: toggleStateLayer
@@ -313,7 +313,7 @@ ColumnLayout {
             id: toggleBtnInner
 
             anchors.centerIn: parent
-            spacing: Appearance.spacing.normal
+            spacing: Config.appearance.spacing.normal
 
             MaterialIcon {
                 id: toggleBtnIcon
@@ -322,7 +322,7 @@ ColumnLayout {
                 fill: toggleBtn.toggled ? 1 : 0
                 text: toggleBtn.icon
                 color: toggleBtn.toggled ? Colours.palette[`m3on${toggleBtn.accent}`] : Colours.palette[`m3on${toggleBtn.accent}Container`]
-                font.pointSize: Appearance.font.size.large
+                font.pointSize: Config.appearance.font.size.large
 
                 Behavior on fill {
                     Anim {}
@@ -343,15 +343,15 @@ ColumnLayout {
 
         Behavior on radius {
             Anim {
-                duration: Appearance.anim.durations.expressiveFastSpatial
-                easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                duration: Config.appearance.anim.durations.expressiveFastSpatial
+                easing.bezierCurve: Config.appearance.anim.curves.expressiveFastSpatial
             }
         }
 
         Behavior on Layout.preferredWidth {
             Anim {
-                duration: Appearance.anim.durations.expressiveFastSpatial
-                easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+                duration: Config.appearance.anim.durations.expressiveFastSpatial
+                easing.bezierCurve: Config.appearance.anim.curves.expressiveFastSpatial
             }
         }
     }

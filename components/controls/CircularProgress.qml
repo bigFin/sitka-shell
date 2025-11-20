@@ -1,5 +1,5 @@
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import QtQuick.Shapes
 
@@ -8,9 +8,9 @@ Shape {
 
     property real value
     property int startAngle: -90
-    property int strokeWidth: Appearance.padding.smaller
+    property int strokeWidth: Config.appearance.padding.smaller
     property int padding: 0
-    property int spacing: Appearance.spacing.small
+    property int spacing: Config.appearance.spacing.small
     property color fgColour: Colours.palette.m3primary
     property color bgColour: Colours.palette.m3secondaryContainer
 
@@ -26,7 +26,7 @@ Shape {
         fillColor: "transparent"
         strokeColor: root.bgColour
         strokeWidth: root.strokeWidth
-        capStyle: Appearance.rounding.scale === 0 ? ShapePath.SquareCap : ShapePath.RoundCap
+        capStyle: Config.appearance.rounding.scale === 0 ? ShapePath.SquareCap : ShapePath.RoundCap
 
         PathAngleArc {
             startAngle: root.startAngle + 360 * root.vValue + root.gapAngle
@@ -39,9 +39,9 @@ Shape {
 
         Behavior on strokeColor {
             ColorAnimation {
-                duration: Appearance.anim.durations.large
+                duration: Config.appearance.anim.durations.large
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
+                easing.bezierCurve: Config.appearance.anim.curves.standard
             }
         }
     }
@@ -50,7 +50,7 @@ Shape {
         fillColor: "transparent"
         strokeColor: root.fgColour
         strokeWidth: root.strokeWidth
-        capStyle: Appearance.rounding.scale === 0 ? ShapePath.SquareCap : ShapePath.RoundCap
+        capStyle: Config.appearance.rounding.scale === 0 ? ShapePath.SquareCap : ShapePath.RoundCap
 
         PathAngleArc {
             startAngle: root.startAngle
@@ -63,9 +63,9 @@ Shape {
 
         Behavior on strokeColor {
             ColorAnimation {
-                duration: Appearance.anim.durations.large
+                duration: Config.appearance.anim.durations.large
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
+                easing.bezierCurve: Config.appearance.anim.curves.standard
             }
         }
     }

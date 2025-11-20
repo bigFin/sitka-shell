@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.config
+import "../../../config"
 import QtQuick
 import QtQuick.Layouts
 
@@ -26,8 +26,8 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             text: root.timeComponents[0]
             color: Colours.palette.m3secondary
-            font.pointSize: Appearance.font.size.extraLarge
-            font.family: Appearance.font.family.clock
+            font.pointSize: Config.appearance.font.size.extraLarge
+            font.family: Config.appearance.font.family.clock
             font.weight: 600
         }
 
@@ -35,8 +35,8 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             text: "•••"
             color: Colours.palette.m3primary
-            font.pointSize: Appearance.font.size.extraLarge * 0.9
-            font.family: Appearance.font.family.clock
+            font.pointSize: Config.appearance.font.size.extraLarge * 0.9
+            font.family: Config.appearance.font.family.clock
         }
 
         StyledText {
@@ -44,8 +44,8 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             text: root.timeComponents[1]
             color: Colours.palette.m3secondary
-            font.pointSize: Appearance.font.size.extraLarge
-            font.family: Appearance.font.family.clock
+            font.pointSize: Config.appearance.font.size.extraLarge
+            font.family: Config.appearance.font.family.clock
             font.weight: 600
         }
 
@@ -59,8 +59,8 @@ Item {
             sourceComponent: StyledText {
                 text: root.timeComponents[2] ?? ""
                 color: Colours.palette.m3primary
-                font.pointSize: Appearance.font.size.large
-                font.family: Appearance.font.family.clock
+                font.pointSize: Config.appearance.font.size.large
+                font.family: Config.appearance.font.family.clock
                 font.weight: 600
             }
         }

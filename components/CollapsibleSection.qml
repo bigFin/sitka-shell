@@ -1,5 +1,5 @@
 import qs.services
-import qs.config
+import "../config"
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
@@ -14,9 +14,9 @@ ColumnLayout {
     property color backgroundColor: expanded ? Colours.palette.m3surfaceContainerLow : "transparent"
 
     // Margin properties: if backgroundMargins >= 0, use it for all sides; otherwise, use individual margins
-    property real backgroundMarginLeft: Appearance.padding.small
-    property real backgroundMarginRight: Appearance.padding.small
-    property real backgroundMarginTop: Appearance.padding.small
+    property real backgroundMarginLeft: Config.appearance.padding.small
+    property real backgroundMarginRight: Config.appearance.padding.small
+    property real backgroundMarginTop: Config.appearance.padding.small
     property real backgroundMarginBottom: 0
     property real backgroundMargins: -1 // -1 means "not set"
 
@@ -36,10 +36,10 @@ ColumnLayout {
 
         color: root.backgroundColor
         // color: "transparent"
-        radius: Appearance.rounding.small
+        radius: Config.appearance.rounding.small
 
         // Height is header + content (if expanded) + margins
-        Layout.preferredHeight: headerRow.implicitHeight + Appearance.padding.small * 2 + (root.expanded ? contentWrapper.implicitHeight : 0) + (anchors.topMargin + anchors.bottomMargin)
+        Layout.preferredHeight: headerRow.implicitHeight + Config.appearance.padding.small * 2 + (root.expanded ? contentWrapper.implicitHeight : 0) + (anchors.topMargin + anchors.bottomMargin)
 
         Behavior on Layout.preferredHeight {
             Anim {}
@@ -51,30 +51,30 @@ ColumnLayout {
             // Header
             RowLayout {
                 id: headerRow
-                Layout.topMargin: Appearance.padding.small
-                Layout.leftMargin: Appearance.padding.large
-                Layout.rightMargin: Appearance.padding.small
-                Layout.bottomMargin: Appearance.padding.small
+                Layout.topMargin: Config.appearance.padding.small
+                Layout.leftMargin: Config.appearance.padding.large
+                Layout.rightMargin: Config.appearance.padding.small
+                Layout.bottomMargin: Config.appearance.padding.small
 
-                spacing: Appearance.spacing.normal
-                implicitHeight: Appearance.spacing.normal + Appearance.padding.small * 2
+                spacing: Config.appearance.spacing.normal
+                implicitHeight: Config.appearance.spacing.normal + Config.appearance.padding.small * 2
 
                 StyledText {
                     Layout.fillWidth: true
                     text: root.title
                     elide: Text.ElideRight
-                    font.pointSize: Appearance.font.size.smaller
-                    font.family: Appearance.font.family.sans
+                    font.pointSize: Config.appearance.font.size.smaller
+                    font.family: Config.appearance.font.family.sans
                 }
 
                 StyledRect {
                     // color: Colours.palette.m3primary
                     color: root.expanded ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
 
-                    radius: Appearance.rounding.small
+                    radius: Config.appearance.rounding.small
 
-                    implicitWidth: expandIcon.implicitWidth + Appearance.padding.small * 2
-                    implicitHeight: expandIcon.implicitHeight + Appearance.padding.small
+                    implicitWidth: expandIcon.implicitWidth + Config.appearance.padding.small * 2
+                    implicitHeight: expandIcon.implicitHeight + Config.appearance.padding.small
 
                     StateLayer {
                         function onClicked(): void {
@@ -89,7 +89,7 @@ ColumnLayout {
                         text: root.expanded ? "expand_more" : "keyboard_arrow_right"
                         color: root.expanded ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
 
-                        font.pointSize: Appearance.font.size.large
+                        font.pointSize: Config.appearance.font.size.large
                     }
                 }
             }
@@ -98,16 +98,16 @@ ColumnLayout {
             WrapperItem {
                 id: contentWrapper
                 Layout.fillWidth: true
-                Layout.leftMargin: Appearance.padding.smaller
-                Layout.rightMargin: Appearance.padding.smaller
+                Layout.leftMargin: Config.appearance.padding.smaller
+                Layout.rightMargin: Config.appearance.padding.smaller
 
                 // Animate height for smooth expand/collapse
                 Layout.preferredHeight: root.expanded ? contentLoader.implicitHeight + topMargin + bottomMargin : 0
                 clip: true
 
-                // topMargin: Appearance.spacing.smaller
-                // bottomMargin: Appearance.spacing.smaller
-                bottomMargin: Appearance.padding.large
+                // topMargin: Config.appearance.spacing.smaller
+                // bottomMargin: Config.appearance.spacing.smaller
+                bottomMargin: Config.appearance.padding.large
 
                 Loader {
                     id: contentLoader

@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import "items"
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell
 import QtQuick
 import QtQuick.Controls
@@ -15,7 +15,7 @@ PathView {
     required property var panels
     required property var wrapper
 
-    readonly property int itemWidth: Config.launcher.sizes.wallpaperWidth * 0.8 + Appearance.padding.larger * 2
+    readonly property int itemWidth: Config.launcher.sizes.wallpaperWidth * 0.8 + Config.appearance.padding.larger * 2
 
     readonly property int numItems: {
         const screen = QsWindow.window?.screen;

@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import Caelestia
 import Quickshell
 import Quickshell.Widgets
@@ -41,7 +41,7 @@ Item {
 
             anchors.fill: parent
             anchors.margins: Config.border.thickness
-            anchors.leftMargin: Visibilities.bars.get(root.screen).exclusiveZone + Appearance.spacing.small * Config.background.visualiser.spacing
+            anchors.leftMargin: Visibilities.bars.get(root.screen).exclusiveZone + Config.appearance.spacing.small * Config.background.visualiser.spacing
 
             Side {}
             Side {
@@ -70,14 +70,14 @@ Item {
             clip: true
 
             x: modelData * ((content.width * 0.4) / Config.services.visualiserBars) + (side.isRight ? content.width * 0.6 : 0)
-            implicitWidth: (content.width * 0.4) / Config.services.visualiserBars - Appearance.spacing.small * Config.background.visualiser.spacing
+            implicitWidth: (content.width * 0.4) / Config.services.visualiserBars - Config.appearance.spacing.small * Config.background.visualiser.spacing
 
             y: content.height - height
             implicitHeight: bar.value * content.height * 0.4
 
             color: "transparent"
-            topLeftRadius: Appearance.rounding.small * Config.background.visualiser.rounding
-            topRightRadius: Appearance.rounding.small * Config.background.visualiser.rounding
+            topLeftRadius: Config.appearance.rounding.small * Config.background.visualiser.rounding
+            topRightRadius: Config.appearance.rounding.small * Config.background.visualiser.rounding
 
             Rectangle {
                 topLeftRadius: parent.topLeftRadius
@@ -112,7 +112,7 @@ Item {
 
             Behavior on value {
                 Anim {
-                    duration: Appearance.anim.durations.small
+                    duration: Config.appearance.anim.durations.small
                 }
             }
         }

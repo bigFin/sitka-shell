@@ -1,7 +1,7 @@
 import "bluetooth"
 import qs.components
 import qs.services
-import qs.config
+import "../../config"
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
@@ -25,7 +25,7 @@ Item {
         anchors.fill: parent
         visible: false
         color: "black"
-        filletSize: Appearance.fillet.large
+        filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
         
         // Logic: if radius (from parent binding) is > 0, enable fillets.
         property bool effectiveEnabled: radius > 0
@@ -51,7 +51,7 @@ Item {
                     anchors.centerIn: parent
                     text: qsTr("Work in progress")
                     color: Colours.palette.m3outline
-                    font.pointSize: Appearance.font.size.extraLarge
+                    font.pointSize: Config.appearance.font.size.extraLarge
                     font.weight: 500
                 }
             }
@@ -71,7 +71,7 @@ Item {
                     anchors.centerIn: parent
                     text: qsTr("Work in progress")
                     color: Colours.palette.m3outline
-                    font.pointSize: Appearance.font.size.extraLarge
+                    font.pointSize: Config.appearance.font.size.extraLarge
                     font.weight: 500
                 }
             }

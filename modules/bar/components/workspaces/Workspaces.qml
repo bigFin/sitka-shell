@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.services
-import qs.config
+import "../../../../config"
 import qs.components
 import QtQuick
 import QtQuick.Layouts
@@ -14,7 +14,7 @@ StyledRect {
     // required property ShellScreen screen
     
     // Apply large fillets for primary elements
-    filletSize: Appearance.fillet.large
+    filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
 
     readonly property int activeWsId: Niri.focusedWorkspaceIndex + 1
     readonly property var occupied: Niri.workspaceHasWindows
@@ -22,11 +22,11 @@ StyledRect {
 
     readonly property int focusedWindowId: Niri.focusedWindow.id
 
-    implicitHeight: layout.implicitHeight + Appearance.padding.small * 2
+    implicitHeight: layout.implicitHeight + Config.appearance.padding.small * 2
     implicitWidth: Config.bar.sizes.innerWidth
 
     color: Colours.tPalette.m3surfaceContainer
-    radius: Appearance.rounding.normal
+    radius: Config.appearance.rounding.normal
 
     signal requestWindowPopout
 
@@ -44,7 +44,7 @@ StyledRect {
         asynchronous: true
 
         anchors.fill: parent
-        anchors.margins: Appearance.padding.small
+        anchors.margins: Config.appearance.padding.small
 
         sourceComponent: OccupiedBg {
             workspaces: workspaces
@@ -59,7 +59,7 @@ StyledRect {
         asynchronous: true
 
         anchors.left: parent.left
-        anchors.leftMargin: Appearance.padding.small
+        anchors.leftMargin: Config.appearance.padding.small
 
         z: Niri.wsContextType === "workspaces" ? -10 : 0
 
@@ -77,7 +77,7 @@ StyledRect {
     //     z: Niri.wsContextType === "item" ? 10 : 1
 
     //     anchors.right: parent.right
-    //     anchors.rightMargin: -Appearance.padding.small
+    //     anchors.rightMargin: -Config.appearance.padding.small
 
     //     sourceComponent: ContextIndicator {
     //         groupOffset: root.groupOffset
@@ -107,8 +107,8 @@ StyledRect {
 
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        anchors.leftMargin: Appearance.padding.small
-        spacing: Math.floor(Appearance.spacing.small)
+        anchors.leftMargin: Config.appearance.padding.small
+        spacing: Math.floor(Config.appearance.spacing.small)
 
         Repeater {
             id: workspaces

@@ -1,5 +1,5 @@
 import qs.services
-import qs.config
+import "../../config"
 import QtQuick
 import ".."
 
@@ -11,19 +11,19 @@ StyledRect {
     property alias disabled: stateLayer.disabled
     property alias icon: icon.text
 
-    property real implicitSize: Appearance.font.size.normal
+    property real implicitSize: Config.appearance.font.size.normal
 
     function onClicked(): void {
     }
 
-    radius: Appearance.rounding.normal
+    radius: Config.appearance.rounding.normal
     implicitWidth: root.implicitSize
     implicitHeight: root.implicitSize
 
     MaterialIcon {
         id: icon
         color: parent.onColor
-        font.pointSize: Appearance.font.size.small
+        font.pointSize: Config.appearance.font.size.small
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
 

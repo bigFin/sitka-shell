@@ -4,7 +4,7 @@ import qs.components
 import qs.components.controls
 import qs.components.images
 import qs.services
-import qs.config
+import "../../config"
 import qs.utils
 import QtQuick
 import QtQuick.Layouts
@@ -21,18 +21,18 @@ ColumnLayout {
     Layout.fillWidth: false
     Layout.fillHeight: true
 
-    spacing: Appearance.spacing.large * 2
+    spacing: Config.appearance.spacing.large * 2
 
     RowLayout {
         Layout.alignment: Qt.AlignHCenter
-        spacing: Appearance.spacing.small
+        spacing: Config.appearance.spacing.small
 
         StyledText {
             Layout.alignment: Qt.AlignVCenter
             text: root.timeComponents[0]
             color: Colours.palette.m3secondary
-            font.pointSize: Math.floor(Appearance.font.size.extraLarge * 3 * root.centerScale)
-            font.family: Appearance.font.family.clock
+            font.pointSize: Math.floor(Config.appearance.font.size.extraLarge * 3 * root.centerScale)
+            font.family: Config.appearance.font.family.clock
             font.bold: true
         }
 
@@ -40,8 +40,8 @@ ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             text: ":"
             color: Colours.palette.m3primary
-            font.pointSize: Math.floor(Appearance.font.size.extraLarge * 3 * root.centerScale)
-            font.family: Appearance.font.family.clock
+            font.pointSize: Math.floor(Config.appearance.font.size.extraLarge * 3 * root.centerScale)
+            font.family: Config.appearance.font.family.clock
             font.bold: true
         }
 
@@ -49,13 +49,13 @@ ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             text: root.timeComponents[1]
             color: Colours.palette.m3secondary
-            font.pointSize: Math.floor(Appearance.font.size.extraLarge * 3 * root.centerScale)
-            font.family: Appearance.font.family.clock
+            font.pointSize: Math.floor(Config.appearance.font.size.extraLarge * 3 * root.centerScale)
+            font.family: Config.appearance.font.family.clock
             font.bold: true
         }
 
         Loader {
-            Layout.leftMargin: Appearance.spacing.small
+            Layout.leftMargin: Config.appearance.spacing.small
             Layout.alignment: Qt.AlignVCenter
 
             asynchronous: true
@@ -65,8 +65,8 @@ ColumnLayout {
             sourceComponent: StyledText {
                 text: root.timeComponents[2] ?? ""
                 color: Colours.palette.m3primary
-                font.pointSize: Math.floor(Appearance.font.size.extraLarge * 2 * root.centerScale)
-                font.family: Appearance.font.family.clock
+                font.pointSize: Math.floor(Config.appearance.font.size.extraLarge * 2 * root.centerScale)
+                font.family: Config.appearance.font.family.clock
                 font.bold: true
             }
         }
@@ -74,24 +74,24 @@ ColumnLayout {
 
     StyledText {
         Layout.alignment: Qt.AlignHCenter
-        Layout.topMargin: -Appearance.padding.large * 2
+        Layout.topMargin: -Config.appearance.padding.large * 2
 
         text: Time.format("dddd, d MMMM yyyy")
         color: Colours.palette.m3tertiary
-        font.pointSize: Math.floor(Appearance.font.size.extraLarge * root.centerScale)
-        font.family: Appearance.font.family.mono
+        font.pointSize: Math.floor(Config.appearance.font.size.extraLarge * root.centerScale)
+        font.family: Config.appearance.font.family.mono
         font.bold: true
     }
 
     StyledClippingRect {
-        Layout.topMargin: Appearance.spacing.large * 2
+        Layout.topMargin: Config.appearance.spacing.large * 2
         Layout.alignment: Qt.AlignHCenter
 
         implicitWidth: root.centerWidth / 2
         implicitHeight: root.centerWidth / 2
 
         color: Colours.tPalette.m3surfaceContainer
-        radius: Appearance.rounding.full
+        radius: Config.appearance.rounding.full
 
         MaterialIcon {
             anchors.centerIn: parent
@@ -113,10 +113,10 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter
 
         implicitWidth: root.centerWidth * 0.8
-        implicitHeight: input.implicitHeight + Appearance.padding.small * 2
+        implicitHeight: input.implicitHeight + Config.appearance.padding.small * 2
 
         color: Colours.tPalette.m3surfaceContainer
-        radius: Appearance.rounding.full
+        radius: Config.appearance.rounding.full
 
         focus: true
         onActiveFocusChanged: {
@@ -147,12 +147,12 @@ ColumnLayout {
             id: input
 
             anchors.fill: parent
-            anchors.margins: Appearance.padding.small
-            spacing: Appearance.spacing.normal
+            anchors.margins: Config.appearance.padding.small
+            spacing: Config.appearance.spacing.normal
 
             Item {
                 implicitWidth: implicitHeight
-                implicitHeight: fprintIcon.implicitHeight + Appearance.padding.small * 2
+                implicitHeight: fprintIcon.implicitHeight + Config.appearance.padding.small * 2
 
                 MaterialIcon {
                     id: fprintIcon
@@ -188,10 +188,10 @@ ColumnLayout {
 
             StyledRect {
                 implicitWidth: implicitHeight
-                implicitHeight: enterIcon.implicitHeight + Appearance.padding.small * 2
+                implicitHeight: enterIcon.implicitHeight + Config.appearance.padding.small * 2
 
                 color: root.lock.pam.buffer ? Colours.palette.m3primary : Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
-                radius: Appearance.rounding.full
+                radius: Config.appearance.rounding.full
 
                 StateLayer {
                     color: root.lock.pam.buffer ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
@@ -215,7 +215,7 @@ ColumnLayout {
 
     Item {
         Layout.fillWidth: true
-        Layout.topMargin: -Appearance.spacing.large
+        Layout.topMargin: -Config.appearance.spacing.large
 
         implicitHeight: Math.max(message.implicitHeight, stateMessage.implicitHeight)
 
@@ -272,7 +272,7 @@ ColumnLayout {
             color: Colours.palette.m3onSurfaceVariant
             animateProp: "opacity"
 
-            font.family: Appearance.font.family.mono
+            font.family: Config.appearance.font.family.mono
             horizontalAlignment: Qt.AlignHCenter
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             lineHeight: 1.2
@@ -327,8 +327,8 @@ ColumnLayout {
             opacity: 0
             color: Colours.palette.m3error
 
-            font.pointSize: Appearance.font.size.small
-            font.family: Appearance.font.family.mono
+            font.pointSize: Config.appearance.font.size.small
+            font.family: Config.appearance.font.family.mono
             horizontalAlignment: Qt.AlignHCenter
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
@@ -397,13 +397,13 @@ ColumnLayout {
                     target: message
                     property: "scale"
                     to: 0.7
-                    duration: Appearance.anim.durations.large
+                    duration: Config.appearance.anim.durations.large
                 }
                 Anim {
                     target: message
                     property: "opacity"
                     to: 0
-                    duration: Appearance.anim.durations.large
+                    duration: Config.appearance.anim.durations.large
                 }
             }
         }
@@ -412,7 +412,7 @@ ColumnLayout {
     component FlashAnim: NumberAnimation {
         target: message
         property: "opacity"
-        duration: Appearance.anim.durations.small
+        duration: Config.appearance.anim.durations.small
         easing.type: Easing.Linear
     }
 }

@@ -1,6 +1,6 @@
 import qs.components
 import qs.services
-import qs.config
+import "../../../../config"
 import QtQuick
 
 StyledRect {
@@ -18,13 +18,13 @@ StyledRect {
     radius: 0
     
     // Apply small fillets for tertiary elements
-    filletSize: Appearance.fillet.small
+    filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.small : 2
 
     // Animate both y and opacity for a smooth effect
-    anchors.topMargin: entered ? -Appearance.padding.normal : -Config.bar.sizes.innerWidth
+    anchors.topMargin: entered ? -Config.appearance.padding.normal : -Config.bar.sizes.innerWidth
 
-    width: Config.bar.sizes.innerWidth - Appearance.spacing.small
-    height: (text.contentHeight + Appearance.spacing.normal)
+    width: Config.bar.sizes.innerWidth - Config.appearance.spacing.small
+    height: (text.contentHeight + Config.appearance.spacing.normal)
 
     // Animate when 'entered' changes
     Behavior on anchors.topMargin {
@@ -41,10 +41,10 @@ StyledRect {
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: Appearance.spacing.small / 2
+        anchors.bottomMargin: Config.appearance.spacing.small / 2
 
-        font.family: Appearance.font.family.mono
-        font.pointSize: Appearance.font.size.extraSmall
+        font.family: Config.appearance.font.family.mono
+        font.pointSize: Config.appearance.font.size.extraSmall
 
         color: Colours.palette.m3surfaceContainerHighest
 

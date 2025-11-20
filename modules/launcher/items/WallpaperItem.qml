@@ -2,7 +2,7 @@ import qs.components
 import qs.components.effects
 import qs.components.images
 import qs.services
-import qs.config
+import "../../../config"
 import Caelestia
 import Quickshell
 import Quickshell.Widgets
@@ -23,11 +23,11 @@ Item {
         opacity = Qt.binding(() => PathView.onPath ? 1 : 0);
     }
 
-    implicitWidth: image.width + Appearance.padding.larger * 2
-    implicitHeight: image.height + label.height + Appearance.spacing.small / 2 + Appearance.padding.large + Appearance.padding.normal
+    implicitWidth: image.width + Config.appearance.padding.larger * 2
+    implicitHeight: image.height + label.height + Config.appearance.spacing.small / 2 + Config.appearance.padding.large + Config.appearance.padding.normal
 
     StateLayer {
-        radius: Appearance.rounding.normal
+        radius: Config.appearance.rounding.normal
 
         function onClicked(): void {
             Wallpapers.setWallpaper(root.modelData.path);
@@ -50,9 +50,9 @@ Item {
         id: image
 
         anchors.horizontalCenter: parent.horizontalCenter
-        y: Appearance.padding.large
+        y: Config.appearance.padding.large
         color: Colours.tPalette.m3surfaceContainer
-        radius: Appearance.rounding.normal
+        radius: Config.appearance.rounding.normal
 
         implicitWidth: Config.launcher.sizes.wallpaperWidth
         implicitHeight: implicitWidth / 16 * 9
@@ -61,7 +61,7 @@ Item {
             anchors.centerIn: parent
             text: "image"
             color: Colours.tPalette.m3outline
-            font.pointSize: Appearance.font.size.extraLarge * 2
+            font.pointSize: Config.appearance.font.size.extraLarge * 2
             font.weight: 600
         }
 
@@ -77,15 +77,15 @@ Item {
         id: label
 
         anchors.top: image.bottom
-        anchors.topMargin: Appearance.spacing.small / 2
+        anchors.topMargin: Config.appearance.spacing.small / 2
         anchors.horizontalCenter: parent.horizontalCenter
 
-        width: image.width - Appearance.padding.normal * 2
+        width: image.width - Config.appearance.padding.normal * 2
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
         renderType: Text.QtRendering
         text: root.modelData.relativePath
-        font.pointSize: Appearance.font.size.normal
+        font.pointSize: Config.appearance.font.size.normal
     }
 
     Behavior on scale {

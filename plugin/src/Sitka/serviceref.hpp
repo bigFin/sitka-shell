@@ -3,7 +3,7 @@
 #include "service.hpp"
 #include <qqmlintegration.h>
 
-namespace caelestia {
+namespace sitka {
 
 class ServiceRef : public QObject {
     Q_OBJECT
@@ -25,4 +25,4 @@ private:
     Service* m_service;
 };
 
-} // namespace caelestia
+} // namespace sitka

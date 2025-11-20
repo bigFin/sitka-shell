@@ -100,7 +100,7 @@ CustomMouseArea {
         const y = event.y;
 
         // Show bar in non-exclusive mode on hover
-        if (!visibilities.bar && Config.bar.showOnHover && x < Math.max(bar.implicitWidth, Config.bar.dragThreshold))
+        if (!visibilities.bar && Config.bar.showOnHover && x < Math.max(bar.implicitWidth, Config.bar.hoverThreshold))
             bar.isHovered = true;
         // console.log("Bar hovered!")
 

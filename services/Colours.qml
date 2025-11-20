@@ -1,9 +1,9 @@
 pragma Singleton
 pragma ComponentBehavior: Bound
 
-import qs.config
+import "../config"
 import qs.utils
-import Caelestia
+import Sitka
 import Quickshell
 import Quickshell.Io
 import QtQuick
@@ -80,7 +80,7 @@ Singleton {
     }
 
     function setMode(mode: string): void {
-        Quickshell.execDetached(["caelestia", "scheme", "set", "--notify", "-m", mode]);
+        Quickshell.execDetached(["sitka", "scheme", "set", "--notify", "-m", mode]);
     }
 
     FileView {
@@ -103,9 +103,9 @@ Singleton {
     }
 
     component Transparency: QtObject {
-        readonly property bool enabled: Appearance.transparency.enabled
-        readonly property real base: Appearance.transparency.base - (root.light ? 0.1 : 0)
-        readonly property real layers: Appearance.transparency.layers
+        readonly property bool enabled: Config.appearance.transparency.enabled
+        readonly property real base: Config.appearance.transparency.base - (root.light ? 0.1 : 0)
+        readonly property real layers: Config.appearance.transparency.layers
     }
 
     component M3TPalette: QtObject {
@@ -164,6 +164,7 @@ Singleton {
         readonly property color m3onTertiaryFixed: root.layer(root.palette.m3onTertiaryFixed)
         readonly property color m3onTertiaryFixedVariant: root.layer(root.palette.m3onTertiaryFixedVariant)
     }
+
 
     component M3Palette: QtObject {
         property color m3primary_paletteKeyColor: "#a26387"

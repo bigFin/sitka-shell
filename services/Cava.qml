@@ -1,7 +1,7 @@
 pragma Singleton
 
 import qs.config
-import Caelestia
+import Sitka
 import Quickshell
 
 Singleton {

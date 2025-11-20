@@ -28,9 +28,7 @@
   cmake,
   ninja,
   pkg-config,
-  caelestia-cli,
   debug ? false,
-  withCli ? false,
   extraRuntimeDeps ? [],
 }: let
   version = "1.0.0";
@@ -49,8 +47,7 @@
       bash
       hyprland
     ]
-    ++ extraRuntimeDeps
-    ++ lib.optional withCli caelestia-cli;
+    ++ extraRuntimeDeps;
 
   fontconfig = makeFontsConf {
     fontDirectories = [material-symbols rubik nerd-fonts.caskaydia-cove];
@@ -63,7 +60,7 @@
   ];
 
   extras = stdenv.mkDerivation {
-    name = "caelestia-extras${lib.optionalString debug "-debug"}";
+    name = "sitka-extras${lib.optionalString debug "-debug"}";
     src = lib.fileset.toSource {
       root = ./..;
       fileset = lib.fileset.union ./../CMakeLists.txt ./../extras;
@@ -80,7 +77,7 @@
   };
 
   plugin = stdenv.mkDerivation {
-    name = "caelestia-qml-plugin${lib.optionalString debug "-debug"}";
+    name = "sitka-qml-plugin${lib.optionalString debug "-debug"}";
     src = lib.fileset.toSource {
       root = ./..;
       fileset = lib.fileset.union ./../CMakeLists.txt ./../plugin;
@@ -145,7 +142,7 @@ in
 
     meta = {
       description = "A very segsy desktop shell";
-      homepage = "https://github.com/caelestia-dots/shell";
+      homepage = "https://github.com/sitka-shell/sitka-shell";
       license = lib.licenses.gpl3Only;
       mainProgram = "sitka-shell";
     };

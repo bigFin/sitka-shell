@@ -79,7 +79,8 @@ Searcher {
 
         function onClicked(list: AppList): void {
             list.visibilities.launcher = false;
-            Quickshell.execDetached(["caelestia", "scheme", "set", "-v", variant]);
+            console.log("Variant setting not implemented without caelestia-cli");
+            // Quickshell.execDetached(["caelestia", "scheme", "set", "-v", variant]);
         }
     }
 }

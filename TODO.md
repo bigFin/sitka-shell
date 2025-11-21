@@ -39,4 +39,6 @@ some minor nit picks/style issues
   We need to replace the kawaii kitty in the top HUD with the images i have put in ./config/images.  same with the anime lady graphic in the power drawer. 
 
 
-We should make the NYX operating system icon that's in the top left of the main bar, clicking that should open the app launcher
+We should make the nixos operating system icon that's in the top left of the main bar, clicking that should open the app launcher
+
+The left main bar theme seems like the active workspace color is off for the theme, if its obvious to you fix it (rn its red on everforest light), or we can collaboratively track down the correct var.

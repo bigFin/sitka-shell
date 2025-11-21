@@ -38,9 +38,9 @@ Item {
         bottomRightFillet: false
     }
     
-    // Left Buttress (Additive)
+    // Bottom-left Buttress
     Canvas {
-        id: leftButtress
+        id: bottomLeftButtress
         width: mainRect.filletSize
         height: mainRect.filletSize
         anchors.right: parent.left
@@ -52,9 +52,9 @@ Item {
             ctx.clearRect(0, 0, width, height);
             ctx.fillStyle = mainRect.color;
             ctx.beginPath();
-            ctx.moveTo(0, 0); // top-left of canvas
-            ctx.lineTo(0, height); // bottom-left
-            ctx.lineTo(width, height); // bottom-right
+            ctx.moveTo(width, 0);
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
             ctx.closePath();
             ctx.fill();
         }
@@ -64,13 +64,13 @@ Item {
         onHeightChanged: requestPaint()
         Connections {
             target: mainRect
-            function onColorChanged() { leftButtress.requestPaint(); }
+            function onColorChanged() { bottomLeftButtress.requestPaint(); }
         }
     }
     
-    // Right Buttress (Additive)
+    // Bottom-right Buttress
     Canvas {
-        id: rightButtress
+        id: bottomRightButtress
         width: mainRect.filletSize
         height: mainRect.filletSize
         anchors.left: parent.right
@@ -82,9 +82,9 @@ Item {
             ctx.clearRect(0, 0, width, height);
             ctx.fillStyle = mainRect.color;
             ctx.beginPath();
-            ctx.moveTo(width, 0); // top-right
-            ctx.lineTo(width, height); // bottom-right
-            ctx.lineTo(0, height); // bottom-left
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, height);
+            ctx.lineTo(width, height);
             ctx.closePath();
             ctx.fill();
         }
@@ -94,7 +94,7 @@ Item {
         onHeightChanged: requestPaint()
         Connections {
             target: mainRect
-            function onColorChanged() { rightButtress.requestPaint(); }
+            function onColorChanged() { bottomRightButtress.requestPaint(); }
         }
     }
 }

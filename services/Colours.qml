@@ -73,9 +73,16 @@ Singleton {
         
         current.m3surface = paletteSource.bg;
         current.m3onSurface = paletteSource.fg;
-        current.m3primary = paletteSource.red;
-        current.m3secondary = paletteSource.green;
-        current.m3tertiary = paletteSource.blue;
+        
+        if (themeName === "EverforestLight") {
+            current.m3primary = paletteSource.green;
+            current.m3secondary = paletteSource.blue;
+            current.m3tertiary = paletteSource.yellow;
+        } else {
+            current.m3primary = paletteSource.red;
+            current.m3secondary = paletteSource.green;
+            current.m3tertiary = paletteSource.blue;
+        }
     }
 
     Component.onCompleted: {

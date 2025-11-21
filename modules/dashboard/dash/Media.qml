@@ -202,7 +202,7 @@ Item {
         }
     }
 
-    AnimatedImage {
+    Image {
         id: bongocat
 
         anchors.top: controls.bottom
@@ -213,11 +213,9 @@ Item {
         anchors.bottomMargin: Config.appearance.padding.large
         anchors.margins: Config.appearance.padding.large * 2
 
-        playing: Players.active?.isPlaying ?? false
-        speed: BeatTracker.bpm / 300
         source: Paths.absolutePath(Config.paths.mediaGif)
         asynchronous: true
-        fillMode: AnimatedImage.PreserveAspectFit
+        fillMode: Image.PreserveAspectFit
     }
 
     component Control: StyledRect {

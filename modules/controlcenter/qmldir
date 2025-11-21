@@ -1,0 +1,8 @@
+module qs.modules.controlcenter
+ControlCenter 1.0 ControlCenter.qml
+NavRail 1.0 NavRail.qml
+Panes 1.0 Panes.qml
+Session 1.0 Session.qml
+singleton WindowFactory 1.0 WindowFactory.qml
+WindowTitle 1.0 WindowTitle.qml
+BackgroundSwitcher 1.0 BackgroundSwitcher.qml

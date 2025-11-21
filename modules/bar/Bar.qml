@@ -5,6 +5,9 @@ import "../../config"
 import "popouts" as BarPopouts
 import "components"
 import "components/workspaces"
+import qs.modules.controlcenter
+import qs.components
+import qs.components.controls
 import Quickshell
 import QtQuick
 import QtQuick.Layouts
@@ -131,7 +134,9 @@ ColumnLayout {
                             acceptedButtons: Qt.RightButton
                             cursorShape: Qt.PointingHandCursor
                             onClicked: mouse => {
-                                if (mouse.button === Qt.RightButton) {
+                                if (mouse.button === Qt.LeftButton) {
+                                    root.visibilities.launcher = true;
+                                } else if (mouse.button === Qt.RightButton) {
                                     Niri.wsContextType = "workspaces";
                                     root.popouts.currentName = "wsWindow";
                                     root.popouts.hasCurrent = true;
@@ -205,6 +210,15 @@ ColumnLayout {
                     sourceComponent: IdleInhibitor {}
                 }
             }
+            DelegateChoice {
+                roleValue: "controlcenter"
+                delegate: WrappedLoader {
+                    sourceComponent: BarIcon {
+                        icon: "settings"
+                        onClicked: WindowFactory.create()
+                    }
+                }
+            }
         }
     }
 
@@ -241,4 +255,29 @@ ColumnLayout {
         visible: enabled
         active: enabled
     }
+
+    component BarIcon: StyledRect {
+        id: barIconRoot
+
+        required property string icon
+        signal clicked()
+
+        implicitWidth: implicitHeight
+        implicitHeight: icon.implicitHeight + Config.appearance.padding.small * 2
+        radius: Config.appearance.rounding.full
+
+        MaterialIcon {
+            id: icon
+            anchors.centerIn: parent
+            text: barIconRoot.icon
+            color: Colours.palette.m3onSurface
+            font.pointSize: Config.appearance.font.size.normal
+        }
+
+        StateLayer {
+            radius: parent.radius
+            onClicked: barIconRoot.clicked()
+        }
+    }
 }
+

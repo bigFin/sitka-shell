@@ -158,18 +158,13 @@ Item {
 
         NavItem {
             Layout.topMargin: Config.appearance.spacing.large * 2
-            icon: "network_manage"
-            label: "network"
-        }
-
-        NavItem {
             icon: "settings_bluetooth"
             label: "bluetooth"
         }
 
         NavItem {
-            icon: "tune"
-            label: "audio"
+            icon: "wallpaper"
+            label: "background"
         }
     }
 

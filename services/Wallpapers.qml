@@ -21,8 +21,7 @@ Searcher {
 
     function setWallpaper(path: string): void {
         actualCurrent = path;
-        console.log("Wallpaper setting not implemented without caelestia-cli");
-        // Quickshell.execDetached(["caelestia", "wallpaper", "-f", path, ...smartArg]);
+        Quickshell.execDetached(["swww", "img", path, "--transition-type", "grow", "--transition-pos", "0.5,0.5"]);
     }
 
     function preview(path: string): void {

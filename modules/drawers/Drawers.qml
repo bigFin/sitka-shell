@@ -5,6 +5,7 @@ import qs.components.containers
 import qs.services
 import "../../config"
 import qs.modules.bar
+import qs.modules.launcher as Launcher
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
@@ -78,6 +79,21 @@ Variants {
 
                 Behavior on opacity {
                     Anim {}
+                }
+            }
+
+            Item {
+                id: opaqueDrawerSurface
+                anchors.fill: parent
+                anchors.margins: Config.border.thickness
+                anchors.leftMargin: bar.implicitWidth
+
+                Launcher.Background {
+                    wrapper: panels.launcher
+                    x: (opaqueDrawerSurface.width - wrapper.width) / 2
+                    y: opaqueDrawerSurface.height - wrapper.height
+                    width: wrapper.width
+                    height: wrapper.height
                 }
             }
 

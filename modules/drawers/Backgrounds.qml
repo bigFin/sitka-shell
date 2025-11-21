@@ -43,14 +43,6 @@ Item {
         height: wrapper.height
     }
 
-    Launcher.Background {
-        wrapper: root.panels.launcher
-        x: (root.width - wrapper.width) / 2
-        y: root.height
-        width: wrapper.width
-        height: wrapper.height
-    }
-
     Dashboard.Background {
         wrapper: root.panels.dashboard
         x: (root.width - wrapper.width) / 2

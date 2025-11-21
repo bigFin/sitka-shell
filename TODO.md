@@ -39,10 +39,4 @@ some minor nit picks/style issues
   We need to replace the kawaii kitty in the top HUD with the images i have put in ./config/images.  same with the anime lady graphic in the power drawer. 
 
 
-in the left bar, there is an active window display that when you hover over it, it pops out a detail about the active window. And you can click on that to open up the performance monitor. But that active window pop out that comes up whenever you hover over the active window title on the left bar. It has two square chunks cut out of the left top and bottom where it joins the left bar, where instead I would expect it to have a chamfer similar to the top of the top of the head's up display. Actually, all of the left bar pop out drawers have this issue. 
-
-
 We should make the NYX operating system icon that's in the top left of the main bar, clicking that should open the app launcher
-
-
-The app launcher drawer on the bottom has a transparent background. It should be opaque.

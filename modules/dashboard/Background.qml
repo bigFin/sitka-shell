@@ -41,12 +41,14 @@ Item {
     // Left Buttress (Additive)
     Canvas {
         id: leftButtress
-        width: mainRect.filletSize
+        width: (root.wrapper.visibilities.dashboard || root.wrapper.expanded) ? mainRect.filletSize : 0
         height: mainRect.filletSize
         anchors.right: parent.left
         anchors.top: parent.top
-        visible: root.wrapper.visibilities.dashboard && width > 0
+        visible: width > 0
         
+        Behavior on width { Anim {} }
+
         onPaint: {
             var ctx = getContext("2d");
             ctx.clearRect(0, 0, width, height);
@@ -71,11 +73,13 @@ Item {
     // Right Buttress (Additive)
     Canvas {
         id: rightButtress
-        width: mainRect.filletSize
+        width: (root.wrapper.visibilities.dashboard || root.wrapper.expanded) ? mainRect.filletSize : 0
         height: mainRect.filletSize
         anchors.left: parent.right
         anchors.top: parent.top
-        visible: root.wrapper.visibilities.dashboard && width > 0
+        visible: width > 0
+
+        Behavior on width { Anim {} }
         
         onPaint: {
             var ctx = getContext("2d");

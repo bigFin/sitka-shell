@@ -19,6 +19,7 @@ Item {
     property int topRightFilletStyle: filletStyle
     property int bottomLeftFilletStyle: filletStyle
     property int bottomRightFilletStyle: filletStyle
+    property bool fillDisabledFillets: true
     
     // Radius support (fallback if fillets disabled)
     property int radius: 0
@@ -119,7 +120,7 @@ Item {
         
         // Fill gaps for disabled fillets
         Rectangle {
-            visible: !root.topLeftFillet
+            visible: !root.topLeftFillet && root.fillDisabledFillets
             width: root.filletSize
             height: root.filletSize
             color: root.color
@@ -128,7 +129,7 @@ Item {
         }
         
         Rectangle {
-            visible: !root.topRightFillet
+            visible: !root.topRightFillet && root.fillDisabledFillets
             width: root.filletSize
             height: root.filletSize
             color: root.color
@@ -137,7 +138,7 @@ Item {
         }
         
         Rectangle {
-            visible: !root.bottomLeftFillet
+            visible: !root.bottomLeftFillet && root.fillDisabledFillets
             width: root.filletSize
             height: root.filletSize
             color: root.color
@@ -146,7 +147,7 @@ Item {
         }
         
         Rectangle {
-            visible: !root.bottomRightFillet
+            visible: !root.bottomRightFillet && root.fillDisabledFillets
             width: root.filletSize
             height: root.filletSize
             color: root.color

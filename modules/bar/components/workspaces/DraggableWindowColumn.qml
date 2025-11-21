@@ -85,9 +85,7 @@ Item {
                 app_id: g.app_id,
                 id: g.id,
                 title: g.title,
-                count: g.count,
-                windows: g.windows,
-                main: g.main
+                count: g.count
             };
 
             if (idx >= 0) {

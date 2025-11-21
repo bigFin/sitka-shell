@@ -18,4 +18,5 @@ StyledRect {
     topRightFillet: false
     bottomLeftFillet: true
     bottomRightFillet: false
+    fillDisabledFillets: false
 }

@@ -54,6 +54,10 @@ JsonObject {
             enabled: true
         },
         {
+            id: "controlcenter",
+            enabled: true
+        },
+        {
             id: "idleInhibitor",
             enabled: false
         }

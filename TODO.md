@@ -4,9 +4,7 @@
 The following features were disabled during the removal of `caelestia-cli`. They need to be re-implemented or removed to align with the new declarative philosophy.
 
 - **Wallpaper Management**
-  - [ ] `services/Wallpapers.qml`: `setWallpaper` is disabled.
   - [ ] `services/Wallpapers.qml`: Preview color generation (`getPreviewColoursProc`) is disabled.
-  - [ ] `modules/launcher/services/Actions.qml`: "Random Wallpaper" action is disabled.
 
 - **Theme/Scheme Management**
   - [ ] `modules/launcher/services/Schemes.qml`: Scheme listing and setting are disabled.
@@ -31,14 +29,12 @@ The following features were disabled during the removal of `caelestia-cli`. They
 - [ ] **Sidebar Rewrite**: The workspace bar needs a refactor.
 
 
-some minor nit picks/style issues
-  - Top HUD theme is inapropriately applied, review and propose improved suggestions to user if the solution is not clear.
-
-  
-
-  We need to replace the kawaii kitty in the top HUD with the images i have put in ./config/images.  same with the anime lady graphic in the power drawer. 
+the power drawer it too kawaii it needs to be angularized
 
 
-We should make the nixos operating system icon that's in the top left of the main bar, clicking that should open the app launcher
+The drawers on the left bar have some permamnently visible squares on the right edge of the bar, and they dont have a buttress when expanded. 
 
-The left main bar theme seems like the active workspace color is off for the theme, if its obvious to you fix it (rn its red on everforest light), or we can collaboratively track down the correct var.
+
+update readme, shouts out caelestia and niri-caelestia shell both 
+
+is it feasible to make the top drawer hud and the right drawer hud both cycle through images (perhaps one dir per drawer to put img in) when you click on the image?

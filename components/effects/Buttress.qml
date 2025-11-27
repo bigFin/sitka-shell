@@ -20,10 +20,9 @@ Shape {
     // Geometry
     // width is set by parent animation
     height: size
+    visible: width > 1
     
     // Optimizations
-    layer.enabled: true
-    layer.samples: 4
     preferredRendererType: Shape.CurveRenderer
 
     ShapePath {

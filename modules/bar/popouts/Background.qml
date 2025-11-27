@@ -14,7 +14,7 @@ Item {
 
     width: wrapper.width
     height: wrapper.height
-    visible: height > 0
+    visible: height > 0 && wrapper.buttressSize > 0.5
 
     StyledRect {
         id: mainRect
@@ -35,22 +35,22 @@ Item {
     // Top-left Buttress
     Buttress {
         id: topLeftButtress
-        orientation: 0 // Top-Left
+        orientation: 3 // Top-Left location (Above), use L shape (Bottom-Left filled)
         size: mainRect.filletSize
         color: mainRect.color
-        anchors.right: parent.left
-        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.bottom: parent.top
         width: wrapper.buttressSize
     }
 
     // Bottom-left Buttress
     Buttress {
         id: bottomLeftButtress
-        orientation: 2 // Bottom-Left
+        orientation: 1 // Bottom-Left location (Below), use F shape (Top-Left filled)
         size: mainRect.filletSize
         color: mainRect.color
-        anchors.right: parent.left
-        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.top: parent.bottom
         width: wrapper.buttressSize
     }
 }

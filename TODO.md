@@ -32,7 +32,7 @@ The following features were disabled during the removal of `caelestia-cli`. They
 the power drawer it too kawaii it needs to be angularized
 
 
-The drawers on the left bar have some permamnently visible squares on the right edge of the bar, and they dont have a buttress when expanded. 
+- [x] The drawers on the left bar have some permamnently visible squares on the right edge of the bar, and they dont have a buttress when expanded.
 
 
 update readme, shouts out caelestia and niri-caelestia shell both 

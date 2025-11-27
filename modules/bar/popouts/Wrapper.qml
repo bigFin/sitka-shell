@@ -41,10 +41,8 @@ Item {
 
     function close(): void {
         hasCurrent = false;
-        animCurve = Config.appearance.anim.curves.emphasizedAccel;
         animLength = Config.appearance.anim.durations.normal;
         detachedMode = "";
-        animCurve = Config.appearance.anim.curves.emphasized;
     }
 
     visible: width > 0 && height > 0

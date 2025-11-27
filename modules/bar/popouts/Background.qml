@@ -1,6 +1,7 @@
 import qs.components
 import qs.services
 import "../../../config"
+import qs.components.effects // For Buttress
 import QtQuick
 
 Item {
@@ -32,62 +33,24 @@ Item {
     }
 
     // Top-left Buttress
-    Canvas {
+    Buttress {
         id: topLeftButtress
-        width: mainRect.filletSize
-        height: mainRect.filletSize
+        orientation: 0 // Top-Left
+        size: mainRect.filletSize
+        color: mainRect.color
         anchors.right: parent.left
         anchors.top: parent.top
-        visible: mainRect.attached && width > 0
-
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = mainRect.color;
-            ctx.beginPath();
-            ctx.moveTo(width, 0); // top-right of canvas
-            ctx.lineTo(0, 0);     // top-left
-            ctx.lineTo(width, height); // bottom-right
-            ctx.closePath();
-            ctx.fill();
-        }
-        
-        Component.onCompleted: requestPaint()
-        onWidthChanged: requestPaint()
-        onHeightChanged: requestPaint()
-        Connections {
-            target: mainRect
-            function onColorChanged() { topLeftButtress.requestPaint(); }
-        }
+        active: wrapper.hasCurrent && mainRect.attached
     }
 
     // Bottom-left Buttress
-    Canvas {
+    Buttress {
         id: bottomLeftButtress
-        width: mainRect.filletSize
-        height: mainRect.filletSize
+        orientation: 2 // Bottom-Left
+        size: mainRect.filletSize
+        color: mainRect.color
         anchors.right: parent.left
         anchors.bottom: parent.bottom
-        visible: mainRect.attached && width > 0
-
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = mainRect.color;
-            ctx.beginPath();
-            ctx.moveTo(width, 0);     // top-right of canvas
-            ctx.lineTo(0, height);    // bottom-left
-            ctx.lineTo(width, height); // bottom-right
-            ctx.closePath();
-            ctx.fill();
-        }
-        
-        Component.onCompleted: requestPaint()
-        onWidthChanged: requestPaint()
-        onHeightChanged: requestPaint()
-        Connections {
-            target: mainRect
-            function onColorChanged() { bottomLeftButtress.requestPaint(); }
-        }
+        active: wrapper.hasCurrent && mainRect.attached
     }
 }

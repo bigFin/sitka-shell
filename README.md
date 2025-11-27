@@ -513,7 +513,14 @@ To set the wallpaper, you can use the app launcher command `> wallpaper`.
 
 ## 🙏 Credits
 
+
+
 * [Quickshell](https://github.com/quickshell/quickshell) – Core shell framework
+
 * [Caelestia](https://github.com/caelestia-shell/caelestia-shell) – Original project
+
+* [Niri-Caelestia-Shell](https://github.com/0lxy/niri-caelestia-shell) - Inspiration for the Niri port
+
 * [Niri](https://github.com/YaLTeR/niri) – Window manager backend
-* All upstream contributors :)
+
+* All upstream contributors

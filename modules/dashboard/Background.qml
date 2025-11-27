@@ -1,6 +1,7 @@
 import qs.components
 import qs.services
 import "../../config"
+import qs.components.effects // For Buttress
 import QtQuick
 
 Item {
@@ -39,66 +40,24 @@ Item {
     }
     
     // Left Buttress (Additive)
-    Canvas {
+    Buttress {
         id: leftButtress
-        width: (root.wrapper.visibilities.dashboard || root.wrapper.expanded) ? mainRect.filletSize : 0
-        height: mainRect.filletSize
+        orientation: 0 // Top-Left
+        size: mainRect.filletSize
+        color: mainRect.color
         anchors.right: parent.left
         anchors.top: parent.top
-        visible: width > 0
-        
-        Behavior on width { Anim {} }
-
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = mainRect.color;
-            ctx.beginPath();
-            ctx.moveTo(width, 0);
-            ctx.lineTo(0, 0);
-            ctx.lineTo(width, height);
-            ctx.closePath();
-            ctx.fill();
-        }
-        
-        Component.onCompleted: requestPaint()
-        onWidthChanged: requestPaint()
-        onHeightChanged: requestPaint()
-        Connections {
-            target: mainRect
-            function onColorChanged() { leftButtress.requestPaint(); }
-        }
+        active: root.wrapper.visibilities.dashboard || root.wrapper.expanded
     }
     
     // Right Buttress (Additive)
-    Canvas {
+    Buttress {
         id: rightButtress
-        width: (root.wrapper.visibilities.dashboard || root.wrapper.expanded) ? mainRect.filletSize : 0
-        height: mainRect.filletSize
+        orientation: 1 // Top-Right
+        size: mainRect.filletSize
+        color: mainRect.color
         anchors.left: parent.right
         anchors.top: parent.top
-        visible: width > 0
-
-        Behavior on width { Anim {} }
-        
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = mainRect.color;
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(width, 0);
-            ctx.lineTo(0, height);
-            ctx.closePath();
-            ctx.fill();
-        }
-        
-        Component.onCompleted: requestPaint()
-        onWidthChanged: requestPaint()
-        onHeightChanged: requestPaint()
-        Connections {
-            target: mainRect
-            function onColorChanged() { rightButtress.requestPaint(); }
-        }
+        active: root.wrapper.visibilities.dashboard || root.wrapper.expanded
     }
 }

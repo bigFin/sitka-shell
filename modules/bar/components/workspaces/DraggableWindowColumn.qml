@@ -32,6 +32,7 @@ Item {
 
     property var wsWindows: {
         const niriWorkspace = Niri.currentOutputWorkspaces[root.idx + root.groupOffset];
+        if (!niriWorkspace) return [];
         return Niri.getWindowsByWorkspaceId(niriWorkspace.id);
     }
 
@@ -231,7 +232,7 @@ Item {
                 
 
 
-                property var fullGroup: root.groupedWindowsArray[index]
+                property var fullGroup: root.groupedWindowsArray[index] || { main: null, windows: [], count: 0, id: -1 }
 
                 windowData: Config.bar.workspaces.groupIconsByApp ? fullGroup.main : fullGroup
                 groupWindowData: Config.bar.workspaces.groupIconsByApp ? (fullGroup.windows || []) : [fullGroup]

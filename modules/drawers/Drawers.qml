@@ -6,6 +6,7 @@ import qs.services
 import "../../config"
 import qs.modules.bar
 import qs.modules.launcher as Launcher
+import qs.modules.dashboard as Dashboard
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
@@ -95,6 +96,18 @@ Variants {
                     width: wrapper.width
                     height: wrapper.height
                 }
+
+                Dashboard.Background {
+                    wrapper: panels.dashboard
+                    x: (opaqueDrawerSurface.width - wrapper.width) / 2
+                    y: 0
+                    width: wrapper.width
+                    height: wrapper.height
+                }
+            }
+
+            Border {
+                bar: bar
             }
 
             Item {
@@ -105,10 +118,6 @@ Variants {
                     shadowEnabled: true
                     blurMax: 15
                     shadowColor: Qt.alpha(Colours.palette.m3shadow, 0.7)
-                }
-
-                Border {
-                    bar: bar
                 }
 
                 Backgrounds {

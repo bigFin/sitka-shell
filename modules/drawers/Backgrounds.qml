@@ -4,7 +4,6 @@ import qs.modules.osd as Osd
 import qs.modules.notifications as Notifications
 import qs.modules.session as Session
 import qs.modules.launcher as Launcher
-import qs.modules.dashboard as Dashboard
 import qs.modules.bar.popouts as BarPopouts
 import qs.modules.utilities as Utilities
 import QtQuick
@@ -39,14 +38,6 @@ Item {
         wrapper: root.panels.session
         x: root.width
         y: (root.height - wrapper.height) / 2
-        width: wrapper.width
-        height: wrapper.height
-    }
-
-    Dashboard.Background {
-        wrapper: root.panels.dashboard
-        x: (root.width - wrapper.width) / 2
-        y: 0
         width: wrapper.width
         height: wrapper.height
     }

@@ -47,7 +47,7 @@ Item {
         color: mainRect.color
         anchors.right: parent.left
         anchors.top: parent.top
-        active: root.wrapper.visibilities.dashboard || root.wrapper.expanded
+        width: root.wrapper.buttressSize
     }
     
     // Right Buttress (Additive)
@@ -58,6 +58,6 @@ Item {
         color: mainRect.color
         anchors.left: parent.right
         anchors.top: parent.top
-        active: root.wrapper.visibilities.dashboard || root.wrapper.expanded
+        width: root.wrapper.buttressSize
     }
 }

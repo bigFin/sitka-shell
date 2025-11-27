@@ -40,7 +40,7 @@ Item {
         color: mainRect.color
         anchors.right: parent.left
         anchors.top: parent.top
-        active: wrapper.hasCurrent && mainRect.attached
+        width: wrapper.buttressSize
     }
 
     // Bottom-left Buttress
@@ -51,6 +51,6 @@ Item {
         color: mainRect.color
         anchors.right: parent.left
         anchors.bottom: parent.bottom
-        active: wrapper.hasCurrent && mainRect.attached
+        width: wrapper.buttressSize
     }
 }

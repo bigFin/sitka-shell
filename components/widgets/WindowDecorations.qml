@@ -36,12 +36,12 @@ RowLayout {
 
     StyledRadialButton {
         disabled: !root.client
-        basecolor: root.client.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
-        onColor: root.client.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
+        basecolor: root.client?.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
+        onColor: root.client?.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
 
         implicitSize: root.implicitSize
 
-        icon: root.client.is_floating ? "grid_view" : "picture_in_picture"
+        icon: root.client?.is_floating ? "grid_view" : "picture_in_picture"
         function onClicked(): void {
             console.log("Toggling floating for", root.client?.id);
             Niri.toggleWindowFloating(root.client?.id);

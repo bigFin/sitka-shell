@@ -16,6 +16,14 @@ Item {
     property bool expanded: false
     property bool isvisible: false
 
+    property real buttressSize: (visibilities.dashboard || expanded) ? Config.appearance.fillet.large : 0
+    Behavior on buttressSize {
+        Anim {
+            duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
+        }
+    }
+
     required property PersistentProperties visibilities
     readonly property PersistentProperties state: PersistentProperties {
         property int currentTab

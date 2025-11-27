@@ -9,6 +9,14 @@ Item {
     required property PersistentProperties visibilities
     required property var panels
 
+    property real buttressSize: (visibilities.launcher && Config.launcher.enabled) ? Config.appearance.fillet.large : 0
+    Behavior on buttressSize {
+        Anim {
+            duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
+        }
+    }
+
     visible: height > 0
     implicitHeight: 0
     implicitWidth: content.implicitWidth

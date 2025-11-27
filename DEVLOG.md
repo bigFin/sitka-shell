@@ -1,48 +1,37 @@
-# Development Log
+# Devlog
 
-## [2025-11-27] Crash Investigation & Stability Fixes
+## 2025-11-27
 
-### Issue
-- **Source**: Crash log from `/run/user/1000/quickshell/by-id/.../log.qslog`.
-- **Symptoms**: Multiple `TypeError: Value is undefined` exceptions in QML files.
-  - `Workspaces.qml`: Accessing `Niri.focusedWindow.id` when `focusedWindow` was undefined.
-  - `DraggableWindowColumn.qml`: Accessing properties of undefined workspaces or out-of-bounds array indices for grouped windows.
-  - `WindowDecorations.qml`: Accessing properties of `root.client` (the window) when it was null/undefined.
+### Buttress & Drawer Artifacts Investigation
 
-### Investigation & Reasoning
-- **Root Cause**: The QML property bindings were too "eager" and did not account for transient states where the Niri service might return `null` or `undefined` (e.g., during window closing, workspace switching, or initialization).
-- **Impact**: These unhandled TypeErrors caused the Quickshell instance to crash or behave erratically.
+**Status:** Ongoing
+**Current Focus:** Debugging persistent square artifacts and incorrect orientation of Buttress components.
 
-### Changes Applied
-1.  **`modules/bar/components/workspaces/Workspaces.qml`**:
-    - **Fix**: Added a null check for `Niri.focusedWindow` before accessing `.id`.
-    - **Code**: `readonly property int focusedWindowId: Niri.focusedWindow ? Niri.focusedWindow.id : -1`
+**History:**
+1.  **Issue Reported:** "Small square artifacts" left after drawer collapse, and buttresses "incorrectly orientated" (interior to drawer).
+2.  **Hypothesis 1 (Failed):** Race condition between `Buttress` internal animation and `Wrapper` size animation.
+    - **Action:** Refactored `Buttress.qml` to remove internal state/animation. Bound `Buttress.width` directly to a new synchronized `wrapper.buttressSize` property in all wrappers (`bar`, `dashboard`, `launcher`).
+    - **Result:** User reports no change. Squares persist, orientation still wrong.
 
-2.  **`modules/bar/components/workspaces/DraggableWindowColumn.qml`**:
-    - **Fix 1 (Workspace)**: Added a guard check for `Niri.currentOutputWorkspaces[...]` to ensure the workspace exists before calling `getWindowsByWorkspaceId`.
-    - **Fix 2 (Groups)**: Added a fallback object for `fullGroup` (`{ main: null, windows: [], count: 0, id: -1 }`) to prevent crashes if the `Repeater` index is temporarily out of sync with `groupedWindowsArray`.
+**New Findings/Hypothesis:**
+1.  **Persistent Squares:**
+    - The "squares" might be caused by `Canvas` failing to clear/redraw correctly when `width` shrinks, or `visible` property not triggering fast enough.
+    - Since `clearRect` uses the *current* `width`, shrinking the width means we assume the canvas clips or clears the rest. If Qt's `Canvas` implementation retains the backbuffer without clipping, the "old" larger drawing might remain visible if the frame isn't fully cleared.
+    - Alternatively, the `buttressSize` property might not be animating all the way to 0, or the `visible` binding `width > 0` has a threshold issue.
 
-3.  **`components/widgets/WindowDecorations.qml`**:
-    - **Fix**: Applied optional chaining (`?.`) to all instances of `root.client` usage (e.g., `root.client?.is_floating`).
+2.  **Incorrect Orientation:**
+    - User described them as "interior to the drawer".
+    - Current `orientation: 0` (Top-Left) draws a triangle with points `(w,0)`, `(0,0)`, `(w,h)`.
+        - Top edge: Horizontal.
+        - Right edge: Vertical (Against drawer).
+        - Left edge: Diagonal.
+    - If the user sees this as "interior", perhaps the "Buttress" is rendering *over* the drawer (z-ordering?) or the shape logic creates a visual that implies a cutout.
+    - If the intention is to "extend the opened drawer", it implies the shape should bridge the gap.
+    - I need to verify what "orientation 0" actually produces visually vs what is expected.
 
-### Insights for Future Development
-- **Defensive Coding in QML**: When binding to external services like `Niri`, always assume the object might be `null` or `undefined`.
-- **Pattern**: Prefer optional chaining (`?.`) or ternary operators with safe defaults (e.g., `-1`, `false`) for properties derived from service state.
-- **List Models**: Be wary of array indexing in `Repeater` delegates if the underlying model changes frequently; provide fallbacks or checks.
-
-## [2025-11-27] Theming Inconsistency Fix
-
-### Issue
-- **Observation**: The Left Bar and Top Drawer (Dashboard) were rendered with inconsistent transparency compared to the Bottom Drawer (Launcher). The Launcher appeared opaque, while the others were partially transparent or lacked the correct opaque background layer.
-- **Context**: The `Drawers.qml` file manages the overall window and layering for these components.
-
-### Changes Applied
-1.  **`modules/drawers/Drawers.qml`**:
-    - **Fix**: Moved `Dashboard.Background` (Top Drawer) from the transparent `Backgrounds.qml` container into the `opaqueDrawerSurface` item. This ensures it shares the same opaque background rendering context as the `Launcher.Background`.
-    - **Fix**: Moved the `Border` component (Left Bar border) out of the transparent container to the root level of the window, ensuring it is rendered opaquely.
-
-2.  **`modules/drawers/Backgrounds.qml`**:
-    - **Cleanup**: Removed `Dashboard.Background` and its import, as it is now instantiated in `Drawers.qml`.
-
-### Result
-- The Left Bar, Top Drawer, and Bottom Drawer now share a consistent opaque visual style, unifying the shell's appearance.
+**Next Steps:**
+1.  **Research:** Use `codebase_investigator` to verify how `Buttress` is actually anchored and if there are Z-index issues.
+2.  **Experiment:**
+    - Force `Canvas` to clear the entire *previous* bounds before repainting, or use a simpler `Item` based shape (like `Shape` or `Rectangle` with rotation/clipping) to avoid Canvas rendering bugs.
+    - Add debug logging to `Buttress.qml` to track `width` and `onPaint`.
+    - Review the coordinate geometry in `Buttress.qml` carefully.

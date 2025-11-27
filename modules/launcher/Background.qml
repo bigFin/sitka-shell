@@ -47,7 +47,7 @@ Item {
         color: mainRect.color
         anchors.right: parent.left
         anchors.bottom: parent.bottom
-        active: root.wrapper.visibilities.launcher
+        width: root.wrapper.buttressSize
     }
     
     // Bottom-right Buttress
@@ -58,6 +58,6 @@ Item {
         color: mainRect.color
         anchors.left: parent.right
         anchors.bottom: parent.bottom
-        active: root.wrapper.visibilities.launcher
+        width: root.wrapper.buttressSize
     }
 }

@@ -25,6 +25,15 @@ Item {
     property string queuedMode
     readonly property bool isDetached: detachedMode.length > 0
 
+    // Synchronized buttress animation
+    property real buttressSize: (hasCurrent && !isDetached) ? Config.appearance.fillet.large : 0
+    Behavior on buttressSize {
+        Anim {
+            duration: root.animLength
+            easing.bezierCurve: root.animCurve
+        }
+    }
+
     property int animLength: Config.appearance.anim.durations.normal
     property list<real> animCurve: Config.appearance.anim.curves.emphasized
 

@@ -15,7 +15,7 @@ Item {
     // Match wrapper dimensions explicitly
     width: wrapper.width
     height: wrapper.height
-    visible: height > 0 // Hide completely when collapsed to prevent artifacts
+    visible: height > 0 && wrapper.buttressSize > 0.5 // Hide completely when collapsed to prevent artifacts
 
     // Main Background Rectangle
     StyledRect {

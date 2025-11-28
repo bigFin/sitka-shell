@@ -86,7 +86,7 @@ ColumnLayout {
             const workspaceId = root.client?.workspace_id;
             if (workspaceId !== undefined && workspaceId !== null) {
                 // Find the workspace object in Niri's list
-                const ws = Niri.currentOutputWorkspaces.find(w => w.id === workspaceId);
+                const ws = Niri.currentOutputWorkspaces ? Niri.currentOutputWorkspaces.find(w => w.id === workspaceId) : null;
                 return qsTr("Workspace: %1 (%2)").arg(ws?.name ?? "unknown").arg(workspaceId);
             }
             return qsTr("Workspace: unknown");
@@ -97,11 +97,12 @@ ColumnLayout {
     Detail {
         icon: "desktop_windows"
         text: {
-            const mon = Niri.outputs[Niri.focusedMonitorName];
-            const modes = Niri.outputs[Niri.focusedMonitorName].modes[0];
+            const mon = Niri.outputs ? Niri.outputs[Niri.focusedMonitorName] : null;
 
-            if (mon)
+            if (mon && mon.modes && mon.modes[0]) {
+                const modes = mon.modes[0];
                 return qsTr("Monitor: %1 (%3px x %4px) @(%2) #(%5)").arg(mon.name).arg(modes.refresh_rate).arg(modes.width).arg(modes.height).arg(mon.logical.scale);
+            }
             return qsTr("Monitor: unknown");
         }
     }

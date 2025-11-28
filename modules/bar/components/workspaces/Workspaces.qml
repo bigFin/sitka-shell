@@ -17,7 +17,7 @@ StyledRect {
     filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
 
     readonly property int activeWsId: Niri.focusedWorkspaceIndex + 1
-    readonly property var occupied: Niri.workspaceHasWindows
+    readonly property var occupied: (Niri && Niri.workspaceHasWindows) ? Niri.workspaceHasWindows : ({})
     readonly property int groupOffset: Math.floor((Niri.focusedWorkspaceIndex) / Config.bar.workspaces.shown) * Config.bar.workspaces.shown
 
     readonly property int focusedWindowId: Niri.focusedWindow ? Niri.focusedWindow.id : -1

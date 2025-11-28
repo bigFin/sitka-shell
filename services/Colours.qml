@@ -75,9 +75,9 @@ Singleton {
         current.m3onSurface = paletteSource.fg;
         
         if (themeName === "EverforestLight") {
-            current.m3primary = paletteSource.green;
+            current.m3primary = paletteSource.fg1;
             current.m3secondary = paletteSource.blue;
-            current.m3tertiary = paletteSource.yellow;
+            current.m3tertiary = paletteSource.fg1;
         } else {
             current.m3primary = paletteSource.red;
             current.m3secondary = paletteSource.green;
@@ -262,37 +262,37 @@ Singleton {
 
     component EverforestLightPalette: QtObject {
         // Everforest Light theme colors
-        property color bg: "#fdf6e3"
+        property color bg: "#fffbef"
         property color fg: "#5c6a72"
-        property color bg0: "#fdf6e3"
-        property color bg1: "#f3ead3"
-        property color bg2: "#edeada"
-        property color bg3: "#e6dfc4"
-        property color bg4: "#dfd8c1"
-        property color bg5: "#d8d1bd"
-        property color bg_visual: "#e6dfc4"
-        property color bg_red: "#e8c4c4"
-        property color bg_green: "#d0e8c8"
-        property color bg_blue: "#c8d8e8"
-        property color bg_yellow: "#e8dcc4"
+        property color bg0: "#fffbef"
+        property color bg1: "#f8f5e4"
+        property color bg2: "#f3efda"
+        property color bg3: "#edeada"
+        property color bg4: "#e6dfc4"
+        property color bg5: "#dfd8c1"
+        property color bg_visual: "#f0f2d4"
+        property color bg_red: "#ffe7de"
+        property color bg_green: "#eff0f2"
+        property color bg_blue: "#e5eff5"
+        property color bg_yellow: "#fae7b2"
         property color fg0: "#5c6a72"
         property color fg1: "#526068"
         property color fg2: "#4a555b"
         property color fg3: "#424a50"
-        property color red: "#f85552"
-        property color orange: "#f57d26"
-        property color yellow: "#dfa000"
-        property color green: "#8da101"
-        property color cyan: "#35a77c"
-        property color blue: "#3a94c5"
-        property color purple: "#df69ba"
-        property color aqua: "#4db899"
-        property color grey0: "#a6b0a0"
-        property color grey1: "#939f91"
-        property color grey2: "#828e80"
-        property color statusline1: "#d0d8c8"
-        property color statusline2: "#e0e8d8"
-        property color statusline3: "#f0f8e8"
+        property color red: "#e67e80"
+        property color orange: "#e69875"
+        property color yellow: "#dbbc7f"
+        property color green: "#a7c080"
+        property color cyan: "#83c092"
+        property color blue: "#7fbbb3"
+        property color purple: "#d699b6"
+        property color aqua: "#83c092"
+        property color grey0: "#9da9a0"
+        property color grey1: "#859289"
+        property color grey2: "#7a8478"
+        property color statusline1: "#93b259"
+        property color statusline2: "#a7c080"
+        property color statusline3: "#d3c6aa"
     }
 
     component EverforestDarkPalette: QtObject {

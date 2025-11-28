@@ -31,13 +31,21 @@ Item {
     property bool isWsFocused: root.activeWsId === root.ws
 
     property var wsWindows: {
-        const niriWorkspace = Niri.currentOutputWorkspaces[root.idx + root.groupOffset];
+        if (!Niri || !Niri.currentOutputWorkspaces) return [];
+        const index = root.idx + root.groupOffset;
+        if (index < 0 || index >= Niri.currentOutputWorkspaces.length) return [];
+
+        const niriWorkspace = Niri.currentOutputWorkspaces[index];
         if (!niriWorkspace) return [];
         return Niri.getWindowsByWorkspaceId(niriWorkspace.id);
     }
 
     function updateGroupedWindowsModel() {
-        const niriWorkspace = Niri.currentOutputWorkspaces[root.idx + root.groupOffset];
+        if (!Niri || !Niri.currentOutputWorkspaces) return;
+        const index = root.idx + root.groupOffset;
+        if (index < 0 || index >= Niri.currentOutputWorkspaces.length) return;
+
+        const niriWorkspace = Niri.currentOutputWorkspaces[index];
         if (!niriWorkspace)
             return;
 

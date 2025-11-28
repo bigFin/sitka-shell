@@ -31,7 +31,7 @@ Item {
         text: "push_pin"
         rotation: Config.bar.persistent ? 0 : 45
 
-        color: Config.bar.persistent ? Colours.palette.primary : Colours.palette.onSurfaceVariant
+        color: Config.bar.persistent ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
         font.pointSize: Config.appearance.font.size.normal
         
         Behavior on rotation {

@@ -4,38 +4,26 @@
 
 ### Buttress & Drawer Artifacts Investigation
 
-**Status:** Ongoing
-**Current Focus:** resolving "persistent squares" and "incorrect orientation" and "drawing over top".
+**Status:** Completed
+**Focus:** Resolving rendering artifacts and orientation issues with Buttress components.
 
-**History:**
-1.  **Issue:** Persistent square artifacts; Buttress orientation "interior".
-2.  **Attempt 1 (Sync):** Failed.
-3.  **Attempt 2 (Shape):** Failed.
-4.  **Attempt 3 (Shape + Visible):** Failed.
+**Summary of Fixes:**
+1.  **Persistent Square Artifacts:**
+    - **Root Cause:** Un-filleted (square) corners of the drawer background (`StyledRect`) remained visible when the covering `Buttress` shrank to 0 width.
+    - **Resolution:** Updated `Background.qml` files for Dashboard, Launcher, and Bar Popouts to strictly synchronize the entire background's visibility with `wrapper.buttressSize > 0.5`.
 
-**New Findings/Hypothesis:**
-1.  **"Drawing over top":**
-    - User reports Buttress draws *over* the left bar.
-    - This implies `Buttress` (attached to Drawer) has a higher Z-index than the Bar, and physically overlaps it.
-    - If `anchors.right: parent.left` (Drawer Left), and Drawer is adjacent to Bar, the Buttress (width > 0) extends *into* the Bar's space.
-    - Overlap + Higher Z-index = Obscures Bar.
+2.  **Closing Flash Artifacts:**
+    - **Root Cause:** Sub-pixel rendering of the square corner before the visibility toggle kicked in.
+    - **Resolution:** Increased visibility threshold from `> 0` to `> 0.5` to hide the drawer slightly earlier in the animation.
 
-2.  **"Persistent Squares":**
-    - Even with `visible: width > 1` and `Shape`, user sees squares.
-    - This suggests either:
-        - `width` is not reaching 0.
-        - There is *another* component creating the square (e.g., a background in `Background.qml` or `Wrapper.qml` that I missed).
-        - The "Square" is the Buttress itself rendering fully rectangular despite the Path (unlikely with Shape, unless Path is wrong).
+3.  **Rendering Quality:**
+    - **Resolution:** Refactored `components/effects/Buttress.qml` from `Canvas` to `QtQuick.Shapes` to eliminate texture caching issues and improve performance.
 
-3.  **"Interior to the drawer":**
-    - User says they are "interior".
-    - If the Drawer is translucent or has a border, and the Buttress is opaque?
-    - Or maybe "interior" means the shape is inverted?
-    - If I draw `\` (Top-Left to Bottom-Right), it cuts *away* the top-left corner of the rectangular bounding box.
-    - If the user expects `/` (Bottom-Left to Top-Right) to flair *out* to the bar?
+4.  **Incorrect Orientation (Left Bar):**
+    - **Root Cause:** Buttresses were anchored to the *side* of the drawer, but the visual goal was to ease the vertical transition.
+    - **Resolution:** Re-anchored Top/Bottom buttresses to sit *above* and *below* the drawer respectively (`anchors.bottom: parent.top` / `anchors.top: parent.bottom`), creating a vertical fillet that bridges the app drawer edge to the left bar.
 
-**Next Steps:**
-1.  **Investigate Z-Order:** Check `modules/drawers/Drawers.qml` and `modules/bar/BarWrapper.qml` to see relative layering.
-2.  **Investigate Buttress Color/Style:** Ensure it matches the Bar/Drawer correctly.
-3.  **Debug Logs:** Add logging to `Buttress.qml` to track its lifecycle, width, and visibility.
-4.  **Verify Orientation:** Re-evaluate the `orientation` logic.
+**Result:**
+- Artifacts are gone.
+- Orientation is correct (vertical easing).
+- Animations are smooth without flashes.

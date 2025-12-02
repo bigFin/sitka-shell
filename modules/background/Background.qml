@@ -24,7 +24,7 @@ Loader {
             name: "background"
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
             WlrLayershell.layer: WlrLayer.Background
-            color: "black"
+            color: Wallpapers.current ? "black" : "transparent"
 
             anchors.top: true
             anchors.bottom: true

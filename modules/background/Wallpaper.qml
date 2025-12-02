@@ -28,7 +28,7 @@ Item {
     Loader {
         anchors.fill: parent
 
-        active: !root.source
+        active: false // !root.source
         asynchronous: true
 
         sourceComponent: StyledRect {

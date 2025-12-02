@@ -20,7 +20,7 @@ PipeWireWorker::PipeWireWorker(std::stop_token token, AudioCollector* collector)
     , m_idle(true)
     , m_token(token)
     , m_collector(collector) {
-    pw_init(nullptr, nullptr);
+    // pw_init(nullptr, nullptr);
 
     m_loop = pw_main_loop_new(nullptr);
     if (!m_loop) {
@@ -75,7 +75,7 @@ PipeWireWorker::PipeWireWorker(std::stop_token token, AudioCollector* collector)
 
     pw_stream_destroy(m_stream);
     pw_main_loop_destroy(m_loop);
-    pw_deinit();
+    // pw_deinit();
 }
 
 void PipeWireWorker::handleTimeout(void* data, uint64_t expirations) {

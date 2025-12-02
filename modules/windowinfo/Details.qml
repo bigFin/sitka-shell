@@ -59,7 +59,7 @@ ColumnLayout {
     Detail {
         icon: "location_on"
         property var adress: root.client?.layout.pos_in_scrolling_layout
-        text: qsTr("Address: %1, %2").arg(adress[0] ?? -1).arg(adress[1] ?? -1)
+        text: qsTr("Address: %1, %2").arg(adress?.[0] ?? -1).arg(adress?.[1] ?? -1)
         color: Colours.palette.m3primary
     }
     Loader {

@@ -132,11 +132,11 @@ StyledRect {
 
                 // Get windows for the current workspace and sort them by layout position
                 // This matches the sorting logic used in Workspace.qml
-                const wsWindows = Niri.getActiveWorkspaceWindows().sort((a, b) => {
-                    const aCol = a.layout?.pos_in_scrolling_layout[0] ?? 0;
-                    const bCol = b.layout?.pos_in_scrolling_layout[0] ?? 0;
-                    const aRow = a.layout?.pos_in_scrolling_layout[1] ?? 0;
-                    const bRow = b.layout?.pos_in_scrolling_layout[1] ?? 0;
+                 const wsWindows = Niri.getActiveWorkspaceWindows().sort((a, b) => {
+                     const aCol = a.layout?.pos_in_scrolling_layout?.[0] ?? 0;
+                     const bCol = b.layout?.pos_in_scrolling_layout?.[0] ?? 0;
+                     const aRow = a.layout?.pos_in_scrolling_layout?.[1] ?? 0;
+                     const bRow = b.layout?.pos_in_scrolling_layout?.[1] ?? 0;
 
                     if (aCol !== bCol) {
                         return aCol - bCol;

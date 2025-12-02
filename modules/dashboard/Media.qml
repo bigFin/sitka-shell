@@ -73,7 +73,7 @@ Item {
         anchors.fill: cover
         anchors.margins: -Config.dashboard.sizes.mediaVisualiserSize
 
-        asynchronous: true
+        asynchronous: false
         preferredRendererType: Shape.CurveRenderer
         data: visualiserBars.instances
     }
@@ -545,7 +545,7 @@ Item {
         readonly property string icon: Icons.getAppIcon(player?.identity)
 
         Layout.fillHeight: true
-        asynchronous: true
+        asynchronous: false
         sourceComponent: !player || icon === "image://icon/" ? fallbackIcon : playerImage
 
         Component {

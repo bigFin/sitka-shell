@@ -16,7 +16,7 @@ Item {
     property bool expanded: false
     property bool isvisible: false
 
-    property real buttressSize: (visibilities.dashboard || expanded) ? Config.appearance.fillet.large : 0
+    property real buttressSize: (visibilities.dashboard || expanded || isvisible) ? Config.appearance.fillet.large : 0
     Behavior on buttressSize {
         Anim {
             duration: Config.appearance.anim.durations.expressiveDefaultSpatial

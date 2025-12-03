@@ -5,6 +5,8 @@ import "../../config"
 import qs.utils
 import Quickshell
 import Quickshell.Io
+import Quickshell.Widgets
+import Sitka
 import QtQuick
 
 Item {

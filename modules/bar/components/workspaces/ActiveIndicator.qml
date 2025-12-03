@@ -7,7 +7,7 @@ import QtQuick
 StyledRect {
     id: root
 
-    required property int activeWsId
+    required property int activeWsIndex
     required property Repeater workspaces
     required property Item mask
     required property int groupOffset
@@ -16,7 +16,7 @@ StyledRect {
     filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.small : 2
 
     readonly property int currentWsIdx: {
-        let i = activeWsId - 1;
+        let i = activeWsIndex;
         while (i < 0)
             i += Config.bar.workspaces.shown;
         return i % Config.bar.workspaces.shown;
@@ -103,13 +103,11 @@ StyledRect {
             };
         }
 
-        sourceComponent: Rectangle {
+        sourceComponent: StyledRect {
             id: activeWindowIndicator
             height: Niri.focusedWindowId ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.small + Config.bar.workspaces.windowIconGap * 2 : 0
             color: Colours.palette.m3primary
-            radius: 0
-            // bottomRightRadius: root.isContextActiveInWs ? Config.appearance.rounding.large : radius
-            // topRightRadius: root.isContextActiveInWs ? Config.appearance.rounding.large : radius
+            filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.small : 2
             anchors.horizontalCenter: parent.horizontalCenter
 
             y: computeFocusedY()
@@ -119,9 +117,6 @@ StyledRect {
                 Anim {}
             }
             Behavior on height {
-                Anim {}
-            }
-            Behavior on radius {
                 Anim {}
             }
 

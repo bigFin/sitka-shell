@@ -1,5 +1,6 @@
 import qs.components
 import qs.components.containers
+import qs.components.filedialog
 import qs.services
 import "../../config"
 import qs.utils
@@ -19,8 +20,6 @@ Item {
         recursive: true
     }
 
-    Component.onCompleted: console.log("BackgroundPane instantiated")
-
     StyledFlickable {
         anchors.fill: parent
         contentHeight: contentCol.height
@@ -39,6 +38,7 @@ Item {
                 font.pointSize: Config.appearance.font.size.large
             }
 
+            // Use System Background Button
             StyledRect {
                 width: parent.width
                 height: 50
@@ -68,6 +68,44 @@ Item {
                 }
             }
 
+            // Browse Button
+            StyledRect {
+                width: parent.width
+                height: 50
+                radius: Config.appearance.rounding.normal
+                color: Colours.palette.m3surfaceContainerHigh
+                
+                FileDialog {
+                     id: fileDialog
+                     title: qsTr("Select a wallpaper")
+                     filterLabel: qsTr("Image files")
+                     filters: Images.validImageExtensions
+                     onAccepted: path => Wallpapers.setWallpaper(path)
+                }
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: Config.appearance.spacing.normal
+                    
+                    MaterialIcon {
+                        text: "folder_open"
+                        color: Colours.palette.m3primary
+                        font.pointSize: Config.appearance.font.size.large
+                    }
+                    
+                    StyledText {
+                        text: qsTr("Browse Files...")
+                        font.bold: true
+                        color: Colours.palette.m3onSurface
+                    }
+                }
+
+                StateLayer {
+                    radius: parent.radius
+                    onClicked: fileDialog.open()
+                }
+            }
+
             StyledText {
                 text: qsTr("Default Wallpapers")
                 font.bold: true
@@ -83,12 +121,11 @@ Item {
                     width: parent.width
                     height: 150
                     
-                    // Add spacing between items
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     StyledRect {
                         anchors.fill: parent
-                        anchors.margins: 2 // small margin
+                        anchors.margins: 2 
                         color: "transparent"
                         radius: Config.appearance.rounding.normal
                         clip: true

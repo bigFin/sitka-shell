@@ -40,37 +40,42 @@ Item {
         bottomRightFillet: effectiveEnabled
     }
 
-    ColumnLayout {
-        id: layout
-
-        spacing: 0
-        y: -root.session.activeIndex * root.height
-        width: parent.width
-        // Height matches content
-
-        Pane {
-            index: 0
-            sourceComponent: BtPane {
-                session: root.session
-            }
-        }
-
-        Pane {
-            index: 1
-            sourceComponent: Component { BackgroundPane {} }
-        }
-
-        Behavior on y {
-            Anim {}
-        }
+    Item {
+        id: viewport
+        anchors.fill: parent
         
-        layer.enabled: true
+        // layer.enabled: true
         layer.effect: MultiEffect {
             maskSource: mask
             maskEnabled: true
             maskInverted: false
             maskThresholdMin: 0.5
             maskSpreadAtMin: 1
+        }
+
+        ColumnLayout {
+            id: layout
+
+            spacing: 0
+            y: -root.session.activeIndex * root.height
+            width: parent.width
+            // Height matches content
+
+            Pane {
+                index: 0
+                sourceComponent: BtPane {
+                    session: root.session
+                }
+            }
+
+            Pane {
+                index: 1
+                source: "BackgroundPane.qml"
+            }
+
+            Behavior on y {
+                Anim {}
+            }
         }
     }
 
@@ -79,6 +84,7 @@ Item {
 
         required property int index
         property alias sourceComponent: loader.sourceComponent
+        property alias source: loader.source
 
         implicitWidth: root.width
         implicitHeight: root.height

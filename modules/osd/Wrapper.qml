@@ -10,6 +10,14 @@ Item {
     required property ShellScreen screen
     required property var visibilities
 
+    property real buttressSize: (visibilities.osd && Config.osd.enabled) ? Config.appearance.fillet.large : 0
+    Behavior on buttressSize {
+        Anim {
+            duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
+        }
+    }
+
     visible: width > 0
     implicitWidth: 0
     implicitHeight: content.implicitHeight

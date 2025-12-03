@@ -21,7 +21,7 @@ Searcher {
 
     function setWallpaper(path: string): void {
         actualCurrent = path;
-        Quickshell.execDetached(["swww", "img", path, "--transition-type", "grow", "--transition-pos", "0.5,0.5"]);
+        Quickshell.execDetached(["bash", "-c", `echo -n "${path}" > "${currentNamePath}"`]);
     }
 
     function preview(path: string): void {

@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.services
 import "../../../../config"
 import qs.components
+import Quickshell
 import QtQuick
 import QtQuick.Layouts
 
@@ -11,14 +12,26 @@ import "context"
 StyledRect {
     id: root
 
-    // required property ShellScreen screen
+    required property ShellScreen screen
     
     // Apply large fillets for primary elements
     filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
 
-    readonly property int activeWsId: Niri.focusedWorkspaceIndex + 1
+    // Filter workspaces for this screen
+    readonly property var myWorkspaces: Niri.allWorkspaces.filter(w => w.output === root.screen.name).sort((a, b) => a.idx - b.idx)
+    
+    // Active index within the filtered list
+    readonly property int activeWsIndex: {
+        const idx = myWorkspaces.findIndex(w => w.id == Niri.focusedWorkspaceId);
+        return idx; // Returns -1 if focused workspace is not on this screen
+    }
+
+    readonly property int activeWsId: Number(Niri.focusedWorkspaceId) || 0
+
     readonly property var occupied: (Niri && Niri.workspaceHasWindows) ? Niri.workspaceHasWindows : ({})
-    readonly property int groupOffset: Math.floor((Niri.focusedWorkspaceIndex) / Config.bar.workspaces.shown) * Config.bar.workspaces.shown
+    // Paging not fully implemented for multi-monitor yet, assuming fit-all or use existing logic if needed. 
+    // For now using simple list.
+    readonly property int groupOffset: 0 
 
     readonly property int focusedWindowId: Niri.focusedWindow ? Niri.focusedWindow.id : -1
 
@@ -70,30 +83,15 @@ StyledRect {
         }
     }
 
-    //TODO, For Niri, workspace context menu on right click.
-    // Loader {
-    //     active: Config.bar.workspaces.windowRighClickContext && Niri.wsContextType !== "none"
-    //     asynchronous: true
-    //     z: Niri.wsContextType === "item" ? 10 : 1
-
-    //     anchors.right: parent.right
-    //     anchors.rightMargin: -Config.appearance.padding.small
-
-    //     sourceComponent: ContextIndicator {
-    //         groupOffset: root.groupOffset
-    //         wsOffset: root.y
-    //         anchorWs: Niri.wsContextAnchor
-    //     }
-    // }
-
     Loader {
         anchors.left: parent.left
         anchors.right: parent.right
-        active: Config.bar.workspaces.activeIndicator
+        // Only show indicator if the active workspace is on this screen
+        active: Config.bar.workspaces.activeIndicator && root.activeWsIndex >= 0
         asynchronous: true
 
         sourceComponent: ActiveIndicator {
-            activeWsId: root.activeWsId
+            activeWsIndex: root.activeWsIndex
             workspaces: workspaces
             mask: layout
             groupOffset: root.groupOffset
@@ -113,9 +111,12 @@ StyledRect {
         Repeater {
             id: workspaces
 
-            model: Config.bar.workspaces.shown > Niri.getWorkspaceCount() ? Niri.getWorkspaceCount() : Config.bar.workspaces.shown
+            model: root.myWorkspaces
 
             Workspace {
+                required property var modelData
+                workspaceData: modelData
+                
                 activeWsId: root.activeWsId
                 occupied: root.occupied
                 groupOffset: root.groupOffset

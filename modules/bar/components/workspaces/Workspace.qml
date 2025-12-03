@@ -9,6 +9,7 @@ import QtQuick.Layouts
 ColumnLayout {
     id: root
 
+    required property var workspaceData
     required property int index
     required property var occupied
     required property int groupOffset
@@ -19,9 +20,15 @@ ColumnLayout {
 
     readonly property bool isWorkspace: true // Flag for finding workspace children
     readonly property int size: isWorkspace ? implicitHeight + (hasWindows ? Config.appearance.padding.small : 0) : 0
-    readonly property int ws: groupOffset + index + 1
-    readonly property bool isOccupied: occupied[ws] ?? false
+    
+    readonly property int wsIdx: workspaceData.idx
+    readonly property int wsId: workspaceData.id
+    readonly property int ws: wsIdx // Alias for compatibility with other components expecting 'ws'
+    
+    readonly property bool isOccupied: occupied[wsIdx] ?? false
     readonly property bool hasWindows: isOccupied && Config.bar.workspaces.showWindows
+
+    // Component.onCompleted: console.log(`Workspace Component: idx=${wsIdx}, id=${wsId}, activeWsId=${activeWsId}`)
 
     // To make the windows repopulate, for Niri.
     // onGroupOffsetChanged: {
@@ -63,6 +70,7 @@ ColumnLayout {
             id: dragDropLayout
             spacing: 0
 
+            workspaceData: root.workspaceData
             workspace: root
             focusedWindowId: root.focusedWindowId
             activeWsId: root.activeWsId

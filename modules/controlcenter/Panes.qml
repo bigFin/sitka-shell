@@ -57,7 +57,7 @@ Item {
 
         Pane {
             index: 1
-            sourceComponent: BackgroundPane {}
+            sourceComponent: Component { BackgroundPane {} }
         }
 
         Behavior on y {

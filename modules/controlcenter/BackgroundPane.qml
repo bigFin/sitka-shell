@@ -11,12 +11,15 @@ import QtQuick
 
 Item {
     id: root
+    anchors.fill: parent
 
     property FileSystemModel defaultWallpapersModel: FileSystemModel {
         path: Paths.config + "/Images"
         filter: FileSystemModel.Images
         recursive: true
     }
+
+    Component.onCompleted: console.log("BackgroundPane instantiated")
 
     StyledFlickable {
         anchors.fill: parent

@@ -19,7 +19,7 @@ StyledRect {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
 
-        text: qsTr("Caelestia Settings - %1").arg(root.session.active)
+        text: qsTr("Sitka Settings - %1").arg(root.session.active)
         font.capitalization: Font.Capitalize
         font.pointSize: Config.appearance.font.size.larger
         font.weight: 500

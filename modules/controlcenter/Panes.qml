@@ -57,7 +57,7 @@ Item {
 
         Pane {
             index: 1
-            sourceComponent: backgroundSwitcherPane
+            sourceComponent: BackgroundPane {}
         }
 
         Behavior on y {
@@ -71,108 +71,6 @@ Item {
             maskInverted: false
             maskThresholdMin: 0.5
             maskSpreadAtMin: 1
-        }
-    }
-
-    property FileSystemModel backgroundSwitcherModel: FileSystemModel {
-        path: Paths.wallsdir
-        filter: FileSystemModel.Images
-        recursive: true
-    }
-
-    property FileSystemModel defaultWallpapersModel: FileSystemModel {
-        path: Paths.absolutePath("root:/config/Images")
-        filter: FileSystemModel.Images
-        recursive: true
-    }
-
-    component BackgroundSwitcherPane: Item {
-        id: switcher
-
-        StyledFlickable {
-            anchors.fill: parent
-            contentHeight: contentCol.height
-            clip: true
-
-            Column {
-                id: contentCol
-                width: parent.width
-                spacing: Config.appearance.spacing.normal
-                padding: Config.appearance.padding.large
-
-                StyledText {
-                    text: qsTr("Default Wallpapers")
-                    font.bold: true
-                    color: Colours.palette.m3onSurface
-                    font.pointSize: Config.appearance.font.size.large
-                }
-
-                Repeater {
-                    model: root.defaultWallpapersModel.entries
-
-                    delegate: Item {
-                        width: parent.width
-                        height: 150
-
-                        StyledRect {
-                            anchors.fill: parent
-                            color: "transparent"
-                            radius: Config.appearance.rounding.normal
-                            clip: true
-
-                            Image {
-                                anchors.fill: parent
-                                source: modelData.filePath
-                                fillMode: Image.PreserveAspectCrop
-                            }
-
-                            StateLayer {
-                                radius: parent.radius
-                                onClicked: {
-                                    Wallpapers.setWallpaper(modelData.filePath);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                StyledText {
-                    text: qsTr("User Wallpapers")
-                    font.bold: true
-                    color: Colours.palette.m3onSurface
-                    font.pointSize: Config.appearance.font.size.large
-                    topPadding: Config.appearance.padding.large
-                }
-
-                Repeater {
-                    model: root.backgroundSwitcherModel.entries
-
-                    delegate: Item {
-                        width: parent.width
-                        height: 150
-
-                        StyledRect {
-                            anchors.fill: parent
-                            color: "transparent"
-                            radius: Config.appearance.rounding.normal
-                            clip: true
-
-                            Image {
-                                anchors.fill: parent
-                                source: modelData.filePath
-                                fillMode: Image.PreserveAspectCrop
-                            }
-
-                            StateLayer {
-                                radius: parent.radius
-                                onClicked: {
-                                    Wallpapers.setWallpaper(modelData.filePath);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 

@@ -1,4 +1,4 @@
-<h1 align=center>🌌 Sitka Shell</h1>
+<h1 align=center>🌲 Sitka Shell</h1>
 
 <div align=center>
 
@@ -26,38 +26,7 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 ---
 
 ## ✨ What’s Different in This Fork?
-
-Replaces **`Hyprland`** with **`Niri`** as the window manager.
-Removes declarative dotfiles management in favor of a standalone shell.
-
-### `Dashboard`
-
-  - Window switch popup
-    * [x] Dashboard is now opened after clicking on the popup instead of completely popping up and taking up half the screen.
-    * [ ] Window decorations for pinning, hovering window, toggling fullscreen, and closing the window.
-
-  - Experimental Niri management tab in dashboard
-    * [x] Niri IPC command buttons for focused workspace
-    * [ ] Needs re-design
-
-### `Sidebar`
-
-- Workspace bar refactor (WIP)
-  * [x] Program Icon support instead of Material Font
-  * [x] Switch to window by clicking
-  * [x] Right click context menu
-    * [ ] Allow performing Niri IPC operations in context menu
-  * [x] Reorder window in workspace by drag&drop
-  * [x] Grouping windows of same program
-  * [x] Layout sensitive icons
-  * [ ] Needs rewrite
-
-### `Misc`
-- * [x]  Niri event parser for Quickshell
-- * [x]  Task manager (GPU/CPU/Memory monitoring, still improving)
-- * [x]  Collapsible container UI element
-- * [ ]  Application dock
-- * [ ]  Searching programs in Niri overview
+Tactical angular aesthetic fork of Caelestia Shell. Still an early WIP focued on Niri, support for both Hyprland and Niri ipc is in the works. 
 
 ---
 
@@ -148,13 +117,7 @@ Then simply build and install using `cmake`.
 3. Build:
 
     ```sh
-    cd $XDG_CONFIG_HOME/quickshell/sitka-shell
-    cmake -B build -G Ninja \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_INSTALL_PREFIX=$HOME \
-      -DINSTALL_QSCONFDIR=$HOME/.config/quickshell/sitka-shell
-    cmake --build build
-    cmake --install build
+    nix build
     ```
 
 ### 🔃 Updating
@@ -195,7 +158,7 @@ All IPC commands can be called via `quickshell -c sitka-shell ipc call ...`
 
 * Example shortcut in `config.kdl` to toggle the launcher drawer:
     ```sh
-    Mod+Space { spawn  "qs" "-c" "sitka-shell" "ipc" "call" "drawers" "toggle" "launcher"; }
+    Mod+D { spawn  "qs" "-c" "sitka-shell" "ipc" "call" "drawers" "toggle" "launcher"; }
     ```
 
 <br>

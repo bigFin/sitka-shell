@@ -18,6 +18,8 @@ class PipeWireWorker {
 public:
     explicit PipeWireWorker(std::stop_token token, AudioCollector* collector);
 
+    void run();
+
 private:
     pw_main_loop* m_loop;
     pw_stream* m_stream;
@@ -59,9 +61,10 @@ private:
     inline static std::mutex s_mutex;
 
     std::jthread m_thread;
-    std::vector<float> m_frontBuffer;
-    std::vector<float> m_backBuffer;
-    std::mutex m_bufferMutex;
+    std::vector<float> m_buffer1;
+    std::vector<float> m_buffer2;
+    std::atomic<std::vector<float>*> m_readBuffer;
+    std::atomic<std::vector<float>*> m_writeBuffer;
     uint32_t m_sampleCount;
 
     const uint32_t m_sampleRate;

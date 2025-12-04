@@ -144,6 +144,20 @@ The shell can be started via the `quickshell -c sitka-shell -n` command or `qs -
    spawn-at-startup "quickshell" "-c" "sitka-shell" "-n"
    ```
 
+#### 🐧 Running on Non-NixOS Systems (Arch, Fedora, etc.)
+
+Binaries built with Nix link against Nix store libraries, which can cause OpenGL/driver issues on other distros. To fix this, use the `arch` flake output, which wraps the shell with `nixGL`:
+
+```sh
+nix run github:sitka-shell/sitka-shell#arch --impure
+```
+
+*   Example line for niri `config.kdl` on Arch Linux:
+
+    ```kdl
+    spawn-at-startup "nix" "run" "github:sitka-shell/sitka-shell#arch" "--impure"
+    ```
+
 ### Custom Shortcuts/IPC
 
 All keybinds are accessible via [Quickshell IPC msg](https://quickshell.org/docs/v0.1.0/types/Quickshell.Io/IpcHandler/).

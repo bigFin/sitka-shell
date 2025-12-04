@@ -18,6 +18,7 @@ qt_add_qml_module(sitka
         audiocollector.hpp audiocollector.cpp
         audioprovider.hpp audioprovider.cpp
         cavaprovider.hpp cavaprovider.cpp
+        desktopdatabase.hpp desktopdatabase.cpp
 )
 
 qt_query_qml_module(sitka

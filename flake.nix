@@ -8,6 +8,11 @@
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixgl = {
+      url = "github:guibou/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -33,6 +38,11 @@
         app2unit = pkgs.callPackage ./nix/app2unit.nix {inherit pkgs;};
       };
       debug = sitka-shell.override {debug = true;};
+
+      arch = pkgs.writeShellScriptBin "sitka-shell" ''
+        exec ${inputs.nixgl.packages.${pkgs.system}.nixGLDefault}/bin/nixGL ${sitka-shell}/bin/sitka-shell "$@"
+      '';
+
       default = sitka-shell;
     });
 

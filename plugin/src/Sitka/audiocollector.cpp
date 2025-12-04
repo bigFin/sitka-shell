@@ -20,12 +20,11 @@ PipeWireWorker::PipeWireWorker(std::stop_token token, AudioCollector* collector)
     , m_idle(true)
     , m_token(token)
     , m_collector(collector) {
-    
-    qInfo() << "PipeWireWorker: Starting audio collection thread";
+    // pw_init(nullptr, nullptr);
 
     m_loop = pw_main_loop_new(nullptr);
     if (!m_loop) {
-        qWarning() << "PipeWireWorker: failed to create PipeWire main loop";
+        qWarning() << "PipeWireWorker::init: failed to create PipeWire main loop";
         return;
     }
 
@@ -66,28 +65,17 @@ PipeWireWorker::PipeWireWorker(std::stop_token token, AudioCollector* collector)
     };
 
     m_stream = pw_stream_new_simple(pw_main_loop_get_loop(m_loop), "sitka-shell", props, &events, this);
-    if (!m_stream) {
-        qWarning() << "PipeWireWorker: failed to create PipeWire stream";
-        pw_main_loop_destroy(m_loop);
-        return;
-    }
 
-    if (pw_stream_connect(m_stream, PW_DIRECTION_INPUT, PW_ID_ANY,
-            static_cast<pw_stream_flags>(
-                PW_STREAM_FLAG_AUTOCONNECT | PW_STREAM_FLAG_MAP_BUFFERS | PW_STREAM_FLAG_RT_PROCESS),
-            params, 1) < 0) {
-        qWarning() << "PipeWireWorker: failed to connect PipeWire stream";
-        pw_stream_destroy(m_stream);
-        pw_main_loop_destroy(m_loop);
-        return;
-    }
+    pw_stream_connect(m_stream, PW_DIRECTION_INPUT, PW_ID_ANY,
+        static_cast<pw_stream_flags>(
+            PW_STREAM_FLAG_AUTOCONNECT | PW_STREAM_FLAG_MAP_BUFFERS | PW_STREAM_FLAG_RT_PROCESS),
+        params, 1);
 
     pw_main_loop_run(m_loop);
 
-    qInfo() << "PipeWireWorker: Stopping audio collection thread";
-
     pw_stream_destroy(m_stream);
     pw_main_loop_destroy(m_loop);
+    // pw_deinit();
 }
 
 void PipeWireWorker::handleTimeout(void* data, uint64_t expirations) {
@@ -121,7 +109,6 @@ void PipeWireWorker::streamStateChanged(pw_stream_state state) {
         pw_loop_update_timer(pw_main_loop_get_loop(m_loop), m_timer, nullptr, nullptr, false);
         break;
     case PW_STREAM_STATE_ERROR:
-        qWarning() << "PipeWireWorker: Stream error, quitting loop";
         pw_main_loop_quit(m_loop);
         break;
     default:
@@ -141,13 +128,13 @@ void PipeWireWorker::processStream() {
     }
 
     const spa_buffer* buf = buffer->buffer;
-    if (buf->n_datas > 0) {
-        const int16_t* samples = reinterpret_cast<const int16_t*>(buf->datas[0].data);
-        if (samples != nullptr) {
-            const uint32_t count = buf->datas[0].chunk->size / 2;
-            m_collector->loadChunk(samples, count);
-        }
+    const int16_t* samples = reinterpret_cast<const int16_t*>(buf->datas[0].data);
+    if (samples == nullptr) {
+        return;
     }
+
+    const uint32_t count = buf->datas[0].chunk->size / 2;
+    m_collector->loadChunk(samples, count);
 
     pw_stream_queue_buffer(m_stream, buffer);
 }
@@ -170,8 +157,10 @@ unsigned int PipeWireWorker::nextPowerOf2(unsigned int n) {
 
 AudioCollector::AudioCollector(uint32_t sampleRate, uint32_t chunkSize, QObject* parent)
     : Service(parent)
-    , m_frontBuffer(chunkSize)
-    , m_backBuffer(chunkSize)
+    , m_buffer1(chunkSize)
+    , m_buffer2(chunkSize)
+    , m_readBuffer(&m_buffer1)
+    , m_writeBuffer(&m_buffer2)
     , m_sampleRate(sampleRate)
     , m_chunkSize(chunkSize) {}
 
@@ -196,9 +185,11 @@ uint32_t AudioCollector::chunkSize() const {
 }
 
 void AudioCollector::clearBuffer() {
-    std::lock_guard lock(m_bufferMutex);
-    std::fill(m_frontBuffer.begin(), m_frontBuffer.end(), 0.0f);
-    std::fill(m_backBuffer.begin(), m_backBuffer.end(), 0.0f);
+    auto* writeBuffer = m_writeBuffer.load(std::memory_order_relaxed);
+    std::fill(writeBuffer->begin(), writeBuffer->end(), 0.0f);
+
+    auto* oldRead = m_readBuffer.exchange(writeBuffer, std::memory_order_acq_rel);
+    m_writeBuffer.store(oldRead, std::memory_order_release);
 }
 
 void AudioCollector::loadChunk(const int16_t* samples, uint32_t count) {
@@ -206,14 +197,13 @@ void AudioCollector::loadChunk(const int16_t* samples, uint32_t count) {
         count = m_chunkSize;
     }
 
-    // Write to the back buffer (owned by this thread until swap)
-    std::transform(samples, samples + count, m_backBuffer.begin(), [](int16_t sample) {
+    auto* writeBuffer = m_writeBuffer.load(std::memory_order_relaxed);
+    std::transform(samples, samples + count, writeBuffer->begin(), [](int16_t sample) {
         return sample / 32768.0f;
     });
 
-    // Swap buffers safely
-    std::lock_guard lock(m_bufferMutex);
-    std::swap(m_frontBuffer, m_backBuffer);
+    auto* oldRead = m_readBuffer.exchange(writeBuffer, std::memory_order_acq_rel);
+    m_writeBuffer.store(oldRead, std::memory_order_release);
 }
 
 uint32_t AudioCollector::readChunk(float* out, uint32_t count) {
@@ -221,8 +211,8 @@ uint32_t AudioCollector::readChunk(float* out, uint32_t count) {
         count = m_chunkSize;
     }
 
-    std::lock_guard lock(m_bufferMutex);
-    std::memcpy(out, m_frontBuffer.data(), count * sizeof(float));
+    auto* readBuffer = m_readBuffer.load(std::memory_order_acquire);
+    std::memcpy(out, readBuffer->data(), count * sizeof(float));
 
     return count;
 }
@@ -232,8 +222,8 @@ uint32_t AudioCollector::readChunk(double* out, uint32_t count) {
         count = m_chunkSize;
     }
 
-    std::lock_guard lock(m_bufferMutex);
-    std::transform(m_frontBuffer.begin(), m_frontBuffer.begin() + count, out, [](float sample) {
+    auto* readBuffer = m_readBuffer.load(std::memory_order_acquire);
+    std::transform(readBuffer->begin(), readBuffer->begin() + count, out, [](float sample) {
         return static_cast<double>(sample);
     });
 

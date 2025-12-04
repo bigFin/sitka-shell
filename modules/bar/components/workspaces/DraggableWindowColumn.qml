@@ -27,29 +27,19 @@ Item {
     required property int idx
     required property int groupOffset
     required property Item windowPopoutSignal
+    required property var workspaceData
 
     property bool isWsFocused: root.activeWsId === root.ws
 
     property var wsWindows: {
-        if (!Niri || !Niri.currentOutputWorkspaces) return [];
-        const index = root.idx + root.groupOffset;
-        if (index < 0 || index >= Niri.currentOutputWorkspaces.length) return [];
-
-        const niriWorkspace = Niri.currentOutputWorkspaces[index];
-        if (!niriWorkspace) return [];
-        return Niri.getWindowsByWorkspaceId(niriWorkspace.id);
+        if (!Niri || !root.workspaceData) return [];
+        return Niri.getWindowsByWorkspaceId(root.workspaceData.id);
     }
 
     function updateGroupedWindowsModel() {
-        if (!Niri || !Niri.currentOutputWorkspaces) return;
-        const index = root.idx + root.groupOffset;
-        if (index < 0 || index >= Niri.currentOutputWorkspaces.length) return;
+        if (!Niri || !root.workspaceData) return;
 
-        const niriWorkspace = Niri.currentOutputWorkspaces[index];
-        if (!niriWorkspace)
-            return;
-
-        var wsWindows = Niri.getWindowsByWorkspaceId(niriWorkspace.id);
+        var wsWindows = Niri.getWindowsByWorkspaceId(root.workspaceData.id);
         var newGroups;
 
         if (Config.bar.workspaces.groupIconsByApp && Config.bar.workspaces.groupingRespectsLayout) {

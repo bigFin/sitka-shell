@@ -9,17 +9,17 @@
 </div>
 
 
-> A **Quickshell-based desktop environment** forked from [Caelestia Shell](https://github.com/caelestia-shell/caelestia-shell), adapted to run with the **Niri window manager**.
+> A **Quickshell-based desktop environment** forked from [Niri Caelestia Shell](https://github.com/jutraim/niri-caelestia-shell)->[Caelestia Shell](https://github.com/caelestia-shell/caelestia-shell), adapted to run with the **Niri window manager**.
 > This fork keeps the dashboard-based workflow while experimenting with new sidebar features and Niri.
 
 <div align=center>
 
-https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
+
 
 </div>
 
 > [!CAUTION]
-> This is my personal thingy and it's **STILL WORK IN PROGRESS.**
+> This is for fun and it's **STILL WORK IN PROGRESS.**
 >
 > This repo is a standalone shell, removing the "dots" management and CLI from the original Caelestia project.
 
@@ -169,6 +169,19 @@ All IPC commands can be called via `quickshell -c sitka-shell ipc call ...`
    ```sh
    qs -c sitka-shell ipc call mpris getActive <trackTitle>
    ```
+
+* To lock the session:
+
+   ```sh
+   sitka-shell ipc call lock lock
+   ```
+
+* Example Niri keybind for locking:
+    ```kdl
+    binds {
+        Mod+L { spawn "sitka-shell" "ipc" "call" "lock" "lock"; }
+    }
+    ```
 
 * Example shortcut in `config.kdl` to toggle the launcher drawer:
     ```sh

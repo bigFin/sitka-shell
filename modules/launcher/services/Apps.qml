@@ -3,12 +3,13 @@ pragma Singleton
 import "../../../config"
 import qs.utils
 import Quickshell
+import Sitka
 import QtQuick
 
 Searcher {
     id: root
 
-    function launch(entry: DesktopEntry): void {
+    function launch(entry: var): void {
         if (entry.runInTerminal)
             Quickshell.execDetached({
                 command: ["app2unit", "--", ...Config.general.apps.terminal, `${Quickshell.shellDir}/assets/wrap_term_launch.sh`, ...entry.command],
@@ -69,10 +70,10 @@ Searcher {
     Variants {
         id: variants
 
-        model: [...DesktopEntries.applications.values].sort((a, b) => a.name.localeCompare(b.name))
+        model: [...DesktopDatabase.applications].sort((a, b) => a.name.localeCompare(b.name))
 
         QtObject {
-            required property DesktopEntry modelData
+            required property var modelData
             readonly property string id: modelData?.id ?? ""
             readonly property string name: modelData?.name ?? ""
             readonly property string desc: modelData?.comment ?? ""

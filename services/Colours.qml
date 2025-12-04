@@ -75,7 +75,7 @@ Singleton {
         current.m3onSurface = paletteSource.fg;
         
         if (themeName === "EverforestLight") {
-            current.m3primary = paletteSource.fg1;
+            current.m3primary = paletteSource.pineGreen;
             current.m3secondary = paletteSource.blue;
             current.m3tertiary = paletteSource.fg1;
         } else {
@@ -293,6 +293,7 @@ Singleton {
         property color statusline1: "#93b259"
         property color statusline2: "#a7c080"
         property color statusline3: "#d3c6aa"
+        property color pineGreen: "#6c8f6c"
     }
 
     component EverforestDarkPalette: QtObject {

@@ -144,20 +144,31 @@ WlSessionLockSurface {
                 Anim {
                     target: lockContent
                     property: "implicitWidth"
-                    to: root.screen.height * Config.lock.sizes.heightMult * Config.lock.sizes.ratio
+                    to: lockContentCalculatedWidth
                     duration: Config.appearance.anim.durations.expressiveDefaultSpatial
                     easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
                 }
                 Anim {
                     target: lockContent
                     property: "implicitHeight"
-                    to: root.screen.height * Config.lock.sizes.heightMult
+                    to: lockContentCalculatedHeight
                     duration: Config.appearance.anim.durations.expressiveDefaultSpatial
                     easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
                 }
             }
         }
     }
+
+    // New properties to calculate content dimensions dynamically
+    readonly property real targetContentMaxWidth: root.screen.width * Config.lock.sizes.heightMult // Use heightMult as a general scaling factor for both width and height
+    readonly property real targetContentMaxHeight: root.screen.height * Config.lock.sizes.heightMult
+
+    readonly property bool isPortrait: root.screen.height > root.screen.width
+    readonly property real contentRatio: isPortrait ? (1 / Config.lock.sizes.ratio) : Config.lock.sizes.ratio
+
+    // Calculate the actual content dimensions while maintaining aspect ratio and fitting within max limits
+    readonly property real lockContentCalculatedWidth: Math.min(targetContentMaxWidth, targetContentMaxHeight * contentRatio)
+    readonly property real lockContentCalculatedHeight: lockContentCalculatedWidth / contentRatio
 
     ScreencopyView {
         id: background
@@ -183,8 +194,8 @@ WlSessionLockSurface {
         readonly property int radius: 0
 
         anchors.centerIn: parent
-        implicitWidth: size
-        implicitHeight: size
+        implicitWidth: size // Initial size for animation
+        implicitHeight: size // Initial size for animation
 
         rotation: 180
         scale: 0
@@ -222,8 +233,9 @@ WlSessionLockSurface {
             id: content
 
             anchors.centerIn: parent
-            width: (root.screen?.height ?? 0) * Config.lock.sizes.heightMult * Config.lock.sizes.ratio - Config.appearance.padding.large * 2
-            height: (root.screen?.height ?? 0) * Config.lock.sizes.heightMult - Config.appearance.padding.large * 2
+            // Use the newly calculated dimensions, adjusted for padding
+            width: lockContentCalculatedWidth - Config.appearance.padding.large * 2
+            height: lockContentCalculatedHeight - Config.appearance.padding.large * 2
 
             lock: root
             opacity: 0

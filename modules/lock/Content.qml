@@ -4,15 +4,25 @@ import "../../config"
 import QtQuick
 import QtQuick.Layouts
 
-RowLayout {
+GridLayout {
     id: root
 
     required property var lock
 
-    spacing: Config.appearance.spacing.large * 2
+    readonly property bool isPortrait: height > width
+    columns: isPortrait ? 2 : 3
+    flow: GridLayout.LeftToRight
+
+    rowSpacing: Config.appearance.spacing.large * 2
+    columnSpacing: Config.appearance.spacing.large * 2
 
     ColumnLayout {
+        Layout.row: root.isPortrait ? 1 : 0
+        Layout.column: 0
         Layout.fillWidth: true
+        Layout.fillHeight: true
+        Layout.alignment: Qt.AlignTop
+        
         spacing: Config.appearance.spacing.normal
 
         StyledRect {
@@ -57,11 +67,22 @@ RowLayout {
     }
 
     Center {
+        Layout.row: 0
+        Layout.column: root.isPortrait ? 0 : 1
+        Layout.columnSpan: root.isPortrait ? 2 : 1
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        Layout.fillHeight: !root.isPortrait
+
         lock: root.lock
     }
 
     ColumnLayout {
+        Layout.row: root.isPortrait ? 1 : 0
+        Layout.column: root.isPortrait ? 1 : 2
         Layout.fillWidth: true
+        Layout.fillHeight: true
+        Layout.alignment: Qt.AlignTop
+        
         spacing: Config.appearance.spacing.normal
 
         StyledRect {

@@ -181,11 +181,7 @@ Item {
 
     component Pane: Loader {
         Layout.alignment: Qt.AlignTop
-
-        Component.onCompleted: active = Qt.binding(() => {
-            const vx = Math.floor(view.visibleArea.xPosition * view.contentWidth);
-            const vex = Math.floor(vx + view.visibleArea.widthRatio * view.contentWidth);
-            return (vx >= x && vx <= x + implicitWidth) || (vex >= x && vex <= x + implicitWidth);
-        })
+        // Keeping panes loaded avoids race conditions during incubation destruction
+        active: true
     }
 }

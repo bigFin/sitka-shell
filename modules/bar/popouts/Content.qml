@@ -89,17 +89,6 @@ Item {
                 name: `traymenu${index}`
                 sourceComponent: trayMenuComp
 
-                Connections {
-                    target: root.wrapper
-
-                    function onHasCurrentChanged(): void {
-                        if (root.wrapper.hasCurrent && trayMenu.shouldBeActive) {
-                            trayMenu.sourceComponent = null;
-                            trayMenu.sourceComponent = trayMenuComp;
-                        }
-                    }
-                }
-
                 Component {
                     id: trayMenuComp
 
@@ -123,14 +112,14 @@ Item {
 
         opacity: 0
         scale: 0.8
-        active: false
+        active: true
+        visible: opacity > 0
 
         states: State {
             name: "active"
             when: popout.shouldBeActive
 
             PropertyChanges {
-                popout.active: true
                 popout.opacity: 1
                 popout.scale: 1
             }
@@ -146,10 +135,6 @@ Item {
                         properties: "opacity,scale"
                         duration: Config.appearance.anim.durations.small
                     }
-                    PropertyAction {
-                        target: popout
-                        property: "active"
-                    }
                 }
             },
             Transition {
@@ -157,10 +142,6 @@ Item {
                 to: "active"
 
                 SequentialAnimation {
-                    PropertyAction {
-                        target: popout
-                        property: "active"
-                    }
                     Anim {
                         properties: "opacity,scale"
                     }

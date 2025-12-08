@@ -153,8 +153,9 @@ Item {
         property bool shouldBeActive
 
         asynchronous: true
-        active: false
+        active: true
         opacity: 0
+        visible: opacity > 0
 
         states: State {
             name: "active"
@@ -162,7 +163,6 @@ Item {
 
             PropertyChanges {
                 comp.opacity: 1
-                comp.active: true
             }
         }
 
@@ -172,9 +172,6 @@ Item {
                 to: "active"
 
                 SequentialAnimation {
-                    PropertyAction {
-                        property: "active"
-                    }
                     Anim {
                         property: "opacity"
                     }
@@ -187,9 +184,6 @@ Item {
                 SequentialAnimation {
                     Anim {
                         property: "opacity"
-                    }
-                    PropertyAction {
-                        property: "active"
                     }
                 }
             }

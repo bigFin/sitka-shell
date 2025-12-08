@@ -255,7 +255,7 @@ ColumnLayout {
         Layout.bottomMargin: findLastEnabled() === this ? root.vPadding : 0
 
         visible: enabled
-        active: enabled
+        active: true
     }
 
     component BarIcon: StyledRect {

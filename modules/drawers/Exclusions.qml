@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components.containers
 import "../../config"
 import Quickshell
+import Quickshell.Wayland
 import QtQuick
 
 Scope {
@@ -13,7 +14,7 @@ Scope {
 
     ExclusionZone {
         anchors.left: true
-        exclusiveZone: root.bar.exclusiveZone
+        WlrLayershell.exclusiveZone: root.bar.exclusiveZone
     }
 
     ExclusionZone {
@@ -31,7 +32,7 @@ Scope {
     component ExclusionZone: StyledWindow {
         screen: root.screen
         name: "border-exclusion"
-        exclusiveZone: Config.border.thickness
+        WlrLayershell.exclusiveZone: Config.border.thickness
         mask: Region {}
         implicitWidth: 1
         implicitHeight: 1

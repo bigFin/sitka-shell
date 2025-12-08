@@ -8,4 +8,4 @@
 .github/chatmodes/prompt-engineer.chatmode.md
 build/
 .cache/
-tmp/
+#tmp/

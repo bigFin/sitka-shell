@@ -129,6 +129,9 @@ Variants {
             PersistentProperties {
                 id: visibilities
 
+                property bool barPinned: Config.bar.persistent
+                property bool barShowOnHover: Config.bar.showOnHover
+                property int barHoverThreshold: Config.bar.hoverThreshold
                 property bool bar
                 property bool osd
                 property bool session

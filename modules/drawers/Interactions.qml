@@ -86,7 +86,7 @@ CustomMouseArea {
             if (!popouts.currentName.startsWith("traymenu"))
                 popouts.hasCurrent = false;
 
-            if (Config.bar.showOnHover)
+            if (visibilities.barShowOnHover)
                 bar.isHovered = false;
             console.log("Bar hidden");
         }
@@ -100,8 +100,13 @@ CustomMouseArea {
         const y = event.y;
 
         // Show bar in non-exclusive mode on hover
-        if (!visibilities.bar && Config.bar.showOnHover && x < Math.max(bar.implicitWidth, Config.bar.hoverThreshold))
-            bar.isHovered = true;
+        if (!visibilities.bar && visibilities.barShowOnHover) {
+            if (x < Math.max(bar.implicitWidth, visibilities.barHoverThreshold)) {
+                bar.isHovered = true;
+            } else {
+                bar.isHovered = false;
+            }
+        }
         // console.log("Bar hovered!")
 
         // Show/hide bar on drag

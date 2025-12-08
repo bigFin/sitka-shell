@@ -152,8 +152,11 @@ Item {
 
     // height: column.height
     // width: column.width
-    implicitWidth: column.implicitWidth
-    implicitHeight: column.implicitHeight
+
+    readonly property bool contextOpen: Niri.wsContextType === "item" && Niri.wsContextAnchor && Niri.wsContextAnchor.workspace === root.workspace
+
+    implicitWidth: Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap + (contextOpen ? Config.bar.workspaces.windowContextWidth : 0)
+    implicitHeight: column.height
 
     // Drop indicator
     Rectangle {
@@ -173,8 +176,90 @@ Item {
         }
     }
 
-    Column {
+    ListView {
         id: column
+        
+        width: parent.width
+        height: Math.min(contentHeight, (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap) * 6)
+        clip: true
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
+
+        highlightRangeMode: ListView.ApplyRange
+        preferredHighlightBegin: height / 2 - (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap) / 2
+        preferredHighlightEnd: height / 2 + (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap) / 2
+
+        model: root.model
+        anchors.left: parent.left
+        spacing: root.spacing
+
+        delegate: WindowIcon {
+            id: icon
+            workspace: root.workspace
+            
+            required property var modelData
+            required property int index
+            
+
+
+            property var fullGroup: root.groupedWindowsArray[index] || { main: null, windows: [], count: 0, id: -1 }
+
+            windowData: Config.bar.workspaces.groupIconsByApp ? fullGroup.main : fullGroup
+            groupWindowData: Config.bar.workspaces.groupIconsByApp ? (fullGroup.windows || []) : [fullGroup]
+            windowCount: Config.bar.workspaces.groupIconsByApp ? fullGroup.count : 1
+            isFocused: Config.bar.workspaces.groupIconsByApp ? fullGroup.windows.some(w => w.id === root.focusedWindowId) : root.focusedWindowId === fullGroup.id
+            isWsFocused: root.isWsFocused
+            curWindowIndex: index
+            wsWindowCount: root.model ? root.model.count : 0
+
+            onDragStart: iconItem => {
+                if (root.draggedItem)
+                    return;
+
+                // Position the preview under the cursor
+                icon.dgprw.visible = true;
+                icon.dgprw.x = iconItem.mapToItem(iconItem, iconItem.width / 2, 0).x;
+                icon.dgprw.y = iconItem.mapToItem(iconItem, 0, iconItem.height / 2).y;
+
+                root.draggedItem = icon;
+                icon.z = 100;
+                icon.opacity = 0.7;
+                dropIndicator.visible = true;
+                root.updateDropIndicator(iconItem.mapToItem(column, 0, 0).y);
+            }
+
+            onDragUpdate: (iconItem, mouseY, mouseX) => {
+                if (root.draggedItem !== icon)
+                    return;
+
+                // Move preview with mouse
+                let globalPos = iconItem.mapToItem(iconItem, mouseX, mouseY);
+                icon.dgprw.x = globalPos.x - icon.dgprw.height / 2;
+                icon.dgprw.y = globalPos.y - icon.dgprw.height / 2;
+                root.updateDropIndicator(iconItem.mapToItem(column, 0, mouseY).y);
+            }
+
+            onDragEnd: iconItem => {
+                if (root.draggedItem !== icon)
+                    return;
+                icon.dgprw.visible = false;
+
+                icon.opacity = 1.0;
+                icon.z = 0;
+                dropIndicator.visible = false;
+
+                if (icon.dropTargetIndex !== undefined && icon.dropTargetIndex !== icon.index) {
+                    root.itemReordered(icon, icon.index, icon.dropTargetIndex);
+                }
+
+                root.draggedItem = null;
+                icon.dropTargetIndex = -1;
+            }
+
+            onRequestPopup: (groupWindowData, iconItem) => {
+                root.windowPopoutSignal.requestWindowPopout();
+            }
+        }
 
         add: Transition {
             NumberAnimation {
@@ -213,102 +298,49 @@ Item {
                 easing.bezierCurve: Config.appearance.anim.curves.standardDecel
             }
         }
+    }
 
-        // anchors.horizontalCenter: parent.horizontalCenter
-
-        Repeater {
-            id: repeater
-            model: root.model
-            anchors.left: parent.left
-
-            delegate: WindowIcon {
-                id: icon
-                workspace: root.workspace
-                
-                required property var modelData
-                required property int index
-                
-
-
-                property var fullGroup: root.groupedWindowsArray[index] || { main: null, windows: [], count: 0, id: -1 }
-
-                windowData: Config.bar.workspaces.groupIconsByApp ? fullGroup.main : fullGroup
-                groupWindowData: Config.bar.workspaces.groupIconsByApp ? (fullGroup.windows || []) : [fullGroup]
-                windowCount: Config.bar.workspaces.groupIconsByApp ? fullGroup.count : 1
-                isFocused: Config.bar.workspaces.groupIconsByApp ? fullGroup.windows.some(w => w.id === root.focusedWindowId) : root.focusedWindowId === fullGroup.id
-                isWsFocused: root.isWsFocused
-                curWindowIndex: index
-                wsWindowCount: root.model ? root.model.count : 0
-
-                onDragStart: iconItem => {
-                    if (root.draggedItem)
-                        return;
-
-                    // Position the preview under the cursor
-                    icon.dgprw.visible = true;
-                    icon.dgprw.x = iconItem.mapToItem(iconItem, iconItem.width / 2, 0).x;
-                    icon.dgprw.y = iconItem.mapToItem(iconItem, 0, iconItem.height / 2).y;
-
-                    root.draggedItem = icon;
-                    icon.z = 100;
-                    icon.opacity = 0.7;
-                    dropIndicator.visible = true;
-                    root.updateDropIndicator(icon.y);
-                }
-
-                onDragUpdate: (iconItem, mouseY, mouseX) => {
-                    if (root.draggedItem !== icon)
-                        return;
-
-                    // Move preview with mouse
-                    let globalPos = iconItem.mapToItem(iconItem, mouseX, mouseY);
-                    icon.dgprw.x = globalPos.x - icon.dgprw.height / 2;
-                    icon.dgprw.y = globalPos.y - icon.dgprw.height / 2;
-                    root.updateDropIndicator(iconItem.mapToItem(iconItem, 0, mouseY).y);
-                }
-
-                onDragEnd: iconItem => {
-                    if (root.draggedItem !== icon)
-                        return;
-                    icon.dgprw.visible = false;
-
-                    icon.opacity = 1.0;
-                    icon.z = 0;
-                    dropIndicator.visible = false;
-
-                    if (icon.dropTargetIndex !== undefined && icon.dropTargetIndex !== icon.index) {
-                        root.itemReordered(icon, icon.index, icon.dropTargetIndex);
-                    }
-
-                    root.draggedItem = null;
-                    icon.dropTargetIndex = -1;
-                }
-
-                onRequestPopup: (groupWindowData, iconItem) => {
-                    root.windowPopoutSignal.requestWindowPopout();
-                }
+    onFocusedWindowIdChanged: {
+        for (let i = 0; i < groupedWindowsModel.count; i++) {
+            let item = root.groupedWindowsArray[i];
+            // Check logic same as isFocused in delegate
+            let isFocused = Config.bar.workspaces.groupIconsByApp ? item.windows.some(w => w.id === root.focusedWindowId) : root.focusedWindowId === item.id;
+            if (isFocused) {
+                column.currentIndex = i;
+                return;
             }
         }
     }
 
     function updateDropIndicator(globalY) {
-        let targetIndex = 0;
-        let targetY = 0;
+        let itemHeight = Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap;
+        let spacing = root.spacing;
+        // globalY is relative to ListView (column)
 
-        for (let i = 0; i < repeater.count; i++) {
-            let child = repeater.itemAt(i);
+        // Adjust for contentY to find index
+        let yInContent = globalY + column.contentY;
+        
+        // Calculate index roughly
+        let estimatedIndex = Math.floor(yInContent / (itemHeight + spacing));
+        
+        // Clamp index
+        if (estimatedIndex < 0) estimatedIndex = 0;
+        if (estimatedIndex > column.count) estimatedIndex = column.count;
 
-            if (!child || child === root.draggedItem)
-                continue;
+        let targetIndex = estimatedIndex;
+        let targetY = (targetIndex * (itemHeight + spacing)) - column.contentY;
 
-            let childY = child.y + child.height / 2;
-            if (globalY < childY) {
-                targetIndex = i;
-                targetY = child.y - Config.bar.workspaces.windowIconGap;
-                break;
-            }
-            targetIndex = i + 1;
-            targetY = child.y + child.height + root.spacing;
+        // Check if we are closer to the next item
+        let remainder = yInContent - (targetIndex * (itemHeight + spacing));
+        if (remainder > itemHeight / 2) {
+             targetIndex++;
+             targetY = (targetIndex * (itemHeight + spacing)) - column.contentY;
+        }
+        
+        // Clamp again just in case
+        if (targetIndex > column.count) {
+             targetIndex = column.count;
+             targetY = (targetIndex * (itemHeight + spacing)) - column.contentY;
         }
 
         if (root.draggedItem) {

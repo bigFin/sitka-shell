@@ -193,7 +193,9 @@ ColumnLayout {
             DelegateChoice {
                 roleValue: "pin"
                 delegate: WrappedLoader {
-                    sourceComponent: Pin {}
+                    sourceComponent: Pin {
+                        visibilities: root.visibilities
+                    }
                 }
             }
             DelegateChoice {

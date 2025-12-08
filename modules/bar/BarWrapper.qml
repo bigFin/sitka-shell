@@ -15,8 +15,8 @@ Item {
 
     readonly property int padding: Math.max(Config.appearance.padding.smaller, Config.border.thickness)
     readonly property int contentWidth: Config.bar.sizes.innerWidth + padding * 2
-    readonly property int exclusiveZone: Config.bar.persistent || visibilities.bar ? contentWidth : Config.border.thickness
-    readonly property bool shouldBeVisible: Config.bar.persistent || visibilities.bar || isHovered
+    readonly property int exclusiveZone: shouldBeVisible ? contentWidth : Config.border.thickness
+    readonly property bool shouldBeVisible: visibilities.barPinned || visibilities.bar || isHovered
     property bool isHovered
 
     function checkPopout(y: real): void {
@@ -70,7 +70,8 @@ Item {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
 
-        active: root.shouldBeVisible || root.visible
+        active: true // Keep loaded to prevent destruction errors
+        visible: root.shouldBeVisible || root.visible
 
         sourceComponent: Bar {
             width: root.contentWidth

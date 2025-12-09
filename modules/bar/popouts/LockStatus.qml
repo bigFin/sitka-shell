@@ -7,10 +7,10 @@ ColumnLayout {
     spacing: Config.appearance.spacing.small
 
     StyledText {
-        text: qsTr("Capslock: %1").arg(Hypr.capsLock ? "Enabled" : "Disabled")
+        text: qsTr("Capslock: %1").arg(WMService.capsLock ? "Enabled" : "Disabled")
     }
 
     StyledText {
-        text: qsTr("Numlock: %1").arg(Hypr.numLock ? "Enabled" : "Disabled")
+        text: qsTr("Numlock: %1").arg(WMService.numLock ? "Enabled" : "Disabled")
     }
 }

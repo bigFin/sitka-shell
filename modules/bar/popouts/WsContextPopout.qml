@@ -8,10 +8,10 @@ Item {
     id: root
 
     // Constants
-    readonly property Item anchorWs: Niri.wsContextAnchor
-    readonly property int anchorWsCount: Niri.wsContextType === "workspace" || Niri.wsContextType === "workspaces" ? 1 : Niri.wsContextAnchor?.windowCount
+    readonly property Item anchorWs: WMService.wsContextAnchor
+    readonly property int anchorWsCount: WMService.wsContextType === "workspace" || WMService.wsContextType === "workspaces" ? 1 : WMService.wsContextAnchor?.windowCount
     readonly property real itemH: anchorWs.height + Config.bar.workspaces.windowIconGap * 2
-    readonly property real expandedW: Config.bar.workspaces.windowContextWidth - Config.bar.workspaces.windowIconSize
+    readonly property real expandedW: Config.bar.workspaces.windowIconContextWidth - Config.bar.workspaces.windowIconSize
 
     implicitHeight: anchorWs ? ((itemH + Config.appearance.padding.small) * anchorWsCount) : itemH - Config.appearance.padding.normal
     implicitWidth: root.expandedW

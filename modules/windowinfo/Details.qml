@@ -11,19 +11,9 @@ ColumnLayout {
 
     property var client: null // NEW LOGIC
 
-    Connections {
-        target: Niri // Listen to the Niri singleton
-        function onFocusedWindowChanged(): void {
-            root.client = Niri.focusedWindow || Niri.lastFocusedWindow || null;
-        // console.log("ClientDetailView: Niri.focusedWindow changed. Displaying client:", root.client ? root.client.id : "null/none");
-        }
-    }
+    // Connections removed - rely on parent binding of 'client'
 
-    // Initial setup in Component.onCompleted
-    Component.onCompleted: {
-        root.client = Niri.focusedWindow || Niri.lastFocusedWindow;
-        // console.log("ClientDetailView: Initial client set to:", root.client ? root.client.id : "null/none");
-    }
+    // Initial setup removed
 
     anchors.fill: parent
     spacing: Config.appearance.spacing.small
@@ -85,8 +75,8 @@ ColumnLayout {
         text: {
             const workspaceId = root.client?.workspace_id;
             if (workspaceId !== undefined && workspaceId !== null) {
-                // Find the workspace object in Niri's list
-                const ws = Niri.currentOutputWorkspaces ? Niri.currentOutputWorkspaces.find(w => w.id === workspaceId) : null;
+                // Find the workspace object in WMService's list
+                const ws = WMService.currentOutputWorkspaces ? WMService.currentOutputWorkspaces.find(w => w.id === workspaceId) : null;
                 return qsTr("Workspace: %1 (%2)").arg(ws?.name ?? "unknown").arg(workspaceId);
             }
             return qsTr("Workspace: unknown");
@@ -97,7 +87,7 @@ ColumnLayout {
     Detail {
         icon: "desktop_windows"
         text: {
-            const mon = Niri.outputs ? Niri.outputs[Niri.focusedMonitorName] : null;
+            const mon = WMService.outputs ? WMService.outputs[WMService.focusedMonitorName] : null;
 
             if (mon && mon.modes && mon.modes[0]) {
                 const modes = mon.modes[0];

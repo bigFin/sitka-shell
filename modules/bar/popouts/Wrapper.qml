@@ -96,7 +96,8 @@ Item {
 
         sourceComponent: WindowInfo {
             screen: root.screen
-            client: Niri.activeToplevel
+            client: WMService.focusedWindow
+            wrapper: root
         }
     }
 

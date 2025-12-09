@@ -651,6 +651,16 @@ Singleton {
         return true;
     }
 
+    function dispatch(cmd) {
+        // Fallback/Placeholder for generic dispatch commands
+        // This handles commands like 'pin address:...' which might come from shared code
+        console.warn("NiriService: dispatch called with command:", cmd);
+        
+        // Example: Try to map 'pin address:...' to niri? 
+        // For now, just logging to prevent crash.
+        return false;
+    }
+
     function doScreenTransition(delayMs = 500) {
         if (!niriAvailable)
             return false;

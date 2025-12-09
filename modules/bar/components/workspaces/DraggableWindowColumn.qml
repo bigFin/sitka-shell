@@ -176,6 +176,11 @@ Item {
         }
     }
 
+    readonly property real activeWindowY: {
+        if (!column.currentItem) return 0;
+        return column.currentItem.y - column.contentY + column.currentItem.height / 2;
+    }
+
     ListView {
         id: column
         
@@ -188,7 +193,7 @@ Item {
         highlightRangeMode: ListView.ApplyRange
         preferredHighlightBegin: height / 2 - (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap) / 2
         preferredHighlightEnd: height / 2 + (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap) / 2
-
+        
         model: root.model
         anchors.left: parent.left
         spacing: root.spacing

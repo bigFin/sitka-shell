@@ -38,6 +38,11 @@ ColumnLayout {
 
     // clip: true
 
+    readonly property real activeWindowCenterY: {
+        if (windows.status !== Loader.Ready || !windows.item) return 0;
+        return windows.y + windows.item.activeWindowY;
+    }
+
     Behavior on scale {
         Anim {}
     }

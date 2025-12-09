@@ -121,7 +121,7 @@ Item {
                 font.pointSize: ((iconItem.isFocused && iconItem.isWsFocused)) ? Config.bar.workspaces.windowIconSize - Config.appearance.padding.small : Config.bar.workspaces.windowIconSize - Config.appearance.padding.small * 2
                 grade: 0
                 text: Icons.getAppCategoryIcon(windowData.app_id, "help_center")
-                color: (iconItem.isWsFocused ? Colours.palette.m3onPrimary : Colours.palette.m3onSurfaceVariant)
+                color: (iconItem.isWsFocused ? (iconItem.isFocused ? Colours.palette.m3primary : Colours.palette.m3onPrimary) : Colours.palette.m3onSurfaceVariant)
                 Behavior on font.pointSize {
                     Anim {
                         easing.bezierCurve: Config.appearance.anim.curves.emphasized

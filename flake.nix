@@ -52,7 +52,9 @@
       in
         pkgs.mkShell.override {stdenv = shell.stdenv;} {
           inputsFrom = [shell shell.plugin shell.extras];
-          packages = with pkgs; [material-symbols rubik nerd-fonts.caskaydia-cove];
+          packages = with pkgs; [material-symbols iosevka];
+          QML2_IMPORT_PATH = "${shell.plugin}/lib/qt6/qml";
+          SITKA_LIB_DIR = "${shell.extras}/lib";
           SITKA_XKB_RULES_PATH = "${pkgs.xkeyboard-config}/share/xkeyboard-config-2/rules/base.lst";
         };
     });

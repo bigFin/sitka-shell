@@ -158,6 +158,17 @@ nix run github:sitka-shell/sitka-shell#arch --impure
     spawn-at-startup "nix" "run" "github:sitka-shell/sitka-shell#arch" "--impure"
     ```
 
+### 🛠️ Development Usage
+
+To run the shell in development mode for testing changes without rebuilding the full package:
+
+1. Enter the development shell to build dependencies and plugins: `nix develop`
+2. Run: `qs -p ./`
+
+This loads the config directly from the current directory. Ensure quickshell is installed on your system (e.g., `quickshell-git` on Arch Linux). The Sitka QML plugin and extras are built via Nix and made available.
+
+Note: `nix run` builds and runs the packaged version automatically, handling all setup.
+
 ### Custom Shortcuts/IPC
 
 All keybinds are accessible via [Quickshell IPC msg](https://quickshell.org/docs/v0.1.0/types/Quickshell.Io/IpcHandler/).

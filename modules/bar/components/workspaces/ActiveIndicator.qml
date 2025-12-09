@@ -105,8 +105,9 @@ StyledRect {
 
         sourceComponent: StyledRect {
             id: activeWindowIndicator
-            height: Niri.focusedWindowId ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.small + Config.bar.workspaces.windowIconGap * 2 : 0
-            color: Colours.palette.m3primary
+            height: Niri.focusedWindowId ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
+            width: Niri.focusedWindowId ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
+            color: Colours.palette.term13
             filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.small : 2
             anchors.horizontalCenter: parent.horizontalCenter
 
@@ -119,48 +120,25 @@ StyledRect {
             Behavior on height {
                 Anim {}
             }
+            Behavior on width {
+                Anim {}
+            }
 
             function computeFocusedY() {
-                const focusedWindow = Niri.focusedWindow;
-                if (!focusedWindow)
-                    return Config.appearance.spacing.large / 2;
-
-                // Get windows for the current workspace and sort them by layout position
-                // This matches the sorting logic used in Workspace.qml
-                 const wsWindows = Niri.getActiveWorkspaceWindows().sort((a, b) => {
-                     const aCol = a.layout?.pos_in_scrolling_layout?.[0] ?? 0;
-                     const bCol = b.layout?.pos_in_scrolling_layout?.[0] ?? 0;
-                     const aRow = a.layout?.pos_in_scrolling_layout?.[1] ?? 0;
-                     const bRow = b.layout?.pos_in_scrolling_layout?.[1] ?? 0;
-
-                    if (aCol !== bCol) {
-                        return aCol - bCol;
-                    }
-                    return aRow - bRow;
-                });
-
-                let focusedIndex = -1;
-
-                if (Config.bar.workspaces.groupIconsByApp) {
-                    const grouped = Niri.groupWindowsByApp(wsWindows);
-                    for (let i = 0; i < grouped.length; i++) {
-                        // Use window ID comparison instead of object reference
-                        if (grouped[i].windows.some(w => w.id === focusedWindow.id)) {
-                            focusedIndex = i;
-                            break;
-                        }
-                    }
-                } else {
-                    // Find the index of the focused window in the sorted array
-                    focusedIndex = wsWindows.findIndex(w => w.id === focusedWindow.id);
-                }
-
-                // If window not found, default to first position
-                if (focusedIndex === -1) {
-                    focusedIndex = 0;
-                }
-
-                return (Config.bar.sizes.innerWidth - Config.appearance.padding.small * 2.5) + focusedIndex * (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap);
+                const ws = workspaces.itemAt(currentWsIdx);
+                if (!ws) return 0;
+                
+                // Calculate the position relative to the ActiveIndicator
+                // ActiveIndicator.y is root.offset relative to the container
+                // ws.y is relative to the same container
+                // ws.activeWindowCenterY is the center of the window relative to ws.y
+                
+                // Target Global Y = ws.y + ws.activeWindowCenterY
+                // ActiveIndicator Global Y = root.offset
+                // Local Y = Target Global Y - ActiveIndicator Global Y
+                //         = (ws.y + ws.activeWindowCenterY) - root.offset
+                
+                return (ws.y + ws.activeWindowCenterY) - root.offset - (height / 2);
             }
         }
     }

@@ -48,23 +48,23 @@ ColumnLayout {
 
     Detail {
         icon: "location_on"
-        property var adress: root.client?.layout.pos_in_scrolling_layout
+        property var adress: root.client?.layout?.pos_in_scrolling_layout ?? []
         text: qsTr("Address: %1, %2").arg(adress?.[0] ?? -1).arg(adress?.[1] ?? -1)
         color: Colours.palette.m3primary
     }
     Loader {
-        active: root.client?.is_floating
+        active: root.client?.is_floating ?? false
         sourceComponent: Detail {
             icon: "location_searching"
-            property var pos: root.client?.layout.tile_pos_in_workspace_view
-            text: qsTr("Position: %1, %2").arg(pos[0] ?? -1).arg(pos[1] ?? -1)
+            property var pos: root.client?.layout?.tile_pos_in_workspace_view ?? []
+            text: qsTr("Position: %1, %2").arg(pos?.[0] ?? -1).arg(pos?.[1] ?? -1)
         }
     }
 
     Detail {
         icon: "resize"
-        property var size: root.client?.layout.window_size
-        text: qsTr("Size: %1 x %2").arg(size[0] ?? -1).arg(size[1] ?? -1)
+        property var size: root.client?.layout?.window_size ?? []
+        text: qsTr("Size: %1 x %2").arg(size?.[0] ?? -1).arg(size?.[1] ?? -1)
         color: Colours.palette.m3tertiary
     }
 

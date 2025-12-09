@@ -10,7 +10,7 @@ Item {
     // Constants
     readonly property Item anchorWs: WMService.wsContextAnchor
     readonly property int anchorWsCount: WMService.wsContextType === "workspace" || WMService.wsContextType === "workspaces" ? 1 : WMService.wsContextAnchor?.windowCount
-    readonly property real itemH: anchorWs.height + Config.bar.workspaces.windowIconGap * 2
+    readonly property real itemH: (anchorWs ? anchorWs.height : 0) + Config.bar.workspaces.windowIconGap * 2
     readonly property real expandedW: Config.bar.workspaces.windowIconContextWidth - Config.bar.workspaces.windowIconSize
 
     implicitHeight: anchorWs ? ((itemH + Config.appearance.padding.small) * anchorWsCount) : itemH - Config.appearance.padding.normal

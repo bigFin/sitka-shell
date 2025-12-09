@@ -1,0 +1,22 @@
+module qs.services
+singleton Audio Audio.qml
+singleton BeatDetector BeatDetector.qml
+singleton Brightness Brightness.qml
+singleton Cava Cava.qml
+singleton Colours Colours.qml
+singleton Hypr Hypr.qml
+singleton IdleInhibitor IdleInhibitor.qml
+singleton IdleService IdleService.qml
+singleton Network Network.qml
+singleton Niri Niri.qml
+singleton Notifs Notifs.qml
+singleton Players Players.qml
+singleton Requests Requests.qml
+singleton SysMonitorService SysMonitorService.qml
+singleton SystemUsage SystemUsage.qml
+singleton Time Time.qml
+singleton Visibilities Visibilities.qml
+singleton Wallpapers Wallpapers.qml
+singleton Weather Weather.qml
+singleton WMDetector WMDetector.qml
+singleton WMService WMService.qml

@@ -9,13 +9,17 @@ import "../../config"
 // 3 Styled Radial buttons
 RowLayout {
     id: root
-    property var client: Niri.focusedWindow
+    property var client: WMService.focusedWindow
     property int implicitSize: Config.appearance.font.size.normal
+    
+    readonly property bool isFloating: client?.is_floating || client?.floating || false
+    // If client is the focused window, it's focused. Otherwise check property.
+    readonly property bool isFocused: (client === WMService.focusedWindow) || client?.is_focused || false
 
     spacing: Config.appearance.padding.small / 2
 
     Loader {
-        active: root.client?.is_floating
+        active: root.isFloating
         asynchronous: true
         visible: active
 
@@ -29,27 +33,28 @@ RowLayout {
             icon: "push_pin"
             function onClicked(): void {
                 // TODO Add a way to pin in Niri.
-                Niri.dispatch(`pin address:0x${root.client?.address}`);
+                const addr = root.client?.address || root.client?.id
+                WMService.dispatch(`pin address:0x${addr}`);
             }
         }
     }
 
     StyledRadialButton {
         disabled: !root.client
-        basecolor: root.client?.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
-        onColor: root.client?.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
+        basecolor: root.isFloating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
+        onColor: root.isFloating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
 
         implicitSize: root.implicitSize
 
-        icon: root.client?.is_floating ? "grid_view" : "picture_in_picture"
+        icon: root.isFloating ? "grid_view" : "picture_in_picture"
         function onClicked(): void {
-            console.log("Toggling floating for", root.client?.id);
-            Niri.toggleWindowFloating(root.client?.id);
+            // console.log("Toggling floating for", root.client?.id);
+            WMService.toggleWindowFloating(root.client);
         }
     }
 
     Loader {
-        active: root.client?.is_focused
+        active: root.isFocused
         asynchronous: true
         visible: active
 
@@ -62,7 +67,7 @@ RowLayout {
 
             icon: "fullscreen"
             function onClicked(): void {
-                Niri.toggleMaximize();
+                WMService.toggleMaximize();
             }
         }
     }
@@ -76,7 +81,7 @@ RowLayout {
         implicitSize: root.implicitSize
 
         function onClicked(): void {
-            Niri.closeWindow(root.client?.id);
+            WMService.closeWindow(root.client);
         }
     }
 }

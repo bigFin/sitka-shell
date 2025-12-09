@@ -10,16 +10,17 @@ ColumnLayout {
     id: root
 
     property var client: null
+    property var wrapper: null // Fix undefined reference
 
     Connections {
-        target: Niri // Listen to the Niri singleton
+        target: WMService // Listen to the WMService singleton
         function onFocusedWindowChanged(): void {
-            root.client = Niri.focusedWindow || Niri.lastFocusedWindow || null;
+            root.client = WMService.focusedWindow || null;
         }
     }
 
     Component.onCompleted: {
-        root.client = Niri.focusedWindow || Niri.lastFocusedWindow;
+        root.client = WMService.focusedWindow;
     }
 
     anchors.fill: parent
@@ -40,20 +41,20 @@ ColumnLayout {
             columns: 5
 
             Repeater {
-                model: Niri.getWorkspaceCount()
+                model: WMService.getWorkspaceCount()
 
                 Button {
                     required property int index
-                    readonly property int wsId: Math.floor((Niri.focusedWorkspaceIndex) / 10) * 10 + index + 1
-                    readonly property bool isCurrent: (wsId - 1) % 10 === Niri.focusedWorkspaceIndex
+                    readonly property int wsId: Math.floor((WMService.focusedWorkspaceIndex) / 10) * 10 + index + 1
+                    readonly property bool isCurrent: (wsId - 1) % 10 === WMService.focusedWorkspaceIndex
 
                     color: isCurrent ? Colours.tPalette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
                     onColor: isCurrent ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
-                    text: (Niri.currentOutputWorkspaces && Niri.currentOutputWorkspaces[wsId - 1] ? Niri.currentOutputWorkspaces[wsId - 1].name : "") || wsId
+                    text: (WMService.currentOutputWorkspaces && WMService.currentOutputWorkspaces[wsId - 1] ? WMService.currentOutputWorkspaces[wsId - 1].name : "") || wsId
                     disabled: isCurrent
 
                     function onClicked(): void {
-                        Niri.moveWindowToWorkspace(wsId);
+                        WMService.moveWindowToWorkspace(wsId);
                     // Call the collapse function on the CollapsibleSection instance
                     // moveWorkspaceDropdown.collapse();
                     }
@@ -87,7 +88,7 @@ ColumnLayout {
                 icon: "center_focus_strong"
 
                 function onClicked(): void {
-                    Niri.centerWindow();
+                    WMService.centerWindow();
                 }
             }
             Button {
@@ -98,7 +99,7 @@ ColumnLayout {
                 // Layout.fillWidth: false
 
                 function onClicked(): void {
-                    Niri.screenshotWindow();
+                    WMService.screenshotWindow();
                 }
             }
             Button {
@@ -108,7 +109,7 @@ ColumnLayout {
                 text: qsTr("Inhibit Shortcuts")
                 // Layout.fillWidth: false
                 function onClicked(): void {
-                    Niri.keyboardShortcutsInhibitWindow();
+                    WMService.keyboardShortcutsInhibitWindow();
                 }
             }
         }
@@ -118,7 +119,7 @@ ColumnLayout {
 
     Loader {
 
-        active: wrapper.isDetached
+        active: wrapper?.isDetached ?? true // Default to true if wrapper null (e.g. testing)
         asynchronous: true
         Layout.fillWidth: active
         visible: active
@@ -129,19 +130,21 @@ ColumnLayout {
         sourceComponent: RowLayout {
             // Layout.fillWidth: true
 
+            readonly property bool isFloating: WMService.focusedWindow?.is_floating || WMService.focusedWindow?.floating || false
+            
             Button {
-                color: Niri.focusedWindow.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
-                onColor: Niri.focusedWindow.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
+                color: isFloating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
+                onColor: isFloating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
                 text: root.client?.is_floating ? qsTr("Tile") : qsTr("Float")
                 icon: root.client?.is_floating ? "grid_view" : "picture_in_picture"
 
                 function onClicked(): void {
-                    Niri.toggleWindowFloating();
+                    WMService.toggleWindowFloating();
                 }
             }
 
             Loader {
-                active: root.client?.is_floating
+                active: isFloating
                 asynchronous: true
                 Layout.fillWidth: active
                 visible: active
@@ -157,7 +160,9 @@ ColumnLayout {
                     // TODO Add a way to pin stuff in Niri
 
                     function onClicked(): void {
-                        Niri.dispatch(`pin address:0x${root.client?.address}`);
+                        // Use address if available
+                        const addr = root.client?.address
+                        if (addr) WMService.dispatch(`pin address:0x${addr}`);
                     }
                 }
             }
@@ -169,7 +174,7 @@ ColumnLayout {
                 text: qsTr("Fullscreen")
 
                 function onClicked(): void {
-                    Niri.toggleMaximize();
+                    WMService.toggleMaximize();
                 }
             }
 
@@ -180,7 +185,7 @@ ColumnLayout {
                 icon: "close"
 
                 function onClicked(): void {
-                    Niri.closeFocusedWindow();
+                    WMService.closeFocusedWindow();
                 }
             }
         }

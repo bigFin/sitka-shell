@@ -2,7 +2,7 @@ import qs.components
 import qs.services
 import "../../config"
 import Quickshell
-import Quickshell.Hyprland
+// import Quickshell.Hyprland // Removed strict dependency
 import QtQuick
 import QtQuick.Layouts
 import "ProcessList"
@@ -11,7 +11,8 @@ Item {
     id: root
 
     required property ShellScreen screen
-    required property HyprlandToplevel client
+    property var client: null // Was HyprlandToplevel
+    property var wrapper: null
 
     implicitWidth: child.implicitWidth
     implicitHeight: screen.height * Config.winfo.sizes.heightMult
@@ -70,6 +71,7 @@ Item {
                     id: buttons
 
                     client: root.client
+                    wrapper: root.wrapper
                 }
             }
         }

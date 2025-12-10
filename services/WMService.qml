@@ -51,8 +51,29 @@ Singleton {
     
     readonly property string focusedWindowId: isNiri ? Niri.focusedWindowId : (Hypr.raw.activeWindow?.address ? "0x" + Hypr.raw.activeWindow.address : "")
     readonly property string focusedMonitorName: isNiri ? Niri.focusedMonitorName : ""
+    
+    readonly property string focusedWindowClass: isNiri ? Niri.focusedWindowClass : (Hypr.raw.activeWindow?.class ?? "")
+    readonly property string focusedWindowTitle: isNiri ? Niri.focusedWindowTitle : (Hypr.raw.activeWindow?.title ?? "")
+    
+    readonly property string kbLayout: isNiri ? Niri.kbLayout : "us" // TODO Hyprland layout
 
     // --- Methods ---
+
+    function getActiveWorkspaceWindows() {
+        if (isNiri) return Niri.getActiveWorkspaceWindows()
+        // TODO Hyprland implementation: filter clients by active workspace
+        return [] 
+    }
+
+    function switchToWorkspaceUpDown(direction) {
+        if (isNiri) Niri.switchToWorkspaceUpDown(direction)
+        else {
+             // Hyprland doesn't have direct up/down workspace switch relative to grid usually without plugins
+             // Assuming numeric workspace switch for now or generic dispatch
+             if (direction === "up") Hypr.dispatch("workspace +1")
+             else Hypr.dispatch("workspace -1")
+        }
+    }
 
     function focusWindow(windowID) {
         if (isNiri) Niri.focusWindow(windowID)

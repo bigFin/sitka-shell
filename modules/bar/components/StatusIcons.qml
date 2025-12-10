@@ -21,7 +21,7 @@ StyledRect {
 
     clip: true
     implicitWidth: Config.bar.sizes.innerWidth
-    implicitHeight: iconColumn.implicitHeight + Config.appearance.padding.normal * 2 - (Config.bar.status.showLockStatus && !Niri.capsLock && !Niri.numLock ? iconColumn.spacing : 0)
+    implicitHeight: iconColumn.implicitHeight + Config.appearance.padding.normal * 2 - (Config.bar.status.showLockStatus && !WMService.capsLock && !WMService.numLock ? iconColumn.spacing : 0)
 
     ColumnLayout {
         id: iconColumn
@@ -43,15 +43,15 @@ StyledRect {
 
                 Item {
                     implicitWidth: capslockIcon.implicitWidth
-                    implicitHeight: Niri.capsLock ? capslockIcon.implicitHeight : 0
+                    implicitHeight: WMService.capsLock ? capslockIcon.implicitHeight : 0
 
                     MaterialIcon {
                         id: capslockIcon
 
                         anchors.centerIn: parent
 
-                        scale: Niri.capsLock ? 1 : 0.5
-                        opacity: Niri.capsLock ? 1 : 0
+                        scale: WMService.capsLock ? 1 : 0.5
+                        opacity: WMService.capsLock ? 1 : 0
 
                         text: "keyboard_capslock_badge"
                         color: root.colour
@@ -71,18 +71,18 @@ StyledRect {
                 }
 
                 Item {
-                    Layout.topMargin: Niri.capsLock && Niri.numLock ? iconColumn.spacing : 0
+                    Layout.topMargin: WMService.capsLock && WMService.numLock ? iconColumn.spacing : 0
 
                     implicitWidth: numlockIcon.implicitWidth
-                    implicitHeight: Niri.numLock ? numlockIcon.implicitHeight : 0
+                    implicitHeight: WMService.numLock ? numlockIcon.implicitHeight : 0
 
                     MaterialIcon {
                         id: numlockIcon
 
                         anchors.centerIn: parent
 
-                        scale: Niri.numLock ? 1 : 0.5
-                        opacity: Niri.numLock ? 1 : 0
+                        scale: WMService.numLock ? 1 : 0.5
+                        opacity: WMService.numLock ? 1 : 0
 
                         text: "looks_one"
                         color: root.colour
@@ -134,7 +134,7 @@ StyledRect {
 
             sourceComponent: StyledText {
                 animate: true
-                text: Niri.kbLayout
+                text: WMService.kbLayout
                 color: root.colour
                 font.family: Config.appearance.font.family.mono
             }

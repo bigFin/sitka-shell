@@ -31,7 +31,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
 
         animate: true
-        text: Icons.getAppCategoryIcon(Niri.focusedWindowClass, "desktop_windows")
+        text: Icons.getAppCategoryIcon(WMService.focusedWindowClass, "desktop_windows")
         color: root.colour
     }
 
@@ -46,7 +46,7 @@ Item {
     TextMetrics {
         id: metrics
 
-        text: Niri.focusedWindowTitle ?? qsTr("Desktop")
+        text: WMService.focusedWindowTitle ?? qsTr("Desktop")
         font.pointSize: Config.appearance.font.size.smaller
         font.family: Config.appearance.font.family.mono
         elide: Qt.ElideRight

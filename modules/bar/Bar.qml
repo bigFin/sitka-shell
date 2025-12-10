@@ -28,7 +28,7 @@ ColumnLayout {
         target: root.popouts
         function onHasCurrentChanged() {
             if (!root.popouts.hasCurrent && root.popouts.currentName === "wsWindow") {
-                Niri.wsContextAnchor = null;
+                WMService.wsContextAnchor = null;
             }
         }
     }
@@ -36,9 +36,9 @@ ColumnLayout {
     // Handle Popouts Hover
 
     function checkPopout(y: real): void {
-        if (Niri.wsContextType === "workspaces") {
+        if (WMService.wsContextType === "workspaces") {
             // Workspace context menu
-            const anchor = Niri.wsContextAnchor;
+            const anchor = WMService.wsContextAnchor;
             if (!anchor) {
                 popouts.hasCurrent = false;
                 return;
@@ -86,7 +86,7 @@ ColumnLayout {
         if (ch?.id === "workspaces" && Config.bar.scrollActions.workspaces) {
             // Workspace scroll (No special workspaces for niri yet.)
 
-            Niri.switchToWorkspaceUpDown(angleDelta.y > 0 ? "up" : "down");
+            WMService.switchToWorkspaceUpDown(angleDelta.y > 0 ? "up" : "down");
 
             // const activeWs = Hyprland.activeToplevel?.workspace?.name;
             // if (activeWs?.startsWith("special:"))
@@ -137,7 +137,7 @@ ColumnLayout {
                                 if (mouse.button === Qt.LeftButton) {
                                     root.visibilities.launcher = true;
                                 } else if (mouse.button === Qt.RightButton) {
-                                    Niri.wsContextType = "workspaces";
+                                    WMService.wsContextType = "workspaces";
                                     root.popouts.currentName = "wsWindow";
                                     root.popouts.hasCurrent = true;
                                 }
@@ -151,7 +151,7 @@ ColumnLayout {
                 delegate: WrappedLoader {
                     sourceComponent: Workspaces {
                         screen: root.screen
-                        property var anchorItem: Niri.wsContextAnchor && Niri.wsContextType !== "none" ? Niri.wsContextAnchor : null
+                        property var anchorItem: WMService.wsContextAnchor && WMService.wsContextType !== "none" ? WMService.wsContextAnchor : null
 
                         onRequestWindowPopout: {
                             if (anchorItem && Config.bar.workspaces.windowRighClickContext) {

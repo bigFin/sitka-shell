@@ -46,7 +46,7 @@ Item {
             id: icon
 
             animate: true
-            text: Icons.getAppCategoryIcon(Niri.focusedWindowClass, "desktop_windows")
+            text: Icons.getAppCategoryIcon(WMService.focusedWindowClass, "desktop_windows")
             color: root.classColour
 
             anchors.verticalCenter: parent.verticalCenter
@@ -66,8 +66,8 @@ Item {
         TextMetrics {
             id: metrics
 
-            property string classPart: Niri.focusedWindowClass || ""
-            property string rawTitlePart: Niri.focusedWindowTitle || "Hi!"
+            property string classPart: WMService.focusedWindowClass || ""
+            property string rawTitlePart: WMService.focusedWindowTitle || "Hi!"
             property string cleanedTitlePart: root.cleanWindowTitle(classPart, rawTitlePart)
             property string separator: " -> "
 

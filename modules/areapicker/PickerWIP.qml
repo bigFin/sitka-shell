@@ -70,7 +70,7 @@ MouseArea {
 
     Component.onCompleted: {
         // Break binding if frozen
-        clients = Niri.getWindowsInScreen(0, 0, screen.width, screen.height, gaps + Config.border.thickness, pad) || [];
+        clients = WMService.getWindowsInScreen(0, 0, screen.width, screen.height, gaps + Config.border.thickness, pad) || [];
 
         if (loader.freeze)
             clients = clients;

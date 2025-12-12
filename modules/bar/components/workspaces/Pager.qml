@@ -12,7 +12,7 @@ StyledRect {
 
     Component.onCompleted: active = true
     property bool active: false
-    property bool entered: Config.bar.workspaces.shown < Niri.getWorkspaceCount() && active
+    property bool entered: Config.bar.workspaces.shown < WMService.getWorkspaceCount() && active
 
     color: Colours.palette.m3surfaceContainer
     radius: 0
@@ -49,7 +49,7 @@ StyledRect {
         color: Colours.palette.m3surfaceContainerHighest
 
         readonly property int pageNumber: Math.floor(root.groupOffset / Config.bar.workspaces.shown) + 1
-        readonly property int totalPages: Math.ceil(Niri.getWorkspaceCount() / Config.bar.workspaces.shown)
+        readonly property int totalPages: Math.ceil(WMService.getWorkspaceCount() / Config.bar.workspaces.shown)
         text: qsTr(`${pageNumber}/${totalPages}`)
     }
 }

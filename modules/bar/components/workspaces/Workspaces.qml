@@ -18,22 +18,22 @@ StyledRect {
     filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
 
     // Filter workspaces for this screen
-    readonly property var myWorkspaces: Niri.allWorkspaces.filter(w => w.output === root.screen.name).sort((a, b) => a.idx - b.idx)
-    
+    readonly property var myWorkspaces: WMService.allWorkspaces.filter(w => w.output === root.screen.name).sort((a, b) => a.idx - b.idx)
+
     // Active index within the filtered list
     readonly property int activeWsIndex: {
-        const idx = myWorkspaces.findIndex(w => w.id == Niri.focusedWorkspaceId);
+        const idx = myWorkspaces.findIndex(w => w.id == WMService.focusedWorkspaceId);
         return idx; // Returns -1 if focused workspace is not on this screen
     }
 
-    readonly property int activeWsId: Number(Niri.focusedWorkspaceId) || 0
+    readonly property int activeWsId: Number(WMService.focusedWorkspaceId) || 0
 
-    readonly property var occupied: (Niri && Niri.workspaceHasWindows) ? Niri.workspaceHasWindows : ({})
+    readonly property var occupied: WMService.workspaceHasWindows
     // Paging not fully implemented for multi-monitor yet, assuming fit-all or use existing logic if needed. 
     // For now using simple list.
     readonly property int groupOffset: 0 
 
-    readonly property int focusedWindowId: Niri.focusedWindow ? Niri.focusedWindow.id : -1
+    readonly property int focusedWindowId: WMService.focusedWindow ? WMService.focusedWindow.id : -1
 
     implicitHeight: layout.implicitHeight + Config.appearance.padding.small * 2
     implicitWidth: Config.bar.sizes.innerWidth
@@ -44,10 +44,10 @@ StyledRect {
     signal requestWindowPopout
 
     Connections {
-        target: Niri
+        target: WMService
         function onWsContextTypeChanged() {
-            if (Niri.wsContextType === "workspaces") {
-                Niri.wsContextAnchor = root;
+            if (WMService.wsContextType === "workspaces") {
+                WMService.wsContextAnchor = root;
             }
         }
     }
@@ -68,18 +68,18 @@ StyledRect {
 
     Loader {
         // Right click on window context menu
-        active: Config.bar.workspaces.windowRighClickContext && Niri.wsContextType !== "none"
+        active: Config.bar.workspaces.windowRighClickContext && WMService.wsContextType !== "none"
         asynchronous: true
 
         anchors.left: parent.left
         anchors.leftMargin: Config.appearance.padding.small
 
-        z: Niri.wsContextType === "workspaces" ? -10 : 0
+        z: WMService.wsContextType === "workspaces" ? -10 : 0
 
         sourceComponent: ContextBg {
             groupOffset: root.groupOffset
             wsOffset: root.y
-            anchorWs: Niri.wsContextAnchor
+            anchorWs: WMService.wsContextAnchor
         }
     }
 

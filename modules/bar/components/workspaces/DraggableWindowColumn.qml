@@ -32,20 +32,20 @@ Item {
     property bool isWsFocused: root.activeWsId === root.ws
 
     property var wsWindows: {
-        if (!Niri || !root.workspaceData) return [];
-        return Niri.getWindowsByWorkspaceId(root.workspaceData.id);
+        if (!root.workspaceData) return [];
+        return WMService.getWindowsByWorkspaceId(root.workspaceData.id);
     }
 
     function updateGroupedWindowsModel() {
-        if (!Niri || !root.workspaceData) return;
+        if (!root.workspaceData) return;
 
-        var wsWindows = Niri.getWindowsByWorkspaceId(root.workspaceData.id);
+        var wsWindows = WMService.getWindowsByWorkspaceId(root.workspaceData.id);
         var newGroups;
 
         if (Config.bar.workspaces.groupIconsByApp && Config.bar.workspaces.groupingRespectsLayout) {
-            newGroups = Niri.groupWindowsByLayoutAndId(wsWindows);
+            newGroups = WMService.groupWindowsByLayoutAndId(wsWindows);
         } else if (Config.bar.workspaces.groupIconsByApp) {
-            newGroups = Niri.groupWindowsByApp(wsWindows);
+            newGroups = WMService.groupWindowsByApp(wsWindows);
         } else {
             newGroups = wsWindows.map(w => ({
                         app_id: w.app_id,
@@ -147,13 +147,13 @@ Item {
         let indices = draggedWindows.map(w => flatWindows.findIndex(x => x.id === w.id));
 
         // 8. Call backend to update order
-        Niri.moveGroupColumnsSequential(Niri.focusedWindowId, draggedWindows.map(w => w.id), flatIndex + 1, 5);
+        WMService.moveGroupColumnsSequential(WMService.focusedWindowId, draggedWindows.map(w => w.id), flatIndex + 1, 5);
     }
 
     // height: column.height
     // width: column.width
 
-    readonly property bool contextOpen: Niri.wsContextType === "item" && Niri.wsContextAnchor && Niri.wsContextAnchor.workspace === root.workspace
+    readonly property bool contextOpen: WMService.wsContextType === "item" && WMService.wsContextAnchor && WMService.wsContextAnchor.workspace === root.workspace
 
     implicitWidth: Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap + (contextOpen ? Config.bar.workspaces.windowContextWidth : 0)
     implicitHeight: column.height

@@ -16,7 +16,7 @@ Item {
 
     required property Item wrapper
 
-    implicitWidth: Niri.focusedWindowTitle /*Niri.activeToplevel*/  ? child.implicitWidth : -Config.appearance.padding.large * 2
+    implicitWidth: WMService.focusedWindowTitle /*WMService.activeToplevel*/  ? child.implicitWidth : -Config.appearance.padding.large * 2
     implicitHeight: child.implicitHeight
 
     ColumnLayout {
@@ -41,7 +41,7 @@ Item {
 
                 Layout.alignment: Qt.AlignVCenter
                 implicitSize: details.implicitHeight
-                source: Icons.getAppIcon(Niri.focusedWindowClass ?? "", "image-missing")
+                source: Icons.getAppIcon(WMService.focusedWindowClass ?? "", "image-missing")
             }
 
             ColumnLayout {
@@ -52,7 +52,7 @@ Item {
 
                 StyledText {
                     Layout.fillWidth: true
-                    text: Niri.focusedWindowTitle ?? ""
+                    text: WMService.focusedWindowTitle ?? ""
                     font.pointSize: Config.appearance.font.size.normal
                     elide: Text.ElideRight
                     Layout.preferredWidth: 200
@@ -60,7 +60,7 @@ Item {
 
                 StyledText {
                     Layout.fillWidth: true
-                    text: Niri.focusedWindowClass ?? ""
+                    text: WMService.focusedWindowClass ?? ""
                     color: Colours.palette.m3onSurfaceVariant
                     elide: Text.ElideRight
                 }

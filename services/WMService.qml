@@ -56,6 +56,14 @@ Singleton {
     readonly property string focusedWindowTitle: isNiri ? Niri.focusedWindowTitle : (Hypr.raw.activeWindow?.title ?? "")
     
     readonly property string kbLayout: isNiri ? Niri.kbLayout : "us" // TODO Hyprland layout
+    readonly property string kbLayoutFull: isNiri ? Niri.kbLayouts : "us" // Full layout string
+    readonly property string defaultKbLayout: isNiri ? Niri.defaultKbLayout : "us"
+
+    // Additional Niri properties for UI compatibility
+    readonly property var allWorkspaces: isNiri ? Niri.allWorkspaces : [] // TODO: Hyprland workspaces mapping
+    readonly property string focusedWorkspaceId: isNiri ? Niri.focusedWorkspaceId : ""
+    readonly property var workspaceHasWindows: isNiri ? Niri.workspaceHasWindows : ({})
+    readonly property var lastFocusedWindow: isNiri ? Niri.lastFocusedWindow : null
 
     // --- Methods ---
 
@@ -138,12 +146,104 @@ Singleton {
     }
     
     function dispatch(cmd) {
-        if (isNiri) Niri.dispatch(cmd) // Niri uses 'msg action ...' usually? Niri.qml doesn't have generic dispatch exposed? 
+        if (isNiri) Niri.dispatch(cmd) // Niri uses 'msg action ...' usually? Niri.qml doesn't have generic dispatch exposed?
         // Checking Niri.qml: has dispatch(cmd) for "pin address..."?
         // Niri.qml DOES NOT have dispatch function in the file I read!
         // Wait, Buttons.qml calls Niri.dispatch(`pin address...`)
         // I must have missed it in Niri.qml or it's dynamic?
         // Re-checking Niri.qml ...
         else Hypr.dispatch(cmd)
+    }
+
+    // Additional methods for UI compatibility
+    function getWindowsByWorkspaceId(wsId) {
+        if (isNiri) return Niri.getWindowsByWorkspaceId(wsId)
+        // TODO: Hyprland implementation
+        return []
+    }
+
+    function getWindowsByWorkspaceIndex(index) {
+        if (isNiri) return Niri.getWindowsByWorkspaceIndex(index)
+        // TODO: Hyprland implementation
+        return []
+    }
+
+    function groupWindowsByLayoutAndId(windows) {
+        if (isNiri) return Niri.groupWindowsByLayoutAndId(windows)
+        // TODO: Hyprland fallback - basic grouping by app
+        return []
+    }
+
+    function groupWindowsByApp(windows) {
+        if (isNiri) return Niri.groupWindowsByApp(windows)
+        // TODO: Hyprland fallback
+        return []
+    }
+
+    function switchToWorkspace(workspaceId) {
+        if (isNiri) return Niri.switchToWorkspace(workspaceId)
+        // Hyprland: assume workspaceId is numeric
+        Hypr.dispatch(`workspace ${workspaceId}`)
+    }
+
+    function switchToWorkspaceByIndex(index) {
+        if (isNiri) return Niri.switchToWorkspaceByIndex(index)
+        // Hyprland: workspace id is index + 1
+        Hypr.dispatch(`workspace ${index + 1}`)
+    }
+
+    function moveGroupColumnsSequential(curWindowId, windowIds, targetIndex, delayMs) {
+        if (isNiri) return Niri.moveGroupColumnsSequential(curWindowId, windowIds, targetIndex, delayMs)
+        // TODO: Hyprland implementation - not supported
+    }
+
+    function moveColumnToIndexAfterFocus(windowId, index, delayMs) {
+        if (isNiri) return Niri.moveColumnToIndexAfterFocus(windowId, index, delayMs)
+        // TODO: Hyprland - not directly supported
+    }
+
+    function getWorkspaceNameByIndex(index) {
+        if (isNiri) return Niri.getWorkspaceNameByIndex(index)
+        // Hyprland: no custom names, return index + 1
+        return (index + 1).toString()
+    }
+
+    function getWorkspaceNameById(id) {
+        if (isNiri) return Niri.getWorkspaceNameById(id)
+        // Hyprland: assume id is numeric
+        return id.toString()
+    }
+
+    function cleanWindowTitle(title) {
+        if (isNiri) return Niri.cleanWindowTitle(title)
+        // Basic cleanup
+        return title ? title.replace(/^[^\x20-\x7E]+/, "") : title
+    }
+
+    function getWindowsInScreen(screenX, screenY, screenWidth, screenHeight, windowBorder, padding) {
+        if (isNiri) return Niri.getWindowsInScreen(screenX, screenY, screenWidth, screenHeight, windowBorder, padding)
+        // TODO: Hyprland implementation
+        return []
+    }
+
+    function toggleFullscreen() {
+        if (isNiri) return Niri.toggleFullscreen()
+        Hypr.dispatch("fullscreen 0") // Toggle fullscreen
+    }
+
+    function toggleWindowedFullscreen() {
+        if (isNiri) return Niri.toggleWindowedFullscreen()
+        // Hyprland doesn't have windowed fullscreen, use regular fullscreen
+        Hypr.dispatch("fullscreen 0")
+    }
+
+    function expandColumnToAvailable() {
+        if (isNiri) return Niri.expandColumnToAvailable()
+        // TODO: Hyprland equivalent?
+    }
+
+    function toggleWindowOpacity() {
+        if (isNiri) return Niri.toggleWindowOpacity()
+        // TODO: Hyprland opacity toggle
     }
 }

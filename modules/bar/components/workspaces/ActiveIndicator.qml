@@ -45,8 +45,8 @@ StyledRect {
         return s;
     }
 
-    property bool isContextActiveInWs: (Niri.wsContextType === "workspace" && Niri.wsContextAnchor?.index === root.currentWsIdx)
-    property bool isWorkspacesContextActive: (Niri.wsContextType === "workspaces") && Niri.wsContextAnchor
+    property bool isContextActiveInWs: (WMService.wsContextType === "workspace" && WMService.wsContextAnchor?.index === root.currentWsIdx)
+    property bool isWorkspacesContextActive: (WMService.wsContextType === "workspaces") && WMService.wsContextAnchor
     clip: false
     y: offset + mask.y
     implicitHeight: size
@@ -85,7 +85,7 @@ StyledRect {
         }
 
         function computeMargins() {
-            if (!Niri.focusedWindowId)
+            if (!WMService.focusedWindowId)
                 return {
                     left: Config.appearance.padding.small,
                     right: Config.appearance.padding.small
@@ -105,8 +105,8 @@ StyledRect {
 
         sourceComponent: StyledRect {
             id: activeWindowIndicator
-            height: Niri.focusedWindowId ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
-            width: Niri.focusedWindowId ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
+            height: WMService.focusedWindowId ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
+            width: WMService.focusedWindowId ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
             color: Colours.palette.term13
             filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.small : 2
             anchors.horizontalCenter: parent.horizontalCenter

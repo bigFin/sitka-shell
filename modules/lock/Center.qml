@@ -227,21 +227,21 @@ ColumnLayout {
             id: stateMessage
 
             readonly property string msg: {
-                if (Niri.kbLayout !== Niri.defaultKbLayout) {
-                    if (Niri.capsLock && Niri.numLock)
-                        return qsTr("Caps lock and Num lock are ON.\nKeyboard layout: %1").arg(Niri.kbLayoutFull);
-                    if (Niri.capsLock)
-                        return qsTr("Caps lock is ON. Kb layout: %1").arg(Niri.kbLayoutFull);
-                    if (Niri.numLock)
-                        return qsTr("Num lock is ON. Kb layout: %1").arg(Niri.kbLayoutFull);
-                    return qsTr("Keyboard layout: %1").arg(Niri.kbLayoutFull);
+                if (WMService.kbLayout !== WMService.defaultKbLayout) {
+                    if (WMService.capsLock && WMService.numLock)
+                        return qsTr("Caps lock and Num lock are ON.\nKeyboard layout: %1").arg(WMService.kbLayoutFull);
+                    if (WMService.capsLock)
+                        return qsTr("Caps lock is ON. Kb layout: %1").arg(WMService.kbLayoutFull);
+                    if (WMService.numLock)
+                        return qsTr("Num lock is ON. Kb layout: %1").arg(WMService.kbLayoutFull);
+                    return qsTr("Keyboard layout: %1").arg(WMService.kbLayoutFull);
                 }
 
-                if (Niri.capsLock && Niri.numLock)
+                if (WMService.capsLock && WMService.numLock)
                     return qsTr("Caps lock and Num lock are ON.");
-                if (Niri.capsLock)
+                if (WMService.capsLock)
                     return qsTr("Caps lock is ON.");
-                if (Niri.numLock)
+                if (WMService.numLock)
                     return qsTr("Num lock is ON.");
 
                 return "";

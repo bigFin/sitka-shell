@@ -10,7 +10,7 @@ Item {
     id: root
 
     required property var workspace
-    property bool popupActive: (Niri.wsContextAnchor === root) || (Niri.wsContextAnchor === workspace) || (Niri.wsContextType === "workspaces")
+    property bool popupActive: (WMService.wsContextAnchor === root) || (WMService.wsContextAnchor === workspace) || (WMService.wsContextType === "workspaces")
 
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
     Layout.preferredHeight: Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap
@@ -92,11 +92,11 @@ Item {
         onClicked: mouse => {
             if (mouse.button === Qt.RightButton) {
                 const thing = root.workspace;
-                const winds = Niri.getWindowsByWorkspaceIndex(thing.index);
+                const winds = WMService.getWindowsByWorkspaceIndex(thing.index);
 
                 if (thing && winds) {
-                    Niri.wsContextAnchor = thing;
-                    Niri.wsContextType = "workspace";
+                    WMService.wsContextAnchor = thing;
+                    WMService.wsContextType = "workspace";
                     root.workspace.windowPopoutSignal.requestWindowPopout();
                 }
                 return;
@@ -104,8 +104,8 @@ Item {
             if (mouse.button === Qt.LeftButton) {
                 const thing = root.workspace;
                 const ws = thing.index + root.workspace.groupOffset;
-                if (Niri.focusedWorkspaceId + 1 !== ws)
-                    Niri.switchToWorkspaceByIndex(ws);
+                if (WMService.focusedWorkspaceId + 1 !== ws)
+                    WMService.switchToWorkspaceByIndex(ws);
                 return;
             }
         }

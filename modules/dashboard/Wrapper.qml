@@ -61,10 +61,10 @@ Item {
     }
 
     Connections {
-        target: Niri
+        target: WMService
         function onFocusedWindowIdChanged() {
             // Show dashboard for 1 second
-            if ((!root.visibilities.dashboard && !root.expanded) && Niri.focusedWindowId) {
+            if ((!root.visibilities.dashboard && !root.expanded) && WMService.focusedWindowId) {
                 root.isvisible = true;
                 flashTimer.restart();
             }

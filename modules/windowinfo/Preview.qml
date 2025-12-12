@@ -17,15 +17,15 @@ Item {
     property var client: null // NEW LOGIC
 
     Connections {
-        target: Niri // Listen to the Niri singleton
+        target: WMService // Listen to the WMService singleton
 
         function onFocusedWindowChanged(): void {
-            root.client = Niri.focusedWindow || Niri.lastFocusedWindow || null;
+            root.client = WMService.focusedWindow || WMService.lastFocusedWindow || null;
         }
     }
     // Initial setup in Component.onCompleted
     Component.onCompleted: {
-        root.client = Niri.focusedWindow || Niri.lastFocusedWindow;
+        root.client = WMService.focusedWindow || WMService.lastFocusedWindow;
     }
 
     Layout.preferredWidth: preview.implicitWidth + Config.appearance.padding.large * 2

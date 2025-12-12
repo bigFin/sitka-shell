@@ -14,11 +14,11 @@ Item {
     required property Item anchorWs
 
     // --- Helpers ---
-    readonly property bool isItem: Niri.wsContextType === "item"
-    readonly property bool isWorkspaces: Niri.wsContextType === "workspaces"
-    readonly property bool isWorkspace: Niri.wsContextType === "workspace"
+    readonly property bool isItem: WMService.wsContextType === "item"
+    readonly property bool isWorkspaces: WMService.wsContextType === "workspaces"
+    readonly property bool isWorkspace: WMService.wsContextType === "workspace"
     readonly property bool hasWindows: (isItem && anchorWs.wsWindowCount > 0) || (isWorkspace && anchorWs.isOccupied)
-    readonly property bool isFocused: (isItem && anchorWs.isWsFocused) || (isWorkspace && (Number(anchorWs.index) === Number(Niri.focusedWorkspaceIndex)))
+    readonly property bool isFocused: (isItem && anchorWs.isWsFocused) || (isWorkspace && (Number(anchorWs.index) === Number(WMService.focusedWorkspaceIndex)))
 
     readonly property int rounding: Config.appearance.rounding.small
     readonly property int gPadding: isItem ? Config.appearance.padding.small / 2 : 0
@@ -35,7 +35,7 @@ Item {
 
         color: root.bgColor
 
-        width: root.activated && Niri.wsContextAnchor ? Config.bar.workspaces.windowContextWidth + Config.bar.workspaces.windowIconSize : Config.bar.workspaces.windowIconSize
+        width: root.activated && WMService.wsContextAnchor ? Config.bar.workspaces.windowContextWidth + Config.bar.workspaces.windowIconSize : Config.bar.workspaces.windowIconSize
         height: (root.anchorWs.height) + root.gPadding * 2
 
         x: 0
@@ -111,14 +111,14 @@ Item {
             property bool firstWorkspace: (root.isWorkspace && root.anchorWs.index === 0)
             cornerType: 2
 
-            height: !(Niri.wsContextAnchor || root.activated) || (firstWorkspace) ? 0 : root.cornerPieceSize
+            height: !(WMService.wsContextAnchor || root.activated) || (firstWorkspace) ? 0 : root.cornerPieceSize
         }
         Corner {
             property bool lastWindowNWorkspace: (root.isItem && ((root.anchorWs.curWindowIndex === root.anchorWs.wsWindowCount - 1) && (root.anchorWs.workspace.index === Config.bar.workspaces.shown - 1)))
             property bool lastWorkspace: (root.isWorkspace && root.anchorWs.index === Config.bar.workspaces.shown - 1)
 
             cornerType: 0
-            height: !(Niri.wsContextAnchor || root.activated) || (lastWorkspace || (lastWindowNWorkspace)) ? 0 : root.cornerPieceSize
+            height: !(WMService.wsContextAnchor || root.activated) || (lastWorkspace || (lastWindowNWorkspace)) ? 0 : root.cornerPieceSize
         }
     }
 
@@ -131,21 +131,21 @@ Item {
         Corner {
             cornerType: 2
             anchors.leftMargin: Config.bar.workspaces.windowIconSize - 1
-            height: !(Niri.wsContextAnchor || root.activated) || root.isWorkspace ? 0 : root.cornerPieceSize
+            height: !(WMService.wsContextAnchor || root.activated) || root.isWorkspace ? 0 : root.cornerPieceSize
         }
         Corner {
             property bool lastWindow: (root.isItem && (root.anchorWs.curWindowIndex === root.anchorWs.wsWindowCount - 1))
 
             cornerType: 0
             anchors.leftMargin: Config.bar.workspaces.windowIconSize - 1
-            height: !(Niri.wsContextAnchor || root.activated) || (root.isWorkspace || lastWindow) ? 0 : root.cornerPieceSize
+            height: !(WMService.wsContextAnchor || root.activated) || (root.isWorkspace || lastWindow) ? 0 : root.cornerPieceSize
         }
     }
 
     // --- Optional corner piece (if needed later) ---
     component Corner: CornerPiece {
         property int cornerType: 0 // 1 = bottom, 3 = top
-        width: root.activated && !root.isWorkspaces && Niri.wsContextAnchor ? root.cornerPieceSize : 0
+        width: root.activated && !root.isWorkspaces && WMService.wsContextAnchor ? root.cornerPieceSize : 0
         height: root.cornerPieceSize
         radius: 0
         orientation: cornerType

@@ -32,7 +32,7 @@ StyledRect {
         ListView {
             id: workspaces
             Layout.fillWidth: true
-            model: Niri.getWorkspaceCount()
+            model: WMService.getWorkspaceCount()
             implicitHeight: contentHeight
 
             // spacing: Config.appearance.spacing.small
@@ -55,7 +55,7 @@ StyledRect {
         color: groupMenu.bgColor
         Layout.fillWidth: true
 
-        readonly property var windows: Niri.getWindowsByWorkspaceIndex(index)
+        readonly property var windows: WMService.getWindowsByWorkspaceIndex(index)
         readonly property var groupedWindows: {
             const groups = {};
             for (const win of windows) {
@@ -82,7 +82,7 @@ StyledRect {
             StyledText {
                 Layout.alignment: Qt.AlignVCenter
                 readonly property string wsName: {
-                    const baseName = Niri.getWorkspaceNameByIndex(wsRect.index) || (wsRect.index + 1);
+                    const baseName = WMService.getWorkspaceNameByIndex(wsRect.index) || (wsRect.index + 1);
                     return wsRect.windows.length > 0 ? baseName : `${baseName} (empty)`;
                 }
                 text: wsName
@@ -114,7 +114,7 @@ StyledRect {
         id: appGroup
 
         required property var modelData // { app_id, windows }
-        readonly property bool isFocused: Number(Niri.focusedWorkspaceId) === Number(modelData.workspace_id)
+        readonly property bool isFocused: Number(WMService.focusedWorkspaceId) === Number(modelData.workspace_id)
 
         radius: Config.appearance.rounding.small
         color: isFocused ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHigh
@@ -171,7 +171,7 @@ StyledRect {
         implicitHeight: Config.bar.sizes.innerWidth
         radius: 0
 
-        readonly property bool isFocused: Number(Niri.focusedWindowId) === Number(modelData.id)
+        readonly property bool isFocused: Number(WMService.focusedWindowId) === Number(modelData.id)
         color: isFocused ? Colours.palette.m3primary : "transparent"
 
         RowLayout {
@@ -219,13 +219,13 @@ StyledRect {
             acceptedButtons: Qt.LeftButton
             cursorShape: Qt.PointingHandCursor
             onTapped: if (itemMain.modelData?.id)
-                Niri.focusWindow(itemMain.modelData.id)
+                WMService.focusWindow(itemMain.modelData.id)
         }
 
         // ---- Pooling hooks ----
         ListView.onReused: {
             // reset properties that might linger
-            color = Number(Niri.focusedWindowId) === Number(modelData.id) ? Colours.palette.m3primary : "transparent";
+            color = Number(WMService.focusedWindowId) === Number(modelData.id) ? Colours.palette.m3primary : "transparent";
             titleText.text = modelData.title || modelData.app_id || "Untitled";
         }
 

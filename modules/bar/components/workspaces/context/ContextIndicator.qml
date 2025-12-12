@@ -14,10 +14,10 @@ Item {
     required property int wsOffset
     required property Item anchorWs
 
-    readonly property int anchorWsCount: (Niri.wsContextType === "item") ? Niri.wsContextAnchor?.windowCount : 1
+    readonly property int anchorWsCount: (WMService.wsContextType === "item") ? WMService.wsContextAnchor?.windowCount : 1
     readonly property real rounding: Config.appearance.rounding.small
     readonly property real padding: Config.appearance.padding.small
-    readonly property color bgColor: (Niri.wsContextType === "workspaces" && Niri.wsContextAnchor ? Colours.palette.m3surfaceContainer : Colours.palette.m3surfaceContainerHigh)
+    readonly property color bgColor: (WMService.wsContextType === "workspaces" && WMService.wsContextAnchor ? Colours.palette.m3surfaceContainer : Colours.palette.m3surfaceContainerHigh)
 
     property real cornerPieceSize: Config.bar.workspaces.windowIconSize + padding
     property bool activated: false
@@ -32,7 +32,7 @@ Item {
         property color highlightColor: root.bgColor
         property real strokeWidth: root.padding
         property real rounding: root.rounding
-        property real roundingEffective: root.activated && Niri.wsContextAnchor ? rounding : 0
+        property real roundingEffective: root.activated && WMService.wsContextAnchor ? rounding : 0
 
         Behavior on roundingEffective {
             Anim {
@@ -41,7 +41,7 @@ Item {
         }
 
         z: zOrder
-        width: root.activated && Niri.wsContextAnchor ? Config.bar.sizes.innerWidth - root.padding / 2 : 0
+        width: root.activated && WMService.wsContextAnchor ? Config.bar.sizes.innerWidth - root.padding / 2 : 0
         height: (root.anchorWs.height) + root.padding
         x: 0
         y: root.anchorWs?.mapToItem(root, 0, 0).y - root.padding / 2
@@ -154,8 +154,8 @@ Item {
     // Corner sub-component
     component Corner: CornerPiece {
         property int cornerType: 0 // 1 = bottom, 3 = top
-        width: root.activated && Niri.wsContextAnchor ? root.cornerPieceSize : 0
-        height: root.activated && Niri.wsContextAnchor ? root.cornerPieceSize / 2 : 0
+        width: root.activated && WMService.wsContextAnchor ? root.cornerPieceSize : 0
+        height: root.activated && WMService.wsContextAnchor ? root.cornerPieceSize / 2 : 0
         radius: Config.appearance.padding.normal
         orientation: cornerType
         color: parent.highlightColor
@@ -188,7 +188,7 @@ Item {
     // Instances
     HighlightRect {
         id: highlightLow
-        opacity: (Niri.wsContextType === "workspaces") ? 0 : 1
+        opacity: (WMService.wsContextType === "workspaces") ? 0 : 1
         highlightColor: Colours.palette.m3surfaceContainer
         anchors.top: highlight.top
         anchors.bottom: highlight.bottom
@@ -203,7 +203,7 @@ Item {
         id: highlight
         anchors.right: parent.right
         anchors.rightMargin: root.padding
-        opacity: (Niri.wsContextType === "workspaces") ? 0 : 1
+        opacity: (WMService.wsContextType === "workspaces") ? 0 : 1
         highlightColor: Colours.palette.m3background
         strokeWidth: root.padding + 0.5
     }

@@ -29,8 +29,8 @@ Rectangle {
 
     border.width: root.hPadding
     border.color: (root.fokus.workspace ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHigh)
-    implicitWidth: root.popupActive && Niri.wsContextAnchor && root.activated ? root.contextWidth - root.sideMargin + root.hPadding : 0
-    implicitHeight: root.popupActive && Niri.wsContextAnchor && root.activated ? windowsColumn.height + root.hPadding * 4 : 0
+    implicitWidth: root.popupActive && WMService.wsContextAnchor && root.activated ? root.contextWidth - root.sideMargin + root.hPadding : 0
+    implicitHeight: root.popupActive && WMService.wsContextAnchor && root.activated ? windowsColumn.height + root.hPadding * 4 : 0
 
     Behavior on border.color {
         CAnim {
@@ -76,10 +76,10 @@ Rectangle {
         required property var modelData
         required property var index
 
-        readonly property bool itemIsFocused: Number(Niri.focusedWindowId) === Number(modelData.id)
+        readonly property bool itemIsFocused: Number(WMService.focusedWindowId) === Number(modelData.id)
         readonly property bool onPrimary: root.fokus.workspace
 
-        readonly property string displayTitle: Niri.cleanWindowTitle(modelData.title || "Untitled")
+        readonly property string displayTitle: WMService.cleanWindowTitle(modelData.title || "Untitled")
         readonly property string displaySubtitle: (modelData.app_id || "Untitled")
 
         color: itemIsFocused ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHighest
@@ -95,8 +95,8 @@ Rectangle {
 
         clip: true
 
-        implicitWidth: Niri.wsContextAnchor ? column.width : 0
-        implicitHeight: root.popupActive && Niri.wsContextAnchor && root.activated ? root.itemH : 0
+        implicitWidth: WMService.wsContextAnchor ? column.width : 0
+        implicitHeight: root.popupActive && WMService.wsContextAnchor && root.activated ? root.itemH : 0
 
         Behavior on implicitHeight {
             Anim {
@@ -121,7 +121,7 @@ Rectangle {
             preventStealing: true
             onClicked: mouse => {
                 if (mouse.button === Qt.LeftButton) {
-                    Niri.focusWindow(multiWindowContent.modelData.id);
+                    WMService.focusWindow(multiWindowContent.modelData.id);
                 }
             }
         }

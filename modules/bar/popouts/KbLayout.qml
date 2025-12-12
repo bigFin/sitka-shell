@@ -2,5 +2,5 @@ import qs.components
 import qs.services
 
 StyledText {
-    text: qsTr("Keyboard layout: %1").arg(Niri.kbLayouts)
+    text: qsTr("Keyboard layout: %1").arg(WMService.kbLayoutFull)
 }

@@ -12,14 +12,14 @@ ColumnLayout {
     property var client: null
 
     Connections {
-        target: Niri // Listen to the Niri singleton
+        target: WMService // Listen to the WMService singleton
         function onFocusedWindowChanged(): void {
-            root.client = Niri.focusedWindow || Niri.lastFocusedWindow || null;
+            root.client = WMService.focusedWindow || WMService.lastFocusedWindow || null;
         }
     }
 
     Component.onCompleted: {
-        root.client = Niri.focusedWindow || Niri.lastFocusedWindow;
+        root.client = WMService.focusedWindow || WMService.lastFocusedWindow;
     }
 
     // ***************************************************
@@ -32,20 +32,20 @@ ColumnLayout {
             columns: 5
 
             Repeater {
-                model: Niri.getWorkspaceCount()
+                model: WMService.getWorkspaceCount()
 
                 Button {
                     required property int index
-                    readonly property int wsId: Math.floor((Niri.focusedWorkspaceIndex) / 10) * 10 + index + 1
-                    readonly property bool isCurrent: (wsId - 1) % 10 === Niri.focusedWorkspaceIndex
+                    readonly property int wsId: Math.floor((WMService.focusedWorkspaceIndex) / 10) * 10 + index + 1
+                    readonly property bool isCurrent: (wsId - 1) % 10 === WMService.focusedWorkspaceIndex
 
                     color: isCurrent ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
                     onColor: isCurrent ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
-                    text: (Niri.currentOutputWorkspaces && Niri.currentOutputWorkspaces[wsId - 1] ? Niri.currentOutputWorkspaces[wsId - 1].name : "") || "Workspace: " + wsId
+                    text: (WMService.currentOutputWorkspaces && WMService.currentOutputWorkspaces[wsId - 1] ? WMService.currentOutputWorkspaces[wsId - 1].name : "") || "Workspace: " + wsId
                     disabled: isCurrent
 
                     function onClicked(): void {
-                        Niri.moveWindowToWorkspace(wsId);
+                        WMService.moveWindowToWorkspace(wsId);
                     }
                 }
             }
@@ -77,7 +77,7 @@ ColumnLayout {
                         text: qsTr("Toggle Fullscreen")
                         icon: "fullscreen"
                         function onClicked(): void {
-                            Niri.toggleFullscreen();
+                            WMService.toggleFullscreen();
                         }
                     }
 
@@ -88,7 +88,7 @@ ColumnLayout {
                         icon: "disabled_visible"
                         text: qsTr("Toggle Fake Fullscreen")
                         function onClicked(): void {
-                            Niri.toggleWindowedFullscreen();
+                            WMService.toggleWindowedFullscreen();
                         }
                     }
 
@@ -110,7 +110,7 @@ ColumnLayout {
                     text: qsTr("Center")
                     icon: "center_focus_strong"
                     function onClicked(): void {
-                        Niri.centerWindow();
+                        WMService.centerWindow();
                     }
                 }
                 // Inhibit Shortcuts - Button 2
@@ -120,7 +120,7 @@ ColumnLayout {
                     icon: "disabled_visible"
                     text: qsTr("Inhibit Shortcuts")
                     function onClicked(): void {
-                        Niri.keyboardShortcutsInhibitWindow();
+                        WMService.keyboardShortcutsInhibitWindow();
                     }
                 }
             }
@@ -134,7 +134,7 @@ ColumnLayout {
                 text: qsTr("Screenshot Window")
                 icon: "photo_camera"
                 function onClicked(): void {
-                    Niri.screenshotWindow();
+                    WMService.screenshotWindow();
                 }
             }
 

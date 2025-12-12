@@ -35,8 +35,8 @@ Rectangle {
 
     clip: true
 
-    implicitWidth: root.popupActive && Niri.wsContextAnchor && root.activated ? root.contextWidth + root.hPadding : 0
-    // implicitHeight: root.activated && root.popupActive && Niri.wsContextAnchor ? root.itemH : 0
+    implicitWidth: root.popupActive && WMService.wsContextAnchor && root.activated ? root.contextWidth + root.hPadding : 0
+    // implicitHeight: root.activated && root.popupActive && WMService.wsContextAnchor ? root.itemH : 0
     implicitHeight: root.itemH
 
     Behavior on implicitWidth {

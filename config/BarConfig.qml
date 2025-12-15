@@ -1,10 +1,19 @@
 import Quickshell.Io
 
 JsonObject {
-    property bool persistent: true
-    property bool showOnHover: true
+    // Legacy options (for backwards compatibility)
+    property bool persistent: false  // Bar starts hidden by default (use corner trigger to show)
+    property bool showOnHover: false  // Deprecated: use revealMode instead
     property int dragThreshold: 20
     property int hoverThreshold: 200
+
+    // New bar behavior options
+    property string revealMode: "corner"  // "corner" | "hover" | "always"
+    property bool overlayMode: true       // true = bar overlays windows (no exclusive zone change)
+
+    // Corner trigger settings (when revealMode === "corner")
+    property CornerTrigger cornerTrigger: CornerTrigger {}
+
     property ScrollActions scrollActions: ScrollActions {}
     property Workspaces workspaces: Workspaces {}
     property Tray tray: Tray {}
@@ -13,10 +22,6 @@ JsonObject {
     property Sizes sizes: Sizes {}
 
     property list<var> entries: [
-        {
-            id: "logo",
-            enabled: true
-        },
         {
             id: "workspaces",
             enabled: true
@@ -46,10 +51,6 @@ JsonObject {
             enabled: true
         },
         {
-            id: "pin",
-            enabled: true
-        },
-        {
             id: "power",
             enabled: true
         },
@@ -60,6 +61,10 @@ JsonObject {
         {
             id: "idleInhibitor",
             enabled: false
+        },
+        {
+            id: "logoToggle",  // OS logo that toggles bar pinned state (replaces pin)
+            enabled: true
         }
     ]
 
@@ -116,5 +121,12 @@ JsonObject {
         property int trayMenuWidth: 300
         property int batteryWidth: 250
         property int networkWidth: 320
+    }
+
+    component CornerTrigger: JsonObject {
+        property int size: 48              // Size of the corner hotspot
+        property int hoverExpand: 8        // How much it expands on hover
+        property bool showLogo: true       // Show OS logo in corner
+        property real logoScale: 0.6       // Scale of logo relative to corner size
     }
 }

@@ -103,4 +103,14 @@ JsonObject {
         property real base: 0.85
         property real layers: 0.4
     }
+
+    component Shaders: JsonObject {
+        property bool enabled: false
+        property string preset: "none"     // "none" | "crt" | "tft" | "bloom" | "vfd" | "scanlines"
+        property string customShader: ""   // Path to custom .qsb shader file (overrides preset)
+        property real intensity: 0.5       // 0.0 to 1.0 - controls effect strength
+        property bool animateTime: true    // Enable time-based animations in shaders
+        property string performanceMode: "dynamic"  // "dynamic" | "static" - affects live updates
+    }
+    property Shaders shaders: Shaders {}
 }

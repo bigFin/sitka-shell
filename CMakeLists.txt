@@ -60,7 +60,7 @@ if("plugin" IN_LIST ENABLE_MODULES)
 endif()
 
 if("shell" IN_LIST ENABLE_MODULES)
-    foreach(dir assets components config modules services utils)
+    foreach(dir assets components config modules services utils scripts)
         install(DIRECTORY ${dir} DESTINATION "${INSTALL_QSCONFDIR}")
     endforeach()
     install(FILES shell.qml LICENSE DESTINATION "${INSTALL_QSCONFDIR}")

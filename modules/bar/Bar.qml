@@ -199,6 +199,14 @@ ColumnLayout {
                 }
             }
             DelegateChoice {
+                roleValue: "logoToggle"
+                delegate: WrappedLoader {
+                    sourceComponent: LogoToggle {
+                        visibilities: root.visibilities
+                    }
+                }
+            }
+            DelegateChoice {
                 roleValue: "power"
                 delegate: WrappedLoader {
                     sourceComponent: Power {

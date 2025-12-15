@@ -1,5 +1,6 @@
 import qs.services
 import "../../config"
+import qs.components
 import qs.modules.osd as Osd
 import qs.modules.notifications as Notifications
 import qs.modules.session as Session
@@ -17,6 +18,14 @@ Item {
     anchors.fill: parent
     anchors.margins: Config.border.thickness
     anchors.leftMargin: bar.implicitWidth
+
+    StyledRect {
+        x: -bar.implicitWidth
+        y: -Config.border.thickness
+        width: bar.implicitWidth
+        height: root.height + Config.border.thickness * 2
+        color: Colours.palette.m3surface
+    }
 
     Osd.Background {
         wrapper: root.panels.osd

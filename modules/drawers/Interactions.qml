@@ -86,9 +86,8 @@ CustomMouseArea {
             if (!popouts.currentName.startsWith("traymenu"))
                 popouts.hasCurrent = false;
 
-            if (visibilities.barShowOnHover)
+            if (Config.bar.revealMode === "hover")
                 bar.isHovered = false;
-            console.log("Bar hidden");
         }
     }
 
@@ -99,9 +98,9 @@ CustomMouseArea {
         const x = event.x;
         const y = event.y;
 
-        // Show bar in non-exclusive mode on hover
-        if (!visibilities.bar && visibilities.barShowOnHover) {
-            if (x < Math.max(bar.implicitWidth, visibilities.barHoverThreshold)) {
+        // Show bar in non-exclusive mode on hover (only when revealMode is "hover")
+        if (!visibilities.bar && Config.bar.revealMode === "hover") {
+            if (x < Math.max(bar.implicitWidth, Config.bar.hoverThreshold)) {
                 bar.isHovered = true;
             } else {
                 bar.isHovered = false;

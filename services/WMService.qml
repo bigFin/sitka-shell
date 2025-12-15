@@ -146,12 +146,7 @@ Singleton {
     }
     
     function dispatch(cmd) {
-        if (isNiri) Niri.dispatch(cmd) // Niri uses 'msg action ...' usually? Niri.qml doesn't have generic dispatch exposed?
-        // Checking Niri.qml: has dispatch(cmd) for "pin address..."?
-        // Niri.qml DOES NOT have dispatch function in the file I read!
-        // Wait, Buttons.qml calls Niri.dispatch(`pin address...`)
-        // I must have missed it in Niri.qml or it's dynamic?
-        // Re-checking Niri.qml ...
+        if (isNiri) Niri.dispatch(cmd)
         else Hypr.dispatch(cmd)
     }
 

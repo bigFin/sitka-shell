@@ -53,7 +53,6 @@ Singleton {
     // Outputs / Monitor management:
     property var outputs: ({})
     property string focusedMonitorName: ""
-    onOutputsChanged: console.log(outputs)
 
     // Overview state
     property bool inOverview: false
@@ -260,11 +259,30 @@ Singleton {
         initialOutputsQuery.running = true; // Add this line
     }
 
+    // Event stream restart backoff
+    property int eventStreamRestartAttempts: 0
+
+    Timer {
+        id: eventStreamRestartBackoff
+        interval: Math.min(1000 * Math.pow(2, root.eventStreamRestartAttempts), 30000)
+        repeat: false
+        onTriggered: {
+            eventStreamProcess.running = true;
+        }
+    }
+
     // Event stream for real-time updates
     Process {
         id: eventStreamProcess
         command: ["niri", "msg", "-j", "event-stream"]
         running: false // Will be enabled after niri check
+
+        onRunningChanged: {
+            if (running) {
+                root.eventStreamRestartAttempts = 0;
+            }
+        }
+
         stdout: SplitParser {
             onRead: data => {
                 try {
@@ -277,8 +295,10 @@ Singleton {
         }
         onExited: exitCode => {
             if (exitCode !== 0 && root.niriAvailable) {
-                console.warn("NiriService: Event stream exited with code", exitCode, "restarting immediately");
-                eventStreamProcess.running = true;
+                root.eventStreamRestartAttempts++;
+                console.warn("NiriService: Event stream exited with code", exitCode, 
+                    "- restarting in", eventStreamRestartBackoff.interval, "ms (attempt", root.eventStreamRestartAttempts + ")");
+                eventStreamRestartBackoff.start();
             }
         }
     }
@@ -508,7 +528,8 @@ Singleton {
 
     function getWorkspaceNameById(id) {
         if (root.allWorkspaces && id >= 0) {
-            return root.allWorkspaces.find(w => w.id === id).name || "";
+            const ws = root.allWorkspaces.find(w => w.id === id);
+            return ws?.name ?? "";
         }
         return "";
     }

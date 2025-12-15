@@ -9,6 +9,30 @@
                 "sans": "Kode Mono",
                 "mono": "Kode Mono"
             }
+        },
+        "shaders": {
+            "enabled": true,
+            "customShader": "~/.config/sitka/shaders/retro-terminal.glsl",
+            "intensity": 0.5,
+            "animateTime": true,
+            "performanceMode": "static"
         }
+    },
+    "bar": {
+        "revealMode": "corner",
+        "overlayMode": false,
+        "entries": [
+            { "id": "workspaces", "enabled": true },
+            { "id": "spacer", "enabled": true },
+            { "id": "activeWindow", "enabled": true },
+            { "id": "spacer", "enabled": true },
+            { "id": "tray", "enabled": true },
+            { "id": "clock", "enabled": true },
+            { "id": "statusIcons", "enabled": true },
+            { "id": "power", "enabled": true },
+            { "id": "controlcenter", "enabled": true },
+            { "id": "logoToggle", "enabled": true }
+        ]
     }
 }
+

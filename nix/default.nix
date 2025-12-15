@@ -46,6 +46,7 @@
       libqalculate
       bash
       hyprland
+      qt6.qtshadertools
     ]
     ++ extraRuntimeDeps;
 

@@ -15,8 +15,17 @@ Item {
 
     readonly property int padding: Math.max(Config.appearance.padding.smaller, Config.border.thickness)
     readonly property int contentWidth: Config.bar.sizes.innerWidth + padding * 2
-    readonly property int exclusiveZone: shouldBeVisible ? contentWidth : Config.border.thickness
-    readonly property bool shouldBeVisible: visibilities.barPinned || visibilities.bar || isHovered
+    // In overlay mode, exclusive zone stays minimal so windows don't get shoved
+    readonly property int exclusiveZone: Config.bar.overlayMode 
+        ? Config.border.thickness 
+        : (shouldBeVisible ? contentWidth : Config.border.thickness)
+    // Bar visibility logic:
+    // - "always" mode: always visible (barPinned defaults to true)
+    // - "hover" mode: visible when pinned, manually toggled, or hovered near edge
+    // - "corner" mode: visible when pinned or manually toggled (via corner trigger click)
+    readonly property bool shouldBeVisible: Config.bar.revealMode === "always" 
+        ? true 
+        : (visibilities.barPinned || visibilities.bar || (Config.bar.revealMode === "hover" && isHovered))
     property bool isHovered
 
     function checkPopout(y: real): void {

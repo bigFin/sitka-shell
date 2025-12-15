@@ -18,6 +18,62 @@
                 // Font for the clock.
                 "clock": "Iosevka Term"
             }
+        },
+        // Shader effects for VFD/CRT visual style
+        "shaders": {
+            // Enable shader effects
+            "enabled": false,
+            // Path to custom GLSL shader (auto-compiled to .qsb)
+            "customShader": "~/.config/sitka/shaders/retro-terminal.glsl",
+            // Effect intensity: 0.0 to 1.0
+            "intensity": 0.5,
+            // Enable time-based animations (for animated effects)
+            "animateTime": true,
+            // Performance mode: "dynamic" (live updates) or "static" (reduced re-rendering)
+            "performanceMode": "dynamic"
         }
+    },
+    "bar": {
+        // Bar reveal behavior:
+        // - "corner": click corner trigger to show bar (default, no window shoving)
+        // - "hover": show bar when mouse is near left edge  
+        // - "always": bar is always visible
+        "revealMode": "corner",
+        
+        // Overlay mode: when true, bar overlays windows instead of pushing them
+        // Only applies when revealMode is "corner" or "hover"
+        "overlayMode": true,
+        
+        // Legacy: whether bar starts pinned (visible)
+        "persistent": false,
+        
+        // Corner trigger settings (when revealMode is "corner")
+        "cornerTrigger": {
+            // Size of the corner hotspot in pixels
+            "size": 48,
+            // How much it expands on hover
+            "hoverExpand": 8,
+            // Show OS logo in corner
+            "showLogo": true,
+            // Scale of logo relative to corner size
+            "logoScale": 0.6
+        },
+        
+        // Bar entries - order and enable/disable components
+        // Available entries: "workspaces", "spacer", "activeWindow", "tray", 
+        // "clock", "statusIcons", "power", "controlcenter", "idleInhibitor", "logoToggle"
+        // Note: "logoToggle" shows the OS logo and toggles bar pinned state
+        "entries": [
+            { "id": "workspaces", "enabled": true },
+            { "id": "spacer", "enabled": true },
+            { "id": "activeWindow", "enabled": true },
+            { "id": "spacer", "enabled": true },
+            { "id": "tray", "enabled": true },
+            { "id": "clock", "enabled": true },
+            { "id": "statusIcons", "enabled": true },
+            { "id": "power", "enabled": true },
+            { "id": "controlcenter", "enabled": true },
+            { "id": "logoToggle", "enabled": true }
+        ]
     }
 }

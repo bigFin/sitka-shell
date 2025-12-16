@@ -54,29 +54,30 @@ PanelWindow {
     anchors.bottom: true
     color: "transparent"
 
-    // Size includes hover expansion
-    readonly property int currentSize: triggerSize + (isHovered ? hoverExpand : 0)
-    implicitWidth: currentSize
-    implicitHeight: currentSize
+    // Size is now fixed, controlled by translation for reveal effect
+    implicitWidth: triggerSize
+    implicitHeight: triggerSize
 
-    // Opacity logic:
-    // - If bar is visible: 0 (and window hidden via state)
-    // - If bar hidden:
-    //   - Hovered: 1
-    //   - Lingering after close: 1
-    //   - Otherwise: 0 (but window stays visible to catch mouse)
-    readonly property real targetOpacity: triggerActive ? (isHovered || lingerTimer.running ? 1.0 : 0.0) : 0.0
+    // Opacity is now 1 when the trigger is active, 0 otherwise
+    readonly property real targetOpacity: triggerActive ? 1.0 : 0.0
 
-    Behavior on implicitWidth {
+    // Slide in/out animation from bottom-left
+    transform: Translate {
+        id: slideTransform
+        x: -root.implicitWidth
+        y: root.implicitHeight
+    }
+
+    Behavior on slideTransform.y {
         NumberAnimation {
-            duration: Config.appearance.anim.durations.small
+            duration: Config.appearance.anim.durations.standard
             easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
         }
     }
 
-    Behavior on implicitHeight {
+    Behavior on slideTransform.x {
         NumberAnimation {
-            duration: Config.appearance.anim.durations.small
+            duration: Config.appearance.anim.durations.standard
             easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
         }
     }
@@ -90,42 +91,34 @@ PanelWindow {
         layer.enabled: true
         layer.effect: ShellShader {}
 
-        // States for show/hide animation
+        // State for show/hide animation via translation
         states: [
             State {
                 name: "active"
                 when: root.triggerActive
-                PropertyChanges { target: root; visible: true }
+                PropertyChanges { 
+                    target: slideTransform
+                    x: 0
+                    y: 0
+                }
                 PropertyChanges { target: content; opacity: root.targetOpacity }
             },
             State {
                 name: "inactive"
                 when: !root.triggerActive
-                PropertyChanges { target: root; visible: false }
+                PropertyChanges { 
+                    target: slideTransform
+                    x: -root.implicitWidth
+                    y: root.implicitHeight
+                }
                 PropertyChanges { target: content; opacity: 0.0 }
             }
         ]
-
-        transitions: [
-            Transition {
-                from: "inactive"
-                to: "active"
-                // When becoming active (bar closed), ensure visible immediately, then animate opacity if needed
-                PropertyAction { target: root; property: "visible"; value: true }
-            },
-            Transition {
-                from: "active"
-                to: "inactive"
-                // When becoming inactive (bar opened), hide immediately (or fade out?)
-                // Usually we want it gone instantly so it doesn't overlap bar
-                PropertyAction { target: root; property: "visible"; value: false }
-            }
-        ]
         
-        // Smooth opacity transition for hover/linger
+        // Smooth opacity transition
         Behavior on opacity {
             NumberAnimation {
-                duration: Config.appearance.anim.durations.normal
+                duration: Config.appearance.anim.durations.standard
                 easing.bezierCurve: Config.appearance.anim.curves.standard
             }
         }
@@ -147,10 +140,10 @@ PanelWindow {
                 startY: 0
 
                 // Go to bottom-left corner
-                PathLine { x: 0; y: root.currentSize }
+                PathLine { x: 0; y: root.triggerSize }
 
                 // Go to bottom-right corner
-                PathLine { x: root.currentSize; y: root.currentSize }
+                PathLine { x: root.triggerSize; y: root.triggerSize }
 
                 // Chamfer line back to start (creates the diagonal)
                 PathLine { x: 0; y: 0 }
@@ -163,8 +156,8 @@ PanelWindow {
             visible: root.showLogo
 
             // Position in the center-ish of the triangle (weighted toward bottom-left)
-            x: root.currentSize * 0.25 - width / 2
-            y: root.currentSize * 0.65 - height / 2
+            x: root.triggerSize * 0.25 - width / 2
+            y: root.triggerSize * 0.65 - height / 2
 
             implicitWidth: root.triggerSize * root.logoScale
             implicitHeight: root.triggerSize * root.logoScale

@@ -66,19 +66,19 @@ PanelWindow {
         id: slideTransform
         x: -root.implicitWidth
         y: root.implicitHeight
-    }
 
-    Behavior on slideTransform.y {
-        NumberAnimation {
-            duration: Config.appearance.anim.durations.standard
-            easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
+        Behavior on y {
+            NumberAnimation {
+                duration: Config.appearance.anim.durations.standard
+                easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
+            }
         }
-    }
 
-    Behavior on slideTransform.x {
-        NumberAnimation {
-            duration: Config.appearance.anim.durations.standard
-            easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
+        Behavior on x {
+            NumberAnimation {
+                duration: Config.appearance.anim.durations.standard
+                easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
+            }
         }
     }
 

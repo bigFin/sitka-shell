@@ -22,27 +22,17 @@ PanelWindow {
 
     // Configuration
     readonly property int triggerSize: Config.bar.cornerTrigger.size
-    readonly property int hoverExpand: Config.bar.cornerTrigger.hoverExpand
     readonly property bool showLogo: Config.bar.cornerTrigger.showLogo
     readonly property real logoScale: Config.bar.cornerTrigger.logoScale
 
-    // State
+    // State properties
     property bool isHovered: false
+    property bool introComplete: false
+    property bool contentVisible: false  // Whether content should be visible (slid in)
+    property bool dismissed: false       // True after click - prevents re-showing until bar hides again
+
     // Only active when mode is corner and bar is hidden
     readonly property bool triggerActive: Config.bar.revealMode === "corner" && !barVisible
-
-    // Timer to keep trigger visible for a moment after bar closes
-    Timer {
-        id: lingerTimer
-        interval: 3000
-        repeat: false
-    }
-
-    onBarVisibleChanged: {
-        if (!barVisible && Config.bar.revealMode === "corner") {
-            lingerTimer.restart();
-        }
-    }
 
     // Window setup - overlay at bottom-left corner
     WlrLayershell.namespace: "corner-trigger"
@@ -54,74 +44,119 @@ PanelWindow {
     anchors.bottom: true
     color: "transparent"
 
-    // Size is now fixed, controlled by translation for reveal effect
+    // Window is visible whenever corner mode is active - it's a transparent hover zone
+    // The content inside slides in/out
+    visible: triggerActive
+
     implicitWidth: triggerSize
     implicitHeight: triggerSize
 
-    // Opacity is now 1 when the trigger is active, 0 otherwise
-    readonly property real targetOpacity: triggerActive ? 1.0 : 0.0
-
-    // Slide in/out animation from bottom-left
-    transform: Translate {
-        id: slideTransform
-        x: -root.implicitWidth
-        y: root.implicitHeight
-
-        Behavior on y {
-            NumberAnimation {
-                duration: Config.appearance.anim.durations.standard
-                easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
-            }
+    // Timers
+    Timer {
+        id: introDelayTimer
+        interval: 500
+        repeat: false
+        onTriggered: {
+            root.contentVisible = true
+            introPauseTimer.start()
         }
+    }
 
-        Behavior on x {
-            NumberAnimation {
-                duration: Config.appearance.anim.durations.standard
-                easing.bezierCurve: Config.appearance.anim.curves.expressiveDefaultSpatial
+    Timer {
+        id: introPauseTimer
+        interval: 1000  // Show for 1 second during intro
+        repeat: false
+        onTriggered: {
+            root.contentVisible = false
+            root.introComplete = true
+        }
+    }
+
+    Timer {
+        id: hoverDelayTimer
+        interval: 150
+        repeat: false
+        onTriggered: {
+            root.contentVisible = true
+        }
+    }
+
+    Timer {
+        id: lingerTimer
+        interval: 3000
+        repeat: false
+        onTriggered: {
+            if (!root.isHovered) {
+                root.contentVisible = false
             }
         }
     }
 
-    // Content wrapper for opacity animation
+    Component.onCompleted: {
+        if (triggerActive) {
+            introDelayTimer.start()
+        }
+    }
+
+    onTriggerActiveChanged: {
+        if (triggerActive && !introComplete) {
+            // Start intro if not done yet
+            introDelayTimer.start()
+        } else if (triggerActive && introComplete) {
+            // Bar just became hidden again - reset dismissed flag so hover works
+            root.dismissed = false
+        } else if (!triggerActive) {
+            // Bar became visible, hide content immediately
+            root.contentVisible = false
+            // Stop any running timers
+            introDelayTimer.stop()
+            introPauseTimer.stop()
+            hoverDelayTimer.stop()
+            lingerTimer.stop()
+        }
+    }
+
+    // Content wrapper
     Item {
         id: content
         anchors.fill: parent
-        opacity: 0 // Default for hidden state
 
-        layer.enabled: true
-        layer.effect: ShellShader {}
+        // Slide transform - start off-screen (bottom-left)
+        transform: Translate {
+            id: slideTransform
+            x: root.contentVisible ? 0 : -root.implicitWidth
+            y: root.contentVisible ? 0 : root.implicitHeight
 
-        // State for show/hide animation via translation
-        states: [
-            State {
-                name: "active"
-                when: root.triggerActive
-                PropertyChanges { 
-                    target: slideTransform
-                    x: 0
-                    y: 0
+            Behavior on x {
+                enabled: !root.dismissed  // Disable animation when dismissed
+                NumberAnimation {
+                    duration: Config.appearance.anim.durations.small
+                    easing.bezierCurve: Config.appearance.anim.curves.expressiveFastSpatial
                 }
-                PropertyChanges { target: content; opacity: root.targetOpacity }
-            },
-            State {
-                name: "inactive"
-                when: !root.triggerActive
-                PropertyChanges { 
-                    target: slideTransform
-                    x: -root.implicitWidth
-                    y: root.implicitHeight
-                }
-                PropertyChanges { target: content; opacity: 0.0 }
             }
-        ]
-        
-        // Smooth opacity transition
+
+            Behavior on y {
+                enabled: !root.dismissed  // Disable animation when dismissed
+                NumberAnimation {
+                    duration: Config.appearance.anim.durations.small
+                    easing.bezierCurve: Config.appearance.anim.curves.expressiveFastSpatial
+                }
+            }
+        }
+
+        // Content opacity for smooth fade
+        opacity: root.contentVisible ? 1 : 0
+
         Behavior on opacity {
+            enabled: !root.dismissed  // Disable animation when dismissed
             NumberAnimation {
-                duration: Config.appearance.anim.durations.standard
+                duration: Config.appearance.anim.durations.small
                 easing.bezierCurve: Config.appearance.anim.curves.standard
             }
         }
+
+        layer.enabled: true
+        layer.effect: ShellShader {}
 
         // Chamfered triangle shape - bottom-left corner
         Shape {
@@ -135,17 +170,10 @@ PanelWindow {
                 fillColor: Colours.palette.m3surfaceContainer
 
                 // Draw a chamfered triangle in bottom-left orientation
-                // Start at top-left corner (0, 0)
                 startX: 0
                 startY: 0
-
-                // Go to bottom-left corner
                 PathLine { x: 0; y: root.triggerSize }
-
-                // Go to bottom-right corner
                 PathLine { x: root.triggerSize; y: root.triggerSize }
-
-                // Chamfer line back to start (creates the diagonal)
                 PathLine { x: 0; y: 0 }
             }
         }
@@ -154,14 +182,10 @@ PanelWindow {
         SystemLogo {
             id: logo
             visible: root.showLogo
-
-            // Position in the center-ish of the triangle (weighted toward bottom-left)
             x: root.triggerSize * 0.25 - width / 2
             y: root.triggerSize * 0.65 - height / 2
-
             implicitWidth: root.triggerSize * root.logoScale
             implicitHeight: root.triggerSize * root.logoScale
-
             colorOverride: root.isHovered ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
             brightnessOverride: root.isHovered ? 0.6 : 0.4
 
@@ -171,24 +195,46 @@ PanelWindow {
                 }
             }
         }
+    }
 
-        // Mouse interaction
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
+    // Mouse interaction - covers entire window (the hover zone)
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        cursorShape: root.contentVisible ? Qt.PointingHandCursor : Qt.ArrowCursor
 
-            onEntered: {
-                root.isHovered = true;
+        onEntered: {
+            root.isHovered = true
+            lingerTimer.stop()
+            
+            // Only show on hover after intro is complete and not dismissed
+            if (root.introComplete && !root.contentVisible && !root.dismissed) {
+                hoverDelayTimer.start()
             }
+        }
 
-            onExited: {
-                root.isHovered = false;
+        onExited: {
+            root.isHovered = false
+            hoverDelayTimer.stop()
+            
+            // Start linger timer when mouse leaves
+            if (root.contentVisible && root.introComplete) {
+                lingerTimer.restart()
             }
+        }
 
-            onClicked: {
-                // Toggle bar visibility (pin it open)
-                root.visibilities.barPinned = true;
+        onClicked: {
+            if (root.contentVisible) {
+                // Stop all timers
+                hoverDelayTimer.stop()
+                lingerTimer.stop()
+                
+                // Mark as dismissed - this disables animations for instant hide
+                root.dismissed = true
+                root.contentVisible = false
+                
+                // Show the bar
+                root.visibilities.barPinned = true
             }
         }
     }

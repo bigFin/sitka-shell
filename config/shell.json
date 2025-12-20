@@ -30,9 +30,16 @@
             { "id": "clock", "enabled": true },
             { "id": "statusIcons", "enabled": true },
             { "id": "power", "enabled": true },
+            { "id": "papertoy", "enabled": true },
             { "id": "controlcenter", "enabled": true },
             { "id": "logoToggle", "enabled": true }
         ]
+    },
+    "services": {
+        "papertoy": {
+            "shaderPath": "/storage/SyncBox/shaders/stochastic-asym-quads-everforest-dark-medium.glsl",
+            "args": []
+        }
     }
 }
 

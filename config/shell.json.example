@@ -60,8 +60,8 @@
         },
         
         // Bar entries - order and enable/disable components
-        // Available entries: "workspaces", "spacer", "activeWindow", "tray", 
-        // "clock", "statusIcons", "power", "controlcenter", "idleInhibitor", "logoToggle"
+        // Available entries: "workspaces", "spacer", "activeWindow", "tray",
+        // "clock", "statusIcons", "power", "controlcenter", "papertoy", "idleInhibitor", "logoToggle"
         // Note: "logoToggle" shows the OS logo and toggles bar pinned state
         "entries": [
             { "id": "workspaces", "enabled": true },
@@ -75,5 +75,13 @@
             { "id": "controlcenter", "enabled": true },
             { "id": "logoToggle", "enabled": true }
         ]
+    },
+    "services": {
+        "papertoy": {
+            // Path to the GLSL shader file for papertoy
+            "shaderPath": "/storage/SyncBox/shaders/stochastic-asym-quads-everforest-dark-medium.glsl",
+            // Additional command-line arguments for papertoy
+            "args": []
+        }
     }
 }

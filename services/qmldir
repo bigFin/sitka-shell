@@ -11,6 +11,7 @@ singleton Network Network.qml
 singleton Niri Niri.qml
 singleton Notifs Notifs.qml
 singleton Players Players.qml
+singleton Papertoy Papertoy.qml
 singleton Requests Requests.qml
 singleton SysMonitorService SysMonitorService.qml
 singleton SystemUsage SystemUsage.qml

@@ -59,6 +59,10 @@ JsonObject {
             enabled: true
         },
         {
+            id: "papertoy",
+            enabled: false
+        },
+        {
             id: "idleInhibitor",
             enabled: false
         },

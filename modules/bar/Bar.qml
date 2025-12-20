@@ -215,6 +215,12 @@ ColumnLayout {
                 }
             }
             DelegateChoice {
+                roleValue: "papertoy"
+                delegate: WrappedLoader {
+                    sourceComponent: Papertoy {}
+                }
+            }
+            DelegateChoice {
                 roleValue: "idleInhibitor"
                 delegate: WrappedLoader {
                     sourceComponent: IdleInhibitor {}

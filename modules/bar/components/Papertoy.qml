@@ -19,15 +19,15 @@ StyledRect {
         }
     }
 
-    MaterialIcon {
+    StyledText {
         id: icon
 
         anchors.centerIn: parent
-        anchors.horizontalCenterOffset: -1
 
-        text: "wallpaper"
+        animate: true
+        text: Papertoy.enabled ? "󰫕" : "󰫖"
         color: Papertoy.enabled ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3secondary
         font.bold: true
-        font.pointSize: Config.appearance.font.size.normal
+        font.pointSize: Config.appearance.font.size.large
     }
 }

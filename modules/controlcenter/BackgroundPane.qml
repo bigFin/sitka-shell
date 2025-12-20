@@ -106,6 +106,122 @@ Item {
                 }
             }
 
+            // Papertoy Shader Background Section
+            StyledText {
+                text: qsTr("Shader Background (Papertoy)")
+                font.bold: true
+                color: Colours.palette.m3onSurface
+                font.pointSize: Config.appearance.font.size.large
+                topPadding: Config.appearance.padding.large
+            }
+
+            // Papertoy Toggle Button
+            StyledRect {
+                width: parent.width
+                height: 50
+                radius: Config.appearance.rounding.normal
+                color: Papertoy.enabled 
+                    ? Colours.palette.m3primaryContainer 
+                    : Colours.palette.m3surfaceContainerHigh
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: Config.appearance.spacing.normal
+                    
+                    StyledText {
+                        text: Papertoy.enabled ? "󰫕" : "󰫖"
+                        animate: true
+                        color: Papertoy.enabled 
+                            ? Colours.palette.m3onPrimaryContainer 
+                            : Colours.palette.m3primary
+                        font.pointSize: Config.appearance.font.size.large
+                    }
+                    
+                    StyledText {
+                        text: Papertoy.enabled ? qsTr("Shader Active") : qsTr("Enable Shader Background")
+                        font.bold: true
+                        color: Papertoy.enabled 
+                            ? Colours.palette.m3onPrimaryContainer 
+                            : Colours.palette.m3onSurface
+                    }
+                }
+
+                StateLayer {
+                    radius: parent.radius
+                    onClicked: Papertoy.enabled = !Papertoy.enabled
+                }
+            }
+
+            // Current Shader Path Display
+            StyledRect {
+                width: parent.width
+                height: shaderPathCol.implicitHeight + Config.appearance.padding.normal * 2
+                radius: Config.appearance.rounding.normal
+                color: Colours.palette.m3surfaceContainerHigh
+                visible: Papertoy.currentShaderPath !== ""
+
+                Column {
+                    id: shaderPathCol
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.margins: Config.appearance.padding.normal
+                    spacing: Config.appearance.spacing.small
+
+                    StyledText {
+                        text: qsTr("Current Shader")
+                        font.bold: true
+                        color: Colours.palette.m3onSurfaceVariant
+                        font.pointSize: Config.appearance.font.size.small
+                    }
+
+                    StyledText {
+                        width: parent.width
+                        text: Paths.shortenHome(Papertoy.currentShaderPath)
+                        color: Colours.palette.m3onSurface
+                        elide: Text.ElideMiddle
+                    }
+                }
+            }
+
+            // Browse Shader Button
+            StyledRect {
+                width: parent.width
+                height: 50
+                radius: Config.appearance.rounding.normal
+                color: Colours.palette.m3surfaceContainerHigh
+                
+                FileDialog {
+                    id: shaderFileDialog
+                    title: qsTr("Select a shader")
+                    filterLabel: qsTr("GLSL shader files")
+                    filters: ["*.glsl", "*.frag", "*.vert"]
+                    onAccepted: path => Papertoy.setShaderPath(path)
+                }
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: Config.appearance.spacing.normal
+                    
+                    MaterialIcon {
+                        text: "folder_open"
+                        color: Colours.palette.m3secondary
+                        font.pointSize: Config.appearance.font.size.large
+                    }
+                    
+                    StyledText {
+                        text: qsTr("Browse Shaders...")
+                        font.bold: true
+                        color: Colours.palette.m3onSurface
+                    }
+                }
+
+                StateLayer {
+                    radius: parent.radius
+                    onClicked: shaderFileDialog.open()
+                }
+            }
+
             StyledText {
                 text: qsTr("Default Wallpapers")
                 font.bold: true

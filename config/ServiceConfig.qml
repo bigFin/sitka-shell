@@ -16,4 +16,11 @@ JsonObject {
             "to": "YT Music"
         }
     ]
+
+    property Papertoy papertoy: Papertoy {}
+
+    component Papertoy: JsonObject {
+        property string shaderPath: ""      // Path to .glsl shader file
+        property list<string> args: []      // Additional arguments for papertoy
+    }
 }

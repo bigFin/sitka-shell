@@ -209,7 +209,7 @@ Variants {
 
         // Corner trigger for "corner" reveal mode - separate layer-shell surface
         CornerTrigger {
-            screen: scope.modelData
+            targetScreen: scope.modelData
             visibilities: scope.visibilities
             barVisible: scope.bar.shouldBeVisible
         }

@@ -16,9 +16,12 @@ import "../../config"
 PanelWindow {
     id: root
 
-    required property ShellScreen screen
+    required property ShellScreen targetScreen
     required property PersistentProperties visibilities
     required property bool barVisible
+
+    // Assign this window to the correct screen
+    screen: targetScreen
 
     // Configuration
     readonly property int triggerSize: Config.bar.cornerTrigger.size
@@ -51,14 +54,28 @@ PanelWindow {
     implicitWidth: triggerSize
     implicitHeight: triggerSize
 
+    // Helper function to safely show content
+    function showContent() {
+        if (triggerActive && !dismissed) {
+            contentVisible = true
+        }
+    }
+
+    // Helper function to safely hide content
+    function hideContent() {
+        contentVisible = false
+    }
+
     // Timers
     Timer {
         id: introDelayTimer
         interval: 500
         repeat: false
         onTriggered: {
-            root.contentVisible = true
-            introPauseTimer.start()
+            if (root.triggerActive) {
+                root.showContent()
+                introPauseTimer.start()
+            }
         }
     }
 
@@ -67,7 +84,7 @@ PanelWindow {
         interval: 1000  // Show for 1 second during intro
         repeat: false
         onTriggered: {
-            root.contentVisible = false
+            root.hideContent()
             root.introComplete = true
         }
     }
@@ -77,7 +94,9 @@ PanelWindow {
         interval: 150
         repeat: false
         onTriggered: {
-            root.contentVisible = true
+            if (root.triggerActive && root.introComplete && !root.dismissed) {
+                root.showContent()
+            }
         }
     }
 
@@ -87,7 +106,7 @@ PanelWindow {
         repeat: false
         onTriggered: {
             if (!root.isHovered) {
-                root.contentVisible = false
+                root.hideContent()
             }
         }
     }
@@ -99,15 +118,21 @@ PanelWindow {
     }
 
     onTriggerActiveChanged: {
-        if (triggerActive && !introComplete) {
-            // Start intro if not done yet
-            introDelayTimer.start()
-        } else if (triggerActive && introComplete) {
-            // Bar just became hidden again - reset dismissed flag so hover works
+        if (triggerActive) {
+            // Bar just became hidden
+            // Reset dismissed flag so hover works again
             root.dismissed = false
-        } else if (!triggerActive) {
-            // Bar became visible, hide content immediately
-            root.contentVisible = false
+            
+            if (!introComplete) {
+                // Start intro if not done yet
+                introDelayTimer.start()
+            }
+            // If intro is complete, just wait for hover - don't auto-show
+        } else {
+            // Bar became visible - immediately hide and stop everything
+            root.hideContent()
+            root.dismissed = false  // Reset for next time
+            
             // Stop any running timers
             introDelayTimer.stop()
             introPauseTimer.stop()
@@ -207,8 +232,8 @@ PanelWindow {
             root.isHovered = true
             lingerTimer.stop()
             
-            // Only show on hover after intro is complete and not dismissed
-            if (root.introComplete && !root.contentVisible && !root.dismissed) {
+            // Only show on hover after intro is complete, not dismissed, and bar is hidden
+            if (root.triggerActive && root.introComplete && !root.contentVisible && !root.dismissed) {
                 hoverDelayTimer.start()
             }
         }
@@ -217,8 +242,8 @@ PanelWindow {
             root.isHovered = false
             hoverDelayTimer.stop()
             
-            // Start linger timer when mouse leaves
-            if (root.contentVisible && root.introComplete) {
+            // Start linger timer when mouse leaves (only if trigger is still active)
+            if (root.triggerActive && root.contentVisible && root.introComplete) {
                 lingerTimer.restart()
             }
         }
@@ -231,7 +256,7 @@ PanelWindow {
                 
                 // Mark as dismissed - this disables animations for instant hide
                 root.dismissed = true
-                root.contentVisible = false
+                root.hideContent()
                 
                 // Show the bar
                 root.visibilities.barPinned = true

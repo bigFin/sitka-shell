@@ -1,6 +1,23 @@
 pragma Singleton
 pragma ComponentBehavior: Bound
 
+/*
+ * WMStateMachine - Event Batching State Machine
+ * 
+ * This singleton batches rapid window manager events and processes them
+ * efficiently in 16ms windows (~60fps), preventing UI thrashing.
+ * 
+ * States: Idle -> Collecting -> Processing -> Committing -> Idle
+ * 
+ * Events are coalesced: multiple events of the same type within the
+ * batch window are merged, keeping only the latest (except for
+ * window open/close which are kept in order).
+ * 
+ * Currently DISABLED - routing in Niri.qml is commented out.
+ * Enable by uncommenting WMStateMachine.enqueue() calls in Niri.qml
+ * once UI components are migrated to use WindowStore.version pattern.
+ */
+
 import QtQuick
 import Quickshell
 import "."

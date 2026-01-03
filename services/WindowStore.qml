@@ -1,6 +1,33 @@
 pragma Singleton
 pragma ComponentBehavior: Bound
 
+/*
+ * WindowStore - Static Buffer Store for Window/Workspace Data
+ * 
+ * This singleton provides pre-allocated static buffers for workspaces and windows,
+ * avoiding dynamic allocation and reducing GC pressure.
+ * 
+ * Key concepts:
+ * - Buffers are fixed-size arrays (10 workspaces, 64 windows)
+ * - Each slot has a 'valid' flag indicating if it's in use
+ * - The 'version' property increments only when state actually changes
+ * - UI components should watch 'version' for efficient updates
+ * 
+ * Usage example:
+ *   readonly property int storeVersion: WindowStore.version
+ *   readonly property var myData: {
+ *       void storeVersion;  // Depend on version
+ *       return WindowStore.getWindowsForWorkspace(wsId);
+ *   }
+ * 
+ * Public API:
+ * - getWorkspace(slotOrId) - Get workspace by slot index or ID
+ * - getWindow(slotOrId) - Get window by slot index or ID  
+ * - getWindowsForWorkspace(workspaceId) - Get all windows for a workspace
+ * - getFocusedWorkspace() / getFocusedWindow() - Get focused items
+ * - version - Increments when state changes (watch this for updates)
+ */
+
 import QtQuick
 import Quickshell
 
@@ -206,16 +233,16 @@ Singleton {
         }
         windowBuffer = winBuffer;
 
-        console.log("WindowStore: Buffers initialized");
+        // console.log("WindowStore: Buffers initialized");
     }
 
     // ===== DEBUG =====
     function debugDump() {
-        console.log("WindowStore Debug Dump:");
-        console.log("  Version:", version);
-        console.log("  Active Workspaces:", activeWorkspaceCount);
-        console.log("  Active Windows:", activeWindowCount);
-        console.log("  Focused Workspace Slot:", focusedWorkspaceSlot);
-        console.log("  Focused Window Slot:", focusedWindowSlot);
+        // console.log("WindowStore Debug Dump:");
+        // console.log("  Version:", version);
+        // console.log("  Active Workspaces:", activeWorkspaceCount);
+        // console.log("  Active Windows:", activeWindowCount);
+        // console.log("  Focused Workspace Slot:", focusedWorkspaceSlot);
+        // console.log("  Focused Window Slot:", focusedWindowSlot);
     }
 }

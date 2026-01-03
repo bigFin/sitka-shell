@@ -82,7 +82,7 @@ Searcher {
 
         function onClicked(list: AppList): void {
             list.visibilities.launcher = false;
-            console.log("Scheme setting not implemented without caelestia-cli");
+            // console.log("Scheme setting not implemented without caelestia-cli");
             // Quickshell.execDetached(["caelestia", "scheme", "set", "-n", name, "-f", flavour]);
         }
     }

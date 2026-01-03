@@ -575,9 +575,9 @@ done | awk -F'|' '!seen[\$6]++ {print \$0}'
         target: IdleService
         function onIdleChanged(idle) {
             if (idle) {
-                console.log("SysMonitorService: System idle, pausing monitoring");
+                // console.log("SysMonitorService: System idle, pausing monitoring");
             } else {
-                console.log("SysMonitorService: System active, resuming monitoring");
+                // console.log("SysMonitorService: System active, resuming monitoring");
                 if (root.refCount > 0) {
                     root.updateAllStats();
                 }
@@ -766,7 +766,7 @@ printf "}\\n"`
     function debug() {
         SysMonitorService.addRef();
         SysMonitorService.updateAllStats();
-        console.log("GPUS:", JSON.stringify(SysMonitorService.gpus));
+        // console.log("GPUS:", JSON.stringify(SysMonitorService.gpus));
     }
 
     // Component.onCompleted: {

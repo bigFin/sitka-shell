@@ -89,7 +89,10 @@ Item {
 
             if (idx >= 0) {
                 for (let key in modelItem) {
-                    groupedWindowsModel.setProperty(idx, key, modelItem[key]);
+                    let currentVal = groupedWindowsModel.get(idx)[key];
+                    if (currentVal !== modelItem[key]) {
+                        groupedWindowsModel.setProperty(idx, key, modelItem[key]);
+                    }
                 }
                 if (idx !== i)
                     groupedWindowsModel.move(idx, i, 1);

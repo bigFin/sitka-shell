@@ -40,9 +40,9 @@ Rectangle {
 
     clip: true
 
-    anchors.left: parent.left
+    anchors.left: parent ? parent.left : undefined
     anchors.leftMargin: root.sideMargin
-    anchors.verticalCenter: parent.verticalCenter
+    anchors.verticalCenter: parent ? parent.verticalCenter : undefined
 
     Behavior on implicitWidth {
         Anim {
@@ -62,7 +62,7 @@ Rectangle {
 
     ColumnLayout {
         id: windowsColumn
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
         spacing: root.hPadding
 
         Repeater {
@@ -129,8 +129,8 @@ Rectangle {
         RowLayout {
             id: column
 
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
+            anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+            anchors.left: parent ? parent.left : undefined
             anchors.leftMargin: Config.appearance.padding.small
             Layout.alignment: Qt.AlignVCenter
 

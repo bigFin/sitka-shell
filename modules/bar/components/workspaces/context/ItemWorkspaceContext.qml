@@ -28,7 +28,7 @@ Rectangle {
 
     color: "transparent"
 
-    anchors.left: parent.left
+    anchors.left: parent ? parent.left : undefined
 
     required property string displayTitle
     required property string displaySubtitle
@@ -47,8 +47,8 @@ Rectangle {
     }
 
     RowLayout {
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.left: parent.left
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+        anchors.left: parent ? parent.left : undefined
 
         ColumnLayout {
             spacing: 0
@@ -112,8 +112,8 @@ Rectangle {
 
     StateLayer {
         id: mouseArea
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.right: parent.right
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+        anchors.right: parent ? parent.right : undefined
 
         propagateComposedEvents: true
         hoverEnabled: true

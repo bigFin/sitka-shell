@@ -40,7 +40,19 @@
       debug = sitka-shell.override {debug = true;};
 
       arch = pkgs.writeShellScriptBin "sitka-shell" ''
-        exec ${inputs.nixgl.packages.${pkgs.system}.nixGLDefault}/bin/nixGL ${sitka-shell}/bin/sitka-shell "$@"
+        # Sitka shell wrapper with OpenGL support
+        # Uses nixGL if available, otherwise runs directly
+        
+        # Check if nixGL is available in PATH
+        if command -v nixGL >/dev/null 2>&1; then
+          exec nixGL ${sitka-shell}/bin/sitka-shell "$@"
+        elif [ -n "$NIX_GL" ]; then
+          # Use custom nixGL path if specified
+          exec "$NIX_GL" ${sitka-shell}/bin/sitka-shell "$@"
+        else
+          # Run directly without nixGL
+          exec ${sitka-shell}/bin/sitka-shell "$@"
+        fi
       '';
 
       default = sitka-shell;

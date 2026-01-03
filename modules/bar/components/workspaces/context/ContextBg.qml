@@ -151,7 +151,7 @@ Item {
         orientation: cornerType
         color: parent.color
 
-        anchors.left: parent.left
+        anchors.left: parent ? parent.left : undefined
         anchors.leftMargin: Config.appearance.padding.small
         anchors.top: cornerType === 0 ? parent.bottom : undefined
         anchors.bottom: cornerType === 2 ? parent.top : undefined

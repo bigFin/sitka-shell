@@ -29,8 +29,8 @@ Item {
     property bool activated: false
     Component.onCompleted: activated = true
 
-    anchors.left: parent.left
-    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent ? parent.left : undefined
+    anchors.verticalCenter: parent ? parent.verticalCenter : undefined
     // opacity: popupActive && activated ? 1 : 0
 
     // height: popupActive && activated && (Niri.wsContextAnchor) ? contextLoader.height : parent.height
@@ -77,8 +77,8 @@ Item {
     Loader {
         id: contextLoader
 
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.left: parent.left
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+        anchors.left: parent ? parent.left : undefined
         active: root.popupActive && root.activated
         // active: root.activated && !(WMService.wsContextType === "none") && root.popupActive
 

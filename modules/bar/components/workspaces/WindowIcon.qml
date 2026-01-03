@@ -39,7 +39,7 @@ Item {
     signal dragUpdate(var iconItem, real mouseY, real mouseX)
     signal dragEnd(var iconItem)
 
-    anchors.left: parent.left
+    anchors.left: parent ? parent.left : undefined
 
     implicitWidth: iconLoader.implicitWidth + (popupActive ? Config.bar.workspaces.windowContextWidth : 0)
     implicitHeight: iconLoader.implicitHeight
@@ -54,9 +54,9 @@ Item {
 
     Loader {
         id: contextLoader
-        anchors.left: parent.left
+        anchors.left: parent ? parent.left : undefined
         anchors.leftMargin: iconLoader.implicitWidth + Config.appearance.padding.small
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
         active: (WMService.wsContextType !== "none" && Config.bar.workspaces.windowRighClickContext)
         sourceComponent: WindowIconContext {
             iconObj: iconItem
@@ -67,7 +67,7 @@ Item {
         id: iconLoader
 
         // anchors.centerIn: parent
-        anchors.left: parent.left
+        anchors.left: parent ? parent.left : undefined
 
         // anchors.horizontalCenter: parent.horizontalCenter
         sourceComponent: iconItem.useImageIcon ? imageIconComp : materialIconComp

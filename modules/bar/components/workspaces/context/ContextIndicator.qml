@@ -73,7 +73,7 @@ Item {
             model: [3, 1] // top, bottom
 
             anchors.fill: parent
-            anchors.right: parent.right
+            anchors.right: parent ? parent.right : undefined
 
             delegate: Corner {
                 required property var modelData
@@ -161,7 +161,7 @@ Item {
         color: parent.highlightColor
         opacity: parent.opacity
 
-        anchors.right: parent.right
+        anchors.right: parent ? parent.right : undefined
         anchors.rightMargin: -1
         anchors.top: cornerType === 1 ? parent.bottom : undefined
         anchors.bottom: cornerType === 3 ? parent.top : undefined
@@ -201,7 +201,7 @@ Item {
 
     HighlightRect {
         id: highlight
-        anchors.right: parent.right
+        anchors.right: parent ? parent.right : undefined
         anchors.rightMargin: root.padding
         opacity: (WMService.wsContextType === "workspaces") ? 0 : 1
         highlightColor: Colours.palette.m3background

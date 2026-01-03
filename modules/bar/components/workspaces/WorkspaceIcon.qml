@@ -26,7 +26,7 @@ Item {
 
     RowLayout {
         id: content
-        anchors.left: parent.left
+        anchors.left: parent ? parent.left : undefined
         spacing: Config.appearance.padding.small
 
         Item {
@@ -36,8 +36,8 @@ Item {
 
             StyledText {
                 id: indicator
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
+                anchors.verticalCenter: parent ? parent.verticalCenter : undefined
 
                 animate: true
                 text: {

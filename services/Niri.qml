@@ -425,13 +425,29 @@ Singleton {
     }
 
     function handleWindowsChanged(data) {
-        var newWindows = data.windows.slice(); // shallow copy
+        var newWindows = data.windows.slice();
         for (var i = 0; i < newWindows.length; i++) {
             if (!newWindows[i].layout) {
                 newWindows[i].layout = {};
             }
         }
-        windows = sortWindows(newWindows);
+        var sortedWindows = sortWindows(newWindows);
+        
+        // Only update if actually changed (compare by window IDs)
+        var currentIds = windows.map(w => w.id).sort().join(',');
+        var newIds = sortedWindows.map(w => w.id).sort().join(',');
+        if (currentIds !== newIds) {
+            windows = sortedWindows;
+        } else {
+            // Update existing windows in place if only properties changed
+            for (var i = 0; i < sortedWindows.length; i++) {
+                var existingIdx = windows.findIndex(w => w.id === sortedWindows[i].id);
+                if (existingIdx >= 0) {
+                    Object.assign(windows[existingIdx], sortedWindows[i]);
+                }
+            }
+            windowsChanged(); // Manually trigger signal for property updates
+        }
         updateFocusedWindow();
     }
 

@@ -40,6 +40,19 @@ Item {
         bottomRightFillet: effectiveEnabled
     }
 
+    StyledRect {
+        anchors.fill: parent
+        color: Colours.tPalette.m3surface
+
+        radius: mask.radius
+        filletSize: mask.filletSize
+
+        topLeftFillet: false
+        bottomLeftFillet: false
+        topRightFillet: mask.topRightFillet
+        bottomRightFillet: mask.bottomRightFillet
+    }
+
     Item {
         id: viewport
         anchors.fill: parent

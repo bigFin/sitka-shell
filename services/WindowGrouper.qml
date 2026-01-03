@@ -1,6 +1,24 @@
 pragma Singleton
 pragma ComponentBehavior: Bound
 
+/*
+ * WindowGrouper - Static Pool for Window Grouping
+ * 
+ * This singleton provides efficient window grouping using pre-allocated
+ * pools instead of dynamic allocation.
+ * 
+ * Features:
+ * - Groups windows by app_id respecting layout order
+ * - Caches groups per-workspace with version tracking
+ * - Automatically invalidates cache when WindowStore.version changes
+ * 
+ * Usage:
+ *   const groups = WindowGrouper.getGroupsForWorkspace(workspaceId);
+ *   for (const group of groups) {
+ *       console.log(group.appId, group.count, "windows");
+ *   }
+ */
+
 import QtQuick
 import Quickshell
 import "."
@@ -193,17 +211,17 @@ Singleton {
         }
         groupPool = pool;
         
-        console.log("WindowGrouper: Pool initialized");
+        // console.log("WindowGrouper: Pool initialized");
     }
 
     function debugDump() {
-        console.log("WindowGrouper Debug:");
-        console.log("  Active Groups:", activeGroupCount);
-        console.log("  Group Version:", groupVersion);
+        // console.log("WindowGrouper Debug:");
+        // console.log("  Active Groups:", activeGroupCount);
+        // console.log("  Group Version:", groupVersion);
         for (let i = 0; i < maxGroups; i++) {
             const g = groupPool[i];
             if (g.valid) {
-                console.log(`  Group ${i}: ${g.appId} (${g.count} windows) ws=${g.workspaceId}`);
+                // console.log(`  Group ${i}: ${g.appId} (${g.count} windows) ws=${g.workspaceId}`);
             }
         }
     }

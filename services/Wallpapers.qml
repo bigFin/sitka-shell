@@ -29,7 +29,7 @@ Searcher {
         showPreview = true;
 
         if (Colours.scheme === "dynamic")
-             console.log("Preview colours not implemented without caelestia-cli");
+             // console.log("Preview colours not implemented without caelestia-cli");
              // getPreviewColoursProc.running = true;
     }
 

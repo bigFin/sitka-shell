@@ -148,18 +148,18 @@ Singleton {
     property bool niriAvailable: false
 
     Component.onCompleted: {
-        console.log("NiriService: Component.onCompleted - initializing service");
+        // console.log("NiriService: Component.onCompleted - initializing service");
         checkNiriAvailability();
 
-        console.log("Paths.home:", Paths.home);
-        console.log("Paths.pictures:", Paths.pictures);
-        console.log("Paths.data:", Paths.data);
-        console.log("Paths.state:", Paths.state);
-        console.log("Paths.cache:", Paths.cache);
-        console.log("Paths.config:", Paths.config);
-        console.log("Paths.imagecache:", Paths.imagecache);
-        console.log("Paths.wallsdir:", Paths.wallsdir);
-        console.log("Paths.libdir:", Paths.libdir);
+        // console.log("Paths.home:", Paths.home);
+        // console.log("Paths.pictures:", Paths.pictures);
+        // console.log("Paths.data:", Paths.data);
+        // console.log("Paths.state:", Paths.state);
+        // console.log("Paths.cache:", Paths.cache);
+        // console.log("Paths.config:", Paths.config);
+        // console.log("Paths.imagecache:", Paths.imagecache);
+        // console.log("Paths.wallsdir:", Paths.wallsdir);
+        // console.log("Paths.libdir:", Paths.libdir);
     }
 
     // Check if niri is available
@@ -169,11 +169,11 @@ Singleton {
         onExited: exitCode => {
             root.niriAvailable = exitCode === 0;
             if (root.niriAvailable) {
-                console.log("NiriService: niri found, starting event stream and loading initial data");
+                // console.log("NiriService: niri found, starting event stream and loading initial data");
                 eventStreamProcess.running = true;
                 root.loadInitialWorkspaceData();
             } else {
-                console.log("NiriService: niri not found, workspace features disabled");
+                // console.log("NiriService: niri not found, workspace features disabled");
             }
         }
     }
@@ -191,7 +191,7 @@ Singleton {
             onStreamFinished: {
                 if (text && text.trim()) {
                     try {
-                        console.log("NiriService: Loaded initial workspace data");
+                        // console.log("NiriService: Loaded initial workspace data");
                         const workspaces = JSON.parse(text.trim());
                         // Initial query returns array directly, event stream wraps it in WorkspacesChanged
                         root.handleWorkspacesChanged({
@@ -238,7 +238,7 @@ Singleton {
                         if (windowsData && windowsData.windows) {
                             root.handleWindowsChanged(windowsData);
                             // WMStateMachine.enqueue(WMStateMachine.evtWindowsChanged, windowsData);
-                            console.log("NiriService: Loaded", windowsData.windows.length, "initial windows");
+                            // console.log("NiriService: Loaded", windowsData.windows.length, "initial windows");
                         }
                     } catch (e) {
                         console.warn("NiriService: Failed to parse initial windows data:", e);
@@ -263,7 +263,7 @@ Singleton {
                                 id: focusedData.id
                             });
                             // WMStateMachine.enqueue(WMStateMachine.evtWindowFocused, { id: focusedData.id });
-                            console.log("NiriService: Loaded initial focused window:", focusedData.id);
+                            // console.log("NiriService: Loaded initial focused window:", focusedData.id);
                         }
                     } catch (e) {
                         console.warn("NiriService: Failed to parse initial focused window data:", e);
@@ -274,7 +274,7 @@ Singleton {
     }
 
     function loadInitialWorkspaceData() {
-        console.log("NiriService: Loading initial workspace data...");
+        // console.log("NiriService: Loading initial workspace data...");
         initialDataQuery.running = true;
         initialWindowsQuery.running = true;
         initialFocusedWindowQuery.running = true;
@@ -411,7 +411,7 @@ Singleton {
             var focusedWs = allWorkspaces[focusedWorkspaceIndex];
             focusedWorkspaceId = focusedWs.id;
             focusedMonitorName = focusedWs.output;
-            console.log(focusedMonitorName);
+            // console.log(focusedMonitorName);
         } else {
             focusedWorkspaceIndex = 0;
             focusedWorkspaceId = "";
@@ -500,7 +500,7 @@ Singleton {
 
     function handleOutputsChanged(data) {
         outputs = data;
-        console.log("NiriService: Updated outputs:", Object.keys(outputs));
+        // console.log("NiriService: Updated outputs:", Object.keys(outputs));
     }
 
     function handleWindowOpenedOrChanged(data) {

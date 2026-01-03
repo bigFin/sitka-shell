@@ -131,7 +131,7 @@ Item {
     ]
 
     HyprlandFocusGrab {
-        active: !Config.dashboard.showOnHover && root.visibilities.dashboard && Config.dashboard.enabled
+        active: WMDetector.isHyprland && !Config.dashboard.showOnHover && root.visibilities.dashboard && Config.dashboard.enabled
         windows: [QsWindow.window]
         onCleared: root.visibilities.dashboard = false
     }

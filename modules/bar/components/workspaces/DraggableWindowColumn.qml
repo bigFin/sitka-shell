@@ -31,10 +31,7 @@ Item {
 
     property bool isWsFocused: root.activeWsId === root.ws
 
-    property var wsWindows: {
-        if (!root.workspaceData) return [];
-        return WMService.getWindowsByWorkspaceId(root.workspaceData.id);
-    }
+    property var wsWindows: root.workspaceData ? WMService.getWindowsByWorkspaceId(root.workspaceData.id) : []
 
     function updateGroupedWindowsModel() {
         if (!root.workspaceData) return;

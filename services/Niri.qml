@@ -95,10 +95,11 @@ Singleton {
 
     property var workspaceHasWindows: ({})
     function updateWorkspaceHasWindows() {
+        let changed = false;
         let newWorkspaceHasWindows = {};
+
         // Initialize all known workspaces to false
         for (const ws of root.allWorkspaces) {
-            // Use allWorkspaces here
             newWorkspaceHasWindows[ws.idx] = false;
         }
 
@@ -109,10 +110,28 @@ Singleton {
             }
         }
 
-        // Only update if there's an actual change to avoid unnecessary property change signals
-        if (JSON.stringify(root.workspaceHasWindows) !== JSON.stringify(newWorkspaceHasWindows)) {
+        // Compare without JSON.stringify - check each key individually
+        for (const key in newWorkspaceHasWindows) {
+            if (root.workspaceHasWindows[key] !== newWorkspaceHasWindows[key]) {
+                changed = true;
+                break;
+            }
+        }
+
+        // Also check if keys count differs
+        if (!changed) {
+            const oldKeys = Object.keys(root.workspaceHasWindows);
+            const newKeys = Object.keys(newWorkspaceHasWindows);
+            if (oldKeys.length !== newKeys.length) {
+                changed = true;
+            }
+        }
+
+        // Only update if there's an actual change
+        if (changed) {
             root.workspaceHasWindows = newWorkspaceHasWindows;
-            console.log("NiriService: updateWorkspaceHasWindows() called. Current state:", JSON.stringify(root.workspaceHasWindows));
+            // Remove the console.log in production - it's causing log spam
+            // console.log("NiriService: updateWorkspaceHasWindows() called. Current state:", JSON.stringify(root.workspaceHasWindows));
         }
     }
 
@@ -178,6 +197,7 @@ Singleton {
                         root.handleWorkspacesChanged({
                             workspaces: workspaces
                         });
+                        // WMStateMachine.enqueue(WMStateMachine.evtWorkspacesChanged, { workspaces: workspaces });
                     } catch (e) {
                         console.warn("NiriService: Failed to parse initial workspace data:", e);
                     }
@@ -217,6 +237,7 @@ Singleton {
                         const windowsData = JSON.parse(text.trim());
                         if (windowsData && windowsData.windows) {
                             root.handleWindowsChanged(windowsData);
+                            // WMStateMachine.enqueue(WMStateMachine.evtWindowsChanged, windowsData);
                             console.log("NiriService: Loaded", windowsData.windows.length, "initial windows");
                         }
                     } catch (e) {
@@ -241,6 +262,7 @@ Singleton {
                             root.handleWindowFocusChanged({
                                 id: focusedData.id
                             });
+                            // WMStateMachine.enqueue(WMStateMachine.evtWindowFocused, { id: focusedData.id });
                             console.log("NiriService: Loaded initial focused window:", focusedData.id);
                         }
                     } catch (e) {
@@ -304,19 +326,28 @@ Singleton {
     }
 
     function handleNiriEvent(event) {
+        // NOTE: WMStateMachine routing disabled until UI migration is complete
+        // Uncomment these when ready to use the new architecture
         if (event.WorkspacesChanged) {
+            // WMStateMachine.enqueue(WMStateMachine.evtWorkspacesChanged, event.WorkspacesChanged);
             handleWorkspacesChanged(event.WorkspacesChanged);
         } else if (event.WorkspaceActivated) {
+            // WMStateMachine.enqueue(WMStateMachine.evtWorkspaceActivated, event.WorkspaceActivated);
             handleWorkspaceActivated(event.WorkspaceActivated);
         } else if (event.WindowLayoutsChanged) {
+            // WMStateMachine.enqueue(WMStateMachine.evtLayoutChanged, event.WindowLayoutsChanged);
             handleWindowLayoutsChanged(event.WindowLayoutsChanged);
         } else if (event.WindowsChanged) {
+            // WMStateMachine.enqueue(WMStateMachine.evtWindowsChanged, event.WindowsChanged);
             handleWindowsChanged(event.WindowsChanged);
         } else if (event.WindowClosed) {
+            // WMStateMachine.enqueue(WMStateMachine.evtWindowClosed, event.WindowClosed);
             handleWindowClosed(event.WindowClosed);
         } else if (event.WindowFocusChanged) {
+            // WMStateMachine.enqueue(WMStateMachine.evtWindowFocused, event.WindowFocusChanged);
             handleWindowFocusChanged(event.WindowFocusChanged);
         } else if (event.WindowOpenedOrChanged) {
+            // WMStateMachine.enqueue(WMStateMachine.evtWindowOpened, event.WindowOpenedOrChanged);
             handleWindowOpenedOrChanged(event.WindowOpenedOrChanged);
         } else if (event.OverviewOpenedOrClosed) {
             handleOverviewChanged(event.OverviewOpenedOrClosed);

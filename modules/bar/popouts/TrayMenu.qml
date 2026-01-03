@@ -28,7 +28,7 @@ StackView {
     popExit: NoAnim {}
 
     HyprlandFocusGrab {
-        active: true
+        active: WMDetector.isHyprland
         windows: [QsWindow.window]
         onCleared: root.popouts.hasCurrent = false
     }

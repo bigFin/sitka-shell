@@ -1,0 +1,87 @@
+===== Build Information =====
+Git Revision: e9bad67619ee9937a1bbecfc6ad3b4231d2ecdc3
+Buildtime Qt Version: 6.10.1
+Build Type: RelWithDebInfo
+Compiler: GNU (14.3.0)
+Complie Flags: 
+
+Build configuration:
+  Distributor: Official-Nix-Flake
+  Distributor provided debuginfo: TRUE
+  Disable precompild headers (dev): OFF
+  Build tests (dev): OFF
+  ASAN (dev): OFF
+  Keep Frame Pointers (dev): OFF
+  Crash Handling: TRUE
+  Use jemalloc: TRUE
+  Unix Sockets: ON
+  Wayland: TRUE
+    Wlroots Layer-Shell: ON
+    Session Lock: ON
+    Foreign Toplevel Management: ON
+    Hyprland: TRUE
+      Hyprland IPC: ON
+      Hyprland Global Shortcuts: ON
+      Hyprland Focus Grabbing: ON
+      Hyprland Surface Extensions: ON
+    Screencopy: TRUE
+      Image Copy Capture: ON
+      Wlroots Screencopy: ON
+      Hyprland Toplevel Export: ON
+  X11: ON
+  I3/Sway: FALSE
+    I3/Sway IPC: OFF (Requires I3)
+  System Tray: ON
+  PipeWire: TRUE
+  Mpris: ON
+  Pam: TRUE
+  Polkit: TRUE
+  Greetd: ON
+  UPower: ON
+  Notifications: ON
+  Bluetooth: ON
+
+===== Runtime Information =====
+Runtime Qt Version: 6.10.1
+Crashed process ID: 83990
+Run ID: bu1cdt47t
+Shell ID: 93d9d5125beb3ce392bd8a1f3d8075d8
+Config Path: /nix/store/ll2gsk2mr3zn5lfpks9wwz1q78gm8vf4-sitka-shell-1.0.0/share/sitka-shell/shell.qml
+
+===== Report Integrity =====
+Minidump save status: 0
+Log save status: 0
+Binary copy status: 0
+
+===== System Information =====
+
+/etc/os-release:
+ANSI_COLOR="0;38;2;126;186;228"
+BUG_REPORT_URL="https://github.com/NixOS/nixpkgs/issues"
+BUILD_ID="25.11.20251022.01f116e"
+CPE_NAME="cpe:/o:nixos:nixos:25.11"
+DEFAULT_HOSTNAME=nixos
+DOCUMENTATION_URL="https://nixos.org/learn.html"
+HOME_URL="https://nixos.org/"
+ID=nixos
+ID_LIKE=""
+IMAGE_ID=""
+IMAGE_VERSION=""
+LOGO="nix-snowflake"
+NAME=NixOS
+PRETTY_NAME="NixOS 25.11 (Xantusia)"
+SUPPORT_URL="https://nixos.org/community.html"
+VARIANT=""
+VARIANT_ID=""
+VENDOR_NAME=NixOS
+VENDOR_URL="https://nixos.org/"
+VERSION="25.11 (Xantusia)"
+VERSION_CODENAME=xantusia
+VERSION_ID="25.11"
+
+/etc/lsb-release:
+DISTRIB_CODENAME=xantusia
+DISTRIB_DESCRIPTION="NixOS 25.11 (Xantusia)"
+DISTRIB_ID=nixos
+DISTRIB_RELEASE="25.11"
+LSB_VERSION="25.11 (Xantusia)"

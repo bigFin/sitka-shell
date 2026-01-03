@@ -241,4 +241,50 @@ Singleton {
         if (isNiri) return Niri.toggleWindowOpacity()
         // TODO: Hyprland opacity toggle
     }
+
+    // ===== NEW ARCHITECTURE: WindowStore Accessors =====
+    // These provide access to the new static buffer architecture
+    // UI components can migrate to these incrementally
+    
+    readonly property int storeVersion: WindowStore.version
+    
+    // Direct buffer access for high-performance scenarios
+    readonly property var windowBuffer: WindowStore.windowBuffer
+    readonly property var workspaceBuffer: WindowStore.workspaceBuffer
+    
+    // Accessor functions that use the new store
+    function getWindowFromStore(windowId) {
+        return WindowStore.getWindow(windowId);
+    }
+    
+    function getWorkspaceFromStore(workspaceId) {
+        return WindowStore.getWorkspace(workspaceId);
+    }
+    
+    function getWindowsFromStoreForWorkspace(workspaceId) {
+        return WindowStore.getWindowsForWorkspace(workspaceId);
+    }
+    
+    function getFocusedWindowFromStore() {
+        return WindowStore.getFocusedWindow();
+    }
+    
+    function getFocusedWorkspaceFromStore() {
+        return WindowStore.getFocusedWorkspace();
+    }
+    
+    // Window grouping from new architecture
+    function getGroupsForWorkspace(workspaceId, forceRebuild) {
+        return WindowGrouper.getGroupsForWorkspace(workspaceId, forceRebuild || false);
+    }
+    
+    function getWindowsInGroup(groupSlot) {
+        return WindowGrouper.getWindowsInGroup(groupSlot);
+    }
+    
+    // Debug helpers
+    function dumpStoreState() {
+        WindowStore.debugDump();
+        WindowGrouper.debugDump();
+    }
 }

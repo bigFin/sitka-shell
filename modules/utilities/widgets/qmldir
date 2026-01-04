@@ -1,4 +1,5 @@
 module qs.modules.utilities.widgets
 
+PomodoroTimer PomodoroTimer.qml
 QuickToggles QuickToggles.qml
 VolumeMixer VolumeMixer.qml

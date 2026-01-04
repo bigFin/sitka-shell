@@ -1,0 +1,6 @@
+module qs.modules.utilities
+
+Background 1.0 Background.qml
+Content 1.0 Content.qml
+CornerTrigger 1.0 CornerTrigger.qml
+Wrapper 1.0 Wrapper.qml

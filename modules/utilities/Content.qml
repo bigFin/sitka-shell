@@ -50,6 +50,18 @@ StyledRect {
             color: Colours.palette.m3outlineVariant
         }
 
+        // WiFi Networks
+        Widgets.WifiNetworks {
+            Layout.fillWidth: true
+        }
+
+        // Separator
+        Rectangle {
+            Layout.fillWidth: true
+            height: 1
+            color: Colours.palette.m3outlineVariant
+        }
+
         // Volume Mixer
         Widgets.VolumeMixer {
             Layout.fillWidth: true

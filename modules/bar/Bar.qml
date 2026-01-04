@@ -227,6 +227,12 @@ ColumnLayout {
                 }
             }
             DelegateChoice {
+                roleValue: "screenRecorder"
+                delegate: WrappedLoader {
+                    sourceComponent: ScreenRecorder {}
+                }
+            }
+            DelegateChoice {
                 roleValue: "controlcenter"
                 delegate: WrappedLoader {
                     sourceComponent: BarIcon {

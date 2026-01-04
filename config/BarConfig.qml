@@ -67,6 +67,10 @@ JsonObject {
             enabled: false
         },
         {
+            id: "screenRecorder",
+            enabled: false
+        },
+        {
             id: "logoToggle",  // OS logo that toggles bar pinned state (replaces pin)
             enabled: true
         }

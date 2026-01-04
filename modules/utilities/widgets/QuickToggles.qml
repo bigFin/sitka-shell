@@ -106,6 +106,16 @@ ColumnLayout {
                     Audio.sink.audio.muted = !Audio.muted
             }
         }
+
+        // Night Light toggle
+        QuickToggle {
+            Layout.fillWidth: true
+            label: qsTr("Night Light")
+            icon: NightLight.enabled ? "nightlight" : "light_mode"
+            active: NightLight.enabled
+            subtitle: NightLight.enabled ? `${NightLight.temperature}K` : qsTr("Off")
+            onClicked: NightLight.toggle()
+        }
     }
 
     component QuickToggle: StyledRect {

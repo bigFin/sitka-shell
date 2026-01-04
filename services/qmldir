@@ -8,6 +8,7 @@ singleton Hypr Hypr.qml
 singleton IdleInhibitor IdleInhibitor.qml
 singleton IdleService IdleService.qml
 singleton Network Network.qml
+singleton NightLight NightLight.qml
 singleton Niri Niri.qml
 singleton Notifs Notifs.qml
 singleton Players Players.qml

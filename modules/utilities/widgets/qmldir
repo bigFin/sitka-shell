@@ -1,6 +1,7 @@
 module qs.modules.utilities.widgets
 
 AppDock AppDock.qml
+BluetoothDevices BluetoothDevices.qml
 PomodoroTimer PomodoroTimer.qml
 QuickToggles QuickToggles.qml
 TodoList TodoList.qml

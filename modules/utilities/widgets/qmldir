@@ -5,3 +5,4 @@ PomodoroTimer PomodoroTimer.qml
 QuickToggles QuickToggles.qml
 TodoList TodoList.qml
 VolumeMixer VolumeMixer.qml
+WifiNetworks WifiNetworks.qml

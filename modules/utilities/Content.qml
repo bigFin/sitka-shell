@@ -11,20 +11,19 @@ import QtQuick.Layouts
 StyledRect {
     id: root
 
-    anchors.top: parent.top
-    anchors.bottom: parent.bottom
-    anchors.right: parent.right
-
-    implicitWidth: content.implicitWidth + Config.appearance.padding.large * 2
+    implicitWidth: 320
+    implicitHeight: content.implicitHeight + Config.appearance.padding.large * 2
     radius: Config.appearance.rounding.large
     color: Colours.tPalette.m3surfaceContainer
 
     ColumnLayout {
         id: content
 
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
         anchors.margins: Config.appearance.padding.large
-        spacing: Config.appearance.spacing.large
+        spacing: Config.appearance.spacing.small
 
         // App Dock at top
         Widgets.AppDock {
@@ -101,11 +100,6 @@ StyledRect {
         // Todo List
         Widgets.TodoList {
             Layout.fillWidth: true
-        }
-
-        // Spacer
-        Item {
-            Layout.fillHeight: true
         }
     }
 

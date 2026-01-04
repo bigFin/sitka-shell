@@ -1,9 +1,9 @@
 module qs.modules.utilities.widgets
 
-AppDock AppDock.qml
-BluetoothDevices BluetoothDevices.qml
-PomodoroTimer PomodoroTimer.qml
-QuickToggles QuickToggles.qml
-TodoList TodoList.qml
-VolumeMixer VolumeMixer.qml
-WifiNetworks WifiNetworks.qml
+AppDock 1.0 AppDock.qml
+BluetoothDevices 1.0 BluetoothDevices.qml
+PomodoroTimer 1.0 PomodoroTimer.qml
+QuickToggles 1.0 QuickToggles.qml
+TodoList 1.0 TodoList.qml
+VolumeMixer 1.0 VolumeMixer.qml
+WifiNetworks 1.0 WifiNetworks.qml

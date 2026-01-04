@@ -5,6 +5,8 @@ import qs.services
 import "../../../config"
 import Quickshell
 import Quickshell.Io
+import Quickshell.Widgets
+import Sitka
 import QtQuick
 import QtQuick.Layouts
 
@@ -12,6 +14,18 @@ ColumnLayout {
     id: root
 
     spacing: Config.appearance.spacing.small
+
+    // Helper to find desktop entry by ID
+    function findEntryById(appId) {
+        const apps = DesktopDatabase.applications
+        for (let i = 0; i < apps.length; i++) {
+            if (apps[i].id === appId || apps[i].id === appId + ".desktop") {
+                return apps[i]
+            }
+        }
+        // Fallback: try heuristic lookup
+        return DesktopEntries.heuristicLookup(appId)
+    }
 
     // Pinned apps storage
     PersistentProperties {
@@ -121,8 +135,8 @@ ColumnLayout {
                 isRunning: false
                 onClicked: {
                     // Launch the app
-                    const entry = DesktopDatabase.byId(modelData)
-                    if (entry) {
+                    const entry = root.findEntryById(modelData)
+                    if (entry && entry.command) {
                         Quickshell.execDetached(["app2unit", "--", ...entry.command])
                     }
                 }
@@ -162,14 +176,9 @@ ColumnLayout {
             implicitHeight: 28
             source: {
                 // Try to find icon for this app
-                const entry = DesktopDatabase.byId(item.appId)
+                const entry = root.findEntryById(item.appId)
                 if (entry?.icon) {
                     return `image://icon/${entry.icon}`
-                }
-                // Fallback: try heuristic lookup
-                const heuristic = DesktopEntries.heuristicLookup(item.appId)
-                if (heuristic?.icon) {
-                    return `image://icon/${heuristic.icon}`
                 }
                 return ""
             }

@@ -8,6 +8,7 @@ import "../../config"
 import qs.modules.bar
 import qs.modules.launcher as Launcher
 import qs.modules.dashboard as Dashboard
+import qs.modules.utilities as Utilities
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
@@ -212,6 +213,12 @@ Variants {
             targetScreen: scope.modelData
             visibilities: scope.visibilities
             barVisible: scope.bar.shouldBeVisible
+        }
+
+        // Bottom-right corner trigger for utilities panel
+        Utilities.CornerTrigger {
+            targetScreen: scope.modelData
+            visibilities: scope.visibilities
         }
     }
 }

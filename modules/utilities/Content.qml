@@ -26,7 +26,19 @@ StyledRect {
         anchors.margins: Config.appearance.padding.large
         spacing: Config.appearance.spacing.large
 
-        // Quick Toggles at top
+        // App Dock at top
+        Widgets.AppDock {
+            Layout.fillWidth: true
+        }
+
+        // Separator
+        Rectangle {
+            Layout.fillWidth: true
+            height: 1
+            color: Colours.palette.m3outlineVariant
+        }
+
+        // Quick Toggles
         Widgets.QuickToggles {
             Layout.fillWidth: true
         }

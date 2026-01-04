@@ -1,5 +1,6 @@
 module qs.modules.utilities.widgets
 
+AppDock AppDock.qml
 PomodoroTimer PomodoroTimer.qml
 QuickToggles QuickToggles.qml
 TodoList TodoList.qml

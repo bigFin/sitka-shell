@@ -233,6 +233,14 @@ ColumnLayout {
                 }
             }
             DelegateChoice {
+                roleValue: "utilities"
+                delegate: WrappedLoader {
+                    sourceComponent: UtilitiesToggle {
+                        visibilities: root.visibilities
+                    }
+                }
+            }
+            DelegateChoice {
                 roleValue: "controlcenter"
                 delegate: WrappedLoader {
                     sourceComponent: BarIcon {

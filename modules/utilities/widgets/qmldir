@@ -1,0 +1,4 @@
+module qs.modules.utilities.widgets
+
+QuickToggles QuickToggles.qml
+VolumeMixer VolumeMixer.qml

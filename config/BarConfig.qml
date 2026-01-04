@@ -71,6 +71,10 @@ JsonObject {
             enabled: false
         },
         {
+            id: "utilities",
+            enabled: false
+        },
+        {
             id: "logoToggle",  // OS logo that toggles bar pinned state (replaces pin)
             enabled: true
         }

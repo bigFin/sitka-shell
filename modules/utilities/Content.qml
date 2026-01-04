@@ -1,19 +1,53 @@
-import "../../config"
-import QtQuick
+pragma ComponentBehavior: Bound
 
-Item {
+import qs.components
+import qs.components.containers
+import qs.services
+import "../../config"
+import "widgets" as Widgets
+import QtQuick
+import QtQuick.Layouts
+
+StyledRect {
     id: root
 
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     anchors.right: parent.right
 
-    implicitWidth: 300
-    // implicitHeight: 100
+    implicitWidth: content.implicitWidth + Config.appearance.padding.large * 2
+    radius: Config.appearance.rounding.large
+    color: Colours.tPalette.m3surfaceContainer
 
-    // Rectangle {
-    //     anchors.fill: parent
-    // }
+    ColumnLayout {
+        id: content
+
+        anchors.fill: parent
+        anchors.margins: Config.appearance.padding.large
+        spacing: Config.appearance.spacing.large
+
+        // Quick Toggles at top
+        Widgets.QuickToggles {
+            Layout.fillWidth: true
+        }
+
+        // Separator
+        Rectangle {
+            Layout.fillWidth: true
+            height: 1
+            color: Colours.palette.m3outlineVariant
+        }
+
+        // Volume Mixer
+        Widgets.VolumeMixer {
+            Layout.fillWidth: true
+        }
+
+        // Spacer
+        Item {
+            Layout.fillHeight: true
+        }
+    }
 
     Behavior on implicitHeight {
         Anim {}

@@ -19,6 +19,7 @@ singleton Time Time.qml
 singleton Visibilities Visibilities.qml
 singleton Wallpapers Wallpapers.qml
 singleton Weather Weather.qml
+singleton Recorder Recorder.qml
 singleton WindowStore WindowStore.qml
 singleton WMStateMachine WMStateMachine.qml
 singleton WindowGrouper WindowGrouper.qml

@@ -28,9 +28,10 @@ Searcher {
         previewPath = path;
         showPreview = true;
 
-        if (Colours.scheme === "dynamic")
+        if (Colours.scheme === "dynamic") {
              // console.log("Preview colours not implemented without caelestia-cli");
              // getPreviewColoursProc.running = true;
+        }
     }
 
     function stopPreview(): void {

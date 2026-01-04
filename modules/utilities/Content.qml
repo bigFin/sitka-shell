@@ -43,6 +43,18 @@ StyledRect {
             Layout.fillWidth: true
         }
 
+        // Separator
+        Rectangle {
+            Layout.fillWidth: true
+            height: 1
+            color: Colours.palette.m3outlineVariant
+        }
+
+        // Pomodoro Timer
+        Widgets.PomodoroTimer {
+            Layout.fillWidth: true
+        }
+
         // Spacer
         Item {
             Layout.fillHeight: true

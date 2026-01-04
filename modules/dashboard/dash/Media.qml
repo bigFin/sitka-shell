@@ -1,6 +1,7 @@
 import qs.components
 import qs.components.misc
 import qs.services
+import qs.components.effects
 import "../../../config"
 import qs.utils
 import Sitka
@@ -202,9 +203,10 @@ Item {
         }
     }
 
-    Image {
-        id: bongocat
-
+    // Media decoration - SitkaTree or custom image
+    Item {
+        id: mediaDecoration
+        
         anchors.top: controls.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
@@ -212,10 +214,44 @@ Item {
         anchors.topMargin: Config.appearance.spacing.small
         anchors.bottomMargin: Config.appearance.padding.large
         anchors.margins: Config.appearance.padding.large * 2
-
-        source: Paths.absolutePath(Config.paths.mediaGif)
-        asynchronous: true
-        fillMode: Image.PreserveAspectFit
+        
+        // Show SitkaTree if no custom media gif is set, or if it's a sitka image
+        property bool useSitkaTree: {
+            const path = Config.paths.mediaGif || ""
+            return path === "" || path.indexOf("sitka") >= 0
+        }
+        
+        // Procedural ASCII Sitka Spruce Tree
+        Loader {
+            id: sitkaTreeLoader
+            anchors.fill: parent
+            active: mediaDecoration.useSitkaTree
+            
+            sourceComponent: SitkaTree {
+                anchors.centerIn: parent
+                animated: true
+                fontSize: 14
+                treeHeight: Math.max(8, Math.floor(parent.height / 18))
+                treeWidth: Math.max(7, Math.floor(parent.width / 14))
+                
+                // Click to regenerate
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: parent.regenerate()
+                }
+            }
+        }
+        
+        // Fallback to configured image
+        Image {
+            id: customImage
+            anchors.fill: parent
+            visible: !mediaDecoration.useSitkaTree
+            
+            source: mediaDecoration.useSitkaTree ? "" : Paths.absolutePath(Config.paths.mediaGif)
+            asynchronous: true
+            fillMode: Image.PreserveAspectFit
+        }
     }
 
     component Control: StyledRect {

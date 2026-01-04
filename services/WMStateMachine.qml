@@ -84,9 +84,11 @@ Singleton {
         
         currentState = stateProcessing;
         
-        // Coalesce events
-        const coalescedEvents = coalesceEvents(eventQueue);
+        // Coalesce events - copy and clear queue first to avoid losing events 
+        // that arrive during processing
+        const eventsToProcess = eventQueue;
         eventQueue = [];
+        const coalescedEvents = coalesceEvents(eventsToProcess);
         
         // Process each event
         let stateChanged = false;
@@ -103,7 +105,13 @@ Singleton {
             WindowStore._incrementVersion();
         }
         
-        currentState = stateIdle;
+        // If more events arrived during processing, restart the timer
+        if (eventQueue.length > 0) {
+            currentState = stateCollecting;
+            batchTimer.start();
+        } else {
+            currentState = stateIdle;
+        }
     }
     
     function coalesceEvents(events) {
@@ -160,14 +168,11 @@ Singleton {
         if (!data || !data.workspaces) return false;
         
         let changed = false;
-        const seenIds = {};
         const workspaces = data.workspaces;
         
         for (let i = 0; i < workspaces.length && i < WindowStore.maxWorkspaces; i++) {
             const ws = workspaces[i];
             const slot = WindowStore.workspaceBuffer[i];
-            
-            seenIds[ws.id] = true;
             
             // Check if anything changed
             if (!slot.valid || slot.id !== ws.id || slot.idx !== ws.idx ||
@@ -352,7 +357,7 @@ Singleton {
             WindowStore.windowBuffer[WindowStore.focusedWindowSlot].isFocused = false;
         }
         
-        if (data.id) {
+        if (data.id !== undefined && data.id !== null) {
             const slot = WindowStore.windowIdToSlot[data.id];
             if (slot !== undefined) {
                 WindowStore.windowBuffer[slot].isFocused = true;

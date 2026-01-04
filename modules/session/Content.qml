@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import qs.components
+import qs.components.effects
 import qs.services
 import "../../config"
 import qs.utils
@@ -52,14 +53,51 @@ Column {
         KeyNavigation.down: hibernate
     }
 
-    Image {
+    // Session decoration - SitkaTree or custom GIF
+    Item {
+        id: sessionDecoration
+        
         width: Config.session.sizes.button
         height: Config.session.sizes.button
-        sourceSize.width: width
-        sourceSize.height: height
-
-        asynchronous: true
-        source: Paths.absolutePath(Config.paths.sessionGif)
+        
+        // Show SitkaTree if no custom session gif is set, or if it's a sitka image
+        property bool useSitkaTree: {
+            const path = Config.paths.sessionGif || ""
+            return path === "" || path.indexOf("sitka") >= 0
+        }
+        
+        // Procedural ASCII Sitka Spruce Tree
+        Loader {
+            id: sitkaTreeLoader
+            anchors.fill: parent
+            active: sessionDecoration.useSitkaTree
+            
+            sourceComponent: SitkaTree {
+                anchors.centerIn: parent
+                animated: true
+                fontSize: 14
+                treeHeight: Math.max(8, Math.floor(parent.height / 18))
+                treeWidth: Math.max(7, Math.floor(parent.width / 14))
+                
+                // Click to regenerate
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: parent.regenerate()
+                }
+            }
+        }
+        
+        // Fallback to configured GIF
+        Image {
+            id: customGif
+            anchors.fill: parent
+            visible: !sessionDecoration.useSitkaTree
+            
+            sourceSize.width: width
+            sourceSize.height: height
+            asynchronous: true
+            source: sessionDecoration.useSitkaTree ? "" : Paths.absolutePath(Config.paths.sessionGif)
+        }
     }
 
     SessionButton {

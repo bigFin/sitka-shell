@@ -524,15 +524,43 @@ Item {
         implicitWidth: visualiser.width
         implicitHeight: visualiser.height
 
+        // Show SitkaTree if no custom media gif is set, or if it's a sitka image
+        property bool useSitkaTree: {
+            const path = Config.paths.mediaGif || ""
+            return path === "" || path.indexOf("sitka") >= 0
+        }
+
+        // Procedural ASCII Sitka Spruce Tree
+        Loader {
+            anchors.fill: parent
+            active: bongocat.useSitkaTree
+            
+            sourceComponent: SitkaTree {
+                anchors.centerIn: parent
+                animated: true
+                fontSize: 14
+                treeHeight: Math.max(8, Math.floor(parent.height / 18))
+                treeWidth: Math.max(7, Math.floor(parent.width / 14))
+                
+                // Click to regenerate
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: parent.regenerate()
+                }
+            }
+        }
+
+        // Fallback to configured animated image
         AnimatedImage {
             anchors.centerIn: parent
+            visible: !bongocat.useSitkaTree
 
-            width: visualiser.width * 0.75
-            height: visualiser.height * 0.75
+            width: parent.width * 0.75
+            height: parent.height * 0.75
 
             playing: Players.active?.isPlaying ?? false
             speed: BeatTracker.bpm / 300
-            source: Paths.absolutePath(Config.paths.mediaGif)
+            source: bongocat.useSitkaTree ? "" : Paths.absolutePath(Config.paths.mediaGif)
             asynchronous: true
             fillMode: AnimatedImage.PreserveAspectFit
         }

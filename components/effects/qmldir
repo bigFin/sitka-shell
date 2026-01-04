@@ -1,0 +1,11 @@
+module qs.components.effects
+Buttress 1.0 Buttress.qml
+CalloutLine 1.0 CalloutLine.qml
+ColouredIcon 1.0 ColouredIcon.qml
+Colouriser 1.0 Colouriser.qml
+CornerPiece 1.0 CornerPiece.qml
+ElevationGlow 1.0 ElevationGlow.qml
+Elevation 1.0 Elevation.qml
+InnerBorder 1.0 InnerBorder.qml
+ShellShader 1.0 ShellShader.qml
+SitkaTree 1.0 SitkaTree.qml

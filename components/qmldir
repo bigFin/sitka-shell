@@ -1,0 +1,10 @@
+module qs.components
+Anim 1.0 Anim.qml
+CAnim 1.0 CAnim.qml
+CollapsibleSection 1.0 CollapsibleSection.qml
+MaterialIcon 1.0 MaterialIcon.qml
+StateLayer 1.0 StateLayer.qml
+StyledClippingRect 1.0 StyledClippingRect.qml
+StyledRect 1.0 StyledRect.qml
+StyledText 1.0 StyledText.qml
+SystemLogo 1.0 SystemLogo.qml

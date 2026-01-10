@@ -1,15 +1,37 @@
 pragma ComponentBehavior: Bound
 
+import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import qs.services
 
 Scope {
+    id: root
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // LOCK SCREEN WITH SCREENSAVER INTEGRATION
+    // ═══════════════════════════════════════════════════════════════════════
+    //
+    // This module integrates with ScreensaverService to provide:
+    // - Lock screen UI that can be overlaid by screensaver (papertoy)
+    // - Coordination between lock state and screensaver state
+    // - Activity detection to show/hide lock UI vs screensaver
+    //
+    // ═══════════════════════════════════════════════════════════════════════
 
     WlSessionLock {
         id: lock
 
         signal unlock
+
+        // When lock state changes, coordinate with ScreensaverService
+        onLockedChanged: {
+            if (!locked) {
+                // Successfully unlocked - notify ScreensaverService
+                ScreensaverService.unlock();
+            }
+        }
 
         LockSurface {
             lock: lock
@@ -19,30 +41,53 @@ Scope {
 
     Pam {
         id: pam
-
         lock: lock
     }
 
-    // CustomShortcut {
-    //     name: "lock"
-    //     description: "Lock the current session"
-    //     onPressed: lock.locked = true
-    // }
+    // ═══════════════════════════════════════════════════════════════════════
+    // SCREENSAVER SERVICE CONNECTIONS
+    // ═══════════════════════════════════════════════════════════════════════
 
-    // CustomShortcut {
-    //     name: "unlock"
-    //     description: "Unlock the current session"
-    //     onPressed: lock.unlock()
-    // }
+    Connections {
+        target: ScreensaverService
+
+        // ScreensaverService requests lock
+        function onLockRequested(): void {
+            console.log("Lock: lockRequested received");
+            lock.locked = true;
+        }
+
+        // ScreensaverService requests unlock (after successful auth)
+        function onUnlockRequested(): void {
+            console.log("Lock: unlockRequested received");
+            lock.unlock();
+        }
+
+        // Activity detected while in LockedScreensaver state
+        // Need to bring lock UI to foreground
+        function onShowLockUI(): void {
+            console.log("Lock: showLockUI received");
+            // The lock surface should already be visible, but we may need
+            // to signal the LockSurface to come to foreground or refocus
+            // For now, the state change in ScreensaverService handles this
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // IPC HANDLER
+    // ═══════════════════════════════════════════════════════════════════════
 
     IpcHandler {
         target: "lock"
 
         function lock(): void {
-            lock.locked = true;
+            // Route through ScreensaverService for proper state management
+            ScreensaverService.lock();
         }
 
         function unlock(): void {
+            // This is typically called after successful authentication
+            // which triggers lock.locked = false via Pam
             lock.unlock();
         }
 

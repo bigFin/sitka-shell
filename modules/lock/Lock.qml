@@ -88,6 +88,8 @@ Scope {
         function unlock(): void {
             // This is typically called after successful authentication
             // which triggers lock.locked = false via Pam
+            // Also notify ScreensaverService directly for state management
+            ScreensaverService.unlock();
             lock.unlock();
         }
 

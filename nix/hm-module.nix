@@ -9,6 +9,27 @@ self: {
   shell-default = self.packages.${system}.sitka-shell;
 
   cfg = config.programs.sitka;
+  
+  # Swayidle configuration
+  swayidleCfg = cfg.swayidle;
+  
+  # Build IPC commands for swayidle
+  screensaverEnableCmd = "${cfg.package}/bin/sitka-ipc call screensaver enable";
+  activityDetectedCmd = "${cfg.package}/bin/sitka-ipc call screensaver activityDetected";
+  dpmsOffCmd = "${cfg.package}/bin/sitka-ipc call screensaver dpmsOff";
+  lockCmd = "${cfg.package}/bin/sitka-ipc call screensaver lock";
+  
+  # Build the complete swayidle command
+  swayidleCmd = lib.concatStringsSep " " (
+    [ "${pkgs.swayidle}/bin/swayidle -w" ]
+    ++ lib.optional (swayidleCfg.screensaverTimeout > 0)
+      "timeout ${toString swayidleCfg.screensaverTimeout} '${screensaverEnableCmd}'"
+    ++ [ "resume '${activityDetectedCmd}'" ]
+    ++ lib.optional (swayidleCfg.dpmsTimeout > 0)
+      "timeout ${toString swayidleCfg.dpmsTimeout} '${dpmsOffCmd}'"
+    ++ lib.optional swayidleCfg.lockOnSleep
+      "before-sleep '${lockCmd}'"
+  );
 in {
   options = with lib; {
     programs.sitka = {
@@ -40,6 +61,30 @@ in {
           ];
         };
       };
+      
+      # Swayidle integration for screensaver
+      swayidle = {
+        enable = mkEnableOption "swayidle integration for screensaver";
+        
+        screensaverTimeout = mkOption {
+          type = types.int;
+          default = 300;
+          description = "Seconds of idle before triggering screensaver (0 to disable).";
+        };
+        
+        dpmsTimeout = mkOption {
+          type = types.int;
+          default = 660;
+          description = "Seconds of idle before turning off monitors (0 to disable).";
+        };
+        
+        lockOnSleep = mkOption {
+          type = types.bool;
+          default = true;
+          description = "Lock screen before system sleep/hibernate.";
+        };
+      };
+      
       settings = mkOption {
         type = types.attrsOf types.anything;
         default = {};
@@ -86,6 +131,28 @@ in {
           WantedBy = [cfg.systemd.target];
         };
       };
+      
+      # Swayidle service for screensaver integration
+      systemd.user.services.swayidle = lib.mkIf swayidleCfg.enable {
+        Unit = {
+          Description = "Idle manager for Wayland - sitka-shell screensaver integration";
+          Documentation = "man:swayidle(1)";
+          PartOf = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
+          Requisite = [ "graphical-session.target" ];
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = swayidleCmd;
+          Restart = "on-failure";
+          RestartSec = 5;
+        };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
+      };
+      
+      home.packages = [ shell ] ++ lib.optional swayidleCfg.enable pkgs.swayidle;
 
       xdg.configFile = let
         mkConfig = c:
@@ -101,7 +168,5 @@ in {
       in {
         "sitka/shell.json".text = mkConfig cfg;
       };
-
-      home.packages = [shell];
     };
 }

@@ -49,6 +49,9 @@ Singleton {
     // State before DPMS off (to restore)
     property int stateBeforeDpms: ScreensaverService.State.Active
 
+    // Track user's original papertoy layer setting
+    property string userPapertoyLayer: "background"
+
     // Track if user had papertoy enabled before we touched it
     property bool userPapertoyWasEnabled: false
     
@@ -74,8 +77,13 @@ Singleton {
         console.log("ScreensaverService: enableScreensaver called, current state:", stateToString(state));
         
         if (state === ScreensaverService.State.Active) {
-            // Save user's papertoy state and enable if needed
+            // Save user's papertoy state (enabled and layer)
             userPapertoyWasEnabled = Papertoy.enabled;
+            userPapertoyLayer = Papertoy.layer;
+            
+            // Switch to overlay layer for fullscreen screensaver
+            Papertoy.setLayer("overlay");
+            
             if (!Papertoy.enabled) {
                 Papertoy.enabled = true;
                 screensaverActivatedPapertoy = true;
@@ -199,6 +207,11 @@ Singleton {
     }
 
     function enablePapertoyIfNeeded(): void {
+        // Switch to overlay layer for screensaver
+        if (Papertoy.layer !== "overlay") {
+            userPapertoyLayer = Papertoy.layer;
+            Papertoy.setLayer("overlay");
+        }
         if (!Papertoy.enabled) {
             userPapertoyWasEnabled = false;
             Papertoy.enabled = true;
@@ -207,6 +220,9 @@ Singleton {
     }
 
     function restorePapertoyState(): void {
+        // Restore layer first
+        Papertoy.setLayer(userPapertoyLayer);
+        
         // Only disable if we enabled it
         if (screensaverActivatedPapertoy && !userPapertoyWasEnabled) {
             Papertoy.enabled = false;

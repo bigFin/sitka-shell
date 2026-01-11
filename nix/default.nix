@@ -133,6 +133,12 @@ in
         --set SITKA_XKB_RULES_PATH ${xkeyboard-config}/share/xkeyboard-config-2/rules/base.lst \
       	--add-flags "-p $out/share/sitka-shell"
 
+      # Create sitka-ipc wrapper for IPC commands
+      # This provides a stable command that always matches the running sitka-shell instance
+      makeWrapper ${quickshell}/bin/qs $out/bin/sitka-ipc \
+        --add-flags "-p $out/share/sitka-shell" \
+        --add-flags "ipc"
+
       mkdir -p $out/lib
       ln -s ${extras}/lib/* $out/lib/
     '';

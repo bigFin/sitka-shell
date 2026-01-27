@@ -12,17 +12,18 @@ import Quickshell
 import QtQuick
 import QtQuick.Layouts
 
-ColumnLayout {
+Item {
     id: root
 
     required property ShellScreen screen
     required property PersistentProperties visibilities
     required property BarPopouts.Wrapper popouts
 
-
-    readonly property int vPadding: Config.appearance.padding.large
+    height: screen.height
 
     // Handle Workspace Popouts for Niri
+
+
 
     Connections {
         target: root.popouts
@@ -47,7 +48,8 @@ ColumnLayout {
             return;
         }
 
-        const ch = childAt(width / 2, y) as WrappedLoader;
+        const adjustedY = y + flickable.contentY;
+        const ch = entriesLayout.childAt(width / 2, adjustedY) as WrappedLoader;
         if (!ch) {
             popouts.hasCurrent = false;
             return;
@@ -60,14 +62,14 @@ ColumnLayout {
 
         if (id === "statusIcons") {
             const items = item.items;
-            const icon = items.childAt(items.width / 2, mapToItem(items, 0, y).y);
+            const icon = items.childAt(items.width / 2, mapToItem(items, 0, adjustedY).y);
             if (icon) {
                 popouts.currentName = icon.name;
                 popouts.currentCenter = Qt.binding(() => icon.mapToItem(root, 0, icon.implicitHeight / 2).y);
                 popouts.hasCurrent = true;
             }
         } else if (id === "tray") {
-            const index = Math.floor(((y - top) / itemHeight) * item.items.count);
+            const index = Math.floor(((adjustedY - top) / itemHeight) * item.items.count);
             const trayItem = item.items.itemAt(index);
             if (trayItem) {
                 popouts.currentName = `traymenu${index}`;
@@ -82,7 +84,8 @@ ColumnLayout {
     }
 
     function handleWheel(y: real, angleDelta: point): void {
-        const ch = childAt(width / 2, y) as WrappedLoader;
+        const adjustedY = y + flickable.contentY;
+        const ch = entriesLayout.childAt(width / 2, adjustedY) as WrappedLoader;
         if (ch?.id === "workspaces" && Config.bar.scrollActions.workspaces) {
             // Workspace scroll (No special workspaces for niri yet.)
 
@@ -93,7 +96,7 @@ ColumnLayout {
             // Hyprland.dispatch(`togglespecialworkspace ${activeWs.slice(8)}`);
             // else if (angleDelta.y < 0 || Hyprland.activeWsId > 1)
             // Hyprland.dispatch(`workspace r${angleDelta.y > 0 ? "-" : "+"}1`);
-        } else if (y < screen.height / 2 && Config.bar.scrollActions.workspaces) {
+        } else if (adjustedY < screen.height / 2 && Config.bar.scrollActions.workspaces) {
             // Volume scroll on top half
             if (angleDelta.y > 0)
                 Audio.incrementVolume();
@@ -109,143 +112,157 @@ ColumnLayout {
         }
     }
 
-    spacing: Config.appearance.spacing.normal
+    Flickable {
+        id: flickable
 
-    Repeater {
-        id: repeater
+        anchors.fill: parent
 
-        model: Config.bar.entries
+        contentHeight: entriesLayout.implicitHeight
+        interactive: contentHeight > height
+        clip: true
 
-        DelegateChooser {
-            role: "id"
+        ColumnLayout {
+            id: entriesLayout
+            width: flickable.width
+            spacing: Config.appearance.spacing.normal
 
-            DelegateChoice {
-                roleValue: "spacer"
-                delegate: WrappedLoader {
-                    Layout.fillHeight: enabled
-                }
-            }
-            DelegateChoice {
-                roleValue: "logo"
-                delegate: WrappedLoader {
-                    sourceComponent: OsIcon {
-                        MouseArea {
-                            anchors.fill: parent
-                            acceptedButtons: Qt.RightButton
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: mouse => {
-                                if (mouse.button === Qt.LeftButton) {
-                                    root.visibilities.launcher = true;
-                                } else if (mouse.button === Qt.RightButton) {
-                                    WMService.wsContextType = "workspaces";
-                                    root.popouts.currentName = "wsWindow";
-                                    root.popouts.hasCurrent = true;
+            Repeater {
+                id: repeater
+
+                model: Config.bar.entries
+
+                DelegateChooser {
+                    role: "id"
+
+                    DelegateChoice {
+                        roleValue: "spacer"
+                        delegate: WrappedLoader {
+                            Layout.fillHeight: enabled
+                        }
+                    }
+                    DelegateChoice {
+                        roleValue: "logo"
+                        delegate: WrappedLoader {
+                            sourceComponent: OsIcon {
+                                MouseArea {
+                                    anchors.fill: parent
+                                    acceptedButtons: Qt.RightButton
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: mouse => {
+                                        if (mouse.button === Qt.LeftButton) {
+                                            root.visibilities.launcher = true;
+                                        } else if (mouse.button === Qt.RightButton) {
+                                            WMService.wsContextType = "workspaces";
+                                            root.popouts.currentName = "wsWindow";
+                                            root.popouts.hasCurrent = true;
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            }
-            DelegateChoice {
-                roleValue: "workspaces"
-                delegate: WrappedLoader {
-                    sourceComponent: Workspaces {
-                        screen: root.screen
-                        property var anchorItem: WMService.wsContextAnchor && WMService.wsContextType !== "none" ? WMService.wsContextAnchor : null
+                    DelegateChoice {
+                        roleValue: "workspaces"
+                        delegate: WrappedLoader {
+                            sourceComponent: Workspaces {
+                                screen: root.screen
+                                property var anchorItem: WMService.wsContextAnchor && WMService.wsContextType !== "none" ? WMService.wsContextAnchor : null
 
-                        onRequestWindowPopout: {
-                            if (anchorItem && Config.bar.workspaces.windowRighClickContext) {
-                                root.popouts.currentName = "wsWindow";
-                                root.popouts.currentCenter = Qt.binding(() => Math.round(anchorItem.mapToItem(null, anchorItem.width, (anchorItem.height) / 2).y));
-                                root.popouts.hasCurrent = true;
+                                onRequestWindowPopout: {
+                                    if (anchorItem && Config.bar.workspaces.windowRighClickContext) {
+                                        root.popouts.currentName = "wsWindow";
+                                        root.popouts.currentCenter = Qt.binding(() => Math.round(anchorItem.mapToItem(null, anchorItem.width, (anchorItem.height) / 2).y));
+                                        root.popouts.hasCurrent = true;
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
-            DelegateChoice {
-                roleValue: "activeWindow"
-                delegate: WrappedLoader {
-                    sourceComponent: ActiveWindow {
-                        bar: root
-                        monitor: Brightness.getMonitorForScreen(root.screen)
+                    DelegateChoice {
+                        roleValue: "activeWindow"
+                        delegate: WrappedLoader {
+                            sourceComponent: ActiveWindow {
+                                bar: root
+                                monitor: Brightness.getMonitorForScreen(root.screen)
+                            }
+                        }
                     }
-                }
-            }
-            DelegateChoice {
-                roleValue: "tray"
-                delegate: WrappedLoader {
-                    sourceComponent: Tray {}
-                }
-            }
-            DelegateChoice {
-                roleValue: "clock"
-                delegate: WrappedLoader {
-                    sourceComponent: Clock {}
-                }
-            }
-            DelegateChoice {
-                roleValue: "statusIcons"
-                delegate: WrappedLoader {
-                    sourceComponent: StatusIcons {}
-                }
-            }
-            DelegateChoice {
-                roleValue: "pin"
-                delegate: WrappedLoader {
-                    sourceComponent: Pin {
-                        visibilities: root.visibilities
+                    DelegateChoice {
+                        roleValue: "tray"
+                        delegate: WrappedLoader {
+                            sourceComponent: Tray {}
+                        }
                     }
-                }
-            }
-            DelegateChoice {
-                roleValue: "logoToggle"
-                delegate: WrappedLoader {
-                    sourceComponent: LogoToggle {
-                        visibilities: root.visibilities
+                    DelegateChoice {
+                        roleValue: "clock"
+                        delegate: WrappedLoader {
+                            sourceComponent: Clock {}
+                        }
                     }
-                }
-            }
-            DelegateChoice {
-                roleValue: "power"
-                delegate: WrappedLoader {
-                    sourceComponent: Power {
-                        visibilities: root.visibilities
+                    DelegateChoice {
+                        roleValue: "statusIcons"
+                        delegate: WrappedLoader {
+                            sourceComponent: StatusIcons {}
+                        }
                     }
-                }
-            }
-            DelegateChoice {
-                roleValue: "papertoy"
-                delegate: WrappedLoader {
-                    sourceComponent: Papertoy {}
-                }
-            }
-            DelegateChoice {
-                roleValue: "idleInhibitor"
-                delegate: WrappedLoader {
-                    sourceComponent: IdleInhibitor {}
-                }
-            }
-            DelegateChoice {
-                roleValue: "screenRecorder"
-                delegate: WrappedLoader {
-                    sourceComponent: ScreenRecorder {}
-                }
-            }
-            DelegateChoice {
-                roleValue: "utilities"
-                delegate: WrappedLoader {
-                    sourceComponent: UtilitiesToggle {
-                        visibilities: root.visibilities
+                    DelegateChoice {
+                        roleValue: "pin"
+                        delegate: WrappedLoader {
+                            sourceComponent: Pin {
+                                visibilities: root.visibilities
+                            }
+                        }
                     }
-                }
-            }
-            DelegateChoice {
-                roleValue: "controlcenter"
-                delegate: WrappedLoader {
-                    sourceComponent: BarIcon {
-                        icon: "settings"
-                        onClicked: WindowFactory.create()
+                    DelegateChoice {
+                        roleValue: "logoToggle"
+                        delegate: WrappedLoader {
+                            sourceComponent: LogoToggle {
+                                visibilities: root.visibilities
+                            }
+                        }
+                    }
+                    DelegateChoice {
+                        roleValue: "power"
+                        delegate: WrappedLoader {
+                            sourceComponent: Power {
+                                visibilities: root.visibilities
+                            }
+                        }
+                    }
+                    DelegateChoice {
+                        roleValue: "papertoy"
+                        delegate: WrappedLoader {
+                            sourceComponent: Papertoy {}
+                        }
+                    }
+                    DelegateChoice {
+                        roleValue: "idleInhibitor"
+                        delegate: WrappedLoader {
+                            sourceComponent: IdleInhibitor {}
+                        }
+                    }
+                    DelegateChoice {
+                        roleValue: "screenRecorder"
+                        delegate: WrappedLoader {
+                            sourceComponent: ScreenRecorder {}
+                        }
+                    }
+                    DelegateChoice {
+                        roleValue: "utilities"
+                        delegate: WrappedLoader {
+                            sourceComponent: UtilitiesToggle {
+                                visibilities: root.visibilities
+                            }
+                        }
+                    }
+                    DelegateChoice {
+                        roleValue: "controlcenter"
+                        delegate: WrappedLoader {
+                            sourceComponent: BarIcon {
+                                icon: "settings"
+                                onClicked: WindowFactory.create()
+                            }
+                        }
                     }
                 }
             }

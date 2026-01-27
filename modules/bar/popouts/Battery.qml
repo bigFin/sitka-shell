@@ -33,13 +33,13 @@ Column {
             return comps.join(", ") || fallback;
         }
 
-        text: UPower.displayDevice.isLaptopBattery ? qsTr("Time %1: %2").arg(UPower.onBattery ? "remaining" : "until charged").arg(UPower.onBattery ? formatSeconds(UPower.displayDevice.timeToEmpty, "Calculating...") : formatSeconds(UPower.displayDevice.timeToFull, "Fully charged!")) : qsTr("Power profile: %1").arg(PowerProfile.toString(PowerProfiles.profile))
+        text: UPower.displayDevice.isLaptopBattery ? qsTr("Time %1: %2").arg(UPower.onBattery ? "remaining" : "until charged").arg(UPower.onBattery ? formatSeconds(UPower.displayDevice.timeToEmpty, "Calculating...") : formatSeconds(UPower.displayDevice.timeToFull, "Fully charged!")) : qsTr("Power profile: %1").arg(Power.profileToString(Power.profile))
     }
 
     Loader {
         anchors.horizontalCenter: parent.horizontalCenter
 
-        active: PowerProfiles.degradationReason !== PerformanceDegradationReason.None
+        active: Power.performanceDegraded
         asynchronous: true
 
         height: active ? (item?.implicitHeight ?? 0) : 0
@@ -88,7 +88,7 @@ Column {
                 StyledText {
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    text: qsTr("Reason: %1").arg(PerformanceDegradationReason.toString(PowerProfiles.degradationReason))
+                    text: qsTr("Reason: %1").arg(Power.degradationReason)
                     color: Colours.palette.m3onError
                 }
             }
@@ -99,10 +99,10 @@ Column {
         id: profiles
 
         property string current: {
-            const p = PowerProfiles.profile;
-            if (p === PowerProfile.PowerSaver)
+            const p = Power.profile;
+            if (p === Power.powerSaver)
                 return saver.icon;
-            if (p === PowerProfile.Performance)
+            if (p === Power.performance)
                 return perf.icon;
             return balance.icon;
         }
@@ -162,7 +162,7 @@ Column {
             anchors.left: parent.left
             anchors.leftMargin: Config.appearance.padding.small
 
-            profile: PowerProfile.PowerSaver
+            profile: Power.powerSaver
             icon: "energy_savings_leaf"
         }
 
@@ -171,7 +171,7 @@ Column {
 
             anchors.centerIn: parent
 
-            profile: PowerProfile.Balanced
+            profile: Power.balanced
             icon: "balance"
         }
 
@@ -182,7 +182,7 @@ Column {
             anchors.right: parent.right
             anchors.rightMargin: Config.appearance.padding.small
 
-            profile: PowerProfile.Performance
+            profile: Power.performance
             icon: "rocket_launch"
         }
     }
@@ -209,7 +209,7 @@ Column {
             color: profiles.current === parent.icon ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
 
             function onClicked(): void {
-                PowerProfiles.profile = parent.profile;
+                Power.setProfile(parent.profile);
             }
         }
 

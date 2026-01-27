@@ -119,8 +119,14 @@ in
     dontStrip = debug;
 
     prePatch = ''
-      substituteInPlace assets/pam.d/fprint \
-        --replace-fail pam_fprintd.so /run/current-system/sw/lib/security/pam_fprintd.so
+      # Only patch PAM path if we are on a NixOS-like system or it exists
+      if grep -q "pam_fprintd.so" assets/pam.d/fprint; then
+        if [ -f /run/current-system/sw/lib/security/pam_fprintd.so ]; then
+          substituteInPlace assets/pam.d/fprint \
+            --replace-fail pam_fprintd.so /run/current-system/sw/lib/security/pam_fprintd.so
+        fi
+      fi
+      
       substituteInPlace shell.qml \
         --replace-fail 'ShellRoot {' 'ShellRoot {  settings.watchFiles: false'
     '';

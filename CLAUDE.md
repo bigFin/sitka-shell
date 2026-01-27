@@ -20,7 +20,7 @@ qs -p ./
 nix run
 
 # Non-NixOS systems (Arch, Fedora, etc.)
-nix run github:sitka-shell/sitka-shell#arch --impure
+nix run .#arch --impure
 ```
 
 The build system uses CMake + Ninja, invoked through Nix. Manual CMake builds are possible but Nix is the primary workflow.

@@ -9,3 +9,12 @@
 build/
 .cache/
 #tmp/
+
+# Logs
+*.txt
+*.qslog
+*.log
+
+# Syncthing
+.stversions/
+.stfolder/

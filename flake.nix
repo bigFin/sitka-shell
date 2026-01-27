@@ -39,21 +39,25 @@
       };
       debug = sitka-shell.override {debug = true;};
 
-      arch = pkgs.writeShellScriptBin "sitka-shell" ''
-        # Sitka shell wrapper with OpenGL support
-        # Uses nixGL if available, otherwise runs directly
-        
-        # Check if nixGL is available in PATH
-        if command -v nixGL >/dev/null 2>&1; then
-          exec nixGL ${sitka-shell}/bin/sitka-shell "$@"
-        elif [ -n "$NIX_GL" ]; then
-          # Use custom nixGL path if specified
-          exec "$NIX_GL" ${sitka-shell}/bin/sitka-shell "$@"
-        else
-          # Run directly without nixGL
-          exec ${sitka-shell}/bin/sitka-shell "$@"
-        fi
-      '';
+      arch = let
+        nixGL = inputs.nixgl.packages.${pkgs.system}.nixGLDefault;
+      in
+        pkgs.writeShellScriptBin "sitka-shell" ''
+          # Sitka shell wrapper with automatic OpenGL support for non-NixOS
+          
+          # Ensure QML paths and libraries are set for the plugin
+          export QML2_IMPORT_PATH="${sitka-shell.plugin}/lib/qt6/qml''${QML2_IMPORT_PATH:+:''$QML2_IMPORT_PATH}"
+          export LD_LIBRARY_PATH="${sitka-shell.extras}/lib''${LD_LIBRARY_PATH:+:''$LD_LIBRARY_PATH}"
+          
+          # Ensure system binaries are accessible for TLP/Power management
+          export PATH="/usr/bin:/bin:/usr/local/bin:$PATH"
+          
+          if [ ! -f /etc/NIXOS ] && [ -z "$NIXGL_IGNORE" ]; then
+            exec ${nixGL}/bin/nixGL ${sitka-shell}/bin/sitka-shell "$@"
+          else
+            exec ${sitka-shell}/bin/sitka-shell "$@"
+          fi
+        '';
 
       default = sitka-shell;
     });

@@ -27,3 +27,4 @@ singleton WMStateMachine WMStateMachine.qml
 singleton WindowGrouper WindowGrouper.qml
 singleton WMDetector WMDetector.qml
 singleton WMService WMService.qml
+singleton Power Power.qml

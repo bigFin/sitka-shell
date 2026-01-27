@@ -1,0 +1,8 @@
+/* /etc/polkit-1/rules.d/99-sitka-tlp.rules */
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.policykit.exec" &&
+        action.lookup("program") == "/usr/bin/tlp" &&
+        subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+    }
+});

@@ -227,9 +227,9 @@ StyledRect {
                 animate: true
                 text: {
                     if (!UPower.displayDevice.isLaptopBattery) {
-                        if (PowerProfiles.profile === PowerProfile.PowerSaver)
+                        if (Power.profile === Power.powerSaver)
                             return "energy_savings_leaf";
-                        if (PowerProfiles.profile === PowerProfile.Performance)
+                        if (Power.profile === Power.performance)
                             return "rocket_launch";
                         return "balance";
                     }

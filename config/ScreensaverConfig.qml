@@ -18,4 +18,8 @@ JsonObject {
     
     // Whether to pause papertoy when monitors are powered off (saves resources)
     property bool pausePapertoyOnDpms: true
+
+    // When true, papertoy moves to background layer during lock UI activity
+    // When false, papertoy is disabled during lock UI activity (saves GPU)
+    property bool papertoyAsBackground: false
 }

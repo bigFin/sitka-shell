@@ -58,11 +58,15 @@ Singleton {
     // Track if screensaver activated papertoy (so we know to disable on exit)
     property bool screensaverActivatedPapertoy: false
 
+    // Track if we temporarily disabled papertoy during lock UI (for re-enable)
+    property bool papertoyTemporarilyDisabled: false
+
     // Configuration aliases
     readonly property bool autoLockEnabled: Config.screensaver.autoLockEnabled
     readonly property int autoLockDelay: Config.screensaver.autoLockDelay * 1000 // convert to ms
     readonly property int screensaverWhileLockedTimeout: Config.screensaver.screensaverWhileLockedTimeout * 1000
     readonly property bool pausePapertoyOnDpms: Config.screensaver.pausePapertoyOnDpms
+    readonly property bool papertoyAsBackground: Config.screensaver.papertoyAsBackground
 
     // Signals for Lock.qml to listen to
     signal lockRequested()
@@ -124,11 +128,17 @@ Singleton {
                 
             case ScreensaverService.State.LockedScreensaver:
                 // Activity while locked+screensaver: hide screensaver, show lock UI
-                // Keep papertoy running behind lock screen, but show lock UI
+                // Temporarily hide papertoy so lock UI is visible
+                if (papertoyAsBackground) {
+                    Papertoy.setLayer("background");
+                } else {
+                    Papertoy.enabled = false;
+                    papertoyTemporarilyDisabled = true;
+                }
                 state = ScreensaverService.State.Locked;
                 showLockUI();
                 // Start timer to re-enable screensaver if no unlock
-                screensaverWhileLockedTimer.start();
+                screensaverWhileLockedTimer.restart();
                 break;
                 
             case ScreensaverService.State.DpmsOff:
@@ -172,10 +182,17 @@ Singleton {
     // Called by Lock.qml when lock is requested (manual or auto)
     function lock(): void {
         console.log("ScreensaverService: lock called, current state:", stateToString(state));
-        
+
         autoLockTimer.stop();
-        
+
         if (state === ScreensaverService.State.Active) {
+            // Save user's papertoy state before we potentially modify it
+            // This ensures proper restoration on unlock
+            userPapertoyWasEnabled = Papertoy.enabled;
+            userPapertoyLayer = Papertoy.layer;
+            // Reset activation flag since we're starting fresh
+            screensaverActivatedPapertoy = false;
+
             state = ScreensaverService.State.Locked;
             lockRequested();
             // Start timer for screensaver overlay on lock screen
@@ -188,9 +205,11 @@ Singleton {
     // Called by Lock.qml when unlock succeeds
     function unlock(): void {
         console.log("ScreensaverService: unlock called");
-        
+
         autoLockTimer.stop();
         screensaverWhileLockedTimer.stop();
+        // Clean up temporary disable flag
+        papertoyTemporarilyDisabled = false;
         restorePapertoyState();
         state = ScreensaverService.State.Active;
         unlockRequested();
@@ -207,13 +226,19 @@ Singleton {
     }
 
     function enablePapertoyIfNeeded(): void {
-        // Switch to overlay layer for screensaver
-        if (Papertoy.layer !== "overlay") {
+        // Save user's current papertoy state BEFORE any changes
+        // This ensures we can properly restore on unlock
+        // Track original layer only on first call (when transitioning from Locked)
+        if (state === ScreensaverService.State.Locked) {
             userPapertoyLayer = Papertoy.layer;
-            Papertoy.setLayer("overlay");
+            userPapertoyWasEnabled = Papertoy.enabled;
         }
+
+        // Switch to overlay layer for screensaver
+        Papertoy.setLayer("overlay");
+
+        // Only enable if not already running
         if (!Papertoy.enabled) {
-            userPapertoyWasEnabled = false;
             Papertoy.enabled = true;
             screensaverActivatedPapertoy = true;
         }
@@ -265,7 +290,13 @@ Singleton {
         onTriggered: {
             console.log("ScreensaverService: screensaverWhileLockedTimer triggered");
             if (root.state === ScreensaverService.State.Locked) {
-                root.enablePapertoyIfNeeded();
+                // Re-enable papertoy if we temporarily disabled it
+                if (root.papertoyTemporarilyDisabled) {
+                    Papertoy.enabled = true;
+                    root.papertoyTemporarilyDisabled = false;
+                }
+                // Ensure layer is overlay for burn-in protection
+                Papertoy.setLayer("overlay");
                 root.state = ScreensaverService.State.LockedScreensaver;
             }
         }

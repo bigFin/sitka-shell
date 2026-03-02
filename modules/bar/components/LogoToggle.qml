@@ -21,7 +21,10 @@ Item {
         radius: Config.appearance.rounding.full
 
         function onClicked(): void {
-            visibilities.barPinned = !visibilities.barPinned;
+            const newPinned = !visibilities.barPinned;
+            visibilities.barPinned = newPinned;
+            if (!newPinned)
+                visibilities.bar = false;
         }
     }
 

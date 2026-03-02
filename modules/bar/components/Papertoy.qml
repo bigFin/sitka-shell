@@ -14,7 +14,15 @@ StyledRect {
     color: Qt.alpha(Colours.palette.m3primaryContainer, Papertoy.enabled ? 1 : 0)
 
     StateLayer {
-        function onClicked(): void {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
             Papertoy.enabled = !Papertoy.enabled;
         }
     }

@@ -17,6 +17,10 @@ WlSessionLockSurface {
 
     color: "transparent"
 
+    function ensureInputFocus(): void {
+        content.ensureInputFocus();
+    }
+
     Connections {
         target: root.lock
 

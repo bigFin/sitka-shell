@@ -34,6 +34,7 @@ Scope {
         }
 
         LockSurface {
+            id: lockSurface
             lock: lock
             pam: pam
         }
@@ -67,9 +68,7 @@ Scope {
         // Need to bring lock UI to foreground
         function onShowLockUI(): void {
             console.log("Lock: showLockUI received");
-            // The lock surface should already be visible, but we may need
-            // to signal the LockSurface to come to foreground or refocus
-            // For now, the state change in ScreensaverService handles this
+            lockSurface.ensureInputFocus();
         }
     }
 

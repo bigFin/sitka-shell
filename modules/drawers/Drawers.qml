@@ -185,7 +185,7 @@ Variants {
                             visibilities: visibilities
                             popouts: panels.popouts
 
-                            Component.onCompleted: Visibilities.bars.set(scope.modelData, this)
+                            Component.onCompleted: Visibilities.registerBar(scope.modelData, this)
                         }
                     }
                 }
@@ -204,7 +204,17 @@ Variants {
                 property bool dashboard
                 property bool utilities
 
-                Component.onCompleted: Visibilities.screens[scope.modelData] = this
+                Component.onCompleted: {
+                    Visibilities.load(scope.modelData, this);
+
+                    const savedPinned = Visibilities.getBarPinned(scope.modelData.name);
+                    if (savedPinned !== null)
+                        barPinned = savedPinned;
+                }
+
+                onBarPinnedChanged: {
+                    Visibilities.setBarPinned(scope.modelData.name, barPinned);
+                }
             }
         }
 

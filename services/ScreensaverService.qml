@@ -100,7 +100,7 @@ Singleton {
                 autoLockTimer.start();
             } else if (autoLockEnabled && autoLockDelay === 0) {
                 // Immediate auto-lock
-                transitionToLocked();
+                transitionToLocked(false);
             }
         } else if (state === ScreensaverService.State.Locked) {
             // Already locked, add screensaver overlay
@@ -116,9 +116,8 @@ Singleton {
             case ScreensaverService.State.Screensaver:
                 autoLockTimer.stop();
                 if (autoLockEnabled) {
-                    // Activity during screensaver with auto-lock: show lock UI
-                    transitionToLocked();
-                    showLockUI();
+                    // Activity during screensaver with auto-lock: lock and show UI immediately
+                    transitionToLocked(true);
                 } else {
                     // No auto-lock: just dismiss screensaver
                     restorePapertoyState();
@@ -198,7 +197,13 @@ Singleton {
             // Start timer for screensaver overlay on lock screen
             screensaverWhileLockedTimer.start();
         } else if (state === ScreensaverService.State.Screensaver) {
-            transitionToLocked();
+            transitionToLocked(false);
+        } else if (state === ScreensaverService.State.DpmsOff) {
+            // Lock requests while monitors are off (before-sleep/manual) must still lock now.
+            stateBeforeDpms = ScreensaverService.State.Locked;
+            state = ScreensaverService.State.Locked;
+            lockRequested();
+            screensaverWhileLockedTimer.start();
         }
     }
 
@@ -219,10 +224,24 @@ Singleton {
     // INTERNAL HELPERS
     // ═══════════════════════════════════════════════════════════════════════
 
-    function transitionToLocked(): void {
-        // Keep papertoy running for burn-in protection
-        state = ScreensaverService.State.LockedScreensaver;
+    function transitionToLocked(showUi: bool): void {
         lockRequested();
+
+        if (showUi) {
+            // Show lock UI immediately.
+            if (papertoyAsBackground) {
+                Papertoy.setLayer("background");
+            } else {
+                Papertoy.enabled = false;
+                papertoyTemporarilyDisabled = true;
+            }
+            state = ScreensaverService.State.Locked;
+            showLockUI();
+            screensaverWhileLockedTimer.restart();
+        } else {
+            // Keep screensaver overlay for burn-in protection until activity.
+            state = ScreensaverService.State.LockedScreensaver;
+        }
     }
 
     function enablePapertoyIfNeeded(): void {
@@ -277,7 +296,7 @@ Singleton {
         onTriggered: {
             console.log("ScreensaverService: autoLockTimer triggered");
             if (root.state === ScreensaverService.State.Screensaver) {
-                root.transitionToLocked();
+                root.transitionToLocked(false);
             }
         }
     }

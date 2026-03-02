@@ -9,6 +9,10 @@ GridLayout {
 
     required property var lock
 
+    function ensureInputFocus(): void {
+        center.ensureInputFocus();
+    }
+
     readonly property bool isPortrait: height > width
     columns: isPortrait ? 2 : 3
     flow: GridLayout.LeftToRight
@@ -67,6 +71,7 @@ GridLayout {
     }
 
     Center {
+        id: center
         Layout.row: 0
         Layout.column: root.isPortrait ? 0 : 1
         Layout.columnSpan: root.isPortrait ? 2 : 1

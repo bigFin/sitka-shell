@@ -17,6 +17,10 @@ ColumnLayout {
     readonly property real centerScale: Math.min(1, (lock.screen?.height ?? 1440) / 1440)
     readonly property int centerWidth: Config.lock.sizes.centerWidth * centerScale
 
+    function ensureInputFocus(): void {
+        inputContainer.forceActiveFocus();
+    }
+
     Layout.preferredWidth: centerWidth
     Layout.fillWidth: false
     Layout.fillHeight: true
@@ -110,6 +114,7 @@ ColumnLayout {
     }
 
     StyledRect {
+        id: inputContainer
         Layout.alignment: Qt.AlignHCenter
 
         implicitWidth: root.centerWidth * 0.8

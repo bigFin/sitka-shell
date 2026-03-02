@@ -20,6 +20,7 @@ Item {
     required property BarPopouts.Wrapper popouts
 
     height: screen.height
+    readonly property int vPadding: Config.appearance.padding.small
 
     // Handle Workspace Popouts for Niri
 
@@ -124,6 +125,7 @@ Item {
         ColumnLayout {
             id: entriesLayout
             width: flickable.width
+            height: Math.max(implicitHeight, flickable.height)
             spacing: Config.appearance.spacing.normal
 
             Repeater {
@@ -327,4 +329,3 @@ Item {
         }
     }
 }
-

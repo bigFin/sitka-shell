@@ -74,16 +74,16 @@ ColumnLayout {
             required property PwNode modelData
 
             Layout.fillWidth: true
-            label: modelData.name || modelData.description || qsTr("Unknown")
-            icon: modelData.audio?.muted ? "volume_off" : "speaker"
-            volume: modelData.audio?.volume ?? 0
-            muted: modelData.audio?.muted ?? false
+            label: modelData?.name || modelData?.description || qsTr("Unknown")
+            icon: modelData?.audio?.muted ? "volume_off" : "speaker"
+            volume: modelData?.audio?.volume ?? 0
+            muted: modelData?.audio?.muted ?? false
             onVolumeRequested: newVal => {
-                if (modelData.audio)
+                if (modelData?.audio)
                     modelData.audio.volume = newVal
             }
             onMuteRequested: newVal => {
-                if (modelData.audio)
+                if (modelData?.audio)
                     modelData.audio.muted = newVal
             }
         }

@@ -210,10 +210,18 @@ Variants {
                     const savedPinned = Visibilities.getBarPinned(scope.modelData.name);
                     if (savedPinned !== null)
                         barPinned = savedPinned;
+
+                    const savedOpen = Visibilities.getBarOpen(scope.modelData.name);
+                    if (savedOpen !== null)
+                        bar = savedOpen;
                 }
 
                 onBarPinnedChanged: {
                     Visibilities.setBarPinned(scope.modelData.name, barPinned);
+                }
+
+                onBarChanged: {
+                    Visibilities.setBarOpen(scope.modelData.name, bar);
                 }
             }
         }

@@ -161,22 +161,24 @@ ColumnLayout {
         delegate: StyledRect {
             id: device
 
-            required property BluetoothDevice modelData
-            readonly property bool loading: modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting
-            readonly property bool connected: modelData.state === BluetoothDeviceState.Connected
+            required property var modelData
+            readonly property bool hasData: !!modelData
+            readonly property bool loading: hasData && (modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting)
+            readonly property bool connected: hasData && modelData.state === BluetoothDeviceState.Connected
 
             anchors.left: parent.left
             anchors.right: parent.right
             implicitHeight: deviceInner.implicitHeight + Config.appearance.padding.normal * 2
 
-            color: Qt.alpha(Colours.tPalette.m3surfaceContainer, root.session.bt.active === modelData ? Colours.tPalette.m3surfaceContainer.a : 0)
+            color: Qt.alpha(Colours.tPalette.m3surfaceContainer, (hasData && root.session.bt.active === modelData) ? Colours.tPalette.m3surfaceContainer.a : 0)
             radius: Config.appearance.rounding.normal
 
             StateLayer {
                 id: stateLayer
 
                 function onClicked(): void {
-                    root.session.bt.active = device.modelData;
+                    if (device.hasData)
+                        root.session.bt.active = device.modelData;
                 }
             }
 
@@ -193,20 +195,20 @@ ColumnLayout {
                     implicitHeight: icon.implicitHeight + Config.appearance.padding.normal * 2
 
                     radius: Config.appearance.rounding.normal
-                    color: device.connected ? Colours.palette.m3primaryContainer : device.modelData.bonded ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainerHigh
+                    color: device.connected ? Colours.palette.m3primaryContainer : (device.hasData && device.modelData.bonded) ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainerHigh
 
                     StyledRect {
                         anchors.fill: parent
                         radius: parent.radius
-                        color: Qt.alpha(device.connected ? Colours.palette.m3onPrimaryContainer : device.modelData.bonded ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface, stateLayer.pressed ? 0.1 : stateLayer.containsMouse ? 0.08 : 0)
+                        color: Qt.alpha(device.connected ? Colours.palette.m3onPrimaryContainer : (device.hasData && device.modelData.bonded) ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface, stateLayer.pressed ? 0.1 : stateLayer.containsMouse ? 0.08 : 0)
                     }
 
                     MaterialIcon {
                         id: icon
 
                         anchors.centerIn: parent
-                        text: Icons.getBluetoothIcon(device.modelData.icon)
-                        color: device.connected ? Colours.palette.m3onPrimaryContainer : device.modelData.bonded ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
+                        text: device.hasData ? Icons.getBluetoothIcon(device.modelData.icon) : "bluetooth_disabled"
+                        color: device.connected ? Colours.palette.m3onPrimaryContainer : (device.hasData && device.modelData.bonded) ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
                         font.pointSize: Config.appearance.font.size.large
                         fill: device.connected ? 1 : 0
 
@@ -223,13 +225,13 @@ ColumnLayout {
 
                     StyledText {
                         Layout.fillWidth: true
-                        text: device.modelData.name
+                        text: device.modelData?.name ?? qsTr("Unknown Device")
                         elide: Text.ElideRight
                     }
 
                     StyledText {
                         Layout.fillWidth: true
-                        text: device.modelData.address + (device.connected ? qsTr(" (Connected)") : device.modelData.bonded ? qsTr(" (Paired)") : "")
+                        text: (device.modelData?.address ?? qsTr("Unavailable")) + (device.connected ? qsTr(" (Connected)") : (device.hasData && device.modelData.bonded) ? qsTr(" (Paired)") : "")
                         color: Colours.palette.m3outline
                         font.pointSize: Config.appearance.font.size.small
                         elide: Text.ElideRight
@@ -255,7 +257,8 @@ ColumnLayout {
                         disabled: device.loading
 
                         function onClicked(): void {
-                            device.modelData.connected = !device.modelData.connected;
+                            if (device.hasData)
+                                device.modelData.connected = !device.modelData.connected;
                         }
                     }
 
@@ -264,7 +267,7 @@ ColumnLayout {
 
                         anchors.centerIn: parent
                         animate: true
-                        text: device.modelData.connected ? "link_off" : "link"
+                        text: device.connected ? "link_off" : "link"
                         color: device.connected ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3onSurface
 
                         opacity: device.loading ? 0 : 1

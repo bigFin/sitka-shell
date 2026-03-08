@@ -10,11 +10,13 @@ Singleton {
     property var screens: new Map()
     property var bars: new Map()
     property var barPinnedByScreen: ({})
+    property var barOpenByScreen: ({})
 
     PersistentProperties {
         id: props
 
         property string barPinnedJson: "{}"
+        property string barOpenJson: "{}"
 
         reloadableId: "visibilities"
     }
@@ -27,6 +29,15 @@ Singleton {
         } catch (e) {
             console.warn("Visibilities: Failed to parse persisted bar state:", e);
             root.barPinnedByScreen = ({});
+        }
+
+        try {
+            const parsedOpen = JSON.parse(props.barOpenJson || "{}");
+            if (parsedOpen && typeof parsedOpen === "object")
+                root.barOpenByScreen = parsedOpen;
+        } catch (e) {
+            console.warn("Visibilities: Failed to parse persisted open state:", e);
+            root.barOpenByScreen = ({});
         }
     }
 
@@ -75,5 +86,23 @@ Singleton {
 
         barPinnedByScreen[screenName] = pinned;
         props.barPinnedJson = JSON.stringify(barPinnedByScreen);
+    }
+
+    function getBarOpen(screenName: string): var {
+        if (!screenName)
+            return null;
+        if (!Object.prototype.hasOwnProperty.call(barOpenByScreen, screenName))
+            return null;
+        return !!barOpenByScreen[screenName];
+    }
+
+    function setBarOpen(screenName: string, open: bool): void {
+        if (!screenName)
+            return;
+        if (barOpenByScreen[screenName] === open)
+            return;
+
+        barOpenByScreen[screenName] = open;
+        props.barOpenJson = JSON.stringify(barOpenByScreen);
     }
 }

@@ -77,13 +77,14 @@ StackView {
             StyledRect {
                 id: item
 
-                required property QsMenuEntry modelData
+                required property var modelData
+                readonly property var entry: modelData
 
                 implicitWidth: Config.bar.sizes.trayMenuWidth
-                implicitHeight: modelData.isSeparator ? 1 : children.implicitHeight
+                implicitHeight: entry?.isSeparator ? 1 : children.implicitHeight
 
                 radius: Config.appearance.rounding.full
-                color: modelData.isSeparator ? Colours.palette.m3outlineVariant : "transparent"
+                color: entry?.isSeparator ? Colours.palette.m3outlineVariant : "transparent"
 
                 Loader {
                     id: children
@@ -91,7 +92,7 @@ StackView {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    active: !item.modelData.isSeparator
+                    active: !(item.entry?.isSeparator ?? true)
                     asynchronous: true
 
                     sourceComponent: Item {
@@ -103,17 +104,19 @@ StackView {
                             anchors.rightMargin: -Config.appearance.padding.smaller
 
                             radius: item.radius
-                            disabled: !item.modelData.enabled
+                            disabled: !(item.entry?.enabled ?? false)
 
                             function onClicked(): void {
                                 const entry = item.modelData;
+                                if (!entry)
+                                    return;
                                 if (entry.hasChildren)
                                     root.push(subMenuComp.createObject(null, {
                                         handle: entry,
                                         isSubMenu: true
                                     }));
                                 else {
-                                    item.modelData.triggered();
+                                    entry.triggered();
                                     root.popouts.hasCurrent = false;
                                 }
                             }
@@ -124,13 +127,13 @@ StackView {
 
                             anchors.left: parent.left
 
-                            active: item.modelData.icon !== ""
+                            active: (item.entry?.icon ?? "") !== ""
                             asynchronous: true
 
                             sourceComponent: IconImage {
                                 implicitSize: label.implicitHeight
 
-                                source: item.modelData.icon
+                                source: item.entry?.icon ?? ""
                             }
                         }
 
@@ -141,13 +144,13 @@ StackView {
                             anchors.leftMargin: icon.active ? Config.appearance.spacing.smaller : 0
 
                             text: labelMetrics.elidedText
-                            color: item.modelData.enabled ? Colours.palette.m3onSurface : Colours.palette.m3outline
+                            color: (item.entry?.enabled ?? false) ? Colours.palette.m3onSurface : Colours.palette.m3outline
                         }
 
                         TextMetrics {
                             id: labelMetrics
 
-                            text: item.modelData.text
+                            text: item.entry?.text ?? ""
                             font.pointSize: label.font.pointSize
                             font.family: label.font.family
 
@@ -161,12 +164,12 @@ StackView {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.right: parent.right
 
-                            active: item.modelData.hasChildren
+                            active: item.entry?.hasChildren ?? false
                             asynchronous: true
 
                             sourceComponent: MaterialIcon {
                                 text: "chevron_right"
-                                color: item.modelData.enabled ? Colours.palette.m3onSurface : Colours.palette.m3outline
+                                color: (item.entry?.enabled ?? false) ? Colours.palette.m3onSurface : Colours.palette.m3outline
                             }
                         }
                     }

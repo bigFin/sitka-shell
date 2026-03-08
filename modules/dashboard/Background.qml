@@ -8,6 +8,8 @@ Item {
     id: root
 
     required property Wrapper wrapper
+    readonly property real buttressMinVisible: mainRect.filletSize - 0.5
+    readonly property bool buttressesVisible: wrapper.buttressSize >= buttressMinVisible
     
     // Proxy properties for animation/layout
     property alias color: mainRect.color
@@ -15,8 +17,7 @@ Item {
     // Match wrapper dimensions explicitly
     width: wrapper.width
     height: wrapper.height
-    // Ensure we hide completely when collapsed to avoid "Square Artifacts" from the un-filleted corners
-    visible: height > 0 && wrapper.buttressSize > 0.5
+    visible: height > 0
 
     // Main Background Rectangle
     StyledRect {
@@ -29,9 +30,12 @@ Item {
         // Apply large fillets for main containers
         filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
         
-        // Top corners: Square (to attach buttresses)
-        topLeftFillet: false
-        topRightFillet: false
+        // Keep top corners filleted whenever buttresses are not fully present.
+        // This prevents tiny square flash artifacts during collapse transitions.
+        topLeftFillet: !root.buttressesVisible
+        topRightFillet: !root.buttressesVisible
+        topLeftFilletStyle: 1
+        topRightFilletStyle: 1
         
         // Bottom corners: Chamfer (Subtractive)
         bottomLeftFillet: true
@@ -48,7 +52,8 @@ Item {
         color: mainRect.color
         anchors.right: parent.left
         anchors.top: parent.top
-        width: root.wrapper.buttressSize
+        visible: root.buttressesVisible
+        width: root.buttressesVisible ? mainRect.filletSize : 0
     }
     
     // Right Buttress (Additive)
@@ -59,6 +64,7 @@ Item {
         color: mainRect.color
         anchors.left: parent.right
         anchors.top: parent.top
-        width: root.wrapper.buttressSize
+        visible: root.buttressesVisible
+        width: root.buttressesVisible ? mainRect.filletSize : 0
     }
 }

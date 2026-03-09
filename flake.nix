@@ -34,7 +34,7 @@
           else if self ? dirtyRev then self.dirtyRev
           else "local-dev";
         stdenv = pkgs.clangStdenv;
-        quickshell = inputs.quickshell.packages.${pkgs.system}.default.override {
+        quickshell = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
           withX11 = false;
           withI3 = false;
         };
@@ -43,7 +43,7 @@
       debug = sitka-shell.override {debug = true;};
 
       arch = let
-        nixGL = inputs.nixgl.packages.${pkgs.system}.nixGLDefault;
+        nixGL = inputs.nixgl.packages.${pkgs.stdenv.hostPlatform.system}.nixGLDefault;
       in
         pkgs.writeShellScriptBin "sitka-shell" ''
           # Sitka shell wrapper with automatic OpenGL support for non-NixOS
@@ -67,7 +67,7 @@
 
     devShells = forAllSystems (pkgs: {
       default = let
-        shell = self.packages.${pkgs.system}.sitka-shell;
+        shell = self.packages.${pkgs.stdenv.hostPlatform.system}.sitka-shell;
       in
         pkgs.mkShell.override {stdenv = shell.stdenv;} {
           inputsFrom = [shell shell.plugin shell.extras];

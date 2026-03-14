@@ -11,4 +11,6 @@ pkgs.app2unit.overrideAttrs (final: prev: rec {
     tag = "v${version}";
     hash = "sha256-7eEVjgs+8k+/NLteSBKgn4gPaPLHC+3Uzlmz6XB0930=";
   };
+  # Newer nixpkgs postFixup expects a variable not present in v1.0.3.
+  postFixup = "";
 })

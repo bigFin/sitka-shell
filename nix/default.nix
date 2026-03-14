@@ -32,6 +32,18 @@
   extraRuntimeDeps ? [],
 }: let
   version = "1.0.0";
+  sourceRoot = ./..;
+  cleanSource = lib.cleanSourceWith {
+    src = sourceRoot;
+    filter = path: type:
+      let
+        rel = lib.removePrefix "${toString sourceRoot}/" (toString path);
+      in
+        !(lib.hasPrefix ".git/" rel
+          || lib.hasPrefix "build/" rel
+          || lib.hasPrefix "result/" rel
+          || lib.hasPrefix ".direnv/" rel);
+  };
 
   runtimeDeps =
     [
@@ -99,7 +111,7 @@ in
   stdenv.mkDerivation {
     inherit version;
     pname = "sitka-shell${lib.optionalString debug "-debug"}";
-    src = ./..;
+    src = cleanSource;
 
     nativeBuildInputs = [cmake ninja makeWrapper qt6.wrapQtAppsHook];
     buildInputs = [quickshell extras plugin xkeyboard-config qt6.qtbase];

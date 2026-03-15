@@ -68,11 +68,16 @@
     devShells = forAllSystems (pkgs: {
       default = let
         shell = self.packages.${pkgs.stdenv.hostPlatform.system}.sitka-shell;
+        qmlImportPath = pkgs.lib.concatStringsSep ":" [
+          "${shell.plugin}/lib/qt6/qml"
+          "${pkgs.qt6.qtdeclarative}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+        ];
       in
         pkgs.mkShell.override {stdenv = shell.stdenv;} {
           inputsFrom = [shell shell.plugin shell.extras];
-          packages = with pkgs; [material-symbols iosevka];
-          QML2_IMPORT_PATH = "${shell.plugin}/lib/qt6/qml";
+          packages = with pkgs; [material-symbols iosevka qt6.qtdeclarative];
+          QML_IMPORT_PATH = qmlImportPath;
+          QML2_IMPORT_PATH = qmlImportPath;
           SITKA_LIB_DIR = "${shell.extras}/lib";
           SITKA_XKB_RULES_PATH = "${pkgs.xkeyboard-config}/share/xkeyboard-config-2/rules/base.lst";
         };

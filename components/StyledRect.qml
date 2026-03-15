@@ -6,6 +6,10 @@ Item {
     id: root
     
     property color color: "transparent"
+    readonly property real effectiveFilletSize: Math.max(
+        0,
+        Math.min(filletSize, width / 2, height / 2)
+    )
     
     // Fillet/chamfer support
     property bool enableFillets: Config.appearance ? Config.appearance.enableFilletEffects : true
@@ -54,75 +58,75 @@ Item {
         Rectangle {
             // Horizontal bar (excludes corners)
             x: 0
-            y: root.filletSize
+            y: root.effectiveFilletSize
             width: root.width
-            height: root.height - (root.filletSize * 2)
+            height: Math.max(0, root.height - (root.effectiveFilletSize * 2))
             color: root.color
         }
         
         Rectangle {
             // Vertical bar (excludes corners)
-            x: root.filletSize
+            x: root.effectiveFilletSize
             y: 0
-            width: root.width - (root.filletSize * 2)
+            width: Math.max(0, root.width - (root.effectiveFilletSize * 2))
             height: root.height
             color: root.color
         }
         
         // Corners
         CornerPiece {
-            width: root.filletSize
-            height: root.filletSize
+            width: root.effectiveFilletSize
+            height: root.effectiveFilletSize
             color: root.color
             filletStyle: root.topLeftFilletStyle
-            filletSize: root.filletSize
+            filletSize: root.effectiveFilletSize
             orientation: 0 // TOP_LEFT
             anchors.top: parent.top
             anchors.left: parent.left
-            visible: root.topLeftFillet
+            visible: root.topLeftFillet && root.effectiveFilletSize > 0
         }
         
         CornerPiece {
-            width: root.filletSize
-            height: root.filletSize
+            width: root.effectiveFilletSize
+            height: root.effectiveFilletSize
             color: root.color
             filletStyle: root.topRightFilletStyle
-            filletSize: root.filletSize
+            filletSize: root.effectiveFilletSize
             orientation: 1 // TOP_RIGHT
             anchors.top: parent.top
             anchors.right: parent.right
-            visible: root.topRightFillet
+            visible: root.topRightFillet && root.effectiveFilletSize > 0
         }
         
         CornerPiece {
-            width: root.filletSize
-            height: root.filletSize
+            width: root.effectiveFilletSize
+            height: root.effectiveFilletSize
             color: root.color
             filletStyle: root.bottomLeftFilletStyle
-            filletSize: root.filletSize
+            filletSize: root.effectiveFilletSize
             orientation: 2 // BOTTOM_LEFT
             anchors.bottom: parent.bottom
             anchors.left: parent.left
-            visible: root.bottomLeftFillet
+            visible: root.bottomLeftFillet && root.effectiveFilletSize > 0
         }
         
         CornerPiece {
-            width: root.filletSize
-            height: root.filletSize
+            width: root.effectiveFilletSize
+            height: root.effectiveFilletSize
             color: root.color
             filletStyle: root.bottomRightFilletStyle
-            filletSize: root.filletSize
+            filletSize: root.effectiveFilletSize
             orientation: 3 // BOTTOM_RIGHT
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            visible: root.bottomRightFillet
+            visible: root.bottomRightFillet && root.effectiveFilletSize > 0
         }
         
         // Fill gaps for disabled fillets
         Rectangle {
             visible: !root.topLeftFillet && root.fillDisabledFillets
-            width: root.filletSize
-            height: root.filletSize
+            width: root.effectiveFilletSize
+            height: root.effectiveFilletSize
             color: root.color
             anchors.top: parent.top
             anchors.left: parent.left
@@ -130,8 +134,8 @@ Item {
         
         Rectangle {
             visible: !root.topRightFillet && root.fillDisabledFillets
-            width: root.filletSize
-            height: root.filletSize
+            width: root.effectiveFilletSize
+            height: root.effectiveFilletSize
             color: root.color
             anchors.top: parent.top
             anchors.right: parent.right
@@ -139,8 +143,8 @@ Item {
         
         Rectangle {
             visible: !root.bottomLeftFillet && root.fillDisabledFillets
-            width: root.filletSize
-            height: root.filletSize
+            width: root.effectiveFilletSize
+            height: root.effectiveFilletSize
             color: root.color
             anchors.bottom: parent.bottom
             anchors.left: parent.left
@@ -148,8 +152,8 @@ Item {
         
         Rectangle {
             visible: !root.bottomRightFillet && root.fillDisabledFillets
-            width: root.filletSize
-            height: root.filletSize
+            width: root.effectiveFilletSize
+            height: root.effectiveFilletSize
             color: root.color
             anchors.bottom: parent.bottom
             anchors.right: parent.right

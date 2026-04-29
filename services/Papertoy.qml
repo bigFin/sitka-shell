@@ -34,13 +34,14 @@ Singleton {
     // Current shader path - from state file, falls back to config
     property string currentShaderPath: Config.services.papertoy.shaderPath
     
-    // Effective command - includes layer option
+    // Effective command.
+    //
+    // The packaged papertoy currently does not expose the custom --layer flag
+    // described in the screensaver design docs. Passing it makes papertoy exit
+    // before rendering anything, so keep the launch command compatible with the
+    // installed CLI and let papertoy use its default background layer.
     readonly property list<string> command: {
         let cmd = ["papertoy"];
-        // Add layer option
-        cmd.push("--layer");
-        cmd.push(layer);
-        // Add shader path
         if (currentShaderPath)
             cmd.push(currentShaderPath);
         return cmd.concat(Config.services.papertoy.args);

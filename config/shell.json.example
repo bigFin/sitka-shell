@@ -28,9 +28,9 @@
             // Effect intensity: 0.0 to 1.0
             "intensity": 0.5,
             // Enable time-based animations (for animated effects)
-            "animateTime": true,
-            // Performance mode: "dynamic" (live updates) or "static" (reduced re-rendering)
-            "performanceMode": "dynamic"
+            "animateTime": false,
+            // Performance mode: "off" or "dynamic". Dynamic captures the UI into a shader source.
+            "performanceMode": "off"
         }
     },
     "bar": {
@@ -79,7 +79,7 @@
     "services": {
         "papertoy": {
             // Path to the GLSL shader file for papertoy
-            "shaderPath": "/storage/SyncBox/shaders/stochastic-asym-quads-everforest-dark-medium.glsl",
+            "shaderPath": "",
             // Additional command-line arguments for papertoy
             "args": []
         }

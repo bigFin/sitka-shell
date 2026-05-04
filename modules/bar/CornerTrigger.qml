@@ -130,8 +130,14 @@ PanelWindow {
             }
         }
 
-        layer.enabled: true
-        layer.effect: ShellShader {}
+        layer.enabled: Config.appearance.shaders.enabled
+            && Config.appearance.shaders.customShader !== ""
+            && Config.appearance.shaders.performanceMode === "dynamic"
+        layer.effect: layer.enabled ? cornerShader : null
+
+        ShellShader {
+            id: cornerShader
+        }
 
         // Chamfered triangle shape - bottom-left corner
         Shape {

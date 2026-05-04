@@ -93,26 +93,29 @@ Variants {
             Item {
                 id: globalShaderWrapper
                 anchors.fill: parent
+                readonly property bool shaderOverlayActive: Config.appearance.shaders.enabled
+                    && Config.appearance.shaders.customShader !== ""
+                    && Config.appearance.shaders.performanceMode === "dynamic"
 
-                // Shader Controller & Display
-                ShellShader {
-                    id: shellShader
+                Loader {
+                    id: shellShaderLoader
                     anchors.fill: parent
-                    // Visible only when active and compiled
-                    visible: shaderActive && resolvedShaderPath !== ""
-                    
-                    // Inputs
-                    source: shaderSource
+                    active: globalShaderWrapper.shaderOverlayActive
+                    asynchronous: true
+
+                    sourceComponent: ShellShader {
+                        anchors.fill: parent
+                        visible: shaderActive && resolvedShaderPath !== ""
+                        source: shaderSource
+                    }
                 }
 
-                // Texture Capture Pipeline
                 ShaderEffectSource {
                     id: shaderSource
                     anchors.fill: parent
-                    sourceItem: uiContent
-                    // Hide original UI when shader is active
-                    hideSource: shellShader.visible
-                    live: true // Dynamic updates
+                    sourceItem: globalShaderWrapper.shaderOverlayActive ? uiContent : null
+                    hideSource: shellShaderLoader.item?.visible ?? false
+                    live: shellShaderLoader.item?.visible ?? false
                     visible: false
                 }
 

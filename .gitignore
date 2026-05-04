@@ -18,3 +18,5 @@ build/
 # Syncthing
 .stversions/
 .stfolder/
+.stignore
+*.sync-conflict-*

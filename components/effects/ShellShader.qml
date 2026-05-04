@@ -18,7 +18,6 @@ ShaderEffect {
     property string customShader: Config.appearance.shaders.customShader
     property real intensity: Config.appearance.shaders.intensity
     property bool animateTime: Config.appearance.shaders.animateTime
-    property string performanceMode: Config.appearance.shaders.performanceMode
     property color backgroundColor: Colours.palette.m3surface
 
     // Shader uniforms
@@ -30,10 +29,7 @@ ShaderEffect {
     // Internal property to hold the resolved .qsb path
     property string resolvedShaderPath: ""
 
-    onSourceChanged: console.log("ShellShader source changed:", source)
-
     function updateShaderPath() {
-        console.log("updateShaderPath called. Active:", shaderActive);
         if (!shaderActive) {
             resolvedShaderPath = "";
             return;
@@ -41,24 +37,18 @@ ShaderEffect {
 
         if (customShader !== "") {
             const path = Paths.absolutePath(customShader);
-            console.log("Resolved path:", path);
             if (path.endsWith(".qsb")) {
                 resolvedShaderPath = `file://${path}`;
             } else {
-                // Trigger auto-compilation
-                console.log("Starting shader compilation for:", path);
                 compilerProcess.inputPath = path;
                 compilerProcess.running = true;
             }
         }
     }
 
-    onCustomShaderChanged: { console.log("CustomShader changed:", customShader); updateShaderPath(); }
-    onShaderActiveChanged: { console.log("ShaderActive changed:", shaderActive); updateShaderPath(); }
-    Component.onCompleted: {
-        console.log("ShellShader initialized. Enabled:", shaderActive, "CustomShader:", customShader);
-        updateShaderPath();
-    }
+    onCustomShaderChanged: updateShaderPath()
+    onShaderActiveChanged: updateShaderPath()
+    Component.onCompleted: updateShaderPath()
 
     fragmentShader: resolvedShaderPath
 
@@ -72,8 +62,6 @@ ShaderEffect {
             onStreamFinished: {
                 const compiledPath = this.text.trim();
                 if (compiledPath !== "") {
-                    console.log("Shader compiled successfully:", compiledPath);
-                    console.log("Setting resolvedShaderPath to:", `file://${compiledPath}`);
                     root.resolvedShaderPath = `file://${compiledPath}`;
                 } else {
                     console.warn("Shader compilation failed: no output path");
@@ -105,8 +93,7 @@ ShaderEffect {
         property real elapsed: 0
         interval: 16
         repeat: true
-        // Only run timer if needed and in dynamic mode
-        running: root.shaderActive && root.animateTime && root.performanceMode === "dynamic"
+        running: root.shaderActive && root.animateTime
         onTriggered: elapsed += interval
     }
 }

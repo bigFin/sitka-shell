@@ -36,15 +36,14 @@ Loader {
             }
 
             Loader {
-                //TODO MAKE SURE IT WORKS
-                readonly property bool shouldBeActive: Config.background.visualiser.enabled && (!Config.background.visualiser.autoHide || WMService.getActiveWorkspaceWindows().every(w => w.is_floating)) ? 1 : 0
+                readonly property bool shouldBeActive: Config.background.visualiser.enabled && (!Config.background.visualiser.autoHide || WMService.getActiveWorkspaceWindows().every(w => w.is_floating))
                 property real offset: shouldBeActive ? 0 : win.modelData.height * 0.2
 
                 anchors.fill: parent
                 anchors.topMargin: offset
                 anchors.bottomMargin: -offset
                 opacity: shouldBeActive ? 1 : 0
-                active: true
+                active: shouldBeActive
                 asynchronous: true
 
                 sourceComponent: Visualiser {

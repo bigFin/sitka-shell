@@ -74,7 +74,7 @@ Item {
         let indices = draggedWindows.map(w => flatWindows.findIndex(x => x.id === w.id));
 
         // 8. Call backend to update order
-        WMService.moveGroupColumnsSequential(WMService.focusedWindowId, draggedWindows.map(w => w.id), flatIndex + 1, 5);
+        WMService.moveGroupColumnsSequential(ActiveWindowModel.idString, draggedWindows.map(w => w.id), flatIndex + 1, 5);
     }
 
     // height: column.height

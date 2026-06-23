@@ -76,7 +76,7 @@ Rectangle {
         required property var modelData
         required property var index
 
-        readonly property bool itemIsFocused: Number(WMService.focusedWindowId) === Number(modelData.id)
+        readonly property bool itemIsFocused: ActiveWindowModel.idString === String(modelData.id)
         readonly property bool onPrimary: root.fokus.workspace
 
         readonly property string displayTitle: WMService.cleanWindowTitle(modelData.title || "Untitled")

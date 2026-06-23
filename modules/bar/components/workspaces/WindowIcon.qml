@@ -216,7 +216,7 @@ Item {
         onClicked: mouse => {
             if (mouse.button === Qt.LeftButton && !iconItem.dragActive) {
                 // cycle through group windows or focus single window
-                if (Number(WMService.focusedWindowId) !== Number(iconItem.windowData.id)) {
+                if (ActiveWindowModel.idString !== String(iconItem.windowData.id)) {
                     WMService.focusWindow(iconItem.windowData.id);
                 } else if (iconItem.groupIconsByApp && iconItem.windowCount > 1) {
                     let idx = iconItem.groupWindowData.findIndex(w => w.id === iconItem.windowData.id);

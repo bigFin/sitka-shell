@@ -40,9 +40,8 @@ Singleton {
     }
 
     function getFocusedGroupIndex(workspaceId): int {
-        const focusedWindow = storeReady ? WindowStore.getFocusedWindow() : null;
-        const focusedId = Number(focusedWindow?.id ?? WMService.focusedWindowId);
-        if (!Number.isFinite(focusedId))
+        const focusedId = ActiveWindowModel.idString;
+        if (!focusedId)
             return -1;
 
         const groups = getGroupsForWorkspace(workspaceId);
@@ -53,9 +52,9 @@ Singleton {
 
             if (groupIconsByApp) {
                 const windows = group.windows || [];
-                if (windows.some(w => Number(w?.id) === focusedId))
+                if (windows.some(w => String(w?.id) === focusedId))
                     return i;
-            } else if (Number(group.id) === focusedId) {
+            } else if (String(group.id) === focusedId) {
                 return i;
             }
         }
@@ -64,21 +63,7 @@ Singleton {
     }
 
     function getWindowsForWorkspace(workspaceId): var {
-        if (!storeReady)
-            return WMService.getWindowsByWorkspaceId(workspaceId) || [];
-
-        return WindowStore.getWindowsForWorkspace(workspaceId).map(w => ({
-            app_id: w.appId,
-            id: w.id,
-            title: w.title,
-            workspace_id: w.workspaceId,
-            is_focused: w.isFocused,
-            is_floating: w.isFloating,
-            layout: {
-                pos_in_scrolling_layout: [w.layoutCol, w.layoutRow],
-                window_size: [w.width, w.height]
-            }
-        }));
+        return WindowCollectionModel.getWindowsByWorkspaceId(workspaceId) || [];
     }
 
     function buildGroups(windows: var): var {

@@ -26,7 +26,7 @@ ScrollView {
             width: parent.width
             height: systemInfoColumn.implicitHeight + 2 * Config.appearance.padding.normal
             radius: Config.appearance.rounding.small
-            color: Qt.rgba(Colours.palette.m3surfaceContainer.r, Colours.palette.m3surfaceContainer.g, Colours.palette.m3surfaceContainer.b, 0.6)
+            color: Colours.tPalette.m3surfaceContainer
             border.width: 0
 
             Column {
@@ -100,7 +100,7 @@ ScrollView {
                         width: (parent.width - Config.appearance.padding.normal) / 2
                         height: Math.max(hardwareColumn.implicitHeight, memoryColumn.implicitHeight) + Config.appearance.padding.smaller
                         radius: Config.appearance.rounding.small
-                        color: Qt.rgba(Colours.palette.m3surfaceContainerHigh.r, Colours.palette.m3surfaceContainerHigh.g, Colours.palette.m3surfaceContainerHigh.b, 0.4)
+                        color: Colours.tPalette.m3surfaceContainerHigh
 
                         Column {
                             id: hardwareColumn
@@ -172,7 +172,7 @@ ScrollView {
                         width: (parent.width - Config.appearance.padding.normal) / 2
                         height: Math.max(hardwareColumn.implicitHeight, memoryColumn.implicitHeight) + Config.appearance.padding.smaller
                         radius: Config.appearance.rounding.small
-                        color: Qt.rgba(Colours.palette.m3surfaceContainerHigh.r, Colours.palette.m3surfaceContainerHigh.g, Colours.palette.m3surfaceContainerHigh.b, 0.4)
+                        color: Colours.tPalette.m3surfaceContainerHigh
 
                         Column {
                             id: memoryColumn
@@ -238,7 +238,7 @@ ScrollView {
             width: parent.width
             height: storageColumn.implicitHeight + 2 * Config.appearance.padding.normal
             radius: Config.appearance.rounding.small
-            color: Qt.rgba(Colours.palette.m3surfaceContainer.r, Colours.palette.m3surfaceContainer.g, Colours.palette.m3surfaceContainer.b, 0.6)
+            color: Colours.tPalette.m3surfaceContainer
             border.width: 0
 
             Column {

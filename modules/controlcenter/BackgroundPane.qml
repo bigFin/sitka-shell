@@ -43,7 +43,7 @@ Item {
                 width: parent.width
                 height: 50
                 radius: Config.appearance.rounding.normal
-                color: Colours.palette.m3surfaceContainerHigh
+                color: Colours.tPalette.m3surfaceContainerHigh
 
                 Row {
                     anchors.centerIn: parent
@@ -73,7 +73,7 @@ Item {
                 width: parent.width
                 height: 50
                 radius: Config.appearance.rounding.normal
-                color: Colours.palette.m3surfaceContainerHigh
+                color: Colours.tPalette.m3surfaceContainerHigh
                 
                 FileDialog {
                      id: fileDialog
@@ -122,7 +122,7 @@ Item {
                 radius: Config.appearance.rounding.normal
                 color: Papertoy.enabled 
                     ? Colours.palette.m3primaryContainer 
-                    : Colours.palette.m3surfaceContainerHigh
+                    : Colours.tPalette.m3surfaceContainerHigh
 
                 Row {
                     anchors.centerIn: parent
@@ -157,7 +157,7 @@ Item {
                 width: parent.width
                 height: shaderPathCol.implicitHeight + Config.appearance.padding.normal * 2
                 radius: Config.appearance.rounding.normal
-                color: Colours.palette.m3surfaceContainerHigh
+                color: Colours.tPalette.m3surfaceContainerHigh
                 visible: Papertoy.currentShaderPath !== ""
 
                 Column {
@@ -189,7 +189,7 @@ Item {
                 width: parent.width
                 height: 50
                 radius: Config.appearance.rounding.normal
-                color: Colours.palette.m3surfaceContainerHigh
+                color: Colours.tPalette.m3surfaceContainerHigh
                 
                 FileDialog {
                     id: shaderFileDialog

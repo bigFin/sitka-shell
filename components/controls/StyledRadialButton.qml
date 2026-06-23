@@ -6,7 +6,7 @@ import ".."
 StyledRect {
     id: root
     property color basecolor: Colours.palette.m3secondaryContainer
-    color: disabled ? Colours.palette.m3surfaceContainerLow : basecolor
+    color: disabled ? Colours.tPalette.m3surfaceContainerLow : basecolor
     property color onColor: Colours.palette.m3onSurface
     property alias disabled: stateLayer.disabled
     property alias icon: icon.text

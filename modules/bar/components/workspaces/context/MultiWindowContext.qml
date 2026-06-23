@@ -25,10 +25,10 @@ Rectangle {
     Component.onCompleted: activated = true
 
     radius: root.baseRadius
-    color: (Colours.palette.m3surfaceContainerLow)
+    color: (Colours.tPalette.m3surfaceContainerLow)
 
     border.width: root.hPadding
-    border.color: (root.fokus.workspace ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHigh)
+    border.color: (root.fokus.workspace ? Colours.palette.m3primary : Colours.tPalette.m3surfaceContainerHigh)
     implicitWidth: root.popupActive && WMService.wsContextAnchor && root.activated ? root.contextWidth - root.sideMargin + root.hPadding : 0
     implicitHeight: root.popupActive && WMService.wsContextAnchor && root.activated ? windowsColumn.height + root.hPadding * 4 : 0
 
@@ -82,7 +82,7 @@ Rectangle {
         readonly property string displayTitle: WMService.cleanWindowTitle(modelData.title || "Untitled")
         readonly property string displaySubtitle: (modelData.app_id || "Untitled")
 
-        color: itemIsFocused ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHighest
+        color: itemIsFocused ? Colours.palette.m3primary : Colours.tPalette.m3surfaceContainerHighest
 
         Behavior on color {
             CAnim {

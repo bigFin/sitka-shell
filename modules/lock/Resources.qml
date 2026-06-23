@@ -60,7 +60,7 @@ GridLayout {
         Layout.fillWidth: true
         implicitHeight: width
 
-        color: Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
+        color: Colours.tPalette.m3surfaceContainerHigh
         radius: Config.appearance.rounding.large
 
         CircularProgress {
@@ -70,7 +70,7 @@ GridLayout {
             value: res.value
             padding: Config.appearance.padding.large * 3
             fgColour: res.colour
-            bgColour: Colours.layer(Colours.palette.m3surfaceContainerHighest, 3)
+            bgColour: Colours.tPalette.m3surfaceContainerHighest
             strokeWidth: width < 200 ? Config.appearance.padding.smaller : Config.appearance.padding.normal
         }
 

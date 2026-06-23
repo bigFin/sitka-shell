@@ -208,7 +208,7 @@ WlSessionLockSurface {
             id: lockBg
 
             anchors.fill: parent
-            color: Colours.palette.m3surface
+            color: Colours.tPalette.m3surface
             radius: parent.radius
             opacity: Colours.transparency.enabled ? Colours.transparency.base : 1
             

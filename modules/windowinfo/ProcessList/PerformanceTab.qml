@@ -44,7 +44,7 @@ ColumnLayout {
         Layout.fillHeight: true
         Layout.preferredHeight: 320
         radius: Config.appearance.rounding.small
-        color: Colours.palette.m3surfaceContainer
+        color: Colours.tPalette.m3surfaceContainer
 
         ColumnLayout {
             anchors.fill: parent
@@ -147,7 +147,7 @@ ColumnLayout {
                                 Layout.preferredHeight: 6
                                 Layout.preferredWidth: 60
                                 radius: 0
-                                color: Colours.palette.m3surfaceContainerLowest
+                                color: Colours.tPalette.m3surfaceContainerLowest
                                 Layout.alignment: Qt.AlignVCenter
 
                                 StyledRect {
@@ -203,7 +203,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 120
                 radius: Config.appearance.rounding.small
-                color: Colours.palette.m3surfaceContainer
+                color: Colours.tPalette.m3surfaceContainer
                 required property var modelData
                 property var gpu: modelData
 
@@ -278,7 +278,7 @@ ColumnLayout {
                                     return Colours.palette.warning;
                                 return Colours.palette.m3primary;
                             }
-                            backgroundColor: Colours.palette.m3surfaceContainerHigh
+                            backgroundColor: Colours.tPalette.m3surfaceContainerHigh
                             animationDuration: Config.appearance.anim.durations.normal
                         }
                     }
@@ -293,7 +293,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.preferredHeight: 120
         radius: Config.appearance.rounding.small
-        color: Colours.palette.m3surfaceContainer
+        color: Colours.tPalette.m3surfaceContainer
 
         RowLayout {
             anchors.fill: parent
@@ -346,7 +346,7 @@ ColumnLayout {
                                     return Colours.palette.warning;
                                 return Colours.palette.m3tertiary;
                             }
-                            backgroundColor: Colours.palette.m3surfaceContainerHigh
+                            backgroundColor: Colours.tPalette.m3surfaceContainerHigh
                             animationDuration: Config.appearance.anim.durations.normal
                         }
                     }
@@ -394,7 +394,7 @@ ColumnLayout {
                                     return Colours.palette.warning;
                                 return Colours.palette.m3tertiary;
                             }
-                            backgroundColor: Colours.palette.m3surfaceContainerHigh
+                            backgroundColor: Colours.tPalette.m3surfaceContainerHigh
                             animationDuration: Config.appearance.anim.durations.normal
                         }
 
@@ -424,7 +424,7 @@ ColumnLayout {
             Layout.preferredWidth: 1
             Layout.preferredHeight: 80
             radius: Config.appearance.rounding.small
-            color: Colours.palette.m3surfaceContainer
+            color: Colours.tPalette.m3surfaceContainer
 
             RowLayout {
                 anchors.fill: parent
@@ -489,7 +489,7 @@ ColumnLayout {
             Layout.preferredWidth: 1
             Layout.preferredHeight: 80
             radius: Config.appearance.rounding.small
-            color: Colours.palette.m3surfaceContainer
+            color: Colours.tPalette.m3surfaceContainer
 
             RowLayout {
                 anchors.fill: parent

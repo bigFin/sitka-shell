@@ -39,7 +39,7 @@ ColumnLayout {
                     readonly property int wsId: Math.floor((WMService.focusedWorkspaceIndex) / 10) * 10 + index + 1
                     readonly property bool isCurrent: (wsId - 1) % 10 === WMService.focusedWorkspaceIndex
 
-                    color: isCurrent ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
+                    color: isCurrent ? Colours.tPalette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
                     onColor: isCurrent ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
                     text: (WMService.currentOutputWorkspaces && WMService.currentOutputWorkspaces[wsId - 1] ? WMService.currentOutputWorkspaces[wsId - 1].name : "") || "Workspace: " + wsId
                     disabled: isCurrent
@@ -170,7 +170,7 @@ ColumnLayout {
 
     component Rect: StyledRect {
         radius: Config.appearance.rounding.small
-        color: Colours.palette.m3surfaceContainerLow
+        color: Colours.tPalette.m3surfaceContainerLow
     }
 
     // Your global Button component (if defined here)

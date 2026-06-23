@@ -17,7 +17,7 @@ Item {
     readonly property int anchorWsCount: (WMService.wsContextType === "item") ? WMService.wsContextAnchor?.windowCount : 1
     readonly property real rounding: Config.appearance.rounding.small
     readonly property real padding: Config.appearance.padding.small
-    readonly property color bgColor: (WMService.wsContextType === "workspaces" && WMService.wsContextAnchor ? Colours.palette.m3surfaceContainer : Colours.palette.m3surfaceContainerHigh)
+    readonly property color bgColor: (WMService.wsContextType === "workspaces" && WMService.wsContextAnchor ? Colours.tPalette.m3surfaceContainer : Colours.tPalette.m3surfaceContainerHigh)
 
     property real cornerPieceSize: Config.bar.workspaces.windowIconSize + padding
     property bool activated: false
@@ -189,7 +189,7 @@ Item {
     HighlightRect {
         id: highlightLow
         opacity: (WMService.wsContextType === "workspaces") ? 0 : 1
-        highlightColor: Colours.palette.m3surfaceContainer
+        highlightColor: Colours.tPalette.m3surfaceContainer
         anchors.top: highlight.top
         anchors.bottom: highlight.bottom
         anchors.left: highlight.left

@@ -11,7 +11,7 @@ ColumnLayout {
 
     property string title: qsTr("Dropdown Title")
     property bool expanded: false
-    property color backgroundColor: expanded ? Colours.palette.m3surfaceContainerLow : "transparent"
+    property color backgroundColor: expanded ? Colours.tPalette.m3surfaceContainerLow : "transparent"
 
     // Margin properties: if backgroundMargins >= 0, use it for all sides; otherwise, use individual margins
     property real backgroundMarginLeft: Config.appearance.padding.small

@@ -32,7 +32,7 @@ Item {
         asynchronous: true
 
         sourceComponent: StyledRect {
-            color: Colours.palette.m3surfaceContainer
+            color: Colours.tPalette.m3surfaceContainer
 
             Row {
                 anchors.centerIn: parent

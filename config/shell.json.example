@@ -23,9 +23,9 @@
         "transparency": {
             "enabled": false,
             // Alpha for primary shell surfaces.
-            "base": 0.85,
+            "base": 0.58,
             // Alpha for nested panels, cards, and raised layers.
-            "layers": 0.4
+            "layers": 0.24
         },
         // Shader effects for VFD/CRT visual style
         "shaders": {

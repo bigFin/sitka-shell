@@ -23,7 +23,7 @@ StyledRect {
         anchors.fill: parent
 
         property bool useImageIcon: root.useImageIcon
-        property color bgColor: Colours.palette.m3surfaceContainer
+        property color bgColor: Colours.tPalette.m3surfaceContainer
         property color onColor: Colours.palette.m3onSurfaceVariant
 
         clip: true
@@ -117,7 +117,7 @@ StyledRect {
         readonly property bool isFocused: Number(WMService.focusedWorkspaceId) === Number(modelData.workspace_id)
 
         radius: Config.appearance.rounding.small
-        color: isFocused ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHigh
+        color: isFocused ? Colours.palette.m3primary : Colours.tPalette.m3surfaceContainerHigh
 
         clip: true
 

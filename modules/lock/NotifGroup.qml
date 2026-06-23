@@ -29,7 +29,7 @@ StyledRect {
 
     clip: true
     radius: Config.appearance.rounding.normal
-    color: root.urgency === "critical" ? Colours.palette.m3secondaryContainer : Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
+    color: root.urgency === "critical" ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainerHigh
 
     RetainableLock {
         object: root.notifs[0]?.notiftication ?? null
@@ -87,7 +87,7 @@ StyledRect {
 
             ClippingRectangle {
                 anchors.fill: parent
-                color: root.urgency === "critical" ? Colours.palette.m3error : root.urgency === "low" ? Colours.layer(Colours.palette.m3surfaceContainerHighest, 3) : Colours.palette.m3secondaryContainer
+                color: root.urgency === "critical" ? Colours.palette.m3error : root.urgency === "low" ? Colours.tPalette.m3surfaceContainerHighest : Colours.palette.m3secondaryContainer
                 radius: Config.appearance.rounding.full
 
                 Loader {
@@ -107,7 +107,7 @@ StyledRect {
                     implicitWidth: Config.notifs.sizes.badge
                     implicitHeight: Config.notifs.sizes.badge
 
-                    color: root.urgency === "critical" ? Colours.palette.m3error : root.urgency === "low" ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3secondaryContainer
+                    color: root.urgency === "critical" ? Colours.palette.m3error : root.urgency === "low" ? Colours.tPalette.m3surfaceContainerHighest : Colours.palette.m3secondaryContainer
                     radius: Config.appearance.rounding.full
 
                     ColouredIcon {
@@ -151,7 +151,7 @@ StyledRect {
                     implicitWidth: expandBtn.implicitWidth + Config.appearance.padding.smaller * 2
                     implicitHeight: groupCount.implicitHeight + Config.appearance.padding.small
 
-                    color: root.urgency === "critical" ? Colours.palette.m3error : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
+                    color: root.urgency === "critical" ? Colours.palette.m3error : Colours.tPalette.m3surfaceContainerHighest
                     radius: Config.appearance.rounding.full
 
                     opacity: root.notifs.length > Config.notifs.groupPreviewNum ? 1 : 0

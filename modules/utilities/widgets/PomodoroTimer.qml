@@ -192,7 +192,7 @@ ColumnLayout {
             implicitWidth: implicitHeight
             implicitHeight: resetIcon.implicitHeight + Config.appearance.padding.normal * 2
             radius: Config.appearance.rounding.normal
-            color: Colours.palette.m3surfaceContainerHigh
+            color: Colours.tPalette.m3surfaceContainerHigh
 
             MaterialIcon {
                 id: resetIcon
@@ -218,7 +218,7 @@ ColumnLayout {
             implicitWidth: implicitHeight
             implicitHeight: skipIcon.implicitHeight + Config.appearance.padding.normal * 2
             radius: Config.appearance.rounding.normal
-            color: Colours.palette.m3surfaceContainerHigh
+            color: Colours.tPalette.m3surfaceContainerHigh
 
             MaterialIcon {
                 id: skipIcon

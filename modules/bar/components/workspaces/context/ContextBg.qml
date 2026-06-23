@@ -27,7 +27,7 @@ Item {
     property bool activated: false
     Component.onCompleted: root.activated = true
 
-    property color bgColor: isWorkspaces ? Colours.palette.m3surfaceContainer : ((isFocused) ? Qt.alpha(Colours.palette.m3primary, 0.95) : (hasWindows ? Colours.palette.m3surfaceContainerHigh : "transparent"))
+    property color bgColor: isWorkspaces ? Colours.tPalette.m3surfaceContainer : ((isFocused) ? Qt.alpha(Colours.palette.m3primary, 0.95) : (hasWindows ? Colours.tPalette.m3surfaceContainerHigh : "transparent"))
 
     // --- Highlight Rect ---
     component HighlightRect: Rectangle {
@@ -97,7 +97,7 @@ Item {
 
     HighlightRect {
         id: highlightLow
-        color: !root.isWorkspaces ? Colours.palette.m3surfaceContainer : "transparent"
+        color: !root.isWorkspaces ? Colours.tPalette.m3surfaceContainer : "transparent"
 
         anchors.fill: highlight
 

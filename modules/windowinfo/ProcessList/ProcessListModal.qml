@@ -15,7 +15,7 @@ Item {
 
     width: 900
     height: 680
-    // color: Colours.palette.m3surfaceContainerLow
+    // color: Colours.tPalette.m3surfaceContainerLow
     // radius: Config.appearance.rounding.small
     Layout.fillHeight: true
     // Remove enableShadow and keyboardFocus, unless you want to reimplement them
@@ -54,7 +54,7 @@ Item {
         StyledRect {
             Layout.fillWidth: true
             implicitHeight: 52
-            color: Colours.palette.m3surfaceContainer
+            color: Colours.tPalette.m3surfaceContainer
             radius: Config.appearance.rounding.small
 
             RowLayout {
@@ -156,7 +156,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             radius: Config.appearance.rounding.small
-            color: Colours.palette.m3surfaceContainerLow
+            color: Colours.tPalette.m3surfaceContainerLow
 
             Loader {
                 id: processesTab

@@ -145,7 +145,7 @@ StyledRect {
 
                 sourceComponent: StyledRect {
                     radius: Config.appearance.rounding.full
-                    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData.urgency === NotificationUrgency.Low ? Colours.layer(Colours.palette.m3surfaceContainerHighest, 2) : Colours.palette.m3secondaryContainer
+                    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData.urgency === NotificationUrgency.Low ? Colours.tPalette.m3surfaceContainerHighest : Colours.palette.m3secondaryContainer
                     implicitWidth: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
                     implicitHeight: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
 
@@ -444,7 +444,7 @@ StyledRect {
         required property var modelData
 
         radius: Config.appearance.rounding.full
-        color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
+        color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.tPalette.m3surfaceContainerHigh
 
         Layout.preferredWidth: actionText.width + Config.appearance.padding.normal * 2
         Layout.preferredHeight: actionText.height + Config.appearance.padding.small * 2

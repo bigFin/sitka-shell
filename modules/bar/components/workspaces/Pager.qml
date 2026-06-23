@@ -14,7 +14,7 @@ StyledRect {
     property bool active: false
     property bool entered: Config.bar.workspaces.shown < WMService.getWorkspaceCount() && active
 
-    color: Colours.palette.m3surfaceContainer
+    color: Colours.tPalette.m3surfaceContainer
     radius: 0
     
     // Apply small fillets for tertiary elements
@@ -46,7 +46,7 @@ StyledRect {
         font.family: Config.appearance.font.family.mono
         font.pointSize: Config.appearance.font.size.extraSmall
 
-        color: Colours.palette.m3surfaceContainerHighest
+        color: Colours.tPalette.m3surfaceContainerHighest
 
         readonly property int pageNumber: Math.floor(root.groupOffset / Config.bar.workspaces.shown) + 1
         readonly property int totalPages: Math.ceil(WMService.getWorkspaceCount() / Config.bar.workspaces.shown)

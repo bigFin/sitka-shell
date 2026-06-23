@@ -132,7 +132,7 @@ ColumnLayout {
         radius: Config.appearance.rounding.normal
         color: toggle.active
             ? Colours.palette.m3primaryContainer
-            : Colours.palette.m3surfaceContainerHigh
+            : Colours.tPalette.m3surfaceContainerHigh
 
         StateLayer {
             radius: parent.radius

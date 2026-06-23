@@ -164,7 +164,7 @@ ColumnLayout {
         radius: Config.appearance.rounding.small
         color: isActive
             ? Colours.palette.m3primaryContainer
-            : Colours.palette.m3surfaceContainerHigh
+            : Colours.tPalette.m3surfaceContainerHigh
 
         RowLayout {
             id: netRow

@@ -63,7 +63,7 @@ Popup {
 
     contentItem: StyledRect {
         id: menuContent
-        color: Colours.palette.m3surfaceContainerHigh
+        color: Colours.tPalette.m3surfaceContainerHigh
         radius: Config.appearance.rounding.small
 
         Column {

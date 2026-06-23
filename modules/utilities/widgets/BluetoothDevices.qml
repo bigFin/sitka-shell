@@ -177,7 +177,7 @@ ColumnLayout {
         radius: Config.appearance.rounding.small
         color: isConnected
             ? Colours.palette.m3primaryContainer
-            : Colours.palette.m3surfaceContainerHigh
+            : Colours.tPalette.m3surfaceContainerHigh
 
         RowLayout {
             id: devRow

@@ -166,7 +166,7 @@ ColumnLayout {
         radius: Config.appearance.rounding.normal
         color: isRunning
             ? Colours.palette.m3primaryContainer
-            : Colours.palette.m3surfaceContainerHigh
+            : Colours.tPalette.m3surfaceContainerHigh
 
         // App icon
         IconImage {

@@ -117,7 +117,7 @@ ColumnLayout {
             Layout.fillWidth: true
             implicitHeight: inputField.implicitHeight + Config.appearance.padding.small * 2
             radius: Config.appearance.rounding.normal
-            color: Colours.palette.m3surfaceContainerHigh
+            color: Colours.tPalette.m3surfaceContainerHigh
 
             TextInput {
                 id: inputField
@@ -233,7 +233,7 @@ ColumnLayout {
         radius: Config.appearance.rounding.small
         color: item.completed
             ? Qt.alpha(Colours.palette.m3primaryContainer, 0.3)
-            : Colours.palette.m3surfaceContainerHigh
+            : Colours.tPalette.m3surfaceContainerHigh
 
         RowLayout {
             id: itemRow

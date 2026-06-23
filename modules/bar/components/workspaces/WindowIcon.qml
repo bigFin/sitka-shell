@@ -142,7 +142,7 @@ Item {
         width: iconLoader.width + Config.appearance.padding.small
         height: iconLoader.height + Config.appearance.padding.small
 
-        color: iconItem.isWsFocused ? Colours.palette.m3primaryContainer : Colours.palette.m3surfaceContainer
+        color: iconItem.isWsFocused ? Colours.palette.m3primaryContainer : Colours.tPalette.m3surfaceContainer
         radius: 0
         
         // Apply small fillets for tertiary elements

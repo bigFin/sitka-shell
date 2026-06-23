@@ -104,7 +104,7 @@ Item {
         //     height: 200
 
         //     width: Config.bar.sizes.windowPreviewSize
-        //     // color: Colours.palette.m3surfaceContainer
+        //     // color: Colours.tPalette.m3surfaceContainer
         //     radius: Config.appearance.rounding.normal
 
         //     Flickable {

@@ -15,7 +15,7 @@ Switch {
 
     indicator: StyledRect {
         radius: Config.appearance.rounding.full
-        color: root.checked ? Colours.palette.m3primary : Colours.layer(Colours.palette.m3surfaceContainerHighest, root.cLayer)
+        color: root.checked ? Colours.palette.m3primary : Colours.tPalette.m3surfaceContainerHighest
 
         implicitWidth: implicitHeight * 1.7
         implicitHeight: Config.appearance.font.size.normal + Config.appearance.padding.smaller * 2
@@ -89,7 +89,7 @@ Switch {
 
                 ShapePath {
                     strokeWidth: Config.appearance.font.size.larger * 0.15
-                    strokeColor: root.checked ? Colours.palette.m3primary : Colours.palette.m3surfaceContainerHighest
+                    strokeColor: root.checked ? Colours.palette.m3primary : Colours.tPalette.m3surfaceContainerHighest
                     fillColor: "transparent"
                     capStyle: Config.appearance.rounding.scale === 0 ? ShapePath.SquareCap : ShapePath.RoundCap
 

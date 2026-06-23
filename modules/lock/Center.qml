@@ -195,7 +195,7 @@ ColumnLayout {
                 implicitWidth: implicitHeight
                 implicitHeight: enterIcon.implicitHeight + Config.appearance.padding.small * 2
 
-                color: root.lock.pam.buffer ? Colours.palette.m3primary : Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
+                color: root.lock.pam.buffer ? Colours.palette.m3primary : Colours.tPalette.m3surfaceContainerHigh
                 radius: Config.appearance.rounding.full
 
                 StateLayer {

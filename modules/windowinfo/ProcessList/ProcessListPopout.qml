@@ -50,7 +50,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             radius: Config.appearance.rounding.normal
-            color: Colours.palette.m3surfaceContainer
+            color: Colours.tPalette.m3surfaceContainer
 
             ProcessListView {
                 anchors.fill: parent

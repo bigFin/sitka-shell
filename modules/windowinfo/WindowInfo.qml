@@ -15,7 +15,7 @@ Item {
     property var wrapper: null
 
     implicitWidth: child.implicitWidth
-    implicitHeight: screen.height * Config.winfo.sizes.heightMult
+    implicitHeight: (screen?.height ?? 0) * Config.winfo.sizes.heightMult
 
     RowLayout {
         id: child

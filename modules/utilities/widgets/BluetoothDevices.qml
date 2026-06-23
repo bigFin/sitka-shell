@@ -19,8 +19,8 @@ ColumnLayout {
     readonly property var adapter: Bluetooth.adapters.values.length > 0
         ? Bluetooth.adapters.values[0] : null
     readonly property bool powered: adapter?.powered ?? false
-    readonly property var devices: Bluetooth.devices.values.filter(d => d.paired || d.connected)
-    readonly property int connectedCount: devices.filter(d => d.connected).length
+    readonly property var devices: Bluetooth.devices.values.filter(d => d && (d.paired || d.connected))
+    readonly property int connectedCount: devices.filter(d => d && d.connected).length
 
     // Header with toggle
     RowLayout {
@@ -139,14 +139,14 @@ ColumnLayout {
         spacing: 2
 
         Repeater {
-            model: root.devices.sort((a, b) => {
+            model: root.devices.slice().sort((a, b) => {
                 // Connected first, then by name
                 if (a.connected !== b.connected) return b.connected - a.connected
                 return (a.name || "").localeCompare(b.name || "")
             })
 
             DeviceItem {
-                required property BluetoothDevice modelData
+                required property var modelData
 
                 Layout.fillWidth: true
                 device: modelData
@@ -167,11 +167,13 @@ ColumnLayout {
     component DeviceItem: StyledRect {
         id: devItem
 
-        required property BluetoothDevice device
+        required property var device
 
-        readonly property bool isConnected: device.connected
+        readonly property bool hasDevice: device !== null && device !== undefined
+        readonly property bool isConnected: hasDevice && device.connected
 
-        implicitHeight: devRow.implicitHeight + Config.appearance.padding.small * 2
+        visible: hasDevice
+        implicitHeight: hasDevice ? devRow.implicitHeight + Config.appearance.padding.small * 2 : 0
         radius: Config.appearance.rounding.small
         color: isConnected
             ? Colours.palette.m3primaryContainer
@@ -186,7 +188,7 @@ ColumnLayout {
             // Device type icon
             MaterialIcon {
                 text: {
-                    const type = devItem.device.type
+                    const type = devItem.device?.type
                     if (type === BluetoothDevice.Headphones || type === BluetoothDevice.Headset)
                         return "headphones"
                     if (type === BluetoothDevice.Keyboard)
@@ -214,7 +216,7 @@ ColumnLayout {
 
                 StyledText {
                     Layout.fillWidth: true
-                    text: devItem.device.name || qsTr("Unknown Device")
+                    text: devItem.device?.name || qsTr("Unknown Device")
                     font.pointSize: Config.appearance.font.size.small
                     font.weight: devItem.isConnected ? 600 : 400
                     color: devItem.isConnected
@@ -224,8 +226,8 @@ ColumnLayout {
                 }
 
                 StyledText {
-                    visible: devItem.device.battery >= 0
-                    text: qsTr("Battery: %1%").arg(devItem.device.battery)
+                    visible: (devItem.device?.battery ?? -1) >= 0
+                    text: qsTr("Battery: %1%").arg(devItem.device?.battery ?? 0)
                     font.pointSize: Config.appearance.font.size.smaller
                     color: devItem.isConnected
                         ? Colours.palette.m3onPrimaryContainer
@@ -235,16 +237,16 @@ ColumnLayout {
 
             // Battery icon
             MaterialIcon {
-                visible: devItem.device.battery >= 0
+                visible: (devItem.device?.battery ?? -1) >= 0
                 text: {
-                    const bat = devItem.device.battery
+                    const bat = devItem.device?.battery ?? 0
                     if (bat >= 90) return "battery_full"
                     if (bat >= 60) return "battery_5_bar"
                     if (bat >= 40) return "battery_3_bar"
                     if (bat >= 20) return "battery_2_bar"
                     return "battery_1_bar"
                 }
-                color: devItem.device.battery < 20
+                color: (devItem.device?.battery ?? 100) < 20
                     ? Colours.palette.m3error
                     : (devItem.isConnected
                         ? Colours.palette.m3onPrimaryContainer
@@ -277,6 +279,9 @@ ColumnLayout {
                         ? Colours.palette.m3onError
                         : Colours.palette.m3onPrimary
                     function onClicked(): void {
+                        if (!devItem.hasDevice)
+                            return
+
                         if (devItem.isConnected)
                             devItem.device.disconnect()
                         else

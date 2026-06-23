@@ -18,7 +18,10 @@ StyledRect {
     filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
 
     // Filter workspaces for this screen
-    readonly property var myWorkspaces: WMService.allWorkspaces.filter(w => w.output === root.screen.name).sort((a, b) => a.idx - b.idx)
+    readonly property var myWorkspaces: {
+        const screenName = root.screen?.name ?? "";
+        return WMService.allWorkspaces.filter(w => w && w.output === screenName).sort((a, b) => a.idx - b.idx);
+    }
 
     // Active index within the filtered list
     readonly property int activeWsIndex: {

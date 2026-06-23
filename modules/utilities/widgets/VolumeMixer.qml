@@ -16,7 +16,7 @@ ColumnLayout {
 
     // Get audio streams (apps playing audio)
     readonly property var streams: Pipewire.nodes.values.filter(node =>
-        node.isStream && node.audio && node.audio.volume !== undefined
+        node && node.isStream && node.audio && node.audio.volume !== undefined
     )
 
     StyledText {
@@ -71,7 +71,7 @@ ColumnLayout {
         model: root.streams
 
         VolumeMixerEntry {
-            required property PwNode modelData
+            required property var modelData
 
             Layout.fillWidth: true
             label: modelData?.name || modelData?.description || qsTr("Unknown")

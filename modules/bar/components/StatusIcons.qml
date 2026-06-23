@@ -168,7 +168,7 @@ StyledRect {
                     text: {
                         if (!Bluetooth.defaultAdapter?.enabled)
                             return "bluetooth_disabled";
-                        if (Bluetooth.devices.values.some(d => d.connected))
+                        if (Bluetooth.devices.values.some(d => d && d.connected))
                             return "bluetooth_connected";
                         return "bluetooth";
                     }
@@ -178,21 +178,21 @@ StyledRect {
                 // Connected bluetooth devices
                 Repeater {
                     model: ScriptModel {
-                        values: Bluetooth.devices.values.filter(d => d.state !== BluetoothDeviceState.Disconnected)
+                        values: Bluetooth.devices.values.filter(d => d && d.state !== BluetoothDeviceState.Disconnected)
                     }
 
                     MaterialIcon {
                         id: device
 
-                        required property BluetoothDevice modelData
+                        required property var modelData
 
                         animate: true
-                        text: Icons.getBluetoothIcon(modelData.icon)
+                        text: Icons.getBluetoothIcon(modelData?.icon ?? "")
                         color: root.colour
                         fill: 1
 
                         SequentialAnimation on opacity {
-                            running: device.modelData.state !== BluetoothDeviceState.Connected
+                            running: (device.modelData?.state ?? BluetoothDeviceState.Disconnected) !== BluetoothDeviceState.Connected
                             alwaysRunToEnd: true
                             loops: Animation.Infinite
 

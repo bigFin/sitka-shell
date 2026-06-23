@@ -41,7 +41,7 @@ Item {
 
             anchors.fill: parent
             anchors.margins: Config.border.thickness
-            anchors.leftMargin: Visibilities.bars.get(root.screen).exclusiveZone + Config.appearance.spacing.small * Config.background.visualiser.spacing
+            anchors.leftMargin: (Visibilities.bars.get(root.screen)?.exclusiveZone ?? 0) + Config.appearance.spacing.small * Config.background.visualiser.spacing
 
             Side {}
             Side {

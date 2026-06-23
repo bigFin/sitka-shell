@@ -48,7 +48,7 @@ ColumnLayout {
         Layout.topMargin: Config.appearance.spacing.small
         Layout.rightMargin: Config.appearance.padding.small
         text: {
-            const devices = Bluetooth.devices.values;
+            const devices = Bluetooth.devices.values.filter(d => d);
             let available = qsTr("%1 device%2 available").arg(devices.length).arg(devices.length === 1 ? "" : "s");
             const connected = devices.filter(d => d.connected).length;
             if (connected > 0)
@@ -61,14 +61,14 @@ ColumnLayout {
 
     Repeater {
         model: ScriptModel {
-            values: [...Bluetooth.devices.values].sort((a, b) => (b.connected - a.connected) || (b.paired - a.paired)).slice(0, 5)
+            values: [...Bluetooth.devices.values].filter(d => d).sort((a, b) => (b.connected - a.connected) || (b.paired - a.paired)).slice(0, 5)
         }
 
         RowLayout {
             id: device
 
-            required property BluetoothDevice modelData
-            readonly property bool loading: modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting
+            required property var modelData
+            readonly property bool loading: modelData && (modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting)
 
             Layout.fillWidth: true
             Layout.rightMargin: Config.appearance.padding.small
@@ -91,14 +91,14 @@ ColumnLayout {
             }
 
             MaterialIcon {
-                text: Icons.getBluetoothIcon(device.modelData.icon)
+                text: Icons.getBluetoothIcon(device.modelData?.icon ?? "")
             }
 
             StyledText {
                 Layout.leftMargin: Config.appearance.spacing.small / 2
                 Layout.rightMargin: Config.appearance.spacing.small / 2
                 Layout.fillWidth: true
-                text: device.modelData.name
+                text: device.modelData?.name ?? qsTr("Unknown device")
             }
 
             StyledRect {
@@ -108,7 +108,7 @@ ColumnLayout {
                 implicitHeight: connectIcon.implicitHeight + Config.appearance.padding.small
 
                 radius: Config.appearance.rounding.full
-                color: Qt.alpha(Colours.palette.m3primary, device.modelData.state === BluetoothDeviceState.Connected ? 1 : 0)
+                color: Qt.alpha(Colours.palette.m3primary, device.modelData?.state === BluetoothDeviceState.Connected ? 1 : 0)
 
                 StyledBusyIndicator {
                     anchors.fill: parent
@@ -116,10 +116,13 @@ ColumnLayout {
                 }
 
                 StateLayer {
-                    color: device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
-                    disabled: device.loading
+                    color: device.modelData?.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                    disabled: device.loading || !device.modelData
 
                     function onClicked(): void {
+                        if (!device.modelData)
+                            return;
+
                         device.modelData.connected = !device.modelData.connected;
                     }
                 }
@@ -129,8 +132,8 @@ ColumnLayout {
 
                     anchors.centerIn: parent
                     animate: true
-                    text: device.modelData.connected ? "link_off" : "link"
-                    color: device.modelData.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                    text: (device.modelData?.connected ?? false) ? "link_off" : "link"
+                    color: device.modelData?.state === BluetoothDeviceState.Connected ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
 
                     opacity: device.loading ? 0 : 1
 
@@ -142,7 +145,7 @@ ColumnLayout {
 
             Loader {
                 asynchronous: true
-                active: device.modelData.bonded
+                active: device.modelData?.bonded ?? false
                 sourceComponent: Item {
                     implicitWidth: connectBtn.implicitWidth
                     implicitHeight: connectBtn.implicitHeight
@@ -151,6 +154,9 @@ ColumnLayout {
                         radius: Config.appearance.rounding.full
 
                         function onClicked(): void {
+                            if (!device.modelData)
+                                return;
+
                             device.modelData.forget();
                         }
                     }

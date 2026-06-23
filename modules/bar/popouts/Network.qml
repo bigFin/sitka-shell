@@ -40,7 +40,7 @@ ColumnLayout {
 
     Repeater {
         model: ScriptModel {
-            values: [...Network.networks].sort((a, b) => {
+            values: [...Network.networks].filter(n => n && n.ssid).sort((a, b) => {
                 if (a.active !== b.active)
                     return b.active - a.active;
                 return b.strength - a.strength;
@@ -50,8 +50,8 @@ ColumnLayout {
         RowLayout {
             id: networkItem
 
-            required property Network.AccessPoint modelData
-            readonly property bool isConnecting: root.connectingToSsid === modelData.ssid
+            required property var modelData
+            readonly property bool isConnecting: root.connectingToSsid === (modelData?.ssid ?? "")
             readonly property bool loading: networkItem.isConnecting
 
             Layout.fillWidth: true
@@ -75,12 +75,12 @@ ColumnLayout {
             }
 
             MaterialIcon {
-                text: Icons.getNetworkIcon(networkItem.modelData.strength)
-                color: networkItem.modelData.active ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+                text: Icons.getNetworkIcon(networkItem.modelData?.strength ?? 0)
+                color: (networkItem.modelData?.active ?? false) ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
             }
 
             MaterialIcon {
-                visible: networkItem.modelData.isSecure
+                visible: networkItem.modelData?.isSecure ?? false
                 text: "lock"
                 font.pointSize: Config.appearance.font.size.small
             }
@@ -89,10 +89,10 @@ ColumnLayout {
                 Layout.leftMargin: Config.appearance.spacing.small / 2
                 Layout.rightMargin: Config.appearance.spacing.small / 2
                 Layout.fillWidth: true
-                text: networkItem.modelData.ssid
+                text: networkItem.modelData?.ssid ?? ""
                 elide: Text.ElideRight
-                font.weight: networkItem.modelData.active ? 500 : 400
-                color: networkItem.modelData.active ? Colours.palette.m3primary : Colours.palette.m3onSurface
+                font.weight: (networkItem.modelData?.active ?? false) ? 500 : 400
+                color: (networkItem.modelData?.active ?? false) ? Colours.palette.m3primary : Colours.palette.m3onSurface
             }
 
             StyledRect {
@@ -102,7 +102,7 @@ ColumnLayout {
                 implicitHeight: connectIcon.implicitHeight + Config.appearance.padding.small
 
                 radius: Config.appearance.rounding.full
-                color: Qt.alpha(Colours.palette.m3primary, networkItem.modelData.active ? 1 : 0)
+                color: Qt.alpha(Colours.palette.m3primary, (networkItem.modelData?.active ?? false) ? 1 : 0)
 
                 StyledBusyIndicator {
                     anchors.fill: parent
@@ -110,10 +110,13 @@ ColumnLayout {
                 }
 
                 StateLayer {
-                    color: networkItem.modelData.active ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                    color: (networkItem.modelData?.active ?? false) ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
                     disabled: networkItem.loading || !Network.wifiEnabled
 
                     function onClicked(): void {
+                        if (!networkItem.modelData?.ssid)
+                            return;
+
                         if (networkItem.modelData.active) {
                             Network.disconnectFromNetwork();
                         } else {
@@ -128,8 +131,8 @@ ColumnLayout {
 
                     anchors.centerIn: parent
                     animate: true
-                    text: networkItem.modelData.active ? "link_off" : "link"
-                    color: networkItem.modelData.active ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                    text: (networkItem.modelData?.active ?? false) ? "link_off" : "link"
+                    color: (networkItem.modelData?.active ?? false) ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
 
                     opacity: networkItem.loading ? 0 : 1
 

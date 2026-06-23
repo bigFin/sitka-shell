@@ -14,6 +14,11 @@ ColumnLayout {
     spacing: Config.appearance.spacing.small
 
     property bool expanded: false
+    readonly property var visibleNetworks: [...Network.networks].filter(n => n && n.ssid).sort((a, b) => {
+        // Active first, then by signal strength
+        if (a.active !== b.active) return b.active - a.active
+        return b.strength - a.strength
+    }).slice(0, 10)
 
     // Header with toggle
     RowLayout {
@@ -117,28 +122,27 @@ ColumnLayout {
         spacing: 2
 
         Repeater {
-            model: Network.networks.sort((a, b) => {
-                // Active first, then by signal strength
-                if (a.active !== b.active) return b.active - a.active
-                return b.strength - a.strength
-            }).slice(0, 10) // Limit to 10 networks
+            model: root.visibleNetworks
 
             NetworkItem {
                 required property var modelData
 
                 Layout.fillWidth: true
-                ssid: modelData.ssid
-                strength: modelData.strength
-                isSecure: modelData.isSecure
-                isActive: modelData.active
-                onConnect: Network.connectToNetwork(modelData.ssid, "")
+                ssid: modelData?.ssid ?? ""
+                strength: modelData?.strength ?? 0
+                isSecure: modelData?.isSecure ?? false
+                isActive: modelData?.active ?? false
+                onConnect: {
+                    if (modelData?.ssid)
+                        Network.connectToNetwork(modelData.ssid, "")
+                }
                 onDisconnect: Network.disconnectFromNetwork()
             }
         }
 
         // Empty state
         StyledText {
-            visible: Network.networks.length === 0
+            visible: root.visibleNetworks.length === 0
             text: Network.scanning ? qsTr("Scanning...") : qsTr("No networks found")
             color: Colours.palette.m3onSurfaceVariant
             font.pointSize: Config.appearance.font.size.small

@@ -36,8 +36,8 @@ Loader {
             }
 
             Loader {
-                readonly property bool shouldBeActive: Config.background.visualiser.enabled && (!Config.background.visualiser.autoHide || WMService.getActiveWorkspaceWindows().every(w => w.is_floating))
-                property real offset: shouldBeActive ? 0 : win.modelData.height * 0.2
+                readonly property bool shouldBeActive: Config.background.visualiser.enabled && (!Config.background.visualiser.autoHide || WMService.getActiveWorkspaceWindows().every(w => w && w.is_floating))
+                property real offset: shouldBeActive ? 0 : (win.modelData?.height ?? 0) * 0.2
 
                 anchors.fill: parent
                 anchors.topMargin: offset

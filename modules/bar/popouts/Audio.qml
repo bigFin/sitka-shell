@@ -40,17 +40,17 @@ Item {
         }
 
         Repeater {
-            model: Audio.sinks
+            model: Audio.sinks.filter(s => s)
 
             StyledRadioButton {
                 id: control
 
-                required property PwNode modelData
+                required property var modelData
 
                 ButtonGroup.group: sinks
-                checked: Audio.sink?.id === modelData.id
+                checked: Audio.sink?.id === (modelData?.id ?? -1)
                 onClicked: Audio.setAudioSink(modelData)
-                text: modelData.description
+                text: modelData?.description ?? qsTr("Unknown output")
             }
         }
 
@@ -62,15 +62,15 @@ Item {
         }
 
         Repeater {
-            model: Audio.sources
+            model: Audio.sources.filter(s => s)
 
             StyledRadioButton {
-                required property PwNode modelData
+                required property var modelData
 
                 ButtonGroup.group: sources
-                checked: Audio.source?.id === modelData.id
+                checked: Audio.source?.id === (modelData?.id ?? -1)
                 onClicked: Audio.setAudioSource(modelData)
-                text: modelData.description
+                text: modelData?.description ?? qsTr("Unknown input")
             }
         }
 

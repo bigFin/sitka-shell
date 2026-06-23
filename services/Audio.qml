@@ -8,6 +8,9 @@ Singleton {
     id: root
 
     readonly property var nodes: Pipewire.nodes.values.reduce((acc, node) => {
+        if (!node)
+            return acc;
+
         if (!node.isStream) {
             if (node.isSink)
                 acc.sinks.push(node);
@@ -63,10 +66,16 @@ Singleton {
     }
 
     function setAudioSink(newSink: PwNode): void {
+        if (!newSink)
+            return;
+
         Pipewire.preferredDefaultAudioSink = newSink;
     }
 
     function setAudioSource(newSource: PwNode): void {
+        if (!newSource)
+            return;
+
         Pipewire.preferredDefaultAudioSource = newSource;
     }
 

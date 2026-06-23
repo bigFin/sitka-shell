@@ -48,16 +48,6 @@ Searcher {
             }
         },
         Action {
-            name: qsTr("Transparency")
-            desc: qsTr("Change shell transparency")
-            icon: "opacity"
-            disabled: true
-
-            function onClicked(list: AppList): void {
-                root.autocomplete(list, "transparency");
-            }
-        },
-        Action {
             name: qsTr("Random")
             desc: qsTr("Switch to a random wallpaper")
             icon: "casino"

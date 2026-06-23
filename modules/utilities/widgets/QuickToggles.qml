@@ -50,7 +50,7 @@ ColumnLayout {
             subtitle: {
                 if (!btAdapter) return qsTr("No adapter")
                 if (!btPowered) return qsTr("Disabled")
-                const connected = Bluetooth.devices.values.filter(d => d.connected).length
+                const connected = Bluetooth.devices.values.filter(d => d && d.connected).length
                 return connected > 0 ? qsTr("%1 connected").arg(connected) : qsTr("Enabled")
             }
             onClicked: {

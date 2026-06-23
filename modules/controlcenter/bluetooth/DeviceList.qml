@@ -148,7 +148,7 @@ ColumnLayout {
     StyledListView {
         model: ScriptModel {
             id: deviceModel
-            values: [...Bluetooth.devices.values].sort((a, b) => (b.connected - a.connected) || (b.paired - a.paired))
+            values: [...Bluetooth.devices.values].filter(d => d).sort((a, b) => (b.connected - a.connected) || (b.paired - a.paired))
         }
 
         Layout.fillWidth: true
@@ -166,8 +166,7 @@ ColumnLayout {
             readonly property bool loading: hasData && (modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting)
             readonly property bool connected: hasData && modelData.state === BluetoothDeviceState.Connected
 
-            anchors.left: parent.left
-            anchors.right: parent.right
+            width: ListView.view ? ListView.view.width : 0
             implicitHeight: deviceInner.implicitHeight + Config.appearance.padding.normal * 2
 
             color: Qt.alpha(Colours.tPalette.m3surfaceContainer, (hasData && root.session.bt.active === modelData) ? Colours.tPalette.m3surfaceContainer.a : 0)

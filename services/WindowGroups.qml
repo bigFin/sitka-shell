@@ -14,6 +14,7 @@ Singleton {
 
     readonly property bool groupIconsByApp: Config.bar.workspaces.groupIconsByApp
     readonly property bool groupingRespectsLayout: Config.bar.workspaces.groupingRespectsLayout
+    readonly property bool storeReady: WindowStore.version > 0
 
     function invalidateAll(): void {
         workspaceCache = {};
@@ -29,7 +30,7 @@ Singleton {
         if (cached && cached.version === version)
             return cached.groups;
 
-        const windows = WMService.getWindowsByWorkspaceId(workspaceId) || [];
+        const windows = getWindowsForWorkspace(workspaceId);
         const groups = buildGroups(windows.filter(w => !!w));
         workspaceCache[key] = {
             version: version,
@@ -39,7 +40,8 @@ Singleton {
     }
 
     function getFocusedGroupIndex(workspaceId): int {
-        const focusedId = Number(WMService.focusedWindowId);
+        const focusedWindow = storeReady ? WindowStore.getFocusedWindow() : null;
+        const focusedId = Number(focusedWindow?.id ?? WMService.focusedWindowId);
         if (!Number.isFinite(focusedId))
             return -1;
 
@@ -61,13 +63,32 @@ Singleton {
         return -1;
     }
 
-    function buildGroups(windows: var): var {
-        if (groupIconsByApp && groupingRespectsLayout)
-            return WMService.groupWindowsByLayoutAndId(windows);
-        if (groupIconsByApp)
-            return WMService.groupWindowsByApp(windows);
+    function getWindowsForWorkspace(workspaceId): var {
+        if (!storeReady)
+            return WMService.getWindowsByWorkspaceId(workspaceId) || [];
 
-        return windows.map(w => ({
+        return WindowStore.getWindowsForWorkspace(workspaceId).map(w => ({
+            app_id: w.appId,
+            id: w.id,
+            title: w.title,
+            workspace_id: w.workspaceId,
+            is_focused: w.isFocused,
+            is_floating: w.isFloating,
+            layout: {
+                pos_in_scrolling_layout: [w.layoutCol, w.layoutRow],
+                window_size: [w.width, w.height]
+            }
+        }));
+    }
+
+    function buildGroups(windows: var): var {
+        const sortedWindows = sortWindows(windows);
+        if (groupIconsByApp && groupingRespectsLayout)
+            return groupWindowsByLayoutAndId(sortedWindows);
+        if (groupIconsByApp)
+            return groupWindowsByApp(sortedWindows);
+
+        return sortedWindows.map(w => ({
             app_id: w.app_id,
             id: w.id,
             title: w.title,
@@ -77,6 +98,67 @@ Singleton {
         }));
     }
 
+    function sortWindows(windows: var): var {
+        return windows.slice().sort((a, b) => {
+            const aPos = Array.isArray(a.layout?.pos_in_scrolling_layout) ? a.layout.pos_in_scrolling_layout : [0, 0];
+            const bPos = Array.isArray(b.layout?.pos_in_scrolling_layout) ? b.layout.pos_in_scrolling_layout : [0, 0];
+            if (aPos[0] !== bPos[0])
+                return aPos[0] - bPos[0];
+            return aPos[1] - bPos[1];
+        });
+    }
+
+    function groupWindowsByApp(windows: var): var {
+        const groups = {};
+        for (let i = 0; i < windows.length; i++) {
+            const w = windows[i];
+            const appId = w.app_id || "unknown";
+            if (!groups[appId]) {
+                groups[appId] = {
+                    app_id: appId,
+                    id: w.id,
+                    title: w.title,
+                    windows: []
+                };
+            }
+            groups[appId].windows.push(w);
+        }
+
+        const result = [];
+        for (const key in groups) {
+            const group = groups[key];
+            group.count = group.windows.length;
+            group.main = group.windows[0];
+            result.push(group);
+        }
+        return result;
+    }
+
+    function groupWindowsByLayoutAndId(windows: var): var {
+        const groups = [];
+        let currentGroup = null;
+
+        for (let i = 0; i < windows.length; i++) {
+            const w = windows[i];
+            if (!currentGroup || currentGroup.app_id !== w.app_id) {
+                currentGroup = {
+                    app_id: w.app_id,
+                    id: w.id,
+                    title: w.title,
+                    windows: [w],
+                    count: 1,
+                    main: w
+                };
+                groups.push(currentGroup);
+            } else {
+                currentGroup.windows.push(w);
+                currentGroup.count = currentGroup.windows.length;
+            }
+        }
+
+        return groups;
+    }
+
     onGroupIconsByAppChanged: invalidateAll()
     onGroupingRespectsLayoutChanged: invalidateAll()
 
@@ -84,11 +166,21 @@ Singleton {
         target: WMService.isNiri ? Niri : null
 
         function onWindowsChanged(): void {
-            root.invalidateAll();
+            if (!root.storeReady)
+                root.invalidateAll();
         }
 
         function onFocusedWindowIdChanged(): void {
-            root.version++;
+            if (!root.storeReady)
+                root.version++;
+        }
+    }
+
+    Connections {
+        target: WindowStore
+
+        function onVersionChanged(): void {
+            root.invalidateAll();
         }
     }
 }

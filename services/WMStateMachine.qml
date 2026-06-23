@@ -13,9 +13,8 @@ pragma ComponentBehavior: Bound
  * batch window are merged, keeping only the latest (except for
  * window open/close which are kept in order).
  * 
- * Currently DISABLED - routing in Niri.qml is commented out.
- * Enable by uncommenting WMStateMachine.enqueue() calls in Niri.qml
- * once UI components are migrated to use WindowStore.version pattern.
+ * Niri.qml feeds this in parallel with its legacy public properties while UI
+ * consumers migrate toward WindowStore.version-driven derived models.
  */
 
 import QtQuick

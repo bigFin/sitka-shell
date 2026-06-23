@@ -8,7 +8,7 @@ pragma ComponentBehavior: Bound
  * avoiding dynamic allocation and reducing GC pressure.
  * 
  * Key concepts:
- * - Buffers are fixed-size arrays (10 workspaces, 64 windows)
+ * - Buffers are fixed-size arrays sized for typical Niri workspace/window sets
  * - Each slot has a 'valid' flag indicating if it's in use
  * - The 'version' property increments only when state actually changes
  * - UI components should watch 'version' for efficient updates
@@ -35,8 +35,8 @@ Singleton {
     id: store
     
     // ===== STATIC BUFFER CONFIGURATION =====
-    readonly property int maxWorkspaces: 10
-    readonly property int maxWindows: 64
+    readonly property int maxWorkspaces: 32
+    readonly property int maxWindows: 128
     readonly property int maxWindowsPerWorkspace: 16
     
     // ===== VERSION COUNTER (Triggers UI Updates) =====

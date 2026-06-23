@@ -18,7 +18,7 @@ ShaderEffect {
     property string customShader: Config.appearance.shaders.customShader
     property real intensity: Config.appearance.shaders.intensity
     property bool animateTime: Config.appearance.shaders.animateTime
-    property color backgroundColor: Colours.palette.m3surface
+    property color backgroundColor: Colours.tPalette.m3surface
 
     // Shader uniforms
     readonly property real iTime: animateTime ? timer.elapsed / 1000.0 : 0.0

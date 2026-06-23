@@ -16,7 +16,7 @@ Item {
         
         // Use transparent fill + border width instead of masking
         color: "transparent"
-        border.color: Colours.palette.m3surface
+        border.color: Colours.tPalette.m3surface
         border.width: Config.border.thickness
         
         // Disable custom fillet shape to use standard Rectangle with border support

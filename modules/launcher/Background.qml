@@ -23,7 +23,7 @@ Item {
         anchors.fill: parent
         
         // Match the original background properties
-        color: Qt.rgba(Colours.palette.m3surface.r, Colours.palette.m3surface.g, Colours.palette.m3surface.b, 1)
+        color: Colours.tPalette.m3surface
         
         // Apply large fillets for main containers
         filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6

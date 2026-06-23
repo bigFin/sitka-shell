@@ -15,7 +15,7 @@ Shape {
     
     // Size is used by parent to determine max width, but here we just render to 'width'
     property real size: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
-    property color color: Colours.palette.m3surface
+    property color color: Colours.tPalette.m3surface
     
     // Geometry
     // width is set by parent animation

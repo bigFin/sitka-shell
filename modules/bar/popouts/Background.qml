@@ -20,7 +20,7 @@ Item {
         id: mainRect
         anchors.fill: parent
 
-        color: Colours.palette.m3surface
+        color: Colours.tPalette.m3surface
         filletSize: Config.appearance.fillet.large
         
         readonly property bool attached: !wrapper.isDetached

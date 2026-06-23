@@ -154,8 +154,7 @@ Variants {
                     // Backgrounds
                     Item {
                         anchors.fill: parent
-                        opacity: Colours.transparency.enabled ? Colours.transparency.base : 1
-                        
+
                         Backgrounds {
                             panels: panels
                             bar: bar

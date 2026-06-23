@@ -19,6 +19,14 @@
                 "clock": "Iosevka Term"
             }
         },
+        // Transparent rice mode. Text/accent colors stay opaque; shell surfaces use these alpha values.
+        "transparency": {
+            "enabled": false,
+            // Alpha for primary shell surfaces.
+            "base": 0.85,
+            // Alpha for nested panels, cards, and raised layers.
+            "layers": 0.4
+        },
         // Shader effects for VFD/CRT visual style
         "shaders": {
             // Enable shader effects

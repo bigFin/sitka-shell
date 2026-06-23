@@ -35,8 +35,14 @@ Singleton {
         return Math.sqrt(0.299 * (c.r ** 2) + 0.587 * (c.g ** 2) + 0.114 * (c.b ** 2));
     }
 
+    function clamp01(v: real): real {
+        return Math.max(0, Math.min(1, v));
+    }
+
     function alterColour(c: color, a: real, layer: int): color {
         const luminance = getLuminance(c);
+        if (luminance <= 0)
+            return Qt.rgba(c.r, c.g, c.b, a);
 
         const offset = (!light || layer == 1 ? 1 : -layer / 2) * (light ? 0.2 : 0.3) * (1 - transparency.base) * (1 + wallLuminance * (light ? (layer == 1 ? 3 : 1) : 2.5));
         const scale = (luminance + offset) / luminance;
@@ -104,8 +110,8 @@ Singleton {
 
     component Transparency: QtObject {
         readonly property bool enabled: Config.appearance.transparency.enabled
-        readonly property real base: Config.appearance.transparency.base - (root.light ? 0.1 : 0)
-        readonly property real layers: Config.appearance.transparency.layers
+        readonly property real base: root.clamp01(Config.appearance.transparency.base - (root.light ? 0.1 : 0))
+        readonly property real layers: root.clamp01(Config.appearance.transparency.layers)
     }
 
     component M3TPalette: QtObject {

@@ -110,6 +110,11 @@ Useful settings:
 ```json
 {
   "appearance": {
+    "transparency": {
+      "enabled": false,
+      "base": 0.85,
+      "layers": 0.4
+    },
     "shaders": {
       "enabled": false,
       "customShader": "~/.config/sitka/shaders/retro-terminal.glsl",
@@ -134,6 +139,8 @@ Useful settings:
 
 Performance guidance:
 
+- Enable `appearance.transparency.enabled` for transparent rice layouts. `base`
+  controls main shell surface alpha; `layers` controls nested/raised surfaces.
 - Leave `appearance.shaders.enabled` off unless you are actively using drawer
   post-processing.
 - The drawer shader overlay only runs when `performanceMode` is set to

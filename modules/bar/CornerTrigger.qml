@@ -148,7 +148,7 @@ PanelWindow {
             ShapePath {
                 strokeWidth: 0
                 strokeColor: "transparent"
-                fillColor: Colours.palette.m3surfaceContainer
+                fillColor: Colours.tPalette.m3surfaceContainer
 
                 // Draw a chamfered triangle in bottom-left orientation
                 startX: 0

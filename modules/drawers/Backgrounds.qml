@@ -24,7 +24,7 @@ Item {
         y: -Config.border.thickness
         width: bar.implicitWidth
         height: root.height + Config.border.thickness * 2
-        color: Colours.palette.m3surface
+        color: Colours.tPalette.m3surface
     }
 
     Osd.Background {

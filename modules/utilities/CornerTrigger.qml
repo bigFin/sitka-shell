@@ -104,7 +104,7 @@ PanelWindow {
             ShapePath {
                 strokeWidth: 0
                 strokeColor: "transparent"
-                fillColor: Colours.palette.m3surfaceContainer
+                fillColor: Colours.tPalette.m3surfaceContainer
 
                 // Draw triangle in bottom-right
                 startX: root.triggerSize

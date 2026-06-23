@@ -8,15 +8,13 @@ import qs.components
 Item {
     id: root
 
-    property var groupedWindowsArray: [] // Holds full group objects
-
-    ListModel {
-        id: groupedWindowsModel
-    }
-
     // Public API
     property int spacing: 0
-    property var model: groupedWindowsModel
+    readonly property int windowGroupsVersion: WindowGroups.version
+    readonly property var groupedWindowsArray: {
+        void windowGroupsVersion;
+        return WindowGroups.getGroupsForWorkspace(root.workspaceData?.id);
+    }
     property real dragThreshold: 8
 
     // Properties passed through to WindowIcon
@@ -30,77 +28,6 @@ Item {
     required property var workspaceData
 
     property bool isWsFocused: root.activeWsId === root.ws
-
-    property var wsWindows: root.workspaceData ? WMService.getWindowsByWorkspaceId(root.workspaceData.id) : []
-
-    function updateGroupedWindowsModel() {
-        if (!root.workspaceData) return;
-
-        var wsWindows = WMService.getWindowsByWorkspaceId(root.workspaceData.id);
-        var newGroups;
-
-        if (Config.bar.workspaces.groupIconsByApp && Config.bar.workspaces.groupingRespectsLayout) {
-            newGroups = WMService.groupWindowsByLayoutAndId(wsWindows);
-        } else if (Config.bar.workspaces.groupIconsByApp) {
-            newGroups = WMService.groupWindowsByApp(wsWindows);
-        } else {
-            newGroups = wsWindows.map(w => ({
-                        app_id: w.app_id,
-                        id: w.id,
-                        title: w.title,
-                        windows: [w],
-                        count: 1,
-                        main: w
-                    }));
-        }
-
-        root.groupedWindowsArray = newGroups;
-
-        // Remove old items
-        for (let i = groupedWindowsModel.count - 1; i >= 0; --i) {
-            let oldItem = groupedWindowsModel.get(i);
-            if (!newGroups.find(g => g.id === oldItem.id && g.app_id === oldItem.app_id)) {
-                groupedWindowsModel.remove(i);
-            }
-        }
-
-        // Insert or update
-        for (let i = 0; i < newGroups.length; ++i) {
-            let g = newGroups[i];
-            let idx = -1;
-
-            for (let j = 0; j < groupedWindowsModel.count; ++j) {
-                let old = groupedWindowsModel.get(j);
-                if ((g.id && old.id === g.id) && (g.app_id && old.app_id === g.app_id)) {
-                    idx = j;
-                    break;
-                }
-            }
-
-            let modelItem = {
-                app_id: g.app_id,
-                id: g.id,
-                title: g.title,
-                count: g.count
-            };
-
-            if (idx >= 0) {
-                for (let key in modelItem) {
-                    let currentVal = groupedWindowsModel.get(idx)[key];
-                    if (currentVal !== modelItem[key]) {
-                        groupedWindowsModel.setProperty(idx, key, modelItem[key]);
-                    }
-                }
-                if (idx !== i)
-                    groupedWindowsModel.move(idx, i, 1);
-            } else {
-                groupedWindowsModel.insert(i, modelItem);
-            }
-        }
-    }
-
-    onWsWindowsChanged: updateGroupedWindowsModel()
-    Component.onCompleted: updateGroupedWindowsModel()
 
     // Drag state
     property Item draggedItem: null
@@ -189,20 +116,8 @@ Item {
     }
 
     readonly property int focusedGroupIndex: {
-        for (let i = 0; i < root.groupedWindowsArray.length; i++) {
-            const item = root.groupedWindowsArray[i];
-            if (!item)
-                continue;
-
-            if (Config.bar.workspaces.groupIconsByApp) {
-                const windows = item.windows || [];
-                if (windows.some(w => Number(w?.id) === Number(root.focusedWindowId)))
-                    return i;
-            } else if (Number(item.id) === Number(root.focusedWindowId)) {
-                return i;
-            }
-        }
-        return -1;
+        void windowGroupsVersion;
+        return WindowGroups.getFocusedGroupIndex(root.workspaceData?.id);
     }
 
     readonly property bool hasFocusedWindow: focusedGroupIndex >= 0
@@ -221,7 +136,7 @@ Item {
         preferredHighlightBegin: height / 2 - (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap) / 2
         preferredHighlightEnd: height / 2 + (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap) / 2
         
-        model: root.model
+        model: root.groupedWindowsArray
         anchors.left: parent.left
         spacing: root.spacing
 
@@ -234,7 +149,7 @@ Item {
             
 
 
-            property var fullGroup: root.groupedWindowsArray[index] || { main: null, windows: [], count: 0, id: -1 }
+            property var fullGroup: modelData || { main: null, windows: [], count: 0, id: -1 }
 
             windowData: Config.bar.workspaces.groupIconsByApp ? fullGroup.main : fullGroup
             groupWindowData: Config.bar.workspaces.groupIconsByApp ? (fullGroup.windows || []) : [fullGroup]
@@ -242,7 +157,7 @@ Item {
             isFocused: Config.bar.workspaces.groupIconsByApp ? fullGroup.windows.some(w => w.id === root.focusedWindowId) : root.focusedWindowId === fullGroup.id
             isWsFocused: root.isWsFocused
             curWindowIndex: index
-            wsWindowCount: root.model ? root.model.count : 0
+            wsWindowCount: root.groupedWindowsArray.length
 
             onDragStart: iconItem => {
                 if (root.draggedItem)

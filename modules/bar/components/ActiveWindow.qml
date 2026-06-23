@@ -12,12 +12,14 @@ Item {
     required property var bar
     required property Brightness.Monitor monitor
     property color colour: Colours.palette.m3primary
+    readonly property string windowClass: WMService.focusedWindowClass || "Desktop"
+    readonly property string windowTitle: WMService.focusedWindowTitle || qsTr("Desktop")
 
     readonly property int maxHeight: {
         const otherModules = bar.children.filter(c => c.id && c.item !== this && c.id !== "spacer");
         const otherHeight = otherModules.reduce((acc, curr) => acc + curr.height, 0);
         // Length - 2 cause repeater counts as a child
-        return bar.height - otherHeight - bar.spacing * (bar.children.length - 1) - bar.vPadding * 2;
+        return Math.max(0, bar.height - otherHeight - bar.spacing * (bar.children.length - 1) - bar.vPadding * 2);
     }
     property Title current: text1
 
@@ -31,7 +33,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
 
         animate: true
-        text: Icons.getAppCategoryIcon(WMService.focusedWindowClass, "desktop_windows")
+        text: Icons.getAppCategoryIcon(root.windowClass, "desktop_windows")
         color: root.colour
     }
 
@@ -46,18 +48,24 @@ Item {
     TextMetrics {
         id: metrics
 
-        text: WMService.focusedWindowTitle ?? qsTr("Desktop")
+        text: root.windowTitle
         font.pointSize: Config.appearance.font.size.smaller
         font.family: Config.appearance.font.family.mono
         elide: Qt.ElideRight
-        elideWidth: root.maxHeight - icon.height
+        elideWidth: Math.max(0, root.maxHeight - icon.height)
 
-        onTextChanged: {
+        function swapText(): void {
             const next = root.current === text1 ? text2 : text1;
             next.text = elidedText;
-            root.current = next;
+            Qt.callLater(() => {
+                if (next.text === metrics.elidedText)
+                    root.current = next;
+            });
         }
-        onElideWidthChanged: root.current.text = elidedText
+
+        onTextChanged: swapText()
+        onElideWidthChanged: swapText()
+        Component.onCompleted: text1.text = elidedText
     }
 
     Behavior on implicitHeight {

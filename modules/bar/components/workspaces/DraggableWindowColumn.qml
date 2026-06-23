@@ -177,9 +177,35 @@ Item {
     }
 
     readonly property real activeWindowY: {
-        if (!column.currentItem) return 0;
-        return column.currentItem.y - column.contentY + column.currentItem.height / 2;
+        if (!hasFocusedWindow)
+            return height / 2;
+
+        const item = column.itemAtIndex(focusedGroupIndex);
+        if (item)
+            return item.y - column.contentY + item.height / 2;
+
+        const itemHeight = Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap;
+        return focusedGroupIndex * (itemHeight + root.spacing) - column.contentY + itemHeight / 2;
     }
+
+    readonly property int focusedGroupIndex: {
+        for (let i = 0; i < root.groupedWindowsArray.length; i++) {
+            const item = root.groupedWindowsArray[i];
+            if (!item)
+                continue;
+
+            if (Config.bar.workspaces.groupIconsByApp) {
+                const windows = item.windows || [];
+                if (windows.some(w => Number(w?.id) === Number(root.focusedWindowId)))
+                    return i;
+            } else if (Number(item.id) === Number(root.focusedWindowId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    readonly property bool hasFocusedWindow: focusedGroupIndex >= 0
 
     ListView {
         id: column
@@ -190,6 +216,7 @@ Item {
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
 
+        currentIndex: root.focusedGroupIndex
         highlightRangeMode: ListView.ApplyRange
         preferredHighlightBegin: height / 2 - (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap) / 2
         preferredHighlightEnd: height / 2 + (Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap) / 2
@@ -301,18 +328,6 @@ Item {
                 duration: Config.appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Config.appearance.anim.curves.standardDecel
-            }
-        }
-    }
-
-    onFocusedWindowIdChanged: {
-        for (let i = 0; i < groupedWindowsModel.count; i++) {
-            let item = root.groupedWindowsArray[i];
-            // Check logic same as isFocused in delegate
-            let isFocused = Config.bar.workspaces.groupIconsByApp ? item.windows.some(w => w.id === root.focusedWindowId) : root.focusedWindowId === item.id;
-            if (isFocused) {
-                column.currentIndex = i;
-                return;
             }
         }
     }

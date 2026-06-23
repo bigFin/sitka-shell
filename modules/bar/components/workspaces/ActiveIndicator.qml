@@ -105,8 +105,12 @@ StyledRect {
 
         sourceComponent: StyledRect {
             id: activeWindowIndicator
-            height: WMService.focusedWindowId ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
-            width: WMService.focusedWindowId ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
+            readonly property Item targetWorkspace: workspaces.itemAt(currentWsIdx)
+            readonly property bool hasTarget: targetWorkspace?.hasFocusedWindow ?? false
+
+            visible: hasTarget
+            height: WMService.focusedWindowId && hasTarget ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
+            width: WMService.focusedWindowId && hasTarget ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
             color: Colours.palette.term13
             filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.small : 2
             anchors.horizontalCenter: parent.horizontalCenter
@@ -125,7 +129,7 @@ StyledRect {
             }
 
             function computeFocusedY() {
-                const ws = workspaces.itemAt(currentWsIdx);
+                const ws = targetWorkspace;
                 if (!ws) return 0;
                 
                 // Calculate the position relative to the ActiveIndicator

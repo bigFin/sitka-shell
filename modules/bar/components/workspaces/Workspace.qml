@@ -39,9 +39,11 @@ ColumnLayout {
     // clip: true
 
     readonly property real activeWindowCenterY: {
-        if (windows.status !== Loader.Ready || !windows.item) return 0;
+        if (windows.status !== Loader.Ready || !windows.item || !windows.item.hasFocusedWindow)
+            return size / 2;
         return windows.y + windows.item.activeWindowY;
     }
+    readonly property bool hasFocusedWindow: windows.status === Loader.Ready && windows.item && windows.item.hasFocusedWindow
 
     Behavior on scale {
         Anim {}

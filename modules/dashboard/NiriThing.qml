@@ -32,16 +32,16 @@ ColumnLayout {
             columns: 5
 
             Repeater {
-                model: WMService.getWorkspaceCount()
+                model: WorkspaceModel.currentOutputWorkspaces
 
                 Button {
-                    required property int index
-                    readonly property int wsId: Math.floor((WMService.focusedWorkspaceIndex) / 10) * 10 + index + 1
-                    readonly property bool isCurrent: (wsId - 1) % 10 === WMService.focusedWorkspaceIndex
+                    required property var modelData
+                    readonly property string wsId: String(modelData.id)
+                    readonly property bool isCurrent: wsId === WorkspaceModel.focusedWorkspaceId
 
                     color: isCurrent ? Colours.tPalette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
                     onColor: isCurrent ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
-                    text: (WMService.currentOutputWorkspaces && WMService.currentOutputWorkspaces[wsId - 1] ? WMService.currentOutputWorkspaces[wsId - 1].name : "") || "Workspace: " + wsId
+                    text: modelData.name || "Workspace: " + modelData.idx
                     disabled: isCurrent
 
                     function onClicked(): void {

@@ -203,6 +203,9 @@ Singleton {
                 const oldId = WindowStore.workspaceBuffer[i].id;
                 WindowStore.workspaceBuffer[i].valid = false;
                 delete WindowStore.workspaceIdToSlot[oldId];
+                if (WindowStore.focusedWorkspaceSlot === i) {
+                    WindowStore.focusedWorkspaceSlot = -1;
+                }
                 changed = true;
             }
         }

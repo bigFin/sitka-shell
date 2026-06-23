@@ -61,7 +61,7 @@ Item {
             // anchors.leftMargin: Config.appearance.padding.large
             active: root.popupActive
             sourceComponent: StyledText {
-                color: root.workspace.activeWsId === root.workspace.ws ? Colours.palette.m3onPrimary // <--- customize to your active color
+                color: root.workspace.activeWsId === root.workspace.wsId ? Colours.palette.m3onPrimary
                  : (root.workspace.isOccupied ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant)
 
                 font.family: Config.appearance.font.family.mono
@@ -103,9 +103,8 @@ Item {
             }
             if (mouse.button === Qt.LeftButton) {
                 const thing = root.workspace;
-                const ws = thing.index + root.workspace.groupOffset;
-                if (WMService.focusedWorkspaceId + 1 !== ws)
-                    WMService.switchToWorkspaceByIndex(ws);
+                if (thing.activeWsId !== thing.wsId)
+                    WMService.switchToWorkspace(thing.wsId);
                 return;
             }
         }

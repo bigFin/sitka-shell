@@ -32,7 +32,7 @@ StyledRect {
         ListView {
             id: workspaces
             Layout.fillWidth: true
-            model: WMService.getWorkspaceCount()
+            model: WorkspaceModel.allWorkspaces
             implicitHeight: contentHeight
 
             // spacing: Config.appearance.spacing.small
@@ -49,13 +49,15 @@ StyledRect {
     component WorkspaceDelegate: StyledRect {
         id: wsRect
 
+        required property var modelData
         required property int index
+        readonly property var workspaceData: modelData || ({})
 
         radius: Config.appearance.rounding.small
         color: groupMenu.bgColor
         Layout.fillWidth: true
 
-        readonly property var windows: WMService.getWindowsByWorkspaceIndex(index)
+        readonly property var windows: WMService.getWindowsByWorkspaceId(workspaceData.id)
         readonly property var groupedWindows: {
             const groups = {};
             for (const win of windows) {
@@ -66,6 +68,7 @@ StyledRect {
             }
             return Object.entries(groups).map(([app_id, wins]) => ({
                         app_id,
+                        workspace_id: wsRect.workspaceData.id,
                         windows: wins
                     }));
         }
@@ -82,7 +85,7 @@ StyledRect {
             StyledText {
                 Layout.alignment: Qt.AlignVCenter
                 readonly property string wsName: {
-                    const baseName = WMService.getWorkspaceNameByIndex(wsRect.index) || (wsRect.index + 1);
+                    const baseName = wsRect.workspaceData.name || wsRect.workspaceData.idx || (wsRect.index + 1);
                     return wsRect.windows.length > 0 ? baseName : `${baseName} (empty)`;
                 }
                 text: wsName
@@ -114,7 +117,7 @@ StyledRect {
         id: appGroup
 
         required property var modelData // { app_id, windows }
-        readonly property bool isFocused: Number(WMService.focusedWorkspaceId) === Number(modelData.workspace_id)
+        readonly property bool isFocused: String(WorkspaceModel.focusedWorkspaceId) === String(modelData.workspace_id)
 
         radius: Config.appearance.rounding.small
         color: isFocused ? Colours.palette.m3primary : Colours.tPalette.m3surfaceContainerHigh
@@ -171,7 +174,7 @@ StyledRect {
         implicitHeight: Config.bar.sizes.innerWidth
         radius: 0
 
-        readonly property bool isFocused: Number(WMService.focusedWindowId) === Number(modelData.id)
+        readonly property bool isFocused: ActiveWindowModel.idString === String(modelData.id)
         color: isFocused ? Colours.palette.m3primary : "transparent"
 
         RowLayout {
@@ -225,7 +228,7 @@ StyledRect {
         // ---- Pooling hooks ----
         ListView.onReused: {
             // reset properties that might linger
-            color = Number(WMService.focusedWindowId) === Number(modelData.id) ? Colours.palette.m3primary : "transparent";
+            color = ActiveWindowModel.idString === String(modelData.id) ? Colours.palette.m3primary : "transparent";
             titleText.text = modelData.title || modelData.app_id || "Untitled";
         }
 

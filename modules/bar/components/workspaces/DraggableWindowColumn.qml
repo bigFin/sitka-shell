@@ -20,14 +20,14 @@ Item {
     // Properties passed through to WindowIcon
     required property Item workspace
     required property string focusedWindowId
-    required property int activeWsId
+    required property string activeWsId
     required property int ws
     required property int idx
     required property int groupOffset
     required property Item windowPopoutSignal
     required property var workspaceData
 
-    property bool isWsFocused: root.activeWsId === root.ws
+    property bool isWsFocused: root.activeWsId === String(root.workspaceData?.id ?? "")
 
     // Drag state
     property Item draggedItem: null

@@ -18,7 +18,7 @@ Item {
     readonly property bool isWorkspaces: WMService.wsContextType === "workspaces"
     readonly property bool isWorkspace: WMService.wsContextType === "workspace"
     readonly property bool hasWindows: (isItem && anchorWs.wsWindowCount > 0) || (isWorkspace && anchorWs.isOccupied)
-    readonly property bool isFocused: (isItem && anchorWs.isWsFocused) || (isWorkspace && (Number(anchorWs.index) === Number(WMService.focusedWorkspaceIndex)))
+    readonly property bool isFocused: (isItem && anchorWs.isWsFocused) || (isWorkspace && (String(anchorWs.wsId) === WorkspaceModel.focusedWorkspaceId))
 
     readonly property int rounding: Config.appearance.rounding.small
     readonly property int gPadding: isItem ? Config.appearance.padding.small / 2 : 0

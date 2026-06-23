@@ -75,8 +75,7 @@ ColumnLayout {
         text: {
             const workspaceId = root.client?.workspace_id;
             if (workspaceId !== undefined && workspaceId !== null) {
-                // Find the workspace object in WMService's list
-                const ws = WMService.currentOutputWorkspaces ? WMService.currentOutputWorkspaces.find(w => w.id === workspaceId) : null;
+                const ws = WorkspaceModel.allWorkspaces.find(w => String(w.id) === String(workspaceId));
                 return qsTr("Workspace: %1 (%2)").arg(ws?.name ?? "unknown").arg(workspaceId);
             }
             return qsTr("Workspace: unknown");

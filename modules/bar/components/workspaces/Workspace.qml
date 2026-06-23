@@ -14,7 +14,7 @@ ColumnLayout {
     required property var occupied
     required property int groupOffset
     required property string focusedWindowId
-    required property int activeWsId
+    required property string activeWsId
 
     required property Item windowPopoutSignal
 
@@ -22,7 +22,7 @@ ColumnLayout {
     readonly property int size: isWorkspace ? implicitHeight + (hasWindows ? Config.appearance.padding.small : 0) : 0
     
     readonly property int wsIdx: workspaceData.idx
-    readonly property int wsId: workspaceData.id
+    readonly property string wsId: String(workspaceData.id)
     readonly property int ws: wsIdx // Alias for compatibility with other components expecting 'ws'
     
     readonly property bool isOccupied: occupied[wsIdx] ?? false

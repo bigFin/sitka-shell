@@ -17,9 +17,9 @@ Singleton {
     // We expose what the UI needs.
     // UI uses: focusedWorkspaceIndex, currentOutputWorkspaces (array), getWorkspaceCount()
     
-    readonly property int focusedWorkspaceIndex: isNiri ? Niri.focusedWorkspaceIndex : (Hypr.raw.activeWorkspace ? Hypr.raw.activeWorkspace.id - 1 : 0)
+    readonly property int focusedWorkspaceIndex: WorkspaceModel.focusedWorkspaceIndex
     
-    readonly property var currentOutputWorkspaces: isNiri ? Niri.currentOutputWorkspaces : [] // TODO: Map Hyprland workspaces
+    readonly property var currentOutputWorkspaces: WorkspaceModel.currentOutputWorkspaces
     
     readonly property bool capsLock: isNiri ? Niri.capsLock : Hypr.capsLock
     readonly property bool numLock: isNiri ? Niri.numLock : Hypr.numLock
@@ -50,7 +50,7 @@ Singleton {
     readonly property var outputs: isNiri ? Niri.outputs : ({}) // TODO: Hyprland outputs
     
     readonly property string focusedWindowId: ActiveWindowModel.idString
-    readonly property string focusedMonitorName: isNiri ? Niri.focusedMonitorName : ""
+    readonly property string focusedMonitorName: WorkspaceModel.focusedMonitorName
     
     readonly property bool hasFocusedWindow: ActiveWindowModel.hasWindow
     readonly property int activeWindowSerial: ActiveWindowModel.focusSerial
@@ -63,21 +63,10 @@ Singleton {
     readonly property string defaultKbLayout: isNiri ? Niri.defaultKbLayout : "us"
 
     // Additional Niri properties for UI compatibility
-    readonly property var allWorkspaces: isNiri ? Niri.allWorkspaces : [] // TODO: Hyprland workspaces mapping
-    readonly property string focusedWorkspaceId: isNiri ? Niri.focusedWorkspaceId : ""
-    readonly property var workspaceHasWindows: {
-        if (WindowStore.version > 0) {
-            const occupied = {};
-            const workspaces = WindowStore.getActiveWorkspaces();
-            for (let i = 0; i < workspaces.length; i++) {
-                const ws = workspaces[i];
-                occupied[ws.idx] = WindowStore.hasWindowsOnWorkspace(ws.id);
-            }
-            return occupied;
-        }
-
-        return isNiri ? Niri.workspaceHasWindows : ({});
-    }
+    readonly property int workspaceSerial: WorkspaceModel.workspaceSerial
+    readonly property var allWorkspaces: WorkspaceModel.allWorkspaces
+    readonly property string focusedWorkspaceId: WorkspaceModel.focusedWorkspaceId
+    readonly property var workspaceHasWindows: WorkspaceModel.workspaceHasWindows
     readonly property var lastFocusedWindow: isNiri ? Niri.lastFocusedWindow : null
 
     // --- Methods ---
@@ -104,7 +93,7 @@ Singleton {
     }
 
     function getWorkspaceCount() {
-        return isNiri ? Niri.getWorkspaceCount() : 10 // TODO Hyprland count
+        return WorkspaceModel.workspaceCount
     }
 
     function moveWindowToWorkspace(wsId) {
@@ -167,12 +156,17 @@ Singleton {
 
     // Additional methods for UI compatibility
     function getWindowsByWorkspaceId(wsId) {
+        if (WindowStore.version > 0) return WindowStore.getWindowsForWorkspace(wsId).map(windowFromStore)
         if (isNiri) return Niri.getWindowsByWorkspaceId(wsId)
         // TODO: Hyprland implementation
         return []
     }
 
     function getWindowsByWorkspaceIndex(index) {
+        if (WindowStore.version > 0) {
+            const ws = WorkspaceModel.getWorkspaceByIndex(index);
+            return ws ? getWindowsByWorkspaceId(ws.id) : [];
+        }
         if (isNiri) return Niri.getWindowsByWorkspaceIndex(index)
         // TODO: Hyprland implementation
         return []
@@ -213,15 +207,11 @@ Singleton {
     }
 
     function getWorkspaceNameByIndex(index) {
-        if (isNiri) return Niri.getWorkspaceNameByIndex(index)
-        // Hyprland: no custom names, return index + 1
-        return (index + 1).toString()
+        return WorkspaceModel.getWorkspaceNameByIndex(index)
     }
 
     function getWorkspaceNameById(id) {
-        if (isNiri) return Niri.getWorkspaceNameById(id)
-        // Hyprland: assume id is numeric
-        return id.toString()
+        return WorkspaceModel.getWorkspaceNameById(id)
     }
 
     function cleanWindowTitle(title) {
@@ -301,5 +291,20 @@ Singleton {
     function dumpStoreState() {
         WindowStore.debugDump();
         WindowGrouper.debugDump();
+    }
+
+    function windowFromStore(win) {
+        return {
+            id: win.id,
+            workspace_id: win.workspaceId,
+            app_id: win.appId,
+            title: win.title,
+            is_focused: win.isFocused,
+            is_floating: win.isFloating,
+            layout: {
+                pos_in_scrolling_layout: [win.layoutCol, win.layoutRow],
+                window_size: [win.width, win.height]
+            }
+        };
     }
 }

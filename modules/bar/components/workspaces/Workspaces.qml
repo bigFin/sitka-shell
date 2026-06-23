@@ -18,25 +18,19 @@ StyledRect {
     filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
 
     // Filter workspaces for this screen
-    readonly property var myWorkspaces: {
-        const screenName = root.screen?.name ?? "";
-        return WMService.allWorkspaces.filter(w => w && w.output === screenName).sort((a, b) => a.idx - b.idx);
-    }
+    readonly property var myWorkspaces: WorkspaceModel.getWorkspacesForOutput(root.screen?.name ?? "")
 
     // Active index within the filtered list
-    readonly property int activeWsIndex: {
-        const idx = myWorkspaces.findIndex(w => w.id == WMService.focusedWorkspaceId);
-        return idx; // Returns -1 if focused workspace is not on this screen
-    }
+    readonly property int activeWsIndex: WorkspaceModel.getActiveIndexForOutput(root.screen?.name ?? "")
 
-    readonly property int activeWsId: Number(WMService.focusedWorkspaceId) || 0
+    readonly property string activeWsId: WorkspaceModel.focusedWorkspaceId
 
-    readonly property var occupied: WMService.workspaceHasWindows
+    readonly property var occupied: WorkspaceModel.workspaceHasWindows
     // Paging not fully implemented for multi-monitor yet, assuming fit-all or use existing logic if needed. 
     // For now using simple list.
     readonly property int groupOffset: 0 
 
-    readonly property string focusedWindowId: WMService.focusedWindowId
+    readonly property string focusedWindowId: ActiveWindowModel.idString
 
     implicitHeight: layout.implicitHeight + Config.appearance.padding.small * 2
     implicitWidth: Config.bar.sizes.innerWidth

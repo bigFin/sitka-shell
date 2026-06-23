@@ -49,11 +49,14 @@ Singleton {
     // --- Outputs ---
     readonly property var outputs: isNiri ? Niri.outputs : ({}) // TODO: Hyprland outputs
     
-    readonly property string focusedWindowId: isNiri ? Niri.focusedWindowId : (Hypr.raw.activeWindow?.address ? "0x" + Hypr.raw.activeWindow.address : "")
+    readonly property string focusedWindowId: ActiveWindowModel.idString
     readonly property string focusedMonitorName: isNiri ? Niri.focusedMonitorName : ""
     
-    readonly property string focusedWindowClass: isNiri ? Niri.focusedWindowClass : (Hypr.raw.activeWindow?.class ?? "")
-    readonly property string focusedWindowTitle: isNiri ? Niri.focusedWindowTitle : (Hypr.raw.activeWindow?.title ?? "")
+    readonly property bool hasFocusedWindow: ActiveWindowModel.hasWindow
+    readonly property int activeWindowSerial: ActiveWindowModel.focusSerial
+    readonly property var focusedWindowDisplay: ActiveWindowModel.current
+    readonly property string focusedWindowClass: ActiveWindowModel.className
+    readonly property string focusedWindowTitle: ActiveWindowModel.title
     
     readonly property string kbLayout: isNiri ? Niri.kbLayout : "us" // TODO Hyprland layout
     readonly property string kbLayoutFull: isNiri ? Niri.kbLayouts : "us" // Full layout string

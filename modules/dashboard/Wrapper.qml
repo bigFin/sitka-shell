@@ -61,10 +61,10 @@ Item {
     }
 
     Connections {
-        target: WMService
-        function onFocusedWindowIdChanged() {
+        target: ActiveWindowModel
+        function onFocusSerialChanged() {
             // Show dashboard for 1 second
-            if ((!root.visibilities.dashboard && !root.expanded) && WMService.focusedWindowId) {
+            if ((!root.visibilities.dashboard && !root.expanded) && ActiveWindowModel.hasWindow) {
                 root.isvisible = true;
                 flashTimer.restart();
             }

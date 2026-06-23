@@ -36,7 +36,7 @@ StyledRect {
     // For now using simple list.
     readonly property int groupOffset: 0 
 
-    readonly property int focusedWindowId: WMService.focusedWindow ? WMService.focusedWindow.id : -1
+    readonly property string focusedWindowId: WMService.focusedWindowId
 
     implicitHeight: layout.implicitHeight + Config.appearance.padding.small * 2
     implicitWidth: Config.bar.sizes.innerWidth

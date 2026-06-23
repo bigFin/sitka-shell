@@ -16,7 +16,7 @@ Item {
 
     required property Item wrapper
 
-    implicitWidth: WMService.focusedWindowTitle /*WMService.activeToplevel*/  ? child.implicitWidth : -Config.appearance.padding.large * 2
+    implicitWidth: ActiveWindowModel.hasWindow ? child.implicitWidth : -Config.appearance.padding.large * 2
     implicitHeight: child.implicitHeight
 
     ColumnLayout {
@@ -41,7 +41,7 @@ Item {
 
                 Layout.alignment: Qt.AlignVCenter
                 implicitSize: details.implicitHeight
-                source: Icons.getAppIcon(WMService.focusedWindowClass ?? "", "image-missing")
+                source: Icons.getAppIcon(ActiveWindowModel.className ?? "", "image-missing")
             }
 
             ColumnLayout {
@@ -52,7 +52,7 @@ Item {
 
                 StyledText {
                     Layout.fillWidth: true
-                    text: WMService.focusedWindowTitle ?? ""
+                    text: ActiveWindowModel.title ?? ""
                     font.pointSize: Config.appearance.font.size.normal
                     elide: Text.ElideRight
                     Layout.preferredWidth: 200
@@ -60,7 +60,7 @@ Item {
 
                 StyledText {
                     Layout.fillWidth: true
-                    text: WMService.focusedWindowClass ?? ""
+                    text: ActiveWindowModel.className ?? ""
                     color: Colours.palette.m3onSurfaceVariant
                     elide: Text.ElideRight
                 }

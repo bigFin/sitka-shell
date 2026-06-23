@@ -12,8 +12,8 @@ Item {
     required property var bar
     required property Brightness.Monitor monitor
     property color colour: Colours.palette.m3primary
-    readonly property string windowClass: WMService.focusedWindowClass || "Desktop"
-    readonly property string windowTitle: WMService.focusedWindowTitle || qsTr("Desktop")
+    readonly property string windowClass: ActiveWindowModel.className
+    readonly property string windowTitle: ActiveWindowModel.title
 
     readonly property int maxHeight: {
         const otherModules = bar.children.filter(c => c.id && c.item !== this && c.id !== "spacer");

@@ -289,6 +289,9 @@ Singleton {
             if (bufWin.valid && !seenIds[bufWin.id]) {
                 delete WindowStore.windowIdToSlot[bufWin.id];
                 bufWin.valid = false;
+                if (WindowStore.focusedWindowSlot === i) {
+                    WindowStore.focusedWindowSlot = -1;
+                }
                 changed = true;
             }
         }
@@ -363,6 +366,7 @@ Singleton {
                 WindowStore.focusedWindowSlot = slot;
                 return true;
             }
+            WindowStore.focusedWindowSlot = -1;
         } else {
             WindowStore.focusedWindowSlot = -1;
         }

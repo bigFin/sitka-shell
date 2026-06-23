@@ -19,7 +19,7 @@ Item {
 
     // Properties passed through to WindowIcon
     required property Item workspace
-    required property int focusedWindowId
+    required property string focusedWindowId
     required property int activeWsId
     required property int ws
     required property int idx
@@ -154,7 +154,7 @@ Item {
             windowData: Config.bar.workspaces.groupIconsByApp ? fullGroup.main : fullGroup
             groupWindowData: Config.bar.workspaces.groupIconsByApp ? (fullGroup.windows || []) : [fullGroup]
             windowCount: Config.bar.workspaces.groupIconsByApp ? fullGroup.count : 1
-            isFocused: Config.bar.workspaces.groupIconsByApp ? fullGroup.windows.some(w => w.id === root.focusedWindowId) : root.focusedWindowId === fullGroup.id
+            isFocused: Config.bar.workspaces.groupIconsByApp ? fullGroup.windows.some(w => String(w.id) === root.focusedWindowId) : root.focusedWindowId === String(fullGroup.id)
             isWsFocused: root.isWsFocused
             curWindowIndex: index
             wsWindowCount: root.groupedWindowsArray.length

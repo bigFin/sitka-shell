@@ -13,7 +13,7 @@ ColumnLayout {
     required property int index
     required property var occupied
     required property int groupOffset
-    required property int focusedWindowId
+    required property string focusedWindowId
     required property int activeWsId
 
     required property Item windowPopoutSignal

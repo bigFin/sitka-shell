@@ -21,16 +21,6 @@ Item {
     implicitWidth: child.implicitWidth
     implicitHeight: child.implicitHeight
 
-    function cleanWindowTitle(windowClass, windowTitle) {
-        // Remove leading non-ASCII (icon) characters and whitespace Firefox Fix.
-        if (windowClass && windowClass.toLowerCase() === "firefox" && windowTitle) {
-            // Remove all leading non-printable or non-ASCII chars (favicons are often in the Unicode private use area or emoji)
-            // This regex removes all leading chars that are not basic ASCII printable (32-126)
-            return windowTitle.replace(/^[^\x20-\x7E]+/, "");
-        }
-        return windowTitle;
-    }
-
     Item {
         id: child
 
@@ -46,7 +36,7 @@ Item {
             id: icon
 
             animate: true
-            text: Icons.getAppCategoryIcon(WMService.focusedWindowClass, "desktop_windows")
+            text: Icons.getAppCategoryIcon(ActiveWindowModel.className, "desktop_windows")
             color: root.classColour
 
             anchors.verticalCenter: parent.verticalCenter
@@ -66,9 +56,8 @@ Item {
         TextMetrics {
             id: metrics
 
-            property string classPart: WMService.focusedWindowClass || ""
-            property string rawTitlePart: WMService.focusedWindowTitle || "Hi!"
-            property string cleanedTitlePart: root.cleanWindowTitle(classPart, rawTitlePart)
+            property string classPart: ActiveWindowModel.className || ""
+            property string cleanedTitlePart: ActiveWindowModel.title || "Desktop"
             property string separator: " -> "
 
             text: classPart + separator + cleanedTitlePart

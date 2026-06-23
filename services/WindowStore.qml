@@ -112,7 +112,7 @@ Singleton {
     function getFocusedWindow() {
         if (focusedWindowSlot < 0 || focusedWindowSlot >= maxWindows) return null;
         const win = windowBuffer[focusedWindowSlot];
-        return win.valid ? win : null;
+        return win.valid && win.isFocused ? win : null;
     }
     
     function getActiveWorkspaces() {

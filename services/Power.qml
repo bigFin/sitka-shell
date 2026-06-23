@@ -49,7 +49,7 @@ Singleton {
         
         if (hasPPD) {
             ppdService.profile = newProfile;
-        } else if (hasTLP || backend === "none") {
+        } else if (hasTLP) {
             root.manualProfile = newProfile;
             
             let cmd = (newProfile === powerSaver) ? "pkexec tlp bat" : "pkexec tlp ac";
@@ -59,6 +59,10 @@ Singleton {
             tlpProcess.running = true;
             
             notifyProcess.command = ["notify-send", "-a", "Sitka Shell", "Power Management", "Switching to " + profileToString(newProfile) + " mode..."];
+            notifyProcess.running = true;
+        } else {
+            root.manualProfile = newProfile;
+            notifyProcess.command = ["notify-send", "-a", "Sitka Shell", "Power Management", "No power backend available; showing " + profileToString(newProfile) + " locally."];
             notifyProcess.running = true;
         }
     }
@@ -84,12 +88,12 @@ Singleton {
     Process {
         id: checkTlpBinary
         command: ["sh", "-c", "command -v tlp || test -x /usr/bin/tlp || test -x /bin/tlp"]
-        onRunningChanged: if (!running) {
-            if (checkTlpBinary.exitCode === 0) {
+        onExited: exitCode => {
+            if (exitCode === 0) {
                 console.log("Power: TLP binary detected");
                 root.hasTLP = true;
             } else {
-                console.log("Power: TLP binary not found, checking if we should force TLP backend");
+                console.log("Power: TLP binary not found, checking host power backend policy");
                 checkNixos.running = true;
             }
         }
@@ -97,12 +101,12 @@ Singleton {
 
     Process {
         id: checkNixos
-        command: ["test", "-f", "/etc/NIXOS"]
-        onRunningChanged: if (!running) {
-            if (checkNixos.exitCode !== 0) {
-                console.log("Power: Not on NixOS, force-enabling TLP backend");
-                root.hasTLP = true;
-            }
+        command: ["sh", "-c", ". /etc/os-release 2>/dev/null && test \"${ID:-}\" = nixos"]
+        onExited: exitCode => {
+            if (exitCode === 0)
+                console.log("Power: NixOS detected without a supported power backend");
+            else
+                console.log("Power: No supported power backend detected");
         }
     }
 

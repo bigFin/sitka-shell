@@ -26,7 +26,8 @@ Singleton {
     }
 
     function start(mode): void {
-        if (mode === undefined) mode = Recorder.Mode.Fullscreen;
+        mode = Number(mode);
+        if (!Number.isInteger(mode)) mode = Recorder.Mode.Fullscreen;
         const timestamp = Qt.formatDateTime(new Date(), "yyyy-MM-dd_hh-mm-ss");
         const filename = `${outputDir}/recording_${timestamp}.mp4`;
 
@@ -128,7 +129,7 @@ Singleton {
             return root.running;
         }
 
-        function start(mode): void {
+        function start(mode: int): void {
             root.start(mode);
         }
 

@@ -25,8 +25,6 @@ struct DesktopEntryData {
     Q_PROPERTY(QString workingDirectory MEMBER workingDirectory CONSTANT)
     Q_PROPERTY(bool runInTerminal MEMBER runInTerminal CONSTANT)
     Q_PROPERTY(QUrl icon MEMBER icon CONSTANT)
-    QML_ELEMENT
-    QML_UNCREATABLE("DesktopEntryData is a value type")
 
 public:
     QString id;

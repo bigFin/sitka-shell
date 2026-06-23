@@ -8,6 +8,9 @@ StyledRect {
     id: root
 
     required property int activeWsIndex
+    required property string activeWorkspaceId
+    required property string focusedWindowWorkspaceId
+    required property string focusedWindowId
     required property Repeater workspaces
     required property Item mask
     required property int groupOffset
@@ -45,7 +48,7 @@ StyledRect {
         return s;
     }
 
-    property bool isContextActiveInWs: (WMService.wsContextType === "workspace" && WMService.wsContextAnchor?.index === root.currentWsIdx)
+    property bool isContextActiveInWs: (WMService.wsContextType === "workspace" && String(WMService.wsContextAnchor?.wsId ?? "") === root.activeWorkspaceId)
     property bool isWorkspacesContextActive: (WMService.wsContextType === "workspaces") && WMService.wsContextAnchor
     clip: false
     y: offset + mask.y
@@ -85,7 +88,7 @@ StyledRect {
         }
 
         function computeMargins() {
-            if (!WMService.focusedWindowId)
+            if (!root.focusedWindowId)
                 return {
                     left: Config.appearance.padding.small,
                     right: Config.appearance.padding.small
@@ -105,12 +108,12 @@ StyledRect {
 
         sourceComponent: StyledRect {
             id: activeWindowIndicator
-            readonly property Item targetWorkspace: workspaces.itemAt(currentWsIdx)
-            readonly property bool hasTarget: targetWorkspace?.hasFocusedWindow ?? false
+            readonly property Item targetWorkspace: root.workspaceItemById(root.focusedWindowWorkspaceId)
+            readonly property bool hasTarget: !!root.focusedWindowId && (targetWorkspace?.hasFocusedWindow ?? false)
 
             visible: hasTarget
-            height: WMService.focusedWindowId && hasTarget ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
-            width: WMService.focusedWindowId && hasTarget ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
+            height: root.focusedWindowId && hasTarget ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
+            width: root.focusedWindowId && hasTarget ? Config.bar.workspaces.windowIconSize + Config.appearance.padding.normal : 0
             color: Colours.palette.term13
             filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.small : 2
             anchors.horizontalCenter: parent.horizontalCenter
@@ -145,6 +148,17 @@ StyledRect {
                 return (ws.y + ws.activeWindowCenterY) - root.offset - (height / 2);
             }
         }
+    }
+
+    function workspaceItemById(workspaceId: string): Item {
+        if (!workspaceId)
+            return null;
+        for (let i = 0; i < workspaces.count; i++) {
+            const item = workspaces.itemAt(i);
+            if (item && String(item.wsId) === workspaceId)
+                return item;
+        }
+        return null;
     }
 
     // Trail animations

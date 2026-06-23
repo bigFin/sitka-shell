@@ -29,6 +29,7 @@ singleton WindowGrouper WindowGrouper.qml
 singleton WindowGroups WindowGroups.qml
 singleton WindowCollectionModel WindowCollectionModel.qml
 singleton WorkspaceModel WorkspaceModel.qml
+singleton WorkspaceIndicatorModel WorkspaceIndicatorModel.qml
 singleton WMDetector WMDetector.qml
 singleton WMService WMService.qml
 singleton Power Power.qml

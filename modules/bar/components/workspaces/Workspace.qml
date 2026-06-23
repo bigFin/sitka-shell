@@ -14,6 +14,7 @@ ColumnLayout {
     required property var occupied
     required property int groupOffset
     required property string focusedWindowId
+    required property string focusedWindowWorkspaceId
     required property string activeWsId
 
     required property Item windowPopoutSignal
@@ -39,11 +40,11 @@ ColumnLayout {
     // clip: true
 
     readonly property real activeWindowCenterY: {
-        if (windows.status !== Loader.Ready || !windows.item || !windows.item.hasFocusedWindow)
+        if (!hasFocusedWindow || windows.status !== Loader.Ready || !windows.item)
             return size / 2;
         return windows.y + windows.item.activeWindowY;
     }
-    readonly property bool hasFocusedWindow: windows.status === Loader.Ready && windows.item && windows.item.hasFocusedWindow
+    readonly property bool hasFocusedWindow: root.wsId === root.focusedWindowWorkspaceId && windows.status === Loader.Ready && windows.item && windows.item.hasFocusedWindow
 
     Behavior on scale {
         Anim {}

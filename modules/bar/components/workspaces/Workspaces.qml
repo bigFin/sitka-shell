@@ -18,19 +18,30 @@ StyledRect {
     filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
 
     // Filter workspaces for this screen
-    readonly property var myWorkspaces: WorkspaceModel.getWorkspacesForOutput(root.screen?.name ?? "")
+    readonly property string screenName: root.screen?.name ?? ""
+    readonly property int indicatorSerial: WorkspaceIndicatorModel.targetSerial
+    readonly property var indicatorTargets: {
+        void indicatorSerial;
+        return WorkspaceIndicatorModel.getTargetsForOutput(root.screenName);
+    }
+    readonly property var myWorkspaces: WorkspaceModel.getWorkspacesForOutput(root.screenName)
 
     // Active index within the filtered list
-    readonly property int activeWsIndex: WorkspaceModel.getActiveIndexForOutput(root.screen?.name ?? "")
+    readonly property int activeWsIndex: {
+        void indicatorSerial;
+        const activeId = indicatorTargets.active?.workspaceId ?? "";
+        return myWorkspaces.findIndex(w => String(w.id) === String(activeId));
+    }
 
-    readonly property string activeWsId: WorkspaceModel.focusedWorkspaceId
+    readonly property string activeWsId: String(indicatorTargets.active?.workspaceId ?? "")
+    readonly property string focusedWindowWorkspaceId: String(indicatorTargets.focusedWindow?.workspaceId ?? "")
 
     readonly property var occupied: WorkspaceModel.workspaceHasWindows
     // Paging not fully implemented for multi-monitor yet, assuming fit-all or use existing logic if needed. 
     // For now using simple list.
     readonly property int groupOffset: 0 
 
-    readonly property string focusedWindowId: ActiveWindowModel.idString
+    readonly property string focusedWindowId: String(indicatorTargets.focusedWindow?.windowId ?? "")
 
     implicitHeight: layout.implicitHeight + Config.appearance.padding.small * 2
     implicitWidth: Config.bar.sizes.innerWidth
@@ -89,6 +100,9 @@ StyledRect {
 
         sourceComponent: ActiveIndicator {
             activeWsIndex: root.activeWsIndex
+            activeWorkspaceId: root.activeWsId
+            focusedWindowWorkspaceId: root.focusedWindowWorkspaceId
+            focusedWindowId: root.focusedWindowId
             workspaces: workspaces
             mask: layout
             groupOffset: root.groupOffset
@@ -118,6 +132,7 @@ StyledRect {
                 occupied: root.occupied
                 groupOffset: root.groupOffset
                 focusedWindowId: root.focusedWindowId
+                focusedWindowWorkspaceId: root.focusedWindowWorkspaceId
                 windowPopoutSignal: root
             }
         }

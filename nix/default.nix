@@ -31,7 +31,7 @@
   debug ? false,
   extraRuntimeDeps ? [],
 }: let
-  version = "1.0.0";
+  version = "1.1.0";
   sourceRoot = ./..;
   cleanSource = lib.cleanSourceWith {
     src = sourceRoot;

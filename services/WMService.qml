@@ -62,7 +62,19 @@ Singleton {
     // Additional Niri properties for UI compatibility
     readonly property var allWorkspaces: isNiri ? Niri.allWorkspaces : [] // TODO: Hyprland workspaces mapping
     readonly property string focusedWorkspaceId: isNiri ? Niri.focusedWorkspaceId : ""
-    readonly property var workspaceHasWindows: isNiri ? Niri.workspaceHasWindows : ({})
+    readonly property var workspaceHasWindows: {
+        if (WindowStore.version > 0) {
+            const occupied = {};
+            const workspaces = WindowStore.getActiveWorkspaces();
+            for (let i = 0; i < workspaces.length; i++) {
+                const ws = workspaces[i];
+                occupied[ws.idx] = WindowStore.hasWindowsOnWorkspace(ws.id);
+            }
+            return occupied;
+        }
+
+        return isNiri ? Niri.workspaceHasWindows : ({});
+    }
     readonly property var lastFocusedWindow: isNiri ? Niri.lastFocusedWindow : null
 
     // --- Methods ---

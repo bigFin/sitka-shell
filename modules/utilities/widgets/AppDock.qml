@@ -44,27 +44,7 @@ ColumnLayout {
         }
     }
 
-    // Get running windows grouped by app
-    readonly property int storeVersion: WindowStore.version
-    readonly property var runningApps: {
-        void storeVersion
-        const apps = {}
-        for (let i = 0; i < WindowStore.activeWindowCount; i++) {
-            const win = WindowStore.windowBuffer[i]
-            if (win && win.valid) {
-                const appId = win.appId || win.title || "unknown"
-                if (!apps[appId]) {
-                    apps[appId] = {
-                        id: appId,
-                        title: win.title,
-                        windows: []
-                    }
-                }
-                apps[appId].windows.push(win)
-            }
-        }
-        return Object.values(apps)
-    }
+    readonly property var runningApps: WindowCollectionModel.runningApps
 
     // Get pinned apps that aren't running
     readonly property var pinnedNotRunning: pinnedIds.filter(id =>

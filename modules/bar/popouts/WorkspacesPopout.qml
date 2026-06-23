@@ -52,25 +52,19 @@ StyledRect {
         required property var modelData
         required property int index
         readonly property var workspaceData: modelData || ({})
+        readonly property int collectionSerial: WindowCollectionModel.collectionSerial
 
         radius: Config.appearance.rounding.small
         color: groupMenu.bgColor
         Layout.fillWidth: true
 
-        readonly property var windows: WMService.getWindowsByWorkspaceId(workspaceData.id)
+        readonly property var windows: {
+            void collectionSerial;
+            return WindowCollectionModel.getWindowsByWorkspaceId(workspaceData.id);
+        }
         readonly property var groupedWindows: {
-            const groups = {};
-            for (const win of windows) {
-                const key = win.app_id || "unknown";
-                if (!groups[key])
-                    groups[key] = [];
-                groups[key].push(win);
-            }
-            return Object.entries(groups).map(([app_id, wins]) => ({
-                        app_id,
-                        workspace_id: wsRect.workspaceData.id,
-                        windows: wins
-                    }));
+            void collectionSerial;
+            return WindowCollectionModel.getAppGroupsForWorkspaceId(workspaceData.id);
         }
 
         implicitHeight: col.implicitHeight

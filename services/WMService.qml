@@ -72,9 +72,7 @@ Singleton {
     // --- Methods ---
 
     function getActiveWorkspaceWindows() {
-        if (isNiri) return Niri.getActiveWorkspaceWindows()
-        // TODO Hyprland implementation: filter clients by active workspace
-        return [] 
+        return WindowCollectionModel.getWindowsByWorkspaceId(WorkspaceModel.focusedWorkspaceId)
     }
 
     function switchToWorkspaceUpDown(direction) {
@@ -156,20 +154,11 @@ Singleton {
 
     // Additional methods for UI compatibility
     function getWindowsByWorkspaceId(wsId) {
-        if (WindowStore.version > 0) return WindowStore.getWindowsForWorkspace(wsId).map(windowFromStore)
-        if (isNiri) return Niri.getWindowsByWorkspaceId(wsId)
-        // TODO: Hyprland implementation
-        return []
+        return WindowCollectionModel.getWindowsByWorkspaceId(wsId)
     }
 
     function getWindowsByWorkspaceIndex(index) {
-        if (WindowStore.version > 0) {
-            const ws = WorkspaceModel.getWorkspaceByIndex(index);
-            return ws ? getWindowsByWorkspaceId(ws.id) : [];
-        }
-        if (isNiri) return Niri.getWindowsByWorkspaceIndex(index)
-        // TODO: Hyprland implementation
-        return []
+        return WindowCollectionModel.getWindowsByWorkspaceIndex(index)
     }
 
     function groupWindowsByLayoutAndId(windows) {
@@ -179,9 +168,26 @@ Singleton {
     }
 
     function groupWindowsByApp(windows) {
-        if (isNiri) return Niri.groupWindowsByApp(windows)
-        // TODO: Hyprland fallback
-        return []
+        const groups = {};
+        for (let i = 0; i < windows.length; i++) {
+            const win = windows[i];
+            const appId = win.app_id || win.title || "unknown";
+            if (!groups[appId]) {
+                groups[appId] = {
+                    id: appId,
+                    app_id: appId,
+                    title: appId,
+                    windows: []
+                };
+            }
+            groups[appId].windows.push(win);
+        }
+        const result = Object.values(groups);
+        for (let i = 0; i < result.length; i++) {
+            result[i].count = result[i].windows.length;
+            result[i].main = result[i].windows[0] || null;
+        }
+        return result;
     }
 
     function switchToWorkspace(workspaceId) {
@@ -293,18 +299,4 @@ Singleton {
         WindowGrouper.debugDump();
     }
 
-    function windowFromStore(win) {
-        return {
-            id: win.id,
-            workspace_id: win.workspaceId,
-            app_id: win.appId,
-            title: win.title,
-            is_focused: win.isFocused,
-            is_floating: win.isFloating,
-            layout: {
-                pos_in_scrolling_layout: [win.layoutCol, win.layoutRow],
-                window_size: [win.width, win.height]
-            }
-        };
-    }
 }

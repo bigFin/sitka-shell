@@ -54,6 +54,7 @@ Singleton {
     
     readonly property bool hasFocusedWindow: ActiveWindowModel.hasWindow
     readonly property int activeWindowSerial: ActiveWindowModel.focusSerial
+    readonly property int activeWindowDetailSerial: ActiveWindowModel.detailSerial
     readonly property var focusedWindowDisplay: ActiveWindowModel.current
     readonly property string focusedWindowClass: ActiveWindowModel.className
     readonly property string focusedWindowTitle: ActiveWindowModel.title

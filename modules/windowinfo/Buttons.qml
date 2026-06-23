@@ -9,19 +9,8 @@ import QtQuick.Layouts
 ColumnLayout {
     id: root
 
-    property var client: null
+    property var client: ActiveWindowModel.window
     property var wrapper: null // Fix undefined reference
-
-    Connections {
-        target: WMService // Listen to the WMService singleton
-        function onFocusedWindowChanged(): void {
-            root.client = WMService.focusedWindow || null;
-        }
-    }
-
-    Component.onCompleted: {
-        root.client = WMService.focusedWindow;
-    }
 
     anchors.fill: parent
     spacing: Config.appearance.spacing.small
@@ -130,13 +119,13 @@ ColumnLayout {
         sourceComponent: RowLayout {
             // Layout.fillWidth: true
 
-            readonly property bool isFloating: WMService.focusedWindow?.is_floating || WMService.focusedWindow?.floating || false
+            readonly property bool isFloating: root.client?.is_floating || root.client?.floating || false
             
             Button {
                 color: isFloating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
                 onColor: isFloating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
-                text: root.client?.is_floating ? qsTr("Tile") : qsTr("Float")
-                icon: root.client?.is_floating ? "grid_view" : "picture_in_picture"
+                text: isFloating ? qsTr("Tile") : qsTr("Float")
+                icon: isFloating ? "grid_view" : "picture_in_picture"
 
                 function onClicked(): void {
                     WMService.toggleWindowFloating();

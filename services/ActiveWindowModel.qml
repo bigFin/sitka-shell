@@ -21,6 +21,7 @@ Singleton {
     property var current: desktopInfo()
     property var previous: desktopInfo()
     property int focusSerial: 0
+    property int detailSerial: 0
 
     readonly property bool hasWindow: current.hasWindow
     readonly property string idString: current.id
@@ -102,9 +103,13 @@ Singleton {
         if (sameInfo(current, pending))
             return;
 
-        previous = current;
+        const focusChanged = !sameFocusIdentity(current, pending);
+        if (focusChanged)
+            previous = current;
         current = pending;
-        focusSerial++;
+        if (focusChanged)
+            focusSerial++;
+        detailSerial++;
     }
 
     function buildCurrentInfo(): var {
@@ -131,7 +136,8 @@ Singleton {
             className: cleanApp || "Desktop",
             rawTitle: win.title || "",
             title: cleanTitle || "(Unnamed window)",
-            window: win
+            detailKey: detailKeyFromStoreWindow(win),
+            window: clientFromStoreWindow(win)
         };
     }
 
@@ -150,6 +156,7 @@ Singleton {
             className: cleanApp || "Desktop",
             rawTitle: Niri.focusedWindowTitle || "",
             title: cleanTitle || "(Unnamed window)",
+            detailKey: detailKeyFromClient(Niri.focusedWindow || null),
             window: Niri.focusedWindow || null
         };
     }
@@ -170,6 +177,7 @@ Singleton {
             className: cleanApp || "Desktop",
             rawTitle: win?.title || "",
             title: cleanTitle || "(Unnamed window)",
+            detailKey: detailKeyFromClient(win),
             window: win
         };
     }
@@ -183,6 +191,7 @@ Singleton {
             className: "Desktop",
             rawTitle: "",
             title: "Desktop",
+            detailKey: "",
             window: null
         };
     }
@@ -192,7 +201,74 @@ Singleton {
             && a.id === b.id
             && a.appId === b.appId
             && a.title === b.title
-            && a.rawTitle === b.rawTitle;
+            && a.rawTitle === b.rawTitle
+            && a.detailKey === b.detailKey;
+    }
+
+    function sameFocusIdentity(a: var, b: var): bool {
+        return a.hasWindow === b.hasWindow && a.id === b.id;
+    }
+
+    function clientFromStoreWindow(win: var): var {
+        return {
+            id: win.id,
+            workspace_id: win.workspaceId,
+            pid: win.pid,
+            app_id: win.appId,
+            initialClass: win.appId,
+            initialTitle: win.title,
+            title: win.title,
+            is_focused: win.isFocused,
+            is_floating: win.isFloating,
+            is_urgent: win.isUrgent,
+            layout: {
+                pos_in_scrolling_layout: [win.layoutCol, win.layoutRow],
+                tile_pos_in_workspace_view: win.tilePosX >= 0 && win.tilePosY >= 0 ? [win.tilePosX, win.tilePosY] : null,
+                window_size: [win.width, win.height]
+            }
+        };
+    }
+
+    function detailKeyFromStoreWindow(win: var): string {
+        return [
+            win.id,
+            win.workspaceId,
+            win.pid,
+            win.appId,
+            win.title,
+            win.isFloating,
+            win.isUrgent,
+            win.layoutCol,
+            win.layoutRow,
+            win.tilePosX,
+            win.tilePosY,
+            win.width,
+            win.height
+        ].join("|");
+    }
+
+    function detailKeyFromClient(win: var): string {
+        if (!win)
+            return "";
+        const layout = win.layout || {};
+        const pos = layout.pos_in_scrolling_layout || [];
+        const tilePos = layout.tile_pos_in_workspace_view || [];
+        const size = layout.window_size || [];
+        return [
+            win.id ?? "",
+            win.workspace_id ?? "",
+            win.pid ?? "",
+            win.app_id ?? win.class ?? "",
+            win.title ?? "",
+            win.is_floating ?? win.floating ?? false,
+            win.is_urgent ?? false,
+            pos[0] ?? "",
+            pos[1] ?? "",
+            tilePos[0] ?? "",
+            tilePos[1] ?? "",
+            size[0] ?? "",
+            size[1] ?? ""
+        ].join("|");
     }
 
     function normaliseId(value: var): string {

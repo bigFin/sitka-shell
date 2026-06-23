@@ -14,19 +14,7 @@ Item {
     required property ShellScreen screen
     // required property HyprlandToplevel client
 
-    property var client: null // NEW LOGIC
-
-    Connections {
-        target: WMService // Listen to the WMService singleton
-
-        function onFocusedWindowChanged(): void {
-            root.client = WMService.focusedWindow || WMService.lastFocusedWindow || null;
-        }
-    }
-    // Initial setup in Component.onCompleted
-    Component.onCompleted: {
-        root.client = WMService.focusedWindow || WMService.lastFocusedWindow;
-    }
+    property var client: ActiveWindowModel.window
 
     Layout.preferredWidth: preview.implicitWidth + Config.appearance.padding.large * 2
     Layout.fillHeight: true

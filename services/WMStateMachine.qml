@@ -258,23 +258,37 @@ Singleton {
             const bufWin = WindowStore.windowBuffer[slot];
             const layout = win.layout || {};
             const pos = layout.pos_in_scrolling_layout || [0, 0];
+            const tilePos = layout.tile_pos_in_workspace_view || [-1, -1];
             const size = layout.window_size || [0, 0];
             
             if (!bufWin.valid || bufWin.id !== win.id ||
                 bufWin.workspaceId !== win.workspace_id ||
+                bufWin.pid !== (win.pid || -1) ||
                 bufWin.appId !== (win.app_id || "") ||
                 bufWin.title !== (win.title || "") ||
-                bufWin.isFocused !== (win.is_focused || false)) {
+                bufWin.isFocused !== (win.is_focused || false) ||
+                bufWin.isFloating !== (win.is_floating || false) ||
+                bufWin.isUrgent !== (win.is_urgent || false) ||
+                bufWin.layoutCol !== pos[0] ||
+                bufWin.layoutRow !== pos[1] ||
+                bufWin.tilePosX !== tilePos[0] ||
+                bufWin.tilePosY !== tilePos[1] ||
+                bufWin.width !== size[0] ||
+                bufWin.height !== size[1]) {
                 
                 bufWin.valid = true;
                 bufWin.id = win.id;
                 bufWin.workspaceId = win.workspace_id;
+                bufWin.pid = win.pid || -1;
                 bufWin.appId = win.app_id || "";
                 bufWin.title = win.title || "";
                 bufWin.isFocused = win.is_focused || false;
                 bufWin.isFloating = win.is_floating || false;
+                bufWin.isUrgent = win.is_urgent || false;
                 bufWin.layoutCol = pos[0];
                 bufWin.layoutRow = pos[1];
+                bufWin.tilePosX = tilePos[0];
+                bufWin.tilePosY = tilePos[1];
                 bufWin.width = size[0];
                 bufWin.height = size[1];
                 
@@ -317,17 +331,22 @@ Singleton {
         const bufWin = WindowStore.windowBuffer[slot];
         const layout = win.layout || {};
         const pos = layout.pos_in_scrolling_layout || [0, 0];
+        const tilePos = layout.tile_pos_in_workspace_view || [-1, -1];
         const size = layout.window_size || [0, 0];
         
         bufWin.valid = true;
         bufWin.id = win.id;
         bufWin.workspaceId = win.workspace_id;
+        bufWin.pid = win.pid || -1;
         bufWin.appId = win.app_id || "";
         bufWin.title = win.title || "";
         bufWin.isFocused = win.is_focused || false;
         bufWin.isFloating = win.is_floating || false;
+        bufWin.isUrgent = win.is_urgent || false;
         bufWin.layoutCol = pos[0];
         bufWin.layoutRow = pos[1];
+        bufWin.tilePosX = tilePos[0];
+        bufWin.tilePosY = tilePos[1];
         bufWin.width = size[0];
         bufWin.height = size[1];
         
@@ -391,12 +410,16 @@ Singleton {
             if (slot !== undefined) {
                 const bufWin = WindowStore.windowBuffer[slot];
                 const pos = layout.pos_in_scrolling_layout || [bufWin.layoutCol, bufWin.layoutRow];
+                const tilePos = layout.tile_pos_in_workspace_view || [bufWin.tilePosX, bufWin.tilePosY];
                 const size = layout.window_size || [bufWin.width, bufWin.height];
                 
                 if (bufWin.layoutCol !== pos[0] || bufWin.layoutRow !== pos[1] ||
+                    bufWin.tilePosX !== tilePos[0] || bufWin.tilePosY !== tilePos[1] ||
                     bufWin.width !== size[0] || bufWin.height !== size[1]) {
                     bufWin.layoutCol = pos[0];
                     bufWin.layoutRow = pos[1];
+                    bufWin.tilePosX = tilePos[0];
+                    bufWin.tilePosY = tilePos[1];
                     bufWin.width = size[0];
                     bufWin.height = size[1];
                     changed = true;

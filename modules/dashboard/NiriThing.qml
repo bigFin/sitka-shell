@@ -9,18 +9,7 @@ ColumnLayout {
     // Layout.fillWidth: true
     // Layout.fillHeight: true
 
-    property var client: null
-
-    Connections {
-        target: WMService // Listen to the WMService singleton
-        function onFocusedWindowChanged(): void {
-            root.client = WMService.focusedWindow || WMService.lastFocusedWindow || null;
-        }
-    }
-
-    Component.onCompleted: {
-        root.client = WMService.focusedWindow || WMService.lastFocusedWindow;
-    }
+    property var client: ActiveWindowModel.window
 
     // ***************************************************
     CollapsibleSection {

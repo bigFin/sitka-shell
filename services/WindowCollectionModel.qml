@@ -150,12 +150,17 @@ Singleton {
         return {
             id: win.id,
             workspace_id: win.workspaceId,
+            pid: win.pid,
             app_id: win.appId,
+            initialClass: win.appId,
+            initialTitle: win.title,
             title: win.title,
             is_focused: win.isFocused,
             is_floating: win.isFloating,
+            is_urgent: win.isUrgent,
             layout: {
                 pos_in_scrolling_layout: [win.layoutCol, win.layoutRow],
+                tile_pos_in_workspace_view: win.tilePosX >= 0 && win.tilePosY >= 0 ? [win.tilePosX, win.tilePosY] : null,
                 window_size: [win.width, win.height]
             }
         };
@@ -165,10 +170,14 @@ Singleton {
         return {
             id: win.id,
             workspace_id: win.workspace_id,
+            pid: win.pid || -1,
             app_id: win.app_id || "",
+            initialClass: win.initialClass || win.app_id || "",
+            initialTitle: win.initialTitle || win.title || "",
             title: win.title || "",
             is_focused: win.is_focused || false,
             is_floating: win.is_floating || false,
+            is_urgent: win.is_urgent || false,
             layout: win.layout || {}
         };
     }
@@ -208,9 +217,11 @@ Singleton {
             if (left.id !== right.id
                     || left.workspace_id !== right.workspace_id
                     || left.app_id !== right.app_id
+                    || left.pid !== right.pid
                     || left.title !== right.title
                     || left.is_focused !== right.is_focused
                     || left.is_floating !== right.is_floating
+                    || left.is_urgent !== right.is_urgent
                     || leftPos[0] !== rightPos[0]
                     || leftPos[1] !== rightPos[1]
                     || leftSize[0] !== rightSize[0]

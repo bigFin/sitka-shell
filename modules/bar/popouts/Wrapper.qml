@@ -96,7 +96,7 @@ Item {
 
         sourceComponent: WindowInfo {
             screen: root.screen
-            client: WMService.focusedWindow
+            client: ActiveWindowModel.window
             wrapper: root
         }
     }

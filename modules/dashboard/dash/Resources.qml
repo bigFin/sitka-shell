@@ -7,14 +7,34 @@ import QtQuick
 Row {
     id: root
 
+    property bool active: true
+    property bool _systemUsageRefHeld: false
+    readonly property var systemUsageDomains: ["cpu", "memory", "storage"]
+
     anchors.top: parent.top
     anchors.bottom: parent.bottom
 
     padding: Config.appearance.padding.large
     spacing: Config.appearance.spacing.normal
 
-    Ref {
-        service: SystemUsage
+    Component.onCompleted: updateSystemUsageRef()
+    Component.onDestruction: releaseSystemUsageRef()
+    onActiveChanged: updateSystemUsageRef()
+
+    function updateSystemUsageRef(): void {
+        if (active && !_systemUsageRefHeld) {
+            SystemUsage.addRef(systemUsageDomains);
+            _systemUsageRefHeld = true;
+        } else if (!active && _systemUsageRefHeld) {
+            releaseSystemUsageRef();
+        }
+    }
+
+    function releaseSystemUsageRef(): void {
+        if (!_systemUsageRefHeld)
+            return;
+        SystemUsage.removeRef(systemUsageDomains);
+        _systemUsageRefHeld = false;
     }
 
     Resource {

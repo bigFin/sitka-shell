@@ -9,6 +9,9 @@ import QtQuick.Layouts
 GridLayout {
     id: root
 
+    property bool _systemUsageRefHeld: false
+    readonly property var systemUsageDomains: ["cpu", "memory", "storage", "sensors"]
+
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.margins: Config.appearance.padding.large
@@ -18,8 +21,13 @@ GridLayout {
     rows: 2
     columns: 2
 
-    Ref {
-        service: SystemUsage
+    Component.onCompleted: {
+        SystemUsage.addRef(systemUsageDomains);
+        _systemUsageRefHeld = true;
+    }
+    Component.onDestruction: {
+        if (_systemUsageRefHeld)
+            SystemUsage.removeRef(systemUsageDomains);
     }
 
     Resource {

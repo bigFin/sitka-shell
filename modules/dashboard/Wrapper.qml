@@ -147,6 +147,7 @@ Item {
         sourceComponent: Content {
             visibilities: root.visibilities
             state: root.state
+            expanded: root.expanded
             // --- MouseArea for hover/click detection ---
             MouseArea {
                 id: hoverArea

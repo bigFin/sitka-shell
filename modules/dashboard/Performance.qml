@@ -8,6 +8,10 @@ import QtQuick.Layouts
 RowLayout {
     id: root
 
+    property bool active: true
+    property bool _systemUsageRefHeld: false
+    readonly property var systemUsageDomains: ["cpu", "memory", "storage", "gpu", "sensors"]
+
     readonly property int padding: Config.appearance.padding.large
 
     function displayTemp(temp: real): string {
@@ -16,8 +20,24 @@ RowLayout {
 
     spacing: Config.appearance.spacing.large * 3
 
-    Ref {
-        service: SystemUsage
+    Component.onCompleted: updateSystemUsageRef()
+    Component.onDestruction: releaseSystemUsageRef()
+    onActiveChanged: updateSystemUsageRef()
+
+    function updateSystemUsageRef(): void {
+        if (active && !_systemUsageRefHeld) {
+            SystemUsage.addRef(systemUsageDomains);
+            _systemUsageRefHeld = true;
+        } else if (!active && _systemUsageRefHeld) {
+            releaseSystemUsageRef();
+        }
+    }
+
+    function releaseSystemUsageRef(): void {
+        if (!_systemUsageRefHeld)
+            return;
+        SystemUsage.removeRef(systemUsageDomains);
+        _systemUsageRefHeld = false;
     }
 
     Resource {

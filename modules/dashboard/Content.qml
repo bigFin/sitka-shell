@@ -16,6 +16,7 @@ Item {
 
     required property PersistentProperties visibilities
     required property PersistentProperties state
+    required property bool expanded
     readonly property real nonAnimWidth: view.implicitWidth + viewWrapper.anchors.margins * 2
 
     implicitWidth: nonAnimWidth
@@ -109,6 +110,7 @@ Item {
                         sourceComponent: Dash {
                             visibilities: root.visibilities
                             state: root.state
+                            systemUsageActive: root.expanded && root.state.currentTab === 0
                         }
                     }
 
@@ -119,7 +121,9 @@ Item {
                     }
 
                     Pane {
-                        sourceComponent: Performance {}
+                        sourceComponent: Performance {
+                            active: root.expanded && root.state.currentTab === 2
+                        }
                     }
 
                     Pane {

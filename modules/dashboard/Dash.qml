@@ -10,6 +10,7 @@ GridLayout {
 
     required property PersistentProperties visibilities
     required property PersistentProperties state
+    required property bool systemUsageActive
 
     rowSpacing: Config.appearance.spacing.normal
     columnSpacing: Config.appearance.spacing.normal
@@ -69,6 +70,7 @@ GridLayout {
 
         Resources {
             id: resources
+            active: root.systemUsageActive
         }
     }
 

@@ -111,9 +111,10 @@ Useful settings:
 {
   "appearance": {
     "transparency": {
+      "mode": "opaque",
       "enabled": false,
-      "base": 0.85,
-      "layers": 0.4
+      "base": 0.58,
+      "layers": 0.24
     },
     "shaders": {
       "enabled": false,
@@ -139,8 +140,10 @@ Useful settings:
 
 Performance guidance:
 
-- Enable `appearance.transparency.enabled` for transparent rice layouts. `base`
-  controls main shell surface alpha; `layers` controls nested/raised surfaces.
+- Set `appearance.transparency.mode` to `"transparent"` for transparent rice
+  layouts. `base` controls main shell surface alpha; `layers` controls
+  nested/raised surfaces. `"normal"` keeps compatibility with the older
+  `enabled` toggle, and `"opaque"` disables surface alpha.
 - Leave `appearance.shaders.enabled` off unless you are actively using drawer
   post-processing.
 - The drawer shader overlay only runs when `performanceMode` is set to

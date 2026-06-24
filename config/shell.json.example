@@ -21,10 +21,14 @@
         },
         // Transparent rice mode. Text/accent colors stay opaque; shell surfaces use these alpha values.
         "transparency": {
+            // "opaque" disables surface alpha, "normal" respects enabled/base/layers,
+            // and "transparent" forces transparency even if enabled is false.
+            "mode": "opaque",
+            // Legacy toggle used by "normal" mode.
             "enabled": false,
-            // Alpha for primary shell surfaces.
+            // Alpha for primary shell surfaces. "transparent" defaults to 0.42.
             "base": 0.58,
-            // Alpha for nested panels, cards, and raised layers.
+            // Alpha for nested panels, cards, and raised layers. "transparent" defaults to 0.16.
             "layers": 0.24
         },
         // Shader effects for VFD/CRT visual style

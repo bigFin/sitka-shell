@@ -99,9 +99,12 @@ JsonObject {
     }
 
     component Transparency: JsonObject {
+        // "opaque" disables surface alpha, "normal" uses enabled/base/layers,
+        // and "transparent" forces an aggressive rice-friendly surface alpha.
+        property string mode: enabled ? "normal" : "opaque"
         property bool enabled: false
-        property real base: 0.85
-        property real layers: 0.4
+        property real base: mode === "transparent" ? 0.42 : 0.58
+        property real layers: mode === "transparent" ? 0.16 : 0.24
     }
 
     component Shaders: JsonObject {

@@ -48,6 +48,7 @@ Singleton {
     property int skippedEventCount: 0
     property int quietTitleUpdateCount: 0
     property var skippedByType: ({})
+    property bool lastEventWorkspaceChanged: false
     property bool lastEventCollectionChanged: false
 
     // ===== BATCH TIMER =====
@@ -122,12 +123,15 @@ Singleton {
 
         // Process each event
         let stateChanged = false;
+        let workspaceChanged = false;
         let collectionChanged = false;
         for (let i = 0; i < coalescedEvents.length; i++) {
+            lastEventWorkspaceChanged = false;
             lastEventCollectionChanged = false;
             processedByType = incrementTypeCount(processedByType, coalescedEvents[i].type);
             const changed = applyEvent(coalescedEvents[i]);
             stateChanged = changed || stateChanged;
+            workspaceChanged = (changed && lastEventWorkspaceChanged) || workspaceChanged;
             collectionChanged = (changed && lastEventCollectionChanged) || collectionChanged;
         }
 
@@ -137,6 +141,10 @@ Singleton {
         if (collectionChanged) {
             WindowStore._rebuildWorkspaceWindowSlots();
             WindowStore._incrementCollectionVersion();
+        }
+
+        if (workspaceChanged) {
+            WindowStore._incrementWorkspaceVersion();
         }
 
         if (stateChanged) {
@@ -308,6 +316,7 @@ Singleton {
             }
         }
 
+        lastEventWorkspaceChanged = changed;
         return changed;
     }
 
@@ -319,21 +328,35 @@ Singleton {
         if (slot === undefined)
             return false;
 
+        const target = WindowStore.workspaceBuffer[slot];
+        const shouldFocus = data.focused || false;
+        let changed = false;
+
         // Clear previous focus
         for (let i = 0; i < WindowStore.maxWorkspaces; i++) {
             const ws = WindowStore.workspaceBuffer[i];
-            if (ws.valid && ws.output === WindowStore.workspaceBuffer[slot].output) {
-                ws.isActive = false;
-                ws.isFocused = false;
+            if (i !== slot && ws.valid && ws.output === target.output) {
+                if (ws.isActive || ws.isFocused) {
+                    ws.isActive = false;
+                    ws.isFocused = false;
+                    changed = true;
+                }
             }
         }
 
         // Set new focus
-        WindowStore.workspaceBuffer[slot].isActive = true;
-        WindowStore.workspaceBuffer[slot].isFocused = data.focused || false;
-        WindowStore.focusedWorkspaceSlot = slot;
+        if (!target.isActive || target.isFocused !== shouldFocus) {
+            target.isActive = true;
+            target.isFocused = shouldFocus;
+            changed = true;
+        }
+        if (WindowStore.focusedWorkspaceSlot !== slot) {
+            WindowStore.focusedWorkspaceSlot = slot;
+            changed = true;
+        }
 
-        return true;
+        lastEventWorkspaceChanged = changed;
+        return changed;
     }
 
     function updateWindows(data) {
@@ -363,7 +386,9 @@ Singleton {
             const tilePos = layout.tile_pos_in_workspace_view || [-1, -1];
             const size = layout.window_size || [0, 0];
 
-            if (!bufWin.valid || bufWin.id !== win.id || bufWin.workspaceId !== win.workspace_id || bufWin.pid !== (win.pid || -1) || bufWin.appId !== (win.app_id || "") || bufWin.title !== (win.title || "") || bufWin.isFocused !== (win.is_focused || false) || bufWin.isFloating !== (win.is_floating || false) || bufWin.isUrgent !== (win.is_urgent || false) || bufWin.layoutCol !== pos[0] || bufWin.layoutRow !== pos[1] || bufWin.tilePosX !== tilePos[0] || bufWin.tilePosY !== tilePos[1] || bufWin.width !== size[0] || bufWin.height !== size[1]) {
+            const occupancyChanged = !bufWin.valid || bufWin.workspaceId !== win.workspace_id;
+            const collectionChanged = occupancyChanged || bufWin.id !== win.id || bufWin.pid !== (win.pid || -1) || bufWin.appId !== (win.app_id || "") || bufWin.isFloating !== (win.is_floating || false) || bufWin.isUrgent !== (win.is_urgent || false) || bufWin.layoutCol !== pos[0] || bufWin.layoutRow !== pos[1] || bufWin.tilePosX !== tilePos[0] || bufWin.tilePosY !== tilePos[1] || bufWin.width !== size[0] || bufWin.height !== size[1];
+            if (collectionChanged || bufWin.title !== (win.title || "") || bufWin.isFocused !== (win.is_focused || false)) {
                 bufWin.valid = true;
                 bufWin.id = win.id;
                 bufWin.workspaceId = win.workspace_id;
@@ -384,7 +409,8 @@ Singleton {
                     WindowStore.focusedWindowSlot = slot;
                 }
 
-                lastEventCollectionChanged = true;
+                lastEventWorkspaceChanged = lastEventWorkspaceChanged || occupancyChanged;
+                lastEventCollectionChanged = lastEventCollectionChanged || collectionChanged;
                 changed = true;
             }
         }
@@ -398,6 +424,7 @@ Singleton {
                 if (WindowStore.focusedWindowSlot === i) {
                     WindowStore.focusedWindowSlot = -1;
                 }
+                lastEventWorkspaceChanged = true;
                 lastEventCollectionChanged = true;
                 changed = true;
             }
@@ -433,7 +460,8 @@ Singleton {
         const title = win.title || "";
 
         const titleChanged = bufWin.title !== title;
-        const collectionChanged = !bufWin.valid || bufWin.id !== win.id || bufWin.workspaceId !== win.workspace_id || bufWin.pid !== pid || bufWin.appId !== appId || bufWin.isFloating !== isFloating || bufWin.isUrgent !== isUrgent || bufWin.layoutCol !== pos[0] || bufWin.layoutRow !== pos[1] || bufWin.tilePosX !== tilePos[0] || bufWin.tilePosY !== tilePos[1] || bufWin.width !== size[0] || bufWin.height !== size[1];
+        const occupancyChanged = !bufWin.valid || bufWin.workspaceId !== win.workspace_id;
+        const collectionChanged = occupancyChanged || bufWin.id !== win.id || bufWin.pid !== pid || bufWin.appId !== appId || bufWin.isFloating !== isFloating || bufWin.isUrgent !== isUrgent || bufWin.layoutCol !== pos[0] || bufWin.layoutRow !== pos[1] || bufWin.tilePosX !== tilePos[0] || bufWin.tilePosY !== tilePos[1] || bufWin.width !== size[0] || bufWin.height !== size[1];
         const focusChanged = bufWin.isFocused !== isFocused;
         const focusSlotChanged = isFocused && WindowStore.focusedWindowSlot !== slot;
         const changed = collectionChanged || focusChanged || focusSlotChanged || (isFocused && titleChanged);
@@ -464,6 +492,7 @@ Singleton {
             WindowStore.focusedWindowSlot = slot;
         }
 
+        lastEventWorkspaceChanged = occupancyChanged;
         lastEventCollectionChanged = collectionChanged;
         return true;
     }
@@ -483,6 +512,7 @@ Singleton {
             WindowStore.focusedWindowSlot = -1;
         }
 
+        lastEventWorkspaceChanged = true;
         lastEventCollectionChanged = true;
         return true;
     }
@@ -491,22 +521,32 @@ Singleton {
         if (!data)
             return false;
 
-        // Clear old focus
-        if (WindowStore.focusedWindowSlot >= 0) {
-            WindowStore.windowBuffer[WindowStore.focusedWindowSlot].isFocused = false;
-        }
-
+        const previousSlot = WindowStore.focusedWindowSlot;
+        let nextSlot = -1;
         if (data.id !== undefined && data.id !== null) {
             const slot = WindowStore.windowIdToSlot[data.id];
             if (slot !== undefined) {
-                WindowStore.windowBuffer[slot].isFocused = true;
-                WindowStore.focusedWindowSlot = slot;
-                return true;
+                nextSlot = slot;
             }
-            WindowStore.focusedWindowSlot = -1;
-        } else {
-            WindowStore.focusedWindowSlot = -1;
         }
+
+        if (previousSlot === nextSlot) {
+            if (nextSlot < 0)
+                return false;
+            const focused = WindowStore.windowBuffer[nextSlot];
+            if (focused.valid && focused.isFocused)
+                return false;
+        }
+
+        // Clear old focus
+        if (previousSlot >= 0) {
+            WindowStore.windowBuffer[previousSlot].isFocused = false;
+        }
+
+        if (nextSlot >= 0) {
+            WindowStore.windowBuffer[nextSlot].isFocused = true;
+        }
+        WindowStore.focusedWindowSlot = nextSlot;
 
         return true;
     }

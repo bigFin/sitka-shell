@@ -27,6 +27,7 @@ Singleton {
             timestamp: new Date().toISOString(),
             windowStore: {
                 version: WindowStore.version,
+                workspaceVersion: WindowStore.workspaceVersion,
                 collectionVersion: WindowStore.collectionVersion,
                 activeWindowCount: WindowStore.activeWindowCount,
                 activeWorkspaceCount: WindowStore.activeWorkspaceCount,
@@ -87,6 +88,7 @@ Singleton {
 
         return {
             windowStoreVersion: to.windowStore.version - from.windowStore.version,
+            windowStoreWorkspaceVersion: to.windowStore.workspaceVersion - from.windowStore.workspaceVersion,
             windowStoreCollectionVersion: to.windowStore.collectionVersion - from.windowStore.collectionVersion,
             activeWindowFocusSerial: to.activeWindow.focusSerial - from.activeWindow.focusSerial,
             activeWindowDetailSerial: to.activeWindow.detailSerial - from.activeWindow.detailSerial,

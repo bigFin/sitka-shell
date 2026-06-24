@@ -16,7 +16,7 @@ import "."
 Singleton {
     id: root
 
-    readonly property int storeVersion: WindowStore.version
+    readonly property int workspaceVersion: WindowStore.workspaceVersion
 
     property var current: emptySnapshot()
     property int workspaceSerial: 0
@@ -31,7 +31,7 @@ Singleton {
     readonly property int workspaceCount: current.workspaceCount
     readonly property var focusedWorkspace: current.focusedWorkspace
 
-    onStoreVersionChanged: scheduleFromSources()
+    onWorkspaceVersionChanged: scheduleFromSources()
 
     Timer {
         id: commitTimer
@@ -59,7 +59,7 @@ Singleton {
     }
 
     function buildCurrentSnapshot(): var {
-        if (WindowStore.version > 0)
+        if (WindowStore.workspaceVersion > 0)
             return snapshotFromStore();
 
         return emptySnapshot();
@@ -129,11 +129,7 @@ Singleton {
     }
 
     function sameSnapshot(a: var, b: var): bool {
-        return a.focusedWorkspaceId === b.focusedWorkspaceId
-            && a.focusedWorkspaceIndex === b.focusedWorkspaceIndex
-            && a.focusedMonitorName === b.focusedMonitorName
-            && sameWorkspaceList(a.allWorkspaces, b.allWorkspaces)
-            && sameOccupancy(a.workspaceHasWindows, b.workspaceHasWindows);
+        return a.focusedWorkspaceId === b.focusedWorkspaceId && a.focusedWorkspaceIndex === b.focusedWorkspaceIndex && a.focusedMonitorName === b.focusedMonitorName && sameWorkspaceList(a.allWorkspaces, b.allWorkspaces) && sameOccupancy(a.workspaceHasWindows, b.workspaceHasWindows);
     }
 
     function sameWorkspaceList(a: var, b: var): bool {
@@ -143,13 +139,7 @@ Singleton {
         for (let i = 0; i < a.length; i++) {
             const left = a[i];
             const right = b[i];
-            if (left.id !== right.id
-                    || left.idx !== right.idx
-                    || left.name !== right.name
-                    || left.output !== right.output
-                    || left.is_active !== right.is_active
-                    || left.is_focused !== right.is_focused
-                    || left.windowCount !== right.windowCount)
+            if (left.id !== right.id || left.idx !== right.idx || left.name !== right.name || left.output !== right.output || left.is_active !== right.is_active || left.is_focused !== right.is_focused || left.windowCount !== right.windowCount)
                 return false;
         }
         return true;

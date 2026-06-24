@@ -11,6 +11,8 @@ pragma ComponentBehavior: Bound
  * - Buffers are fixed-size arrays sized for typical Niri workspace/window sets
  * - Each slot has a 'valid' flag indicating if it's in use
  * - The 'version' property increments when compositor state changes
+ * - The 'workspaceVersion' property increments only when workspace display
+ *   state or window occupancy changes
  * - The 'collectionVersion' property increments only when window membership,
  *   grouping, or layout changes
  *
@@ -27,6 +29,7 @@ pragma ComponentBehavior: Bound
  * - getWindowsForWorkspace(workspaceId) - Get all windows for a workspace
  * - getFocusedWorkspace() / getFocusedWindow() - Get focused items
  * - version - Increments when state changes
+ * - workspaceVersion - Increments when workspace snapshots need rebuilding
  * - collectionVersion - Increments when window collections need rebuilding
  */
 
@@ -43,6 +46,7 @@ Singleton {
 
     // ===== VERSION COUNTERS (Trigger Derived Models) =====
     property int version: 0
+    property int workspaceVersion: 0
     property int collectionVersion: 0
 
     // ===== PRE-ALLOCATED WORKSPACE BUFFER =====
@@ -201,6 +205,10 @@ Singleton {
         version++;
     }
 
+    function _incrementWorkspaceVersion() {
+        workspaceVersion++;
+    }
+
     function _incrementCollectionVersion() {
         collectionVersion++;
     }
@@ -256,6 +264,7 @@ Singleton {
     function debugDump() {
         // console.log("WindowStore Debug Dump:");
         // console.log("  Version:", version);
+        // console.log("  Workspace Version:", workspaceVersion);
         // console.log("  Collection Version:", collectionVersion);
         // console.log("  Active Workspaces:", activeWorkspaceCount);
         // console.log("  Active Windows:", activeWindowCount);

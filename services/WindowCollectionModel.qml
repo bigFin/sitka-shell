@@ -29,15 +29,6 @@ Singleton {
 
     onStoreVersionChanged: scheduleFromSources()
 
-    Connections {
-        target: Niri
-
-        function onWindowsChanged(): void {
-            if (WindowStore.version === 0)
-                root.scheduleFromSources();
-        }
-    }
-
     Timer {
         id: commitTimer
         interval: 16
@@ -64,9 +55,7 @@ Singleton {
     }
 
     function buildCurrentSnapshot(): var {
-        const windowList = WindowStore.version > 0
-            ? WindowStore.getActiveWindows().map(windowFromStore).sort(sortWindows)
-            : legacyWindows();
+        const windowList = WindowStore.version > 0 ? WindowStore.getActiveWindows().map(windowFromStore).sort(sortWindows) : [];
         return buildSnapshot(windowList);
     }
 
@@ -142,10 +131,6 @@ Singleton {
         return result;
     }
 
-    function legacyWindows(): var {
-        return (Niri.windows || []).slice().map(windowFromLegacy).sort(sortWindows);
-    }
-
     function windowFromStore(win: var): var {
         return {
             id: win.id,
@@ -163,22 +148,6 @@ Singleton {
                 tile_pos_in_workspace_view: win.tilePosX >= 0 && win.tilePosY >= 0 ? [win.tilePosX, win.tilePosY] : null,
                 window_size: [win.width, win.height]
             }
-        };
-    }
-
-    function windowFromLegacy(win: var): var {
-        return {
-            id: win.id,
-            workspace_id: win.workspace_id,
-            pid: win.pid || -1,
-            app_id: win.app_id || "",
-            initialClass: win.initialClass || win.app_id || "",
-            initialTitle: win.initialTitle || win.title || "",
-            title: win.title || "",
-            is_focused: win.is_focused || false,
-            is_floating: win.is_floating || false,
-            is_urgent: win.is_urgent || false,
-            layout: win.layout || {}
         };
     }
 

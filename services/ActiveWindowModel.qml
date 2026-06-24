@@ -37,25 +37,6 @@ Singleton {
     onStoreVersionChanged: scheduleFromSources()
 
     Connections {
-        target: Niri
-
-        function onFocusedWindowIdChanged(): void {
-            if (WindowStore.version === 0)
-                root.scheduleFromSources();
-        }
-
-        function onFocusedWindowTitleChanged(): void {
-            if (WindowStore.version === 0)
-                root.scheduleFromSources();
-        }
-
-        function onFocusedWindowClassChanged(): void {
-            if (WindowStore.version === 0)
-                root.scheduleFromSources();
-        }
-    }
-
-    Connections {
         target: Hypr
 
         function onFocusedWindowChanged(): void {
@@ -120,7 +101,7 @@ Singleton {
         }
 
         if (WMDetector.isNiri)
-            return infoFromLegacyNiri();
+            return desktopInfo();
 
         return infoFromHypr();
     }
@@ -138,26 +119,6 @@ Singleton {
             title: cleanTitle || "(Unnamed window)",
             detailKey: detailKeyFromStoreWindow(win),
             window: clientFromStoreWindow(win)
-        };
-    }
-
-    function infoFromLegacyNiri(): var {
-        const id = normaliseId(Niri.focusedWindowId);
-        if (!id)
-            return desktopInfo();
-
-        const cleanApp = cleanWindowText(Niri.focusedWindowClass || "");
-        const cleanTitle = cleanWindowText(Niri.focusedWindowTitle || "");
-        return {
-            hasWindow: true,
-            id: id,
-            numericId: Number(id),
-            appId: cleanApp,
-            className: cleanApp || "Desktop",
-            rawTitle: Niri.focusedWindowTitle || "",
-            title: cleanTitle || "(Unnamed window)",
-            detailKey: detailKeyFromClient(Niri.focusedWindow || null),
-            window: Niri.focusedWindow || null
         };
     }
 

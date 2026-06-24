@@ -160,9 +160,29 @@ Singleton {
     }
 
     function groupWindowsByLayoutAndId(windows) {
-        if (isNiri) return Niri.groupWindowsByLayoutAndId(windows)
-        // TODO: Hyprland fallback - basic grouping by app
-        return []
+        const sorted = sortWindowsByLayout(windows || []);
+        const groups = [];
+        let currentGroup = null;
+
+        for (let i = 0; i < sorted.length; i++) {
+            const win = sorted[i];
+            if (!currentGroup || currentGroup.app_id !== win.app_id) {
+                currentGroup = {
+                    app_id: win.app_id,
+                    id: win.id,
+                    title: win.title,
+                    windows: [win],
+                    count: 1,
+                    main: win
+                };
+                groups.push(currentGroup);
+            } else {
+                currentGroup.windows.push(win);
+                currentGroup.count = currentGroup.windows.length;
+            }
+        }
+
+        return groups;
     }
 
     function groupWindowsByApp(windows) {
@@ -186,6 +206,16 @@ Singleton {
             result[i].main = result[i].windows[0] || null;
         }
         return result;
+    }
+
+    function sortWindowsByLayout(windows) {
+        return windows.slice().sort((a, b) => {
+            const aPos = Array.isArray(a.layout?.pos_in_scrolling_layout) ? a.layout.pos_in_scrolling_layout : [0, 0];
+            const bPos = Array.isArray(b.layout?.pos_in_scrolling_layout) ? b.layout.pos_in_scrolling_layout : [0, 0];
+            if (aPos[0] !== bPos[0])
+                return aPos[0] - bPos[0];
+            return aPos[1] - bPos[1];
+        });
     }
 
     function switchToWorkspace(workspaceId) {

@@ -13,8 +13,8 @@ pragma ComponentBehavior: Bound
  * batch window are merged, keeping only the latest (except for
  * window open/close which are kept in order).
  * 
- * Niri.qml feeds this in parallel with its legacy public properties while UI
- * consumers migrate toward WindowStore.version-driven derived models.
+ * Niri.qml feeds compositor events here; UI consumers read WindowStore-driven
+ * derived models instead of raw compositor arrays.
  */
 
 import QtQuick

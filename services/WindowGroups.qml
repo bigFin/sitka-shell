@@ -148,20 +148,6 @@ Singleton {
     onGroupingRespectsLayoutChanged: invalidateAll()
 
     Connections {
-        target: WMService.isNiri ? Niri : null
-
-        function onWindowsChanged(): void {
-            if (!root.storeReady)
-                root.invalidateAll();
-        }
-
-        function onFocusedWindowIdChanged(): void {
-            if (!root.storeReady)
-                root.version++;
-        }
-    }
-
-    Connections {
         target: WindowStore
 
         function onVersionChanged(): void {

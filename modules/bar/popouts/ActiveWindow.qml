@@ -131,8 +131,7 @@ Item {
         //     ScreencopyView {
         //         id: preview
         //
-        //         // captureSource: Niri.activeToplevel ?? null
-        //         captureSource: Quickshell.Wayland.findClientByPid(Niri.focusedWindow.pid) ?? null
+        //         captureSource: Quickshell.Wayland.findClientByPid(ActiveWindowModel.window?.pid) ?? null
         //         live: visible
         //
         //         constraintSize.width: Config.bar.sizes.windowPreviewSize
@@ -145,7 +144,7 @@ Item {
         //     anchors.right: parent.right
 
         //     Loader {
-        //         active: Niri.focusedWindow.is_floating
+        //         active: ActiveWindowModel.window?.is_floating
         //         asynchronous: true
         //         Layout.fillWidth: active
         //         visible: active
@@ -165,10 +164,10 @@ Item {
 
         //     WindowDecorations {
 
-        //         color: Niri.focusedWindow.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
-        //         onColor: Niri.focusedWindow.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
+        //         color: ActiveWindowModel.window?.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
+        //         onColor: ActiveWindowModel.window?.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
 
-        //         icon: Niri.focusedWindow.is_floating ? "grid_view" : "picture_in_picture"
+        //         icon: ActiveWindowModel.window?.is_floating ? "grid_view" : "picture_in_picture"
         //         function onClicked(): void {
         //             Niri.toggleWindowFloating();
         //         }

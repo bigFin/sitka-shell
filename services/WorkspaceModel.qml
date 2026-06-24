@@ -33,40 +33,6 @@ Singleton {
 
     onStoreVersionChanged: scheduleFromSources()
 
-    Connections {
-        target: Niri
-
-        function onAllWorkspacesChanged(): void {
-            if (WindowStore.version === 0)
-                root.scheduleFromSources();
-        }
-
-        function onFocusedWorkspaceIdChanged(): void {
-            if (WindowStore.version === 0)
-                root.scheduleFromSources();
-        }
-
-        function onFocusedWorkspaceIndexChanged(): void {
-            if (WindowStore.version === 0)
-                root.scheduleFromSources();
-        }
-
-        function onFocusedMonitorNameChanged(): void {
-            if (WindowStore.version === 0)
-                root.scheduleFromSources();
-        }
-
-        function onCurrentOutputWorkspacesChanged(): void {
-            if (WindowStore.version === 0)
-                root.scheduleFromSources();
-        }
-
-        function onWorkspaceHasWindowsChanged(): void {
-            if (WindowStore.version === 0)
-                root.scheduleFromSources();
-        }
-    }
-
     Timer {
         id: commitTimer
         interval: 16
@@ -96,9 +62,6 @@ Singleton {
         if (WindowStore.version > 0)
             return snapshotFromStore();
 
-        if (WMDetector.isNiri)
-            return snapshotFromLegacyNiri();
-
         return emptySnapshot();
     }
 
@@ -111,17 +74,6 @@ Singleton {
             focused = workspaceFromStore(focused);
 
         return buildSnapshot(workspaces, focused, buildOccupancy(workspaces));
-    }
-
-    function snapshotFromLegacyNiri(): var {
-        const workspaces = (Niri.allWorkspaces || []).slice().sort((a, b) => a.idx - b.idx);
-        const focused = workspaces.find(w => String(w.id) === String(Niri.focusedWorkspaceId))
-            || workspaces[Niri.focusedWorkspaceIndex]
-            || workspaces.find(w => w.is_focused)
-            || workspaces.find(w => w.is_active)
-            || null;
-
-        return buildSnapshot(workspaces, focused, Niri.workspaceHasWindows || ({}));
     }
 
     function buildSnapshot(workspaces: var, focused: var, occupied: var): var {

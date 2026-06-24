@@ -114,7 +114,8 @@ Useful settings:
       "mode": "opaque",
       "enabled": false,
       "base": 0.58,
-      "layers": 0.24
+      "layers": 0.24,
+      "scrim": 0.5
     },
     "shaders": {
       "enabled": false,
@@ -142,8 +143,9 @@ Performance guidance:
 
 - Set `appearance.transparency.mode` to `"transparent"` for transparent rice
   layouts. `base` controls main shell surface alpha; `layers` controls
-  nested/raised surfaces. `"normal"` keeps compatibility with the older
-  `enabled` toggle, and `"opaque"` disables surface alpha.
+  nested/raised surfaces, and `scrim` controls modal dimming. `"normal"` keeps
+  compatibility with the older `enabled` toggle, and `"opaque"` disables
+  surface alpha.
 - Leave `appearance.shaders.enabled` off unless you are actively using drawer
   post-processing.
 - The drawer shader overlay only runs when `performanceMode` is set to

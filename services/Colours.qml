@@ -21,7 +21,7 @@ Singleton {
     readonly property M3TPalette tPalette: M3TPalette {}
     readonly property M3Palette current: M3Palette {}
     readonly property M3Palette preview: M3Palette {}
-    
+
     // Tactical color palettes
     readonly property EverforestLightPalette everforestLight: EverforestLightPalette {}
     readonly property EverforestDarkPalette everforestDark: EverforestDarkPalette {}
@@ -67,19 +67,21 @@ Singleton {
     }
 
     readonly property string themeName: Config.general.theme || "EverforestDark"
-    
+
     readonly property var paletteSource: {
-        if (themeName === "EverforestLight") return everforestLight;
-        if (themeName === "RosePine") return rosepine;
+        if (themeName === "EverforestLight")
+            return everforestLight;
+        if (themeName === "RosePine")
+            return rosepine;
         return everforestDark;
     }
-    
+
     onPaletteSourceChanged: {
         currentLight = (themeName === "EverforestLight");
-        
+
         current.m3surface = paletteSource.bg;
         current.m3onSurface = paletteSource.fg;
-        
+
         if (themeName === "EverforestLight") {
             current.m3primary = paletteSource.pineGreen;
             current.m3secondary = paletteSource.blue;
@@ -113,6 +115,7 @@ Singleton {
         readonly property bool enabled: mode === "transparent" || (mode !== "opaque" && Config.appearance.transparency.enabled)
         readonly property real base: root.clamp01(Config.appearance.transparency.base - (root.light ? 0.1 : 0))
         readonly property real layers: root.clamp01(Config.appearance.transparency.layers)
+        readonly property real scrim: root.clamp01(Config.appearance.transparency.scrim)
     }
 
     component M3TPalette: QtObject {
@@ -171,7 +174,6 @@ Singleton {
         readonly property color m3onTertiaryFixed: root.palette.m3onTertiaryFixed
         readonly property color m3onTertiaryFixedVariant: root.palette.m3onTertiaryFixedVariant
     }
-
 
     component M3Palette: QtObject {
         property color m3primary_paletteKeyColor: "#a26387"

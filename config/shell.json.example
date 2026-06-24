@@ -26,10 +26,12 @@
             "mode": "opaque",
             // Legacy toggle used by "normal" mode.
             "enabled": false,
-            // Alpha for primary shell surfaces. "transparent" defaults to 0.42.
+            // Alpha for primary shell surfaces. "transparent" defaults to 0.34.
             "base": 0.58,
-            // Alpha for nested panels, cards, and raised layers. "transparent" defaults to 0.16.
-            "layers": 0.24
+            // Alpha for nested panels, cards, and raised layers. "transparent" defaults to 0.11.
+            "layers": 0.24,
+            // Alpha for modal dimming/scrims. "transparent" defaults to 0.28.
+            "scrim": 0.5
         },
         // Shader effects for VFD/CRT visual style
         "shaders": {

@@ -46,7 +46,7 @@ Row {
             StyledRect {
                 anchors.fill: parent
 
-                color: Qt.alpha(Colours.palette.m3scrim, 0.5)
+                color: Qt.alpha(Colours.palette.m3scrim, Colours.transparency.scrim)
                 opacity: parent.containsMouse ? 1 : 0
 
                 Behavior on opacity {

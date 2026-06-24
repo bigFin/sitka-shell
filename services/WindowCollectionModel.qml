@@ -7,6 +7,10 @@ pragma ComponentBehavior: Bound
  * WindowStore owns compositor state. This model commits reusable arrays and app
  * groups once per store batch so UI surfaces stop rebuilding the same grouping
  * structures inside render bindings.
+ *
+ * Focus and title changes are intentionally excluded from collection commits:
+ * ActiveWindowModel owns focused-window display state, while this model owns
+ * stable window membership, ordering, and app grouping.
  */
 
 import QtQuick
@@ -183,18 +187,7 @@ Singleton {
             const leftSize = Array.isArray(left.layout?.window_size) ? left.layout.window_size : [0, 0];
             const rightSize = Array.isArray(right.layout?.window_size) ? right.layout.window_size : [0, 0];
 
-            if (left.id !== right.id
-                    || left.workspace_id !== right.workspace_id
-                    || left.app_id !== right.app_id
-                    || left.pid !== right.pid
-                    || left.title !== right.title
-                    || left.is_focused !== right.is_focused
-                    || left.is_floating !== right.is_floating
-                    || left.is_urgent !== right.is_urgent
-                    || leftPos[0] !== rightPos[0]
-                    || leftPos[1] !== rightPos[1]
-                    || leftSize[0] !== rightSize[0]
-                    || leftSize[1] !== rightSize[1])
+            if (left.id !== right.id || left.workspace_id !== right.workspace_id || left.app_id !== right.app_id || left.pid !== right.pid || left.is_floating !== right.is_floating || left.is_urgent !== right.is_urgent || leftPos[0] !== rightPos[0] || leftPos[1] !== rightPos[1] || leftSize[0] !== rightSize[0] || leftSize[1] !== rightSize[1])
                 return false;
         }
         return true;

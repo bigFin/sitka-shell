@@ -81,8 +81,8 @@ Variants {
 
             StyledRect {
                 anchors.fill: parent
-                opacity: visibilities.session && Config.session.enabled ? 0.5 : 0
-                color: Colours.palette.m3scrim
+                opacity: visibilities.session && Config.session.enabled ? 1 : 0
+                color: Qt.alpha(Colours.palette.m3scrim, Colours.transparency.scrim)
 
                 Behavior on opacity {
                     Anim {}
@@ -93,9 +93,7 @@ Variants {
             Item {
                 id: globalShaderWrapper
                 anchors.fill: parent
-                readonly property bool shaderOverlayActive: Config.appearance.shaders.enabled
-                    && Config.appearance.shaders.customShader !== ""
-                    && Config.appearance.shaders.performanceMode === "dynamic"
+                readonly property bool shaderOverlayActive: Config.appearance.shaders.enabled && Config.appearance.shaders.customShader !== "" && Config.appearance.shaders.performanceMode === "dynamic"
 
                 Loader {
                     id: shellShaderLoader
@@ -123,7 +121,7 @@ Variants {
                 Item {
                     id: uiContent
                     anchors.fill: parent
-                    
+
                     Item {
                         id: opaqueDrawerSurface
                         anchors.fill: parent

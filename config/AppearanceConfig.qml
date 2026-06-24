@@ -19,7 +19,7 @@ JsonObject {
     component FilletConfig: JsonObject {
         property real scale: 1
         property int small: 2 * scale    // 2px fillet for small elements
-        property int normal: 4 * scale   // 4px fillet for normal elements  
+        property int normal: 4 * scale   // 4px fillet for normal elements
         property int large: 6 * scale     // 6px fillet for large elements
         property int style: 1             // 0=radius, 1=chamfer, 2=fillet
     }
@@ -103,8 +103,9 @@ JsonObject {
         // and "transparent" forces an aggressive rice-friendly surface alpha.
         property string mode: enabled ? "normal" : "opaque"
         property bool enabled: false
-        property real base: mode === "transparent" ? 0.42 : 0.58
-        property real layers: mode === "transparent" ? 0.16 : 0.24
+        property real base: mode === "transparent" ? 0.34 : 0.58
+        property real layers: mode === "transparent" ? 0.11 : 0.24
+        property real scrim: mode === "transparent" ? 0.28 : 0.5
     }
 
     component Shaders: JsonObject {

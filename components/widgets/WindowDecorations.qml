@@ -9,12 +9,11 @@ import "../../config"
 // 3 Styled Radial buttons
 RowLayout {
     id: root
-    property var client: WMService.focusedWindow
+    property var client: ActiveWindowModel.window
     property int implicitSize: Config.appearance.font.size.normal
     
     readonly property bool isFloating: client?.is_floating || client?.floating || false
-    // If client is the focused window, it's focused. Otherwise check property.
-    readonly property bool isFocused: (client === WMService.focusedWindow) || client?.is_focused || false
+    readonly property bool isFocused: String(client?.id ?? "") === ActiveWindowModel.idString || client?.is_focused || false
 
     spacing: Config.appearance.padding.small / 2
 

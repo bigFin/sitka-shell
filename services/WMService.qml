@@ -10,8 +10,6 @@ Singleton {
 
     // --- Properties ---
 
-    readonly property var focusedWindow: isNiri ? Niri.focusedWindow : Hypr.focusedWindow
-    
     // Workspaces
     // Niri has arrays of objects. Hyprland likely has list of objects.
     // We expose what the UI needs.
@@ -68,7 +66,6 @@ Singleton {
     readonly property var allWorkspaces: WorkspaceModel.allWorkspaces
     readonly property string focusedWorkspaceId: WorkspaceModel.focusedWorkspaceId
     readonly property var workspaceHasWindows: WorkspaceModel.workspaceHasWindows
-    readonly property var lastFocusedWindow: isNiri ? Niri.lastFocusedWindow : null
 
     // --- Methods ---
 

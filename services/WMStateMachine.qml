@@ -48,6 +48,7 @@ Singleton {
     property int skippedEventCount: 0
     property int quietTitleUpdateCount: 0
     property var skippedByType: ({})
+    property bool lastEventCollectionChanged: false
 
     // ===== BATCH TIMER =====
     Timer {
@@ -121,16 +122,24 @@ Singleton {
 
         // Process each event
         let stateChanged = false;
+        let collectionChanged = false;
         for (let i = 0; i < coalescedEvents.length; i++) {
+            lastEventCollectionChanged = false;
             processedByType = incrementTypeCount(processedByType, coalescedEvents[i].type);
-            stateChanged = applyEvent(coalescedEvents[i]) || stateChanged;
+            const changed = applyEvent(coalescedEvents[i]);
+            stateChanged = changed || stateChanged;
+            collectionChanged = (changed && lastEventCollectionChanged) || collectionChanged;
         }
 
         // Commit changes
         currentState = stateCommitting;
 
-        if (stateChanged) {
+        if (collectionChanged) {
             WindowStore._rebuildWorkspaceWindowSlots();
+            WindowStore._incrementCollectionVersion();
+        }
+
+        if (stateChanged) {
             WindowStore._updateCounts();
             WindowStore._incrementVersion();
         }
@@ -375,6 +384,7 @@ Singleton {
                     WindowStore.focusedWindowSlot = slot;
                 }
 
+                lastEventCollectionChanged = true;
                 changed = true;
             }
         }
@@ -388,6 +398,7 @@ Singleton {
                 if (WindowStore.focusedWindowSlot === i) {
                     WindowStore.focusedWindowSlot = -1;
                 }
+                lastEventCollectionChanged = true;
                 changed = true;
             }
         }
@@ -422,9 +433,10 @@ Singleton {
         const title = win.title || "";
 
         const titleChanged = bufWin.title !== title;
-        const structuralChanged = !bufWin.valid || bufWin.id !== win.id || bufWin.workspaceId !== win.workspace_id || bufWin.pid !== pid || bufWin.appId !== appId || bufWin.isFocused !== isFocused || bufWin.isFloating !== isFloating || bufWin.isUrgent !== isUrgent || bufWin.layoutCol !== pos[0] || bufWin.layoutRow !== pos[1] || bufWin.tilePosX !== tilePos[0] || bufWin.tilePosY !== tilePos[1] || bufWin.width !== size[0] || bufWin.height !== size[1];
+        const collectionChanged = !bufWin.valid || bufWin.id !== win.id || bufWin.workspaceId !== win.workspace_id || bufWin.pid !== pid || bufWin.appId !== appId || bufWin.isFloating !== isFloating || bufWin.isUrgent !== isUrgent || bufWin.layoutCol !== pos[0] || bufWin.layoutRow !== pos[1] || bufWin.tilePosX !== tilePos[0] || bufWin.tilePosY !== tilePos[1] || bufWin.width !== size[0] || bufWin.height !== size[1];
+        const focusChanged = bufWin.isFocused !== isFocused;
         const focusSlotChanged = isFocused && WindowStore.focusedWindowSlot !== slot;
-        const changed = structuralChanged || focusSlotChanged || (isFocused && titleChanged);
+        const changed = collectionChanged || focusChanged || focusSlotChanged || (isFocused && titleChanged);
 
         if (!changed) {
             if (titleChanged)
@@ -452,6 +464,7 @@ Singleton {
             WindowStore.focusedWindowSlot = slot;
         }
 
+        lastEventCollectionChanged = collectionChanged;
         return true;
     }
 
@@ -470,6 +483,7 @@ Singleton {
             WindowStore.focusedWindowSlot = -1;
         }
 
+        lastEventCollectionChanged = true;
         return true;
     }
 
@@ -522,6 +536,7 @@ Singleton {
                     bufWin.tilePosY = tilePos[1];
                     bufWin.width = size[0];
                     bufWin.height = size[1];
+                    lastEventCollectionChanged = true;
                     changed = true;
                 }
             }

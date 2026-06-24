@@ -20,7 +20,7 @@ import "."
 Singleton {
     id: root
 
-    readonly property int storeVersion: WindowStore.version
+    readonly property int collectionVersion: WindowStore.collectionVersion
 
     property var current: emptySnapshot()
     property var pending: null
@@ -31,7 +31,7 @@ Singleton {
     readonly property var windowsByWorkspace: current.windowsByWorkspace
     readonly property var appGroupsByWorkspace: current.appGroupsByWorkspace
 
-    onStoreVersionChanged: scheduleFromSources()
+    onCollectionVersionChanged: scheduleFromSources()
 
     Timer {
         id: commitTimer
@@ -59,7 +59,7 @@ Singleton {
     }
 
     function buildCurrentSnapshot(): var {
-        const windowList = WindowStore.version > 0 ? WindowStore.getActiveWindows().map(windowFromStore).sort(sortWindows) : [];
+        const windowList = WindowStore.collectionVersion > 0 ? WindowStore.getActiveWindows().map(windowFromStore).sort(sortWindows) : [];
         return buildSnapshot(windowList);
     }
 

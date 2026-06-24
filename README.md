@@ -171,6 +171,9 @@ Examples:
 ```sh
 sitka-shell ipc call lock lock
 qs -c sitka-shell ipc call drawers toggle launcher
+sitka-shell ipc call stateStats get
+sitka-shell ipc call stateStats mark
+sitka-shell ipc call stateStats delta
 ```
 
 Niri lock keybind example:

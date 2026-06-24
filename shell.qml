@@ -9,8 +9,14 @@ import "modules/areapicker"
 import "modules/lock"
 
 import Quickshell
+import QtQuick
+import qs.services
 
 ShellRoot {
+    Scope {
+        Component.onCompleted: StateStats.ensureLoaded()
+    }
+
     Background {}
     Drawers {}
     AreaPicker {}

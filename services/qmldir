@@ -23,6 +23,7 @@ singleton Wallpapers Wallpapers.qml
 singleton Weather Weather.qml
 singleton Recorder Recorder.qml
 singleton ScreensaverService ScreensaverService.qml
+singleton StateStats StateStats.qml
 singleton WindowStore WindowStore.qml
 singleton WMStateMachine WMStateMachine.qml
 singleton WindowGrouper WindowGrouper.qml

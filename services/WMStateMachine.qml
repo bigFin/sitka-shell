@@ -45,6 +45,9 @@ Singleton {
     property double lastProcessedAt: 0
     property var queuedByType: ({})
     property var processedByType: ({})
+    property int skippedEventCount: 0
+    property int quietTitleUpdateCount: 0
+    property var skippedByType: ({})
 
     // ===== BATCH TIMER =====
     Timer {
@@ -66,6 +69,13 @@ Singleton {
     // ===== PUBLIC API =====
 
     function enqueue(eventType, payload) {
+        if (eventType === evtWindowOpened && absorbQuietTitleUpdate(payload)) {
+            skippedEventCount++;
+            quietTitleUpdateCount++;
+            skippedByType = incrementTypeCount(skippedByType, eventType);
+            return;
+        }
+
         if (eventQueue.length >= maxQueueSize) {
             console.warn("WMStateMachine: Event queue overflow, dropping oldest");
             eventQueue.shift();
@@ -153,6 +163,33 @@ Singleton {
         if (eventQueue.length === 0)
             return 0;
         return Date.now() - eventQueue[0].timestamp;
+    }
+
+    function absorbQuietTitleUpdate(data) {
+        if (!data || !data.window)
+            return false;
+
+        const win = data.window;
+        const slot = WindowStore.windowIdToSlot[win.id];
+        if (slot === undefined)
+            return false;
+
+        const bufWin = WindowStore.windowBuffer[slot];
+        if (!bufWin.valid || bufWin.isFocused || (win.is_focused || false))
+            return false;
+
+        const layout = win.layout || {};
+        const pos = layout.pos_in_scrolling_layout || [0, 0];
+        const tilePos = layout.tile_pos_in_workspace_view || [-1, -1];
+        const size = layout.window_size || [0, 0];
+        const title = win.title || "";
+
+        const structuralChanged = bufWin.id !== win.id || bufWin.workspaceId !== win.workspace_id || bufWin.pid !== (win.pid || -1) || bufWin.appId !== (win.app_id || "") || bufWin.isFloating !== (win.is_floating || false) || bufWin.isUrgent !== (win.is_urgent || false) || bufWin.layoutCol !== pos[0] || bufWin.layoutRow !== pos[1] || bufWin.tilePosX !== tilePos[0] || bufWin.tilePosY !== tilePos[1] || bufWin.width !== size[0] || bufWin.height !== size[1];
+        if (structuralChanged || bufWin.title === title)
+            return false;
+
+        bufWin.title = title;
+        return true;
     }
 
     function coalesceEvents(events) {

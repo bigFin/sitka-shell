@@ -66,11 +66,14 @@ Singleton {
                 maxQueueSize: WMStateMachine.maxQueueSize,
                 oldestEventAgeMs: WMStateMachine.oldestEventAgeMs(),
                 queuedEventCount: WMStateMachine.queuedEventCount,
+                skippedEventCount: WMStateMachine.skippedEventCount,
+                quietTitleUpdateCount: WMStateMachine.quietTitleUpdateCount,
                 processedBatchCount: WMStateMachine.processedBatchCount,
                 processedEventCount: WMStateMachine.processedEventCount,
                 lastBatchSize: WMStateMachine.lastBatchSize,
                 lastCoalescedSize: WMStateMachine.lastCoalescedSize,
                 queuedByType: WMStateMachine.queuedByType,
+                skippedByType: WMStateMachine.skippedByType,
                 processedByType: WMStateMachine.processedByType,
                 queuedByTypeNow: WMStateMachine.queuedByTypeNow()
             }
@@ -90,6 +93,8 @@ Singleton {
             indicatorTargetSerial: to.indicators.targetSerial - from.indicators.targetSerial,
             queueLength: to.stateMachine.queueLength - from.stateMachine.queueLength,
             queuedEventCount: to.stateMachine.queuedEventCount - from.stateMachine.queuedEventCount,
+            skippedEventCount: to.stateMachine.skippedEventCount - from.stateMachine.skippedEventCount,
+            quietTitleUpdateCount: to.stateMachine.quietTitleUpdateCount - from.stateMachine.quietTitleUpdateCount,
             processedBatchCount: to.stateMachine.processedBatchCount - from.stateMachine.processedBatchCount,
             processedEventCount: to.stateMachine.processedEventCount - from.stateMachine.processedEventCount
         };

@@ -8,11 +8,11 @@ Row {
     spacing: Config.appearance.padding.normal
 
     Component.onCompleted: {
-        SysMonitorService.addRef();
+        SysMonitorService.addRef(["metrics"]);
     }
 
     Component.onDestruction: {
-        SysMonitorService.removeRef();
+        SysMonitorService.removeRef(["metrics"]);
     }
 
     StyledRect {

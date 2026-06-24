@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Layouts
 import qs.services
 import qs.components
-import qs.components.misc
 import "../../../config"
 
 Item {
@@ -22,10 +21,6 @@ Item {
 
     // If you want to control visibility, you can still use visible property
     // visible: true
-
-    Ref {
-        service: SysMonitorService
-    }
 
     // Remove onBackgroundClicked, as it's modal-specific
 

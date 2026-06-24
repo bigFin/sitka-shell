@@ -154,7 +154,7 @@ Item {
         property bool shouldBeActive
 
         asynchronous: true
-        active: true
+        active: shouldBeActive || opacity > 0
         opacity: 0
         visible: opacity > 0
 

@@ -11,11 +11,11 @@ ScrollView {
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
     Component.onCompleted: {
-        SysMonitorService.addRef();
+        SysMonitorService.addRef(["metrics", "system"]);
     }
 
     Component.onDestruction: {
-        SysMonitorService.removeRef();
+        SysMonitorService.removeRef(["metrics", "system"]);
     }
 
     Column {

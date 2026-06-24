@@ -10,11 +10,10 @@ ColumnLayout {
     spacing: Config.appearance.padding.normal
 
     Component.onCompleted: {
-        SysMonitorService.addRef();
-        SysMonitorService.updateAllStats();
+        SysMonitorService.addRef(["metrics", "gpu"]);
     }
     Component.onDestruction: {
-        SysMonitorService.removeRef();
+        SysMonitorService.removeRef(["metrics", "gpu"]);
     }
 
     function formatNetworkSpeed(bytesPerSec) {

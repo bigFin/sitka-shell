@@ -11,11 +11,11 @@ Column {
     property var contextMenu: null
 
     Component.onCompleted: {
-        SysMonitorService.addRef();
+        SysMonitorService.addRef(["processes"]);
     }
 
     Component.onDestruction: {
-        SysMonitorService.removeRef();
+        SysMonitorService.removeRef(["processes"]);
     }
 
     Item {

@@ -1,17 +1,12 @@
 import QtQuick
 import QtQuick.Layouts
 import qs.components
-import qs.services
 import "../../../config"
 
 Item {
     id: processListPanel
 
     visible: true
-
-    Ref {
-        service: SysMonitorService
-    }
 
     Layout.alignment: Qt.AlignCenter
 

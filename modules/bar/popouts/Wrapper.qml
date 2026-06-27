@@ -46,12 +46,26 @@ Item {
             queuedMode = mode;
         }
         focus = true;
+        DrawerStats.recordPopoutDetach();
+        syncPopoutStats();
     }
 
     function close(): void {
         hasCurrent = false;
         animLength = Config.appearance.anim.durations.normal;
         detachedMode = "";
+        DrawerStats.recordPopoutClose();
+        syncPopoutStats();
+    }
+
+    Component.onCompleted: syncPopoutStats()
+    onHasCurrentChanged: syncPopoutStats()
+    onCurrentNameChanged: syncPopoutStats()
+    onDetachedModeChanged: syncPopoutStats()
+    onQueuedModeChanged: syncPopoutStats()
+
+    function syncPopoutStats(): void {
+        DrawerStats.recordPopoutState(root.hasCurrent, root.currentName, root.detachedMode, root.queuedMode);
     }
 
     visible: width > 0 && height > 0

@@ -56,19 +56,58 @@ Item {
         running: false
         repeat: false
         onTriggered: {
-            root.isvisible = false;
+            if (root.isvisible) {
+                DrawerStats.recordDashboardFlashHidden();
+                root.isvisible = false;
+                root.syncDrawerStats();
+            }
         }
     }
 
     Connections {
         target: ActiveWindowModel
         function onFocusSerialChanged() {
-            // Show dashboard for 1 second
-            if ((!root.visibilities.dashboard && !root.expanded) && ActiveWindowModel.hasWindow) {
-                root.isvisible = true;
-                flashTimer.restart();
+            DrawerStats.recordDashboardFlashRequest();
+
+            if (root.visibilities.dashboard || root.expanded || !ActiveWindowModel.hasWindow) {
+                DrawerStats.recordDashboardFlashSuppressed();
+                return;
             }
+
+            if (DrawerStats.dashboardFlashVisible) {
+                DrawerStats.recordDashboardFlashCoalesced();
+                return;
+            }
+
+            DrawerStats.recordDashboardFlashAccepted();
+            root.isvisible = true;
+            flashTimer.restart();
+            root.syncDrawerStats();
         }
+    }
+
+    Component.onCompleted: syncDrawerStats()
+    onIsvisibleChanged: syncDrawerStats()
+    onExpandedChanged: syncDrawerStats()
+
+    Connections {
+        target: root.visibilities
+
+        function onDashboardChanged(): void {
+            root.syncDrawerStats();
+        }
+    }
+
+    Connections {
+        target: root.state
+
+        function onCurrentTabChanged(): void {
+            root.syncDrawerStats();
+        }
+    }
+
+    function syncDrawerStats(): void {
+        DrawerStats.recordDashboardState(root.visibilities.dashboard, root.expanded, root.state.currentTab, root.isvisible);
     }
 
     visible: height > 0

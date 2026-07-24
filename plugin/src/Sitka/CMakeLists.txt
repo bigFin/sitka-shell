@@ -3,6 +3,8 @@ pkg_check_modules(Qalculate IMPORTED_TARGET libqalculate REQUIRED)
 pkg_check_modules(Pipewire IMPORTED_TARGET libpipewire-0.3 REQUIRED)
 pkg_check_modules(Aubio IMPORTED_TARGET aubio REQUIRED)
 
+# libcava releases do not consistently ship the same pkg-config module name.
+# Discover the installed header and library directly instead.
 find_path(Cava_INCLUDE_DIR NAMES cava/cavacore.h REQUIRED)
 find_library(Cava_LIBRARY NAMES cava REQUIRED)
 add_library(Cava::Cava UNKNOWN IMPORTED)

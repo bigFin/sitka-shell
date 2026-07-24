@@ -19,7 +19,7 @@ windows, and compositor-specific APIs.
 Runtime dependencies:
 
 ```sh
-quickshell-git networkmanager fish glibc qt6-declarative gcc-libs cava libcava aubio libpipewire lm-sensors ddcutil brightnessctl material-symbols caskaydia-cove-nerd grim swappy app2unit libqalculate
+quickshell-git networkmanager fish glibc qt6-declarative gcc-libs libcava aubio libpipewire lm-sensors ddcutil brightnessctl material-symbols caskaydia-cove-nerd grim swappy app2unit libqalculate
 ```
 
 Build dependencies:
@@ -31,7 +31,7 @@ cmake ninja
 Notes:
 
 - `quickshell-git` is required.
-- `cava`, `libcava`, `aubio`, and `libpipewire` are used by the audio visualizer.
+- `libcava`, `aubio`, and `libpipewire` are used by the audio visualizer.
 - `grim` and `swappy` are used by screenshot tooling.
 - `material-symbols` and `caskaydia-cove-nerd` provide the expected fonts/icons.
 

@@ -2,7 +2,14 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(Qalculate IMPORTED_TARGET libqalculate REQUIRED)
 pkg_check_modules(Pipewire IMPORTED_TARGET libpipewire-0.3 REQUIRED)
 pkg_check_modules(Aubio IMPORTED_TARGET aubio REQUIRED)
-pkg_check_modules(Cava IMPORTED_TARGET cava REQUIRED)
+
+find_path(Cava_INCLUDE_DIR NAMES cava/cavacore.h REQUIRED)
+find_library(Cava_LIBRARY NAMES cava REQUIRED)
+add_library(Cava::Cava UNKNOWN IMPORTED)
+set_target_properties(Cava::Cava PROPERTIES
+    IMPORTED_LOCATION "${Cava_LIBRARY}"
+    INTERFACE_INCLUDE_DIRECTORIES "${Cava_INCLUDE_DIR}"
+)
 
 qt_add_qml_module(sitka
     URI Sitka
@@ -40,5 +47,5 @@ install(FILES "${module_typeinfo}" DESTINATION "${module_dir}")
 
 target_link_libraries(sitka PRIVATE
     Qt::Core Qt::Qml Qt::Gui Qt::Concurrent Qt::Multimedia
-    PkgConfig::Qalculate PkgConfig::Pipewire PkgConfig::Aubio PkgConfig::Cava
+    PkgConfig::Qalculate PkgConfig::Pipewire PkgConfig::Aubio Cava::Cava
 )

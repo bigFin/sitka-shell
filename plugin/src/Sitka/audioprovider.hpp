@@ -22,6 +22,7 @@ protected:
 
 private:
     QTimer* m_timer;
+    bool m_running;
 
     Q_INVOKABLE void start();
     Q_INVOKABLE void stop();

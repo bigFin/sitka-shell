@@ -10,7 +10,9 @@ namespace sitka {
 AudioProcessor::AudioProcessor(QObject* parent)
     : QObject(parent)
     , m_sampleRate(AudioCollector::instance()->sampleRate())
-    , m_chunkSize(AudioCollector::instance()->chunkSize()) {}
+    , m_chunkSize(AudioCollector::instance()->chunkSize())
+    , m_timer(nullptr)
+    , m_running(false) {}
 
 AudioProcessor::~AudioProcessor() {
     stop();
@@ -20,20 +22,33 @@ void AudioProcessor::init() {
     m_timer = new QTimer(this);
     m_timer->setInterval(static_cast<int>(m_chunkSize * 1000.0 / m_sampleRate));
     connect(m_timer, &QTimer::timeout, this, &AudioProcessor::process);
-}
-
-void AudioProcessor::start() {
-    AudioCollector::instance()->ref();
-    if (m_timer) {
+    if (m_running) {
         m_timer->start();
     }
 }
 
+void AudioProcessor::start() {
+    if (m_running) {
+        return;
+    }
+
+    AudioCollector::instance()->ref();
+    if (m_timer) {
+        m_timer->start();
+    }
+    m_running = true;
+}
+
 void AudioProcessor::stop() {
+    if (!m_running) {
+        return;
+    }
+
     if (m_timer) {
         m_timer->stop();
     }
     AudioCollector::instance()->unref();
+    m_running = false;
 }
 
 AudioProvider::AudioProvider(QObject* parent)

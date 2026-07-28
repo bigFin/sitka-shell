@@ -38,11 +38,15 @@
     filter = path: type:
       let
         rel = lib.removePrefix "${toString sourceRoot}/" (toString path);
+        excluded = [
+          ".direnv"
+          ".git"
+          ".stfolder"
+          "build"
+          "result"
+        ];
       in
-        !(lib.hasPrefix ".git/" rel
-          || lib.hasPrefix "build/" rel
-          || lib.hasPrefix "result/" rel
-          || lib.hasPrefix ".direnv/" rel);
+        !(builtins.elem rel excluded || lib.any (name: lib.hasPrefix "${name}/" rel) excluded);
   };
 
   runtimeDeps =

@@ -1,24 +1,31 @@
 name: Feature request
-description: Suggest a new feature
+description: Suggest a focused improvement to Sitka Shell
 labels: ["enhancement"]
 type: "Feature"
-title: "[FEATURE] "
+title: "[Feature] "
 body:
-    - type: markdown
-      attributes:
-          value: "NOTE: Please write in **English**."
+  - type: textarea
+    attributes:
+      label: Problem
+      description: What workflow or limitation should this address?
+    validations:
+      required: true
 
-    - type: textarea
-      attributes:
-          label: "What would you like to be added?"
-          description: "Can be a suggestion for an existing feature. You can suggest a widget, minor user interaction changes.. whatever."
+  - type: textarea
+    attributes:
+      label: Proposed behavior
+      description: Describe the desired interaction and where it belongs.
+    validations:
+      required: true
 
-    - type: textarea
-      attributes:
-          label: "How will it help?"
-          description: "It's helpful to include examples (like in your use case)."
+  - type: textarea
+    attributes:
+      label: Alternatives
+      description: Note any existing workaround or competing design.
 
-    - type: textarea
-      attributes:
-          label: "Extra info"
-          description: "If you want a new widget, a pic of the inspiration (if available) would be awesome."
+  - type: checkboxes
+    attributes:
+      label: Scope
+      options:
+        - label: This fits Sitka Shell's Niri-first, declarative configuration direction.
+          required: true

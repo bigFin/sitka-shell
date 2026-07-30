@@ -1,7 +1,6 @@
 pragma Singleton
 
 import qs.modules.launcher
-import qs.services
 import "../../../config"
 import qs.utils
 import Quickshell
@@ -21,61 +20,12 @@ Searcher {
             }
         },
         Action {
-            name: qsTr("Scheme")
-            desc: qsTr("Change the current colour scheme")
-            icon: "palette"
-
-            function onClicked(list: AppList): void {
-                root.autocomplete(list, "scheme");
-            }
-        },
-        Action {
             name: qsTr("Wallpaper")
             desc: qsTr("Change the current wallpaper")
             icon: "image"
 
             function onClicked(list: AppList): void {
                 root.autocomplete(list, "wallpaper");
-            }
-        },
-        Action {
-            name: qsTr("Variant")
-            desc: qsTr("Change the current scheme variant")
-            icon: "colors"
-
-            function onClicked(list: AppList): void {
-                root.autocomplete(list, "variant");
-            }
-        },
-        Action {
-            name: qsTr("Random")
-            desc: qsTr("Switch to a random wallpaper")
-            icon: "casino"
-
-            function onClicked(list: AppList): void {
-                list.visibilities.launcher = false;
-                // console.log("Random wallpaper not implemented without caelestia-cli");
-                // Quickshell.execDetached(["caelestia", "wallpaper", "-r"]);
-            }
-        },
-        Action {
-            name: qsTr("Light")
-            desc: qsTr("Change the scheme to light mode")
-            icon: "light_mode"
-
-            function onClicked(list: AppList): void {
-                list.visibilities.launcher = false;
-                Colours.setMode("light");
-            }
-        },
-        Action {
-            name: qsTr("Dark")
-            desc: qsTr("Change the scheme to dark mode")
-            icon: "dark_mode"
-
-            function onClicked(list: AppList): void {
-                list.visibilities.launcher = false;
-                Colours.setMode("dark");
             }
         },
         Action {

@@ -1,40 +1,28 @@
-# Sitka Shell To-Do & Roadmap
+# Sitka Shell Roadmap
 
-## 🚧 Immediate Refactor Follow-ups
-The following features were disabled during the removal of `caelestia-cli`. They need to be re-implemented or removed to align with the new declarative philosophy.
+## Current priorities
 
-- **Wallpaper Management**
-  - [ ] `services/Wallpapers.qml`: Preview color generation (`getPreviewColoursProc`) is disabled.
+- Make screen ownership and drawer placement reliable on multi-monitor setups.
+- Refactor the workspace bar around the current Niri window/workspace models.
+- Replace the Hyprland-specific area-picker window matching with the
+  compositor-neutral `WMService` API.
+- Improve focus and keyboard dismissal for layer-shell windows such as the
+  launcher, power menu, task manager, and settings.
+- Add Intel GPU metrics without reintroducing unconditional background polling.
 
-- **Theme/Scheme Management**
-  - [ ] `modules/launcher/services/Schemes.qml`: Scheme listing and setting are disabled.
-  - [ ] `modules/launcher/services/M3Variants.qml`: Variant setting is disabled.
-  - [ ] `modules/launcher/services/Actions.qml`: "Light/Dark" mode actions need verification (currently call `Colours.setMode`, check if that relies on external state).
+## Later
 
-- **Configuration & State**
-  - [ ] Verify `shell.json` is being watched/read correctly from `~/.config/sitka/shell.json`.
-  - [ ] Decide if UI controls for changing settings (e.g. in the Launcher) should remain. If the shell is strictly declarative, these buttons should probably be removed to avoid user confusion.
+- Add Niri equivalents for the remaining compositor-specific window actions.
+- Revisit dashboard window controls and content overflow.
+- Make media/session decoration image cycling configurable.
+- Continue simplifying old compatibility properties as configurations migrate.
 
-## 🐛 Known Issues (Inherited)
-- **Multi-monitor**: Support is currently hardcoded/limited.
-- **Task Manager**: No Intel GPU support.
-- **Niri Integration**:
-  - Window decorations (pin/close/fullscreen) in Dashboard are missing.
-  - Window grabbing for the "Picker" (screenshot) tool is WIP.
-  - Focus grabbing for popups is awkward.
+## Project boundaries
 
-## 🔮 Future Goals
-- [ ] **Declarative Config**: Ensure all "dynamic" state is moved to `shell.json` or managed via Nix `home-manager` options.
-- [ ] **Niri Management Tab**: Redesign the experimental management tab in the dashboard.
-- [ ] **Sidebar Rewrite**: The workspace bar needs a refactor.
-
-
-the power drawer it too kawaii it needs to be angularized
-
-
-- [x] The drawers on the left bar have some permamnently visible squares on the right edge of the bar, and they dont have a buttress when expanded.
-
-
-update readme, shouts out caelestia and niri-caelestia shell both 
-
-is it feasible to make the top drawer hud and the right drawer hud both cycle through images (perhaps one dir per drawer to put img in) when you click on the image?
+- Configuration stays declarative through `shell.json` or Home Manager.
+- Personal configuration, crash dumps, logs, and generated build output do not
+  belong in the repository.
+- The removed `caelestia-cli` theme and dots-management workflows are not
+  planned to return.
+- Hyprland compatibility is welcome when it fits the shared service layer, but
+  Niri remains the primary target.

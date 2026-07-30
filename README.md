@@ -1,114 +1,130 @@
 # Sitka Shell
 
-Sitka Shell is a Quickshell desktop shell for the Niri window manager. It is
-forked from Niri Caelestia Shell and Caelestia Shell, with the original dots
-management and CLI removed.
+Sitka Shell is a Niri-first desktop shell built with
+[Quickshell](https://github.com/quickshell/quickshell). It began as a fork of
+[Niri Caelestia Shell](https://github.com/0lxy/niri-caelestia-shell) and
+[Caelestia Shell](https://github.com/caelestia-shell/caelestia-shell), but its
+configuration, window-manager integration, visual language, and service layer
+have diverged substantially.
 
-The project is still experimental. The current focus is a Niri-first workflow
-with a left bar, drawers, launcher, dashboard, notifications, lock screen,
-wallpaper tools, and optional shader effects.
+![Sitka Shell desktop](assets/left-bar.png)
+
+## Features
+
+- Left-side bar with workspaces, tray, status, clock, and configurable entries
+- Launcher with application, command, calculator, and wallpaper search
+- Dashboard, control center, notifications, OSDs, session menu, and lock screen
+- Niri window/workspace models with measured state and polling diagnostics
+- Wallpaper browsing, audio visualization, and optional shader effects
+- JSON configuration and a Home Manager module
 
 ## Status
 
-This is a personal shell, not a polished distribution. Expect rough edges,
-especially around multi-monitor behavior, focus handling for layer-shell
-windows, and compositor-specific APIs.
+Sitka Shell is an experimental personal shell rather than a polished desktop
+distribution. Niri is the primary target. Some Hyprland paths remain, but they
+are best-effort and are not kept at feature parity.
 
-## Dependencies
-
-Runtime dependencies:
-
-```sh
-quickshell-git networkmanager fish glibc qt6-declarative gcc-libs libcava aubio libpipewire lm-sensors ddcutil brightnessctl material-symbols caskaydia-cove-nerd grim swappy app2unit libqalculate
-```
-
-Build dependencies:
-
-```sh
-cmake ninja
-```
-
-Notes:
-
-- `quickshell-git` is required.
-- `libcava`, `aubio`, and `libpipewire` are used by the audio visualizer.
-- `grim` and `swappy` are used by screenshot tooling.
-- `material-symbols` and `caskaydia-cove-nerd` provide the expected fonts/icons.
+See [TODO.md](TODO.md) for the current maintenance roadmap.
 
 ## Install
 
-Clone the repository where Quickshell can find it:
+### Nix
+
+Run the current package directly:
 
 ```sh
-mkdir -p "$XDG_CONFIG_HOME/quickshell"
-cd "$XDG_CONFIG_HOME/quickshell"
-git clone https://github.com/sitka-shell/sitka-shell
-cd sitka-shell
+nix run github:bigFin/sitka-shell
 ```
 
-Build with Nix:
-
-```sh
-nix build
-```
-
-On non-NixOS systems, use the `arch` flake output so OpenGL is wrapped with
+On non-NixOS systems, use the `arch` output so the application is wrapped with
 `nixGL`:
 
 ```sh
-nix run github:sitka-shell/sitka-shell#arch --impure
+nix run github:bigFin/sitka-shell#arch --impure
 ```
 
-## Run
+### Home Manager
 
-Start the shell with either `quickshell` or `qs`:
+Add the flake and import its module in your Home Manager configuration:
 
-```sh
-quickshell -c sitka-shell -n
+```nix
+{
+  inputs.sitka-shell.url = "github:bigFin/sitka-shell";
+
+  # In the relevant Home Manager module:
+  imports = [inputs.sitka-shell.homeManagerModules.default];
+
+  programs.sitka = {
+    enable = true;
+    settings = {
+      general.theme = "EverforestDark";
+      bar.revealMode = "corner";
+    };
+  };
+}
 ```
 
-Niri startup example:
-
-```kdl
-spawn-at-startup "quickshell" "-c" "sitka-shell" "-n"
-```
-
-For the Nix `arch` output:
-
-```kdl
-spawn-at-startup "nix" "run" "github:sitka-shell/sitka-shell#arch" "--impure"
-```
+The module installs the shell, writes `~/.config/sitka/shell.json`, and can run
+Sitka Shell as a user service.
 
 ## Development
 
-Enter the development shell, then run the local QML directly:
+Clone the repository and enter the development shell:
 
 ```sh
+git clone https://github.com/bigFin/sitka-shell.git
+cd sitka-shell
 nix develop
-qs -p ./
 ```
 
-This loads the current checkout instead of the packaged shell. The Sitka QML
-plugin and extra binaries are provided by the Nix development environment.
+Run the current checkout instead of the packaged source:
+
+```sh
+qs -p .
+```
+
+Build the package before submitting changes:
+
+```sh
+nix build .#sitka-shell
+```
 
 ## Configuration
 
-User configuration lives at:
+Runtime configuration belongs outside the repository:
 
-```sh
+```text
 ~/.config/sitka/shell.json
 ```
 
-The commented example is in:
+Start from the annotated example:
 
 ```sh
-config/shell.json.example
+mkdir -p ~/.config/sitka
+cp config/shell.json.example ~/.config/sitka/shell.json
 ```
 
-Useful settings:
+The repository intentionally ignores `config/shell.json` and
+`config/shell.json.backup` so local preferences do not become source files.
+
+Useful environment overrides:
+
+| Variable | Purpose |
+| --- | --- |
+| `SITKA_CONFIG_DIR` | Override the configuration directory |
+| `SITKA_WALLPAPERS_DIR` | Override the wallpaper directory |
+| `SITKA_LIB_DIR` | Locate Sitka helper libraries |
+
+### Themes and transparency
+
+Built-in themes are `EverforestDark`, `EverforestLight`, and `RosePine`.
+Theme selection is declarative:
 
 ```json
 {
+  "general": {
+    "theme": "EverforestDark"
+  },
   "appearance": {
     "transparency": {
       "mode": "opaque",
@@ -116,99 +132,71 @@ Useful settings:
       "base": 0.58,
       "layers": 0.24,
       "scrim": 0.5
-    },
-    "shaders": {
-      "enabled": false,
-      "customShader": "~/.config/sitka/shaders/retro-terminal.glsl",
-      "animateTime": false,
-      "performanceMode": "off"
-    }
-  },
-  "background": {
-    "visualiser": {
-      "enabled": false,
-      "autoHide": true
-    }
-  },
-  "services": {
-    "papertoy": {
-      "shaderPath": "",
-      "args": []
     }
   }
 }
 ```
 
-Performance guidance:
+Transparency modes:
 
-- Set `appearance.transparency.mode` to `"transparent"` for transparent rice
-  layouts. `base` controls main shell surface alpha; `layers` controls
-  nested/raised surfaces, and `scrim` controls modal dimming. `"normal"` keeps
-  compatibility with the older `enabled` toggle, and `"opaque"` disables
-  surface alpha.
-- Leave `appearance.shaders.enabled` off unless you are actively using drawer
-  post-processing.
-- The drawer shader overlay only runs when `performanceMode` is set to
-  `"dynamic"`. Keep it `"off"` for normal use.
-- Keep `background.visualiser.enabled` off unless the audio visualizer is needed.
-- Disable Papertoy from the bar when not using shader wallpaper/screensaver
-  effects.
+- `opaque`: disable shell surface alpha
+- `normal`: use `enabled`, `base`, `layers`, and `scrim`
+- `transparent`: force the lower-alpha rice-oriented defaults
 
-## IPC
+Leave shader effects and the background visualizer disabled unless they are in
+active use; both add continuous rendering or audio work.
 
-List available IPC targets:
+## Running and IPC
+
+Start a packaged shell:
 
 ```sh
-qs -c sitka-shell ipc show
+sitka-shell
 ```
 
-Call IPC functions with:
-
-```sh
-quickshell -c sitka-shell ipc call <target> <function> [args...]
-```
-
-Examples:
-
-```sh
-sitka-shell ipc call lock lock
-qs -c sitka-shell ipc call drawers toggle launcher
-sitka-shell ipc call stateStats get
-sitka-shell ipc call stateStats mark
-sitka-shell ipc call stateStats delta
-```
-
-Niri lock keybind example:
+Niri startup example:
 
 ```kdl
-binds {
-    Mod+L { spawn "sitka-shell" "ipc" "call" "lock" "lock"; }
-}
+spawn-at-startup "sitka-shell"
 ```
 
-## Wallpapers and Profile Image
+Inspect and call IPC targets with the stable package wrapper:
 
-The dashboard profile image is read from `~/.face`.
+```sh
+sitka-ipc show
+sitka-ipc call drawers toggle launcher
+sitka-ipc call lock lock
+sitka-ipc call stateStats get
+sitka-ipc call stateStats mark
+sitka-ipc call stateStats delta
+```
 
-Wallpapers are read from `~/Pictures/Wallpapers` by default. Change the path in
-`~/.config/sitka/shell.json` if your wallpaper directory lives elsewhere.
+When running directly from a checkout, use Quickshell:
 
-The launcher command `> wallpaper` opens wallpaper actions.
+```sh
+qs -p . ipc show
+qs -p . ipc call drawers toggle launcher
+```
 
-## Known Issues
+## Runtime integrations
 
-1. Multi-monitor behavior still needs cleanup.
-2. The task manager currently has no Intel GPU support.
-3. The workspace bar needs refactoring.
-4. Screenshot window grabbing is limited by Niri behavior.
-5. Focus handling for Quickshell windows such as power menu, task manager, and
-   settings is awkward under Niri.
-6. Quickshell can still crash due to upstream issues.
+The Nix package supplies the shell's main runtime dependencies. Features also
+expect the corresponding system services or tools to exist:
+
+- NetworkManager for network state
+- PipeWire, libcava, and aubio for audio visualization
+- `brightnessctl` or `ddcutil` for brightness controls
+- `grim` and `swappy` for screenshots
+- `lm-sensors` and supported GPU tools for hardware metrics
+- Material Symbols and a Nerd Font for icons and glyphs
+
+The dashboard profile image is read from `~/.face`. Wallpapers default to
+`~/Pictures/Wallpapers`.
 
 ## Credits
 
-- [Quickshell](https://github.com/quickshell/quickshell)
 - [Caelestia Shell](https://github.com/caelestia-shell/caelestia-shell)
 - [Niri Caelestia Shell](https://github.com/0lxy/niri-caelestia-shell)
+- [Quickshell](https://github.com/quickshell/quickshell)
 - [Niri](https://github.com/YaLTeR/niri)
-- Upstream contributors
+- All upstream and Sitka Shell contributors

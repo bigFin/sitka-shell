@@ -1,22 +1,23 @@
-.direnv
+# Build and editor state
+/.direnv/
+/build/
+/.cache/
 /result
 /.qmlls.ini
-.vscode
-.vscode/settings.json
-.github/chatmodes/4.1-Beast.chatmode.md
-.github/chatmodes/janitor.chatmode.md
-.github/chatmodes/prompt-engineer.chatmode.md
-build/
-.cache/
-#tmp/
+/.vscode/
 
-# Logs
-*.txt
+# Local runtime state
+/config/shell.json
+/config/shell.json.backup
+/tmp/
 *.qslog
 *.log
 
+# Local prompts
+/.github/chatmodes/
+
 # Syncthing
-.stversions/
-.stfolder/
-.stignore
+/.stversions/
+/.stfolder/
+/.stignore
 *.sync-conflict-*

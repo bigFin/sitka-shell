@@ -1,21 +1,16 @@
 # Contributing
 
-There are only a few rules:
-- Follow the commit convention as follows:
-  - The name of the commit should be `module: change`
-  - Try to be consistent with the module names; you can look at existing commits for the module names I use
-  - If there is more than one change, the change in the commit name should be the most impactful change
-  - Put other changes in the description
-- Format your code
-  - I use the vscode qml extension with default arguments to format the code, however you do not have to use it
-  - Just try to follow the code style of the rest of the code and ensure that there is:
-    - no trailing whitespace on any lines
-    - a single space between operators
-- No AI slop allowed
-  - AI readme/docs slop = instant block
-- PLEASE TEST YOUR PRS
-  - I can't believe I have to put this here, but please test your PRs before submitting them
-  - Your PR must not break anything currently existing, or specify in the description if it does
-- PR descriptions should be descriptive
-  - Please explain what the PR does and how to use it in your PR description
-  - Also include any breaking changes and/or side effects of the PR
+Sitka Shell is an experimental personal shell, so discuss large behavioral or
+visual changes before investing in them.
+
+For focused fixes:
+
+1. Keep the change scoped to one problem.
+2. Follow the surrounding QML and C++ style.
+3. Do not commit personal configuration, logs, crash dumps, or build output.
+4. Run `nix build .#sitka-shell`.
+5. Describe user-visible changes, compatibility impact, and validation in the
+   pull request.
+
+Commit subjects should be short and imperative. A conventional prefix such as
+`fix:`, `feat:`, `docs:`, or `chore:` is preferred.

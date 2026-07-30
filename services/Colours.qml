@@ -11,16 +11,11 @@ import QtQuick
 Singleton {
     id: root
 
-    property bool showPreview
-    property string scheme
-    property string flavour
-    readonly property bool light: showPreview ? previewLight : currentLight
+    readonly property bool light: currentLight
     property bool currentLight
-    property bool previewLight
-    readonly property M3Palette palette: showPreview ? preview : current
+    readonly property M3Palette palette: current
     readonly property M3TPalette tPalette: M3TPalette {}
     readonly property M3Palette current: M3Palette {}
-    readonly property M3Palette preview: M3Palette {}
 
     // Tactical color palettes
     readonly property EverforestLightPalette everforestLight: EverforestLightPalette {}

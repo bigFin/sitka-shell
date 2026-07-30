@@ -16,8 +16,6 @@ JsonObject {
     component UseFuzzy: JsonObject {
         property bool apps: false
         property bool actions: false
-        property bool schemes: false
-        property bool variants: false
         property bool wallpapers: false
     }
 

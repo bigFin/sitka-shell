@@ -170,8 +170,8 @@ in
     };
 
     meta = {
-      description = "A very segsy desktop shell";
-      homepage = "https://github.com/sitka-shell/sitka-shell";
+      description = "Niri-first desktop shell built with Quickshell";
+      homepage = "https://github.com/bigFin/sitka-shell";
       license = lib.licenses.gpl3Only;
       mainProgram = "sitka-shell";
     };

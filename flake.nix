@@ -1,5 +1,5 @@
 {
-  description = "Desktop shell for Sitka dots";
+  description = "Niri-first Quickshell desktop shell";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";

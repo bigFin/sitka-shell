@@ -1,16 +1,11 @@
-{
-  pkgs, # To ensure the nixpkgs version of app2unit
-  fetchFromGitHub,
-  ...
-}:
-pkgs.app2unit.overrideAttrs (final: prev: rec {
-  version = "1.0.3"; # Fix old issue related to missing env var
-  src = fetchFromGitHub {
-    owner = "Vladimir-csp";
-    repo = "app2unit";
-    tag = "v${version}";
-    hash = "sha256-7eEVjgs+8k+/NLteSBKgn4gPaPLHC+3Uzlmz6XB0930=";
-  };
-  # Newer nixpkgs postFixup expects a variable not present in v1.0.3.
-  postFixup = "";
+{pkgs, ...}:
+pkgs.app2unit.overrideAttrs (final: prev: {
+  postPatch =
+    (prev.postPatch or "")
+    + ''
+      sed -i \
+        -e '/^[[:space:]]*app-_/ { s/_\(\$[{]\)/\1/g; s/}_/}/g; s/app_name/app\\_name/g; }' \
+        -e '/^app-/s/^/\t\t/' \
+        app2unit.1.scd
+    '';
 })

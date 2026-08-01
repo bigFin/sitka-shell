@@ -31,22 +31,21 @@
   debug ? false,
   extraRuntimeDeps ? [],
 }: let
-  version = "1.1.0";
+  version = "1.1.1";
   sourceRoot = ./..;
   cleanSource = lib.cleanSourceWith {
     src = sourceRoot;
-    filter = path: type:
-      let
-        rel = lib.removePrefix "${toString sourceRoot}/" (toString path);
-        excluded = [
-          ".direnv"
-          ".git"
-          ".stfolder"
-          "build"
-          "result"
-        ];
-      in
-        !(builtins.elem rel excluded || lib.any (name: lib.hasPrefix "${name}/" rel) excluded);
+    filter = path: type: let
+      rel = lib.removePrefix "${toString sourceRoot}/" (toString path);
+      excluded = [
+        ".direnv"
+        ".git"
+        ".stfolder"
+        "build"
+        "result"
+      ];
+    in
+      !(builtins.elem rel excluded || lib.any (name: lib.hasPrefix "${name}/" rel) excluded);
   };
 
   runtimeDeps =
@@ -142,7 +141,7 @@ in
             --replace-fail pam_fprintd.so /run/current-system/sw/lib/security/pam_fprintd.so
         fi
       fi
-      
+
       substituteInPlace shell.qml \
         --replace-fail 'ShellRoot {' 'ShellRoot {  settings.watchFiles: false'
     '';

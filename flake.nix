@@ -34,6 +34,9 @@
           else if self ? dirtyRev then self.dirtyRev
           else "local-dev";
         stdenv = pkgs.clangStdenv;
+        # Sitka is Niri-first; opt into the Hyprland runtime only for a
+        # consumer that actually runs Hyprland.
+        hyprland = null;
         quickshell = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
           withX11 = false;
           withI3 = false;

@@ -15,7 +15,7 @@
   libqalculate,
   fftw,
   bash,
-  hyprland,
+  hyprland ? null,
   material-symbols,
   rubik,
   nerd-fonts,
@@ -60,9 +60,9 @@
       wl-clipboard
       libqalculate
       bash
-      hyprland
       qt6.qtshadertools
     ]
+    ++ lib.optional (hyprland != null) hyprland
     ++ extraRuntimeDeps;
 
   fontconfig = makeFontsConf {

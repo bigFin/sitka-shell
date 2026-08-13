@@ -1,6 +1,7 @@
 module qs.services
 singleton Audio Audio.qml
 singleton ActiveWindowModel ActiveWindowModel.qml
+singleton AgentUsage AgentUsage.qml
 singleton BeatDetector BeatDetector.qml
 singleton Brightness Brightness.qml
 singleton Cava Cava.qml

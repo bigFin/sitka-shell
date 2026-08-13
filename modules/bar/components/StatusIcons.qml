@@ -218,6 +218,18 @@ StyledRect {
             }
         }
 
+        // Coding agent quota
+        WrappedLoader {
+            name: "codingusage"
+            active: AgentUsage.available || AgentUsage.loading
+
+            sourceComponent: MaterialIcon {
+                animate: true
+                text: "data_usage"
+                color: AgentUsage.highestUsedPercent >= 90 ? Colours.palette.m3error : (AgentUsage.highestUsedPercent >= 70 ? Colours.palette.m3tertiary : root.colour)
+            }
+        }
+
         // Battery icon
         WrappedLoader {
             name: "battery"

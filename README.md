@@ -11,7 +11,7 @@ have diverged substantially.
 
 ## Features
 
-- Left-side bar with workspaces, tray, status, clock, and configurable entries
+- Left-side bar with workspaces, tray, coding-agent quotas, status, clock, and configurable entries
 - Launcher with application, command, calculator, and wallpaper search
 - Dashboard, control center, notifications, OSDs, session menu, and lock screen
 - Niri window/workspace models with measured state and polling diagnostics
@@ -189,6 +189,7 @@ expect the corresponding system services or tools to exist:
 - `grim` and `swappy` for screenshots
 - `lm-sensors` and supported GPU tools for hardware metrics
 - Material Symbols and a Nerd Font for icons and glyphs
+- Codex CLI for Codex quota data; Claude Code plus `script`/`timeout` for Claude quota data
 
 The dashboard profile image is read from `~/.face`. Wallpapers default to
 `~/Pictures/Wallpapers`.

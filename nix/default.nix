@@ -15,6 +15,8 @@
   libqalculate,
   fftw,
   bash,
+  coreutils,
+  util-linux,
   hyprland ? null,
   material-symbols,
   rubik,
@@ -60,6 +62,8 @@
       wl-clipboard
       libqalculate
       bash
+      coreutils
+      util-linux
       qt6.qtshadertools
     ]
     ++ lib.optional (hyprland != null) hyprland

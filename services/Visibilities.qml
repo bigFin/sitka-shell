@@ -3,7 +3,6 @@ pragma Singleton
 import qs.services
 import Quickshell
 import QtQuick
-
 Singleton {
     id: root
 
@@ -39,7 +38,6 @@ Singleton {
             console.warn("Visibilities: Failed to parse persisted open state:", e);
             root.barOpenByScreen = ({});
         }
-    }
 
     function screenKey(screen: ShellScreen): string {
         return screen?.name ?? "";
@@ -51,6 +49,10 @@ Singleton {
             return;
         screens.set(screen, visibilities);
         screens.set(key, visibilities);
+    }
+
+    function getForScreen(screenName: string): PersistentProperties {
+        return screens.get(screenName) ?? null;
     }
 
     function registerBar(screen: ShellScreen, bar: Item): void {

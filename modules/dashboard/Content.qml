@@ -129,6 +129,10 @@ Item {
                     Pane {
                         sourceComponent: NiriThing {}
                     }
+
+                    Pane {
+                        sourceComponent: CodingUsage {}
+                    }
                 }
 
                 Behavior on contentX {

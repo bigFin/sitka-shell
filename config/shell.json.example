@@ -91,6 +91,12 @@
         ]
     },
     "services": {
+        "agentUsage": {
+            // Primary Codex weekly quota is shown by default.
+            "showCodex": true,
+            "showAdditionalCodexLimits": false,
+            "showClaude": false
+        },
         "papertoy": {
             // Path to the GLSL shader file for papertoy
             "shaderPath": "",

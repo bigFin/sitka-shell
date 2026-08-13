@@ -65,10 +65,6 @@ Item {
             }
         }
 
-        Popout {
-            name: "codingusage"
-            sourceComponent: CodingUsage {}
-        }
 
         Popout {
             name: "kblayout"

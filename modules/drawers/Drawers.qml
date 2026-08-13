@@ -225,7 +225,6 @@ Variants {
                 }
             }
         }
-
         // Corner trigger for "corner" reveal mode - separate layer-shell surface
         CornerTrigger {
             targetScreen: scope.modelData

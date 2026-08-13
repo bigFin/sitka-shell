@@ -49,6 +49,11 @@ Item {
             iconName: "workspaces"
             text: qsTr("Niri")
         }
+
+        Tab {
+            iconName: "code"
+            text: qsTr("Usage")
+        }
     }
 
     Item {

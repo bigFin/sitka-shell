@@ -1,5 +1,6 @@
 pragma Singleton
 
+import qs.config
 import Quickshell
 import Quickshell.Io
 import QtQuick
@@ -31,11 +32,19 @@ Singleton {
     property bool codexInitialized: false
 
     function refresh(): void {
-        refreshCodex();
-        refreshClaude();
+        if (Config.services.agentUsage.showCodex)
+            refreshCodex();
+        if (Config.services.agentUsage.showClaude)
+            refreshClaude();
     }
 
     function refreshCodex(): void {
+        if (!Config.services.agentUsage.showCodex) {
+            codexLoading = false;
+            codexError = "";
+            rebuildProviders();
+            return;
+        }
         codexLoading = true;
         codexError = "";
         if (!codexProcess.running) {
@@ -46,6 +55,12 @@ Singleton {
     }
 
     function refreshClaude(): void {
+        if (!Config.services.agentUsage.showClaude) {
+            claudeLoading = false;
+            claudeError = "";
+            rebuildProviders();
+            return;
+        }
         if (claudeProcess.running)
             return;
         claudeLoading = true;
@@ -185,16 +200,41 @@ Singleton {
     }
 
     function rebuildProviders(): void {
-        const values = codexQuotas.slice();
-        if (claudeQuota)
+        let values = [];
+        if (Config.services.agentUsage.showCodex) {
+            values = Config.services.agentUsage.showAdditionalCodexLimits
+                ? codexQuotas.slice()
+                : codexQuotas.filter(quota => quota.id === "codex-codex");
+        }
+        if (Config.services.agentUsage.showClaude && claudeQuota)
             values.push(claudeQuota);
         providers = values;
     }
 
     Component.onCompleted: refresh()
 
+    Connections {
+        target: Config.services.agentUsage
+
+        function onShowCodexChanged(): void {
+            root.rebuildProviders();
+            if (target.showCodex)
+                root.refreshCodex();
+        }
+
+        function onShowAdditionalCodexLimitsChanged(): void {
+            root.rebuildProviders();
+        }
+
+        function onShowClaudeChanged(): void {
+            root.rebuildProviders();
+            if (target.showClaude)
+                root.refreshClaude();
+        }
+    }
+
     Timer {
-        interval: 15 * 60 * 1000
+        interval: 60 * 1000
         running: true
         repeat: true
         onTriggered: root.refresh()

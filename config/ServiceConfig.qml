@@ -16,10 +16,18 @@ JsonObject {
         }
     ]
 
+    property AgentUsage agentUsage: AgentUsage {}
+
     property Papertoy papertoy: Papertoy {}
 
     component Papertoy: JsonObject {
         property string shaderPath: ""      // Path to .glsl shader file
         property list<string> args: []      // Additional arguments for papertoy
+    }
+
+    component AgentUsage: JsonObject {
+        property bool showCodex: true
+        property bool showAdditionalCodexLimits: false
+        property bool showClaude: false
     }
 }

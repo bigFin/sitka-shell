@@ -30,12 +30,24 @@ Singleton {
     property int codexInitializeRequestId: 0
     property int codexRateLimitRequestId: 0
     property bool codexInitialized: false
+    property int activeViewCount: 0
+    readonly property bool pollingActive: activeViewCount > 0
 
     function refresh(): void {
         if (Config.services.agentUsage.showCodex)
             refreshCodex();
         if (Config.services.agentUsage.showClaude)
             refreshClaude();
+    }
+
+    function addView(): void {
+        activeViewCount++;
+        if (activeViewCount === 1)
+            refresh();
+    }
+
+    function removeView(): void {
+        activeViewCount = Math.max(0, activeViewCount - 1);
     }
 
     function refreshCodex(): void {
@@ -211,14 +223,14 @@ Singleton {
         providers = values;
     }
 
-    Component.onCompleted: refresh()
+    Component.onCompleted: rebuildProviders()
 
     Connections {
         target: Config.services.agentUsage
 
         function onShowCodexChanged(): void {
             root.rebuildProviders();
-            if (target.showCodex)
+            if (target.showCodex && root.pollingActive)
                 root.refreshCodex();
         }
 
@@ -228,14 +240,14 @@ Singleton {
 
         function onShowClaudeChanged(): void {
             root.rebuildProviders();
-            if (target.showClaude)
+            if (target.showClaude && root.pollingActive)
                 root.refreshClaude();
         }
     }
 
     Timer {
         interval: 60 * 1000
-        running: true
+        running: root.pollingActive
         repeat: true
         onTriggered: root.refresh()
     }

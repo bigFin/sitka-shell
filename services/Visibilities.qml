@@ -38,6 +38,7 @@ Singleton {
             console.warn("Visibilities: Failed to parse persisted open state:", e);
             root.barOpenByScreen = ({});
         }
+    }
 
     function screenKey(screen: ShellScreen): string {
         return screen?.name ?? "";

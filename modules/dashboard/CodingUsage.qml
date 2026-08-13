@@ -11,6 +11,25 @@ ColumnLayout {
 
     width: 760
     spacing: Config.appearance.spacing.large
+    property bool active: false
+    property bool viewRegistered: false
+
+    function updateViewRegistration(): void {
+        if (active === viewRegistered)
+            return;
+        viewRegistered = active;
+        if (active)
+            AgentUsage.addView();
+        else
+            AgentUsage.removeView();
+    }
+
+    Component.onCompleted: updateViewRegistration()
+    Component.onDestruction: {
+        if (viewRegistered)
+            AgentUsage.removeView();
+    }
+    onActiveChanged: updateViewRegistration()
 
     function formatDuration(milliseconds: real): string {
         const minutes = Math.max(0, Math.floor(milliseconds / 60000));
@@ -58,8 +77,8 @@ ColumnLayout {
 
             StyledText {
                 text: AgentUsage.lastUpdatedMs > 0
-                    ? qsTr("Updated %1 · automatic refresh every minute").arg(Qt.formatTime(new Date(AgentUsage.lastUpdatedMs), Locale.ShortFormat))
-                    : qsTr("Waiting for provider data · automatic refresh every minute")
+                    ? qsTr("Updated %1 · refreshes every minute while this tab is open").arg(Qt.formatTime(new Date(AgentUsage.lastUpdatedMs), Locale.ShortFormat))
+                    : qsTr("Waiting for provider data · refreshes while this tab is open")
                 color: Colours.palette.m3onSurfaceVariant
                 font.pointSize: Config.appearance.font.size.small
             }

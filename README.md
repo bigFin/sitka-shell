@@ -191,10 +191,11 @@ expect the corresponding system services or tools to exist:
 - Material Symbols and a Nerd Font for icons and glyphs
 - Codex CLI for Codex quota data; Claude Code plus `script`/`timeout` for Claude quota data
 
-Coding-agent quotas are shown in the dashboard's **Usage** tab and refresh
-automatically every minute. Provider visibility is configured under
-`services.agentUsage`. The primary Codex weekly limit is enabled by default;
-Claude and additional Codex model buckets are opt-in:
+Coding-agent quotas are shown in the dashboard's **Usage** tab. Opening that
+tab refreshes immediately, then every minute while it remains visible.
+Provider visibility is configured under `services.agentUsage`. The primary
+Codex weekly limit is enabled by default; Claude and additional Codex model
+buckets are opt-in:
 
 ```json
 {

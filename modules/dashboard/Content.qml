@@ -131,7 +131,9 @@ Item {
                     }
 
                     Pane {
-                        sourceComponent: CodingUsage {}
+                        sourceComponent: CodingUsage {
+                            active: root.expanded && root.state.currentTab === 4
+                        }
                     }
                 }
 

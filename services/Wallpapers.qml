@@ -19,7 +19,7 @@ Searcher {
 
     function setWallpaper(path: string): void {
         actualCurrent = path;
-        Quickshell.execDetached(["bash", "-c", `echo -n "${path}" > "${currentNamePath}"`]);
+        Quickshell.execDetached(["bash", "-c", "printf '%s' \"$1\" > \"$2\"", "sitka-shell", path, currentNamePath]);
     }
 
     function preview(path: string): void {

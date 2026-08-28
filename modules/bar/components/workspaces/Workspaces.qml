@@ -37,9 +37,10 @@ StyledRect {
     readonly property string focusedWindowWorkspaceId: String(indicatorTargets.focusedWindow?.workspaceId ?? "")
 
     readonly property var occupied: WorkspaceModel.workspaceHasWindows
-    // Paging not fully implemented for multi-monitor yet, assuming fit-all or use existing logic if needed. 
-    // For now using simple list.
-    readonly property int groupOffset: 0 
+
+    // Bar.qml owns vertical overflow scrolling; keep this offset at zero for
+    // context and indicator components that still accept it.
+    readonly property int groupOffset: 0
 
     readonly property string focusedWindowId: String(indicatorTargets.focusedWindow?.windowId ?? "")
 

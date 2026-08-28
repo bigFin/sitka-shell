@@ -11,6 +11,7 @@ import qs.components.controls
 import Quickshell
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 
 Item {
     id: root
@@ -18,8 +19,8 @@ Item {
     required property ShellScreen screen
     required property PersistentProperties visibilities
     required property BarPopouts.Wrapper popouts
-
-    height: screen.height
+    // Follow the per-screen layer surface rather than the ShellScreen's raw size.
+    height: parent ? parent.height : 0
     readonly property int vPadding: Config.appearance.padding.small
 
     // Handle Workspace Popouts for Niri
@@ -97,7 +98,7 @@ Item {
             // Hyprland.dispatch(`togglespecialworkspace ${activeWs.slice(8)}`);
             // else if (angleDelta.y < 0 || Hyprland.activeWsId > 1)
             // Hyprland.dispatch(`workspace r${angleDelta.y > 0 ? "-" : "+"}1`);
-        } else if (adjustedY < screen.height / 2 && Config.bar.scrollActions.workspaces) {
+        } else if (adjustedY < height / 2 && Config.bar.scrollActions.workspaces) {
             // Volume scroll on top half
             if (angleDelta.y > 0)
                 Audio.incrementVolume();
@@ -120,8 +121,30 @@ Item {
 
         contentHeight: entriesLayout.implicitHeight
         interactive: contentHeight > height
+        flickableDirection: Flickable.VerticalFlick
+        boundsBehavior: Flickable.StopAtBounds
         clip: true
 
+        ScrollBar.vertical: StyledScrollBar {
+            policy: ScrollBar.AsNeeded
+        }
+
+        WheelHandler {
+            target: null
+            enabled: flickable.contentHeight > flickable.height
+
+            onWheel: event => {
+                let delta = event.pixelDelta.y !== 0
+                    ? event.pixelDelta.y
+                    : (event.angleDelta.y / 120) * 160;
+                if (event.inverted)
+                    delta = -delta;
+
+                const maxY = Math.max(0, flickable.contentHeight - flickable.height);
+                flickable.contentY = Math.max(0, Math.min(maxY, flickable.contentY - delta));
+                event.accepted = true;
+            }
+        }
         ColumnLayout {
             id: entriesLayout
             width: flickable.width

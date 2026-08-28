@@ -65,7 +65,9 @@ Add the flake and import its module in your Home Manager configuration:
 ```
 
 The module installs the shell, writes `~/.config/sitka/shell.json`, and can run
-Sitka Shell as a user service.
+Sitka Shell as a user service. The service restarts when a rebuild changes the
+package path; do not also launch `sitka-shell` from the compositor startup
+configuration.
 
 ## Development
 

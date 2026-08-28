@@ -107,9 +107,9 @@ in {
           Description = "Sitka Shell Service";
           After = [cfg.systemd.target];
           PartOf = [cfg.systemd.target];
-          X-Restart-Triggers = lib.mkIf (cfg.settings != {}) [
-            "${config.xdg.configFile."sitka/shell.json".source}"
-          ];
+          X-Restart-Triggers =
+            [ "${shell}/bin/sitka-shell" ]
+            ++ lib.optional (cfg.settings != {}) config.xdg.configFile."sitka/shell.json".source;
         };
 
         Service = {

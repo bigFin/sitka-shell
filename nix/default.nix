@@ -33,6 +33,7 @@
   debug ? false,
   extraRuntimeDeps ? [],
 }: let
+  quickshellWithImageFormats = quickshell.withModules [qt6.qtimageformats];
   version = "1.1.1";
   sourceRoot = ./..;
   cleanSource = lib.cleanSourceWith {
@@ -121,7 +122,7 @@ in
     src = cleanSource;
 
     nativeBuildInputs = [cmake ninja makeWrapper qt6.wrapQtAppsHook];
-    buildInputs = [quickshell extras plugin xkeyboard-config qt6.qtbase];
+    buildInputs = [quickshellWithImageFormats extras plugin xkeyboard-config qt6.qtbase];
     propagatedBuildInputs = runtimeDeps;
 
     cmakeBuildType =
@@ -151,7 +152,7 @@ in
     '';
 
     postInstall = ''
-      makeWrapper ${quickshell}/bin/qs $out/bin/sitka-shell \
+      makeWrapper ${quickshellWithImageFormats}/bin/qs $out/bin/sitka-shell \
       	--prefix PATH : "${lib.makeBinPath runtimeDeps}" \
       	--set FONTCONFIG_FILE "${fontconfig}" \
       	--set SITKA_LIB_DIR ${extras}/lib \
@@ -160,7 +161,7 @@ in
 
       # Create sitka-ipc wrapper for IPC commands
       # This provides a stable command that always matches the running sitka-shell instance
-      makeWrapper ${quickshell}/bin/qs $out/bin/sitka-ipc \
+      makeWrapper ${quickshellWithImageFormats}/bin/qs $out/bin/sitka-ipc \
         --add-flags "-p $out/share/sitka-shell" \
         --add-flags "ipc"
 

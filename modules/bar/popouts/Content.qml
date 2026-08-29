@@ -29,11 +29,6 @@ Item {
             WsContextPopout {}
         }
 
-        // Popout { // TODO
-        //     name: "workspaces"
-        //     sourceComponent: WorkspacesPopout {}
-        // }
-
         Popout {
             name: "activewindow"
             sourceComponent: ActiveWindow {

@@ -106,6 +106,10 @@ mkdir -p ~/.config/sitka
 cp config/shell.json.example ~/.config/sitka/shell.json
 ```
 
+Workspace labels support `"symbol"` (the default), `"number"`, `"name"`, and
+`"both"` through `bar.workspaces.displayMode`. Names come from the active
+window-manager backend and fall back to the workspace number when unavailable.
+
 The repository intentionally ignores `config/shell.json` and
 `config/shell.json.backup` so local preferences do not become source files.
 

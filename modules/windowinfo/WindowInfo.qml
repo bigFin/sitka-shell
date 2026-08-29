@@ -2,7 +2,6 @@ import qs.components
 import qs.services
 import "../../config"
 import Quickshell
-// import Quickshell.Hyprland // Removed strict dependency
 import QtQuick
 import QtQuick.Layouts
 import "ProcessList"
@@ -25,22 +24,9 @@ Item {
 
         spacing: Config.appearance.spacing.normal
 
-        // Preview {
-        //     screen: root.screen
-        //     client: root.client
-        // }
-
-        // ProcessListPopout {
-        //     id: processListPopout
-        // }
-
         ProcessListModal {
             id: processListModal
         }
-
-        // ProcessListModal {
-
-        // }
 
         ColumnLayout {
             spacing: Config.appearance.spacing.normal

@@ -72,6 +72,10 @@
             // Scale of logo relative to corner size
             "logoScale": 0.6
         },
+        // Workspace labels: "symbol", "number", "name", or "both"
+        "workspaces": {
+            "displayMode": "symbol"
+        },
         
         // Bar entries - order and enable/disable components
         // Available entries: "workspaces", "spacer", "activeWindow", "tray",

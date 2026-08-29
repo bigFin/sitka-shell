@@ -13,7 +13,7 @@ Item {
     property bool popupActive: (WMService.wsContextAnchor === root) || (WMService.wsContextAnchor === workspace) || (WMService.wsContextType === "workspaces")
 
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-    Layout.preferredHeight: Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap
+    Layout.fillWidth: true
 
     implicitWidth: Config.bar.workspaces.windowIconSize + Config.bar.workspaces.windowIconGap + (popupActive ? Config.bar.workspaces.windowContextWidth : 0)
     Behavior on implicitWidth {
@@ -36,22 +36,33 @@ Item {
 
             StyledText {
                 id: indicator
+                width: parent ? parent.width : 0
                 anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
                 anchors.verticalCenter: parent ? parent.verticalCenter : undefined
 
                 animate: true
+                elide: Text.ElideRight
+                maximumLineCount: 1
                 text: {
-                    //TODO: Add config option to choose between name/number/both for workspaces
+                    const mode = Config.bar.workspaces.displayMode;
+                    const number = String(root.workspace.wsIdx);
+                    const name = String(root.workspace.workspaceData.name || "");
 
-                    const wsName = root.workspace.workspaceData.name || root.workspace.wsIdx;
-                    const label = Config.bar.workspaces.label || root.workspace.wsIdx;
+                    if (mode === "number")
+                        return number;
+                    if (mode === "name")
+                        return name || number;
+                    if (mode === "both")
+                        return name ? `${number} ${name}` : number;
+
+                    const label = Config.bar.workspaces.label || number;
                     const occupiedLabel = Config.bar.workspaces.occupiedLabel || label;
-                    const activeLabel = root.workspace.wsIdx || (root.workspace.isOccupied ? occupiedLabel : label);
+                    const activeLabel = Config.bar.workspaces.activeLabel || occupiedLabel;
                     return root.workspace.activeWsId === root.workspace.wsId ? activeLabel : root.workspace.isOccupied ? occupiedLabel : label;
                 }
 
                 color: root.workspace.activeWsId === root.workspace.wsId ? Colours.palette.m3onPrimary : (root.workspace.isOccupied ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant)
-                verticalAlignment: Qt.AlignVCenter
+                verticalAlignment: Text.AlignVCenter
             }
         }
 

@@ -103,9 +103,11 @@ JsonObject {
         property int windowContextWidth: 250
         property bool activeTrail: false
         property bool pagerActive: true
+        // symbol preserves the existing glyph indicators.
+        property string displayMode: "symbol" // symbol | number | name | both
         property string label: "◦" // ""
         property string occupiedLabel: "⊙" // "󰮯"
-        property string activeLabel: "󰮯" //Handled in workspace.qml
+        property string activeLabel: "󰮯" // Handled in WorkspaceIcon.qml
     }
 
     component Tray: JsonObject {

@@ -1,15 +1,10 @@
 import qs.components
-// import qs.components.controls
 import qs.services
 import qs.utils
 import "../../../config"
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
-
-// import QtQuick.Controls
-// import qs.widgets
-// import qs.modules.windowinfo // TODO Niri for details.
 
 Item {
     id: root
@@ -25,15 +20,10 @@ Item {
         anchors.left: parent.left
         spacing: Config.appearance.spacing.normal
 
-        // height: 20
-        // width: Config.bar.sizes.windowPreviewSize - 100
-
         RowLayout {
             id: detailsRow
 
             Layout.alignment: Qt.AlignLeft
-            // anchors.left: parent.left
-            // anchors.right: parent.right
             spacing: Config.appearance.spacing.normal
 
             IconImage {
@@ -93,104 +83,5 @@ Item {
             }
         }
 
-        // StyledRect {
-        //     // Layout.fillWidth: true
-        //     // Layout.fillHeight: true
-        //     // clip: true
-
-        //     // Layout.preferredHeight: buttons.implicitHeight
-        //     // height : 250
-
-        //     height: 200
-
-        //     width: Config.bar.sizes.windowPreviewSize
-        //     // color: Colours.tPalette.m3surfaceContainer
-        //     radius: Config.appearance.rounding.normal
-
-        //     Flickable {
-        //         id: flick
-        //         anchors.fill: parent
-        //         contentHeight: buttons.implicitHeight
-
-        //         interactive: true
-        //         clip: true
-
-        //         Buttons {
-        //             id: buttons
-        //             // Your buttons content here
-        //         }
-
-        //         ScrollBar.vertical: StyledScrollBar {}
-        //     }
-        // }
-
-        // ClippingWrapperRectangle {
-        //     color: "transparent"
-        //     radius: Config.appearance.rounding.small
-        //
-        //     ScreencopyView {
-        //         id: preview
-        //
-        //         captureSource: Quickshell.Wayland.findClientByPid(ActiveWindowModel.window?.pid) ?? null
-        //         live: visible
-        //
-        //         constraintSize.width: Config.bar.sizes.windowPreviewSize
-        //         constraintSize.height: Config.bar.sizes.windowPreviewSize
-        //     }
-        // }
-
-        // RowLayout {
-        //     id: windowdecorations
-        //     anchors.right: parent.right
-
-        //     Loader {
-        //         active: ActiveWindowModel.window?.is_floating
-        //         asynchronous: true
-        //         Layout.fillWidth: active
-        //         visible: active
-        //         // Layout.leftMargin: active ? 0 : -parent.spacing * 2
-        //         // Layout.rightMargin: active ? 0 : -parent.spacing * 2
-
-        //         sourceComponent: WindowDecorations {
-        //             color: Colours.palette.m3secondaryContainer
-        //             onColor: Colours.palette.m3onSecondaryContainer
-
-        //             icon: "push_pin"
-        //             function onClicked(): void {
-        //                 Niri.dispatch(`pin address:0x${root.client?.address}`);
-        //             }
-        //         }
-        //     }
-
-        //     WindowDecorations {
-
-        //         color: ActiveWindowModel.window?.is_floating ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
-        //         onColor: ActiveWindowModel.window?.is_floating ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
-
-        //         icon: ActiveWindowModel.window?.is_floating ? "grid_view" : "picture_in_picture"
-        //         function onClicked(): void {
-        //             Niri.toggleWindowFloating();
-        //         }
-        //     }
-
-        //     WindowDecorations {
-        //         color: Colours.palette.m3tertiary
-        //         onColor: Colours.palette.m3onTertiary
-
-        //         icon: "fullscreen"
-        //         function onClicked(): void {
-        //             Niri.toggleMaximize();
-        //         }
-        //     }
-        //     WindowDecorations {
-        //         color: Colours.palette.m3errorContainer
-        //         onColor: Colours.palette.m3onErrorContainer
-
-        //         icon: "close"
-        //         function onClicked(): void {
-        //             Niri.closeFocusedWindow();
-        //         }
-        //     }
-        // }
     }
 }

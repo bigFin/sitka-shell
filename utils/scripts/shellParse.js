@@ -283,3 +283,29 @@ function getLuminance(c) {
 function clamp01(v) {
     return Math.max(0, Math.min(1, v));
 }
+
+function parseNmcliNetworks(text) {
+    const PLACEHOLDER = "STRINGWHICHHOPEFULLYWONTBEUSED";
+    const rows = [];
+
+    for (const line of text.trim().split("\n")) {
+        if (!line)
+            continue;
+        const net = line.replace(/\\:/g, PLACEHOLDER).split(":");
+        const strength = parseInt(net[1], 10);
+        const frequency = parseInt(net[2], 10);
+        const ssid = (net[3] || "").split(PLACEHOLDER).join(":");
+        if (!ssid)
+            continue;
+        rows.push({
+            active: net[0] === "yes",
+            strength: Number.isFinite(strength) ? strength : 0,
+            frequency: Number.isFinite(frequency) ? frequency : 0,
+            ssid: ssid,
+            bssid: (net[4] || "").split(PLACEHOLDER).join(":"),
+            security: net[5] || ""
+        });
+    }
+
+    return rows;
+}

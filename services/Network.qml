@@ -3,6 +3,7 @@ pragma Singleton
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import "../utils/scripts/shellParse.js" as ShellParse
 
 Singleton {
     id: root
@@ -113,21 +114,7 @@ Singleton {
             })
         stdout: StdioCollector {
             onStreamFinished: {
-                const PLACEHOLDER = "STRINGWHICHHOPEFULLYWONTBEUSED";
-                const rep = new RegExp("\\\\:", "g");
-                const rep2 = new RegExp(PLACEHOLDER, "g");
-
-                const allNetworks = text.trim().split("\n").map(n => {
-                    const net = n.replace(rep, PLACEHOLDER).split(":");
-                    return {
-                        active: net[0] === "yes",
-                        strength: parseInt(net[1]),
-                        frequency: parseInt(net[2]),
-                        ssid: net[3],
-                        bssid: net[4]?.replace(rep2, ":") ?? "",
-                        security: net[5] || ""
-                    };
-                }).filter(n => n.ssid && n.ssid.length > 0);
+                const allNetworks = ShellParse.parseNmcliNetworks(text);
 
                 // Group networks by SSID and prioritize connected ones
                 const networkMap = new Map();

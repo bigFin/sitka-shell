@@ -23,7 +23,7 @@ vm.runInThisContext(src + `;globalThis.__shellParse = {
     parseNvidiaGpuLine, parseGenericGpuLines, nearlyEqual,
     formatKib, calculateCpuUsage, coalesceWindowEvents,
     buildProcessRows, shouldWarnOverflow, cleanWindowText, isRequestStale,
-    getLuminance, clamp01
+    getLuminance, clamp01, parseNmcliNetworks
 }`, { filename: "shellParse.js" });
 const api = globalThis.__shellParse;
 delete globalThis.__shellParse;
@@ -296,5 +296,34 @@ describe("clamp01", () => {
         assert.equal(api.clamp01(-0.5), 0);
         assert.equal(api.clamp01(1.5), 1);
         assert.equal(api.clamp01(0.42), 0.42);
+    });
+});
+
+describe("parseNmcliNetworks", () => {
+    it("parses escaped rows with BSSID colons restored", () => {
+        const rows = api.parseNmcliNetworks("yes:80:5180:MyNet:AA\\:BB\\:CC\\:DD\\:EE\\:FF:WPA2");
+        assert.equal(rows.length, 1);
+        assert.deepEqual(rows[0], {
+            active: true,
+            strength: 80,
+            frequency: 5180,
+            ssid: "MyNet",
+            bssid: "AA:BB:CC:DD:EE:FF",
+            security: "WPA2"
+        });
+    });
+
+    it("restores escaped colons inside SSIDs", () => {
+        const rows = api.parseNmcliNetworks("no:60:2412:My\\:Net:11\\:22\\:33\\:44\\:55\\:66:--");
+        assert.equal(rows[0].ssid, "My:Net");
+        assert.equal(rows[0].bssid, "11:22:33:44:55:66");
+    });
+
+    it("drops empty and truncated rows and zeroes bad numbers", () => {
+        assert.deepEqual(api.parseNmcliNetworks(""), []);
+        assert.deepEqual(api.parseNmcliNetworks("garbage"), []);
+        const rows = api.parseNmcliNetworks("no:xx:yy:Net:AA:--");
+        assert.equal(rows[0].strength, 0);
+        assert.equal(rows[0].frequency, 0);
     });
 });

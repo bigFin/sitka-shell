@@ -123,7 +123,7 @@ Useful environment overrides:
 
 ### Themes and transparency
 
-Built-in themes are `EverforestDark`, `EverforestLight`, and `RosePine`.
+Built-in themes are `EverforestDark`, `EverforestLight`, `RosePine`, and `HighTest`.
 Theme selection is declarative:
 
 ```json

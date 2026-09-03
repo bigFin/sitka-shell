@@ -1,7 +1,7 @@
 {
     "general": {
         // "theme": "EverforestDark"
-        // Available themes: "EverforestDark", "EverforestLight", "RosePine"
+        // Available themes: "EverforestDark", "EverforestLight", "RosePine", "HighTest"
         "theme": "EverforestDark"
     },
     "appearance": {
@@ -81,17 +81,18 @@
         // Available entries: "workspaces", "spacer", "activeWindow", "tray",
         // "clock", "statusIcons", "power", "controlcenter", "papertoy", "idleInhibitor", "logoToggle"
         // Note: "logoToggle" shows the OS logo and toggles bar pinned state
+        // Tactical default: workspaces, tray, clock, status. Flip any flag to bring extras back.
         "entries": [
             { "id": "workspaces", "enabled": true },
             { "id": "spacer", "enabled": true },
-            { "id": "activeWindow", "enabled": true },
+            { "id": "activeWindow", "enabled": false },
             { "id": "spacer", "enabled": true },
             { "id": "tray", "enabled": true },
             { "id": "clock", "enabled": true },
             { "id": "statusIcons", "enabled": true },
-            { "id": "power", "enabled": true },
-            { "id": "controlcenter", "enabled": true },
-            { "id": "logoToggle", "enabled": true }
+            { "id": "power", "enabled": false },
+            { "id": "controlcenter", "enabled": false },
+            { "id": "logoToggle", "enabled": false }
         ]
     },
     "services": {

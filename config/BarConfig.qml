@@ -32,7 +32,7 @@ JsonObject {
         },
         {
             id: "activeWindow",
-            enabled: true
+            enabled: false
         },
         {
             id: "spacer",
@@ -52,11 +52,11 @@ JsonObject {
         },
         {
             id: "power",
-            enabled: true
+            enabled: false
         },
         {
             id: "controlcenter",
-            enabled: true
+            enabled: false
         },
         {
             id: "papertoy",
@@ -76,7 +76,7 @@ JsonObject {
         },
         {
             id: "logoToggle",  // OS logo that toggles bar pinned state (replaces pin)
-            enabled: true
+            enabled: false
         }
     ]
 

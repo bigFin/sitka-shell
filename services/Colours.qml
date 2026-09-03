@@ -21,6 +21,7 @@ Singleton {
     readonly property EverforestLightPalette everforestLight: EverforestLightPalette {}
     readonly property EverforestDarkPalette everforestDark: EverforestDarkPalette {}
     readonly property RosePinePalette rosepine: RosePinePalette {}
+    readonly property HighTestPalette highTest: HighTestPalette {}
     readonly property Transparency transparency: Transparency {}
     property real wallLuminance
 
@@ -68,6 +69,8 @@ Singleton {
             return everforestLight;
         if (themeName === "RosePine")
             return rosepine;
+        if (themeName === "HighTest")
+            return highTest;
         return everforestDark;
     }
 
@@ -368,5 +371,39 @@ Singleton {
         property color statusline1: "#26233a"
         property color statusline2: "#2a2743"
         property color statusline3: "#302d4a"
+    }
+    component HighTestPalette: QtObject {
+        // HighTest theme colors: espresso black, championship gold, burnt orange
+        property color bg: "#171310"
+        property color fg: "#f0e6d6"
+        property color bg0: "#171310"
+        property color bg1: "#1f1a14"
+        property color bg2: "#282119"
+        property color bg3: "#322920"
+        property color bg4: "#3d332a"
+        property color bg5: "#4a3f30"
+        property color bg_visual: "#322920"
+        property color bg_red: "#4a2b22"
+        property color bg_green: "#2c3a22"
+        property color bg_blue: "#22303a"
+        property color bg_yellow: "#4a3a1c"
+        property color fg0: "#f0e6d6"
+        property color fg1: "#e6d7bd"
+        property color fg2: "#d9c8a8"
+        property color fg3: "#cbb894"
+        property color red: "#e4572e"
+        property color orange: "#f09233"
+        property color yellow: "#f2b705"
+        property color green: "#8fb573"
+        property color cyan: "#6fc2a4"
+        property color blue: "#6fa8d8"
+        property color purple: "#c39bd3"
+        property color aqua: "#6fc2a4"
+        property color grey0: "#7a6f5f"
+        property color grey1: "#8d8172"
+        property color grey2: "#a29885"
+        property color statusline1: "#282119"
+        property color statusline2: "#322920"
+        property color statusline3: "#3d332a"
     }
 }

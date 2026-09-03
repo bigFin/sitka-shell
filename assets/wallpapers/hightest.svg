@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1440" viewBox="0 0 2560 1440">
+  <defs>
+    <linearGradient id="beam" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f2b705" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#f2b705" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="ember" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#e4572e" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#e4572e" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="vignette" cx="0.5" cy="0.45" r="0.9">
+      <stop offset="0.55" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.45"/>
+    </radialGradient>
+  </defs>
+
+  <!-- espresso field -->
+  <rect width="2560" height="1440" fill="#171310"/>
+
+  <!-- faint tactical grid -->
+  <g stroke="#282119" stroke-width="2">
+    <path d="M0 360 H2560 M0 720 H2560 M0 1080 H2560"/>
+    <path d="M640 0 V1440 M1280 0 V1440 M1920 0 V1440"/>
+  </g>
+
+  <!-- gold beams -->
+  <polygon points="1500,1440 2100,0 2360,0 1760,1440" fill="url(#beam)"/>
+  <polygon points="1850,1440 2450,0 2520,0 1920,1440" fill="url(#beam)" opacity="0.6"/>
+
+  <!-- ember rise -->
+  <rect x="0" y="900" width="2560" height="540" fill="url(#ember)"/>
+
+  <!-- championship line -->
+  <rect x="0" y="712" width="2560" height="6" fill="#f2b705"/>
+  <rect x="0" y="724" width="2560" height="2" fill="#f2b705" opacity="0.5"/>
+
+  <!-- chevron mark -->
+  <g fill="none" stroke="#e4572e" stroke-width="26">
+    <path d="M1120 620 L1280 720 L1120 820"/>
+    <path d="M1220 620 L1380 720 L1220 820" opacity="0.55"/>
+  </g>
+  <circle cx="1280" cy="720" r="150" fill="none" stroke="#f2b705" stroke-width="4" opacity="0.8"/>
+  <circle cx="1280" cy="720" r="168" fill="none" stroke="#f2b705" stroke-width="2" opacity="0.35"/>
+
+  <rect width="2560" height="1440" fill="url(#vignette)"/>
+</svg>

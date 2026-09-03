@@ -21,7 +21,8 @@ vm.runInThisContext(src + `;globalThis.__shellParse = {
     stripTerminalCodes, chooseLongestWindow, extractCodexQuotas,
     extractClaudeQuota, parseDdcDetectBlock, parseMeminfo,
     parseNvidiaGpuLine, parseGenericGpuLines, nearlyEqual,
-    formatKib, calculateCpuUsage, coalesceWindowEvents
+    formatKib, calculateCpuUsage, coalesceWindowEvents,
+    buildProcessRows, shouldWarnOverflow
 }`, { filename: "shellParse.js" });
 const api = globalThis.__shellParse;
 delete globalThis.__shellParse;
@@ -221,5 +222,30 @@ describe("coalesceWindowEvents", () => {
         const out = api.coalesceWindowEvents([close(1), a, close(2), b], CLOSED, OPENED);
         assert.deepEqual(out.map(e => e.type), [CLOSED, CLOSED, "workspaces_changed"]);
         assert.equal(out[2].data.v, 2);
+    });
+});
+
+describe("buildProcessRows", () => {
+    it("projects fields and truncates long commands", () => {
+        const rows = api.buildProcessRows([
+            { pid: 1, ppid: 0, cpu: 2.5, memoryPercent: 1.1, memoryKB: 2048, command: "quickshell-with-a-long-name", fullCommand: "/bin/quickshell" },
+            { pid: 2, ppid: 1, cpu: 0, memoryPercent: 0.1, memoryKB: 512, command: "sh", fullCommand: "sh" }
+        ]);
+        assert.equal(rows.length, 2);
+        assert.equal(rows[0].displayName, "quickshell-with...");
+        assert.equal(rows[1].displayName, "sh");
+        assert.equal(rows[0].cpu, 2.5);
+    });
+    it("returns an empty array for missing input", () => {
+        assert.deepEqual(api.buildProcessRows(null), []);
+        assert.deepEqual(api.buildProcessRows([]), []);
+});
+});
+
+describe("shouldWarnOverflow", () => {
+    it("throttles repeat warnings to one per second", () => {
+        assert.equal(api.shouldWarnOverflow(1500, 0), true);
+        assert.equal(api.shouldWarnOverflow(500, 0), false);
+        assert.equal(api.shouldWarnOverflow(1000, 0), false);
     });
 });

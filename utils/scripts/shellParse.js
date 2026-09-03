@@ -229,3 +229,24 @@ function coalesceWindowEvents(events, closedType, openedType) {
 
     return ordered;
 }
+
+function buildProcessRows(processes) {
+    const rows = [];
+    for (const proc of processes || []) {
+        rows.push({
+            "pid": proc.pid,
+            "ppid": proc.ppid,
+            "cpu": proc.cpu,
+            "memoryPercent": proc.memoryPercent,
+            "memoryKB": proc.memoryKB,
+            "command": proc.command,
+            "fullCommand": proc.fullCommand,
+            "displayName": proc.command.length > 15 ? proc.command.substring(0, 15) + "..." : proc.command
+        });
+    }
+    return rows;
+}
+
+function shouldWarnOverflow(nowMs, lastWarnMs) {
+    return nowMs - lastWarnMs > 1000;
+}

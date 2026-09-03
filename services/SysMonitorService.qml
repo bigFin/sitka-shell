@@ -603,20 +603,7 @@ done | awk -F'|' '!seen[\$6]++ {print \$0}'
         }
 
         if (data.processes) {
-            const newProcesses = [];
-            for (const proc of data.processes) {
-                newProcesses.push({
-                    "pid": proc.pid,
-                    "ppid": proc.ppid,
-                    "cpu": proc.cpu,
-                    "memoryPercent": proc.memoryPercent,
-                    "memoryKB": proc.memoryKB,
-                    "command": proc.command,
-                    "fullCommand": proc.fullCommand,
-                    "displayName": proc.command.length > 15 ? proc.command.substring(0, 15) + "..." : proc.command
-                });
-            }
-            processes = newProcesses;
+            processes = ShellParse.buildProcessRows(data.processes);
             sortProcessesInPlace();
         }
 

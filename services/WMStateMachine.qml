@@ -36,8 +36,8 @@ Singleton {
     // ===== EVENT QUEUE =====
     property var eventQueue: []
     readonly property int maxQueueSize: 100
-    readonly property bool batchTimerRunning: batchTimer.running
     property int queuedEventCount: 0
+    property double lastOverflowWarnMs: 0
     property int processedBatchCount: 0
     property int processedEventCount: 0
     property int lastBatchSize: 0
@@ -78,9 +78,12 @@ Singleton {
             skippedByType = incrementTypeCount(skippedByType, eventType);
             return;
         }
-
         if (eventQueue.length >= maxQueueSize) {
-            console.warn("WMStateMachine: Event queue overflow, dropping oldest");
+            const now = Date.now();
+            if (ShellParse.shouldWarnOverflow(now, lastOverflowWarnMs)) {
+                console.warn("WMStateMachine: Event queue overflow, dropping oldest");
+                lastOverflowWarnMs = now;
+            }
             eventQueue.shift();
         }
 

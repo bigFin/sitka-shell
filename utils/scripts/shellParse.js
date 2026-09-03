@@ -1,0 +1,231 @@
+.pragma library
+/*
+ * shellParse - pure parsing helpers shared by Sitka Shell services.
+ *
+ * Everything here is intentionally side-effect free with no Quickshell/Qt
+ * dependencies so it runs unmodified under both QML and Node
+ * (`node --test tests/`). Ownership of user-facing strings (qsTr),
+ * timestamps, and singleton state stays with the calling QML service;
+ * these functions only turn raw text into data (or null when the input
+ * is missing/malformed, in which case callers keep their prior values).
+ */
+
+function stripTerminalCodes(text) {
+    const ESC = String.fromCharCode(27);
+    const CSI = new RegExp(ESC + "\\[[0-?]*[ -/]*[@-~]", "g");
+    const CTRLS = new RegExp("[\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]", "g");
+    return text.replace(CSI, "").replace(/\r/g, "\n").replace(CTRLS, "");
+}
+
+function chooseLongestWindow(snapshot) {
+    const primary = snapshot ? snapshot.primary : null;
+    const secondary = snapshot ? snapshot.secondary : null;
+    if (!primary)
+        return secondary;
+    if (!secondary)
+        return primary;
+    return (secondary.windowDurationMins || 0) > (primary.windowDurationMins || 0) ? secondary : primary;
+}
+
+function extractCodexQuotas(result) {
+    const buckets = (result && result.rateLimitsByLimitId) || {};
+    let ids = Object.keys(buckets);
+    if (ids.length === 0 && result && result.rateLimits) {
+        const fallbackId = result.rateLimits.limitId || "codex";
+        buckets[fallbackId] = result.rateLimits;
+        ids = [fallbackId];
+    }
+
+    const quotas = [];
+    for (const id of ids) {
+        const snapshot = buckets[id];
+        const window = chooseLongestWindow(snapshot);
+        if (!window || typeof window.usedPercent !== "number")
+            continue;
+        quotas.push({
+            "id": "codex-" + id,
+            "provider": "codex",
+            "name": id === "codex" ? "Codex" : (snapshot.limitName || id),
+            "usedPercent": Math.max(0, Math.min(100, window.usedPercent)),
+            "resetsAt": window.resetsAt ? window.resetsAt * 1000 : 0,
+            "resetText": "",
+            "plan": snapshot.planType || ""
+        });
+    }
+
+    quotas.sort((a, b) => a.name === "Codex" ? -1 : (b.name === "Codex" ? 1 : a.name.localeCompare(b.name)));
+    return quotas;
+}
+
+function extractClaudeQuota(text) {
+    const lines = stripTerminalCodes(text).split("\n");
+
+    for (let i = 0; i < lines.length; i++) {
+        if (!lines[i].toLowerCase().includes("current week (all models)"))
+            continue;
+
+        let percentage = null;
+        let resetText = "";
+        for (let j = i; j < Math.min(lines.length, i + 8); j++) {
+            if (j > i && /current (?:session|week)|extra usage/i.test(lines[j]))
+                break;
+
+            const percentageMatch = lines[j].match(/(\d{1,3})%\s*(used|left)/i);
+            if (percentageMatch) {
+                const value = Number(percentageMatch[1]);
+                percentage = percentageMatch[2].toLowerCase() === "left" ? 100 - value : value;
+            }
+
+            const resetIndex = lines[j].indexOf("Resets ");
+            if (resetIndex >= 0) {
+                resetText = lines[j].slice(resetIndex).replace(/\s+\d{1,3}%\s*(?:used|left).*$/i, "").trim();
+                const duplicateIndex = resetText.indexOf("Resets ", 7);
+                if (duplicateIndex >= 0)
+                    resetText = resetText.slice(0, duplicateIndex).trim();
+            }
+        }
+
+        if (percentage !== null) {
+            return {
+                "id": "claude",
+                "provider": "claude",
+                "name": "Claude",
+                "usedPercent": Math.max(0, Math.min(100, percentage)),
+                "resetsAt": 0,
+                "resetText": resetText,
+                "plan": ""
+            };
+        }
+    }
+
+    return null;
+}
+
+function parseDdcDetectBlock(block) {
+    const busMatch = block.match(/I2C bus:\s*\/dev\/i2c-([0-9]+)/);
+    const connectorMatch = block.match(/DRM connector:\s+(.*)/);
+    if (!busMatch || !connectorMatch)
+        return null;
+    return {
+        busNum: busMatch[1],
+        connector: connectorMatch[1].trim().replace(/^card\d+-/, "")
+    };
+}
+
+function parseMeminfo(text) {
+    const totalMatch = text.match(/MemTotal:\s*(\d+)/);
+    const availMatch = text.match(/MemAvailable:\s*(\d+)/);
+    if (!totalMatch || !availMatch)
+        return null;
+    const total = parseInt(totalMatch[1], 10) || 1;
+    const used = (total - parseInt(availMatch[1], 10)) || 0;
+    return {
+        total: total,
+        used: used
+    };
+}
+
+function parseNvidiaGpuLine(text) {
+    const parts = text.trim().split(",");
+    const perc = parseInt(parts[0], 10) / 100;
+    const temp = parseInt(parts[1], 10);
+    if (isNaN(perc) || isNaN(temp))
+        return null;
+    return {
+        perc: perc,
+        temp: temp
+    };
+}
+
+function parseGenericGpuLines(text) {
+    const values = text.trim().split("\n").filter(d => d !== "").map(d => parseInt(d, 10)).filter(v => !isNaN(v));
+    if (values.length === 0)
+        return null;
+    return values.reduce((acc, v) => acc + v, 0) / values.length / 100;
+}
+
+function nearlyEqual(a, b) {
+    return Math.abs((a || 0) - (b || 0)) < 0.0001;
+}
+
+function formatKib(kib) {
+    const mib = 1024;
+    const gib = 1024 * 1024;
+    const tib = 1024 * 1024 * 1024;
+
+    if (kib >= tib)
+        return {
+            value: kib / tib,
+            unit: "TiB"
+        };
+    if (kib >= gib)
+        return {
+            value: kib / gib,
+            unit: "GiB"
+        };
+    if (kib >= mib)
+        return {
+            value: kib / mib,
+            unit: "MiB"
+        };
+    return {
+        value: kib,
+        unit: "KiB"
+    };
+}
+
+function calculateCpuUsage(currentStats, lastStats) {
+    if (!lastStats || !currentStats || currentStats.length < 4) {
+        return 0;
+    }
+
+    const currentTotal = currentStats.reduce((sum, val) => sum + val, 0);
+    const lastTotal = lastStats.reduce((sum, val) => sum + val, 0);
+
+    const totalDiff = currentTotal - lastTotal;
+    if (totalDiff <= 0)
+        return 0;
+
+    const currentIdle = currentStats[3];
+    const lastIdle = lastStats[3];
+    const idleDiff = currentIdle - lastIdle;
+
+    const usedDiff = totalDiff - idleDiff;
+    return Math.max(0, Math.min(100, (usedDiff / totalDiff) * 100));
+}
+
+function coalesceWindowEvents(events, closedType, openedType) {
+    const byType = {};
+    const windowUpserts = {};
+    const ordered = [];
+
+    for (let i = 0; i < events.length; i++) {
+        const event = events[i];
+        const type = event.type;
+
+        if (type === closedType) {
+            const closedId = event.data ? event.data.id : undefined;
+            if (closedId !== undefined && closedId !== null)
+                delete windowUpserts[closedId];
+            ordered.push(event);
+        } else if (type === openedType) {
+            const windowId = event.data && event.data.window ? event.data.window.id : undefined;
+            if (windowId === undefined || windowId === null) {
+                ordered.push(event);
+            } else {
+                windowUpserts[windowId] = event;
+            }
+        } else {
+            byType[type] = event;
+        }
+    }
+
+    for (const windowId in windowUpserts) {
+        ordered.push(windowUpserts[windowId]);
+    }
+    for (const type in byType) {
+        ordered.push(byType[type]);
+    }
+
+    return ordered;
+}

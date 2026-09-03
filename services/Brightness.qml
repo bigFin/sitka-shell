@@ -6,6 +6,7 @@ import qs.services
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import "../utils/scripts/shellParse.js" as ShellParse
 
 //TODO FOR NIRI
 
@@ -81,10 +82,10 @@ Singleton {
 
         command: ["ddcutil", "detect", "--brief"]
         stdout: StdioCollector {
-            onStreamFinished: root.ddcMonitors = text.trim().split("\n\n").filter(d => d.startsWith("Display ")).map(d => ({
-                        busNum: d.match(/I2C bus:[ ]*\/dev\/i2c-([0-9]+)/)[1],
-                        connector: d.match(/DRM connector:\s+(.*)/)[1].replace(/^card\d+-/, "") // strip "card1-"
-                    }))
+            onStreamFinished: root.ddcMonitors = text.trim().split("\n\n").filter(d => d.startsWith("Display ")).flatMap(d => {
+                        const parsed = ShellParse.parseDdcDetectBlock(d);
+                        return parsed ? [parsed] : [];
+                    })
         }
     }
 
@@ -168,10 +169,14 @@ Singleton {
                 onStreamFinished: {
                     if (monitor.isAppleDisplay) {
                         const val = parseInt(text.trim());
-                        monitor.brightness = val / 101;
+                        if (!isNaN(val))
+                            monitor.brightness = val / 101;
                     } else {
                         const [, , , cur, max] = text.split(" ");
-                        monitor.brightness = parseInt(cur) / parseInt(max);
+                        const curVal = parseInt(cur);
+                        const maxVal = parseInt(max);
+                        if (!isNaN(curVal) && !isNaN(maxVal) && maxVal > 0)
+                            monitor.brightness = curVal / maxVal;
                     }
                 }
             }
@@ -188,6 +193,8 @@ Singleton {
         }
 
         function setBrightness(value: real): void {
+            if (isNaN(value))
+                return;
             value = Math.max(0, Math.min(1, value));
             const rounded = Math.round(value * 100);
             if (Math.round(brightness * 100) === rounded)

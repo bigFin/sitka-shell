@@ -61,7 +61,6 @@ Singleton {
     // Change layer (triggers restart if running)
     function setLayer(newLayer: string): void {
         if (layer !== newLayer) {
-            console.log("Papertoy: Changing layer from", layer, "to", newLayer);
             layer = newLayer;
             // Restart if running to apply new layer
             if (enabled) {
@@ -89,8 +88,6 @@ Singleton {
         running: root.enabled && root.currentShaderPath !== ""
         command: root.command
         
-        onStarted: console.log("Papertoy: Started with command:", root.command.join(" "))
-        onExited: (exitCode, exitStatus) => console.log("Papertoy: Exited with code", exitCode)
     }
 
     // Load shader path from state file

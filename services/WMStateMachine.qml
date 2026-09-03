@@ -21,6 +21,7 @@ import QtQuick
 import Quickshell
 import "."
 
+import "../utils/scripts/shellParse.js" as ShellParse
 Singleton {
     id: machine
 
@@ -213,39 +214,8 @@ Singleton {
         // Group by event type, keeping closes ordered while coalescing upserts
         // by window id. Niri reports both opened and changed windows through
         // WindowOpenedOrChanged, so preserving every upsert creates churn.
-        const byType = {};
-        const windowUpserts = {};
-        const ordered = [];
-
-        for (let i = 0; i < events.length; i++) {
-            const event = events[i];
-            const type = event.type;
-
-            // Window closes must be kept in order.
-            if (type === evtWindowClosed) {
-                ordered.push(event);
-            } else if (type === evtWindowOpened) {
-                const windowId = event.data && event.data.window ? event.data.window.id : undefined;
-                if (windowId === undefined || windowId === null) {
-                    ordered.push(event);
-                } else {
-                    windowUpserts[windowId] = event;
-                }
-            } else {
-                // Keep only the latest of each type
-                byType[type] = event;
-            }
-        }
-
-        // Add coalesced events
-        for (const windowId in windowUpserts) {
-            ordered.push(windowUpserts[windowId]);
-        }
-        for (const type in byType) {
-            ordered.push(byType[type]);
-        }
-
-        return ordered;
+        // A close drops any earlier upsert for the same id (last-write-wins).
+        return ShellParse.coalesceWindowEvents(events, evtWindowClosed, evtWindowOpened);
     }
 
     function applyEvent(event) {

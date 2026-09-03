@@ -4,6 +4,8 @@ import qs.config
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import "../utils/scripts/shellParse.js" as ShellParse
+import qs.services
 
 Singleton {
     id: root
@@ -52,29 +54,7 @@ Singleton {
     property int sensorPollCount
 
     function formatKib(kib: real): var {
-        const mib = 1024;
-        const gib = 1024 ** 2;
-        const tib = 1024 ** 3;
-
-        if (kib >= tib)
-            return {
-                value: kib / tib,
-                unit: "TiB"
-            };
-        if (kib >= gib)
-            return {
-                value: kib / gib,
-                unit: "GiB"
-            };
-        if (kib >= mib)
-            return {
-                value: kib / mib,
-                unit: "MiB"
-            };
-        return {
-            value: kib,
-            unit: "KiB"
-        };
+        return ShellParse.formatKib(kib);
     }
 
     function addRef(domains: var): void {
@@ -122,7 +102,7 @@ Singleton {
     }
 
     function nearlyEqual(a: real, b: real): bool {
-        return Math.abs((a || 0) - (b || 0)) < 0.0001;
+        return ShellParse.nearlyEqual(a, b);
     }
 
     function pollCpu(): void {
@@ -145,6 +125,14 @@ Singleton {
     function pollGpu(): void {
         if (gpuUsage.running)
             return;
+        if (root.gpuType !== "GENERIC" && root.gpuType !== "NVIDIA") {
+            if (!root.nearlyEqual(root.gpuPerc, 0) || !root.nearlyEqual(root.gpuTemp, 0)) {
+                root.gpuPerc = 0;
+                root.gpuTemp = 0;
+                root.gpuSerial++;
+            }
+            return;
+        }
         gpuPollCount++;
         gpuUsage.running = true;
     }
@@ -157,7 +145,7 @@ Singleton {
     }
 
     Timer {
-        running: root.cpuActive
+        running: root.cpuActive && !IdleService.isIdle
         interval: 3000
         repeat: true
         triggeredOnStart: true
@@ -165,7 +153,7 @@ Singleton {
     }
 
     Timer {
-        running: root.memoryActive
+        running: root.memoryActive && !IdleService.isIdle
         interval: 3000
         repeat: true
         triggeredOnStart: true
@@ -173,7 +161,7 @@ Singleton {
     }
 
     Timer {
-        running: root.storageActive
+        running: root.storageActive && !IdleService.isIdle
         interval: 3000
         repeat: true
         triggeredOnStart: true
@@ -181,7 +169,7 @@ Singleton {
     }
 
     Timer {
-        running: root.gpuActive
+        running: root.gpuActive && !IdleService.isIdle
         interval: 3000
         repeat: true
         triggeredOnStart: true
@@ -189,7 +177,7 @@ Singleton {
     }
 
     Timer {
-        running: root.sensorActive
+        running: root.sensorActive && !IdleService.isIdle
         interval: 3000
         repeat: true
         triggeredOnStart: true
@@ -227,8 +215,11 @@ Singleton {
         path: "/proc/meminfo"
         onLoaded: {
             const data = text();
-            const nextMemTotal = parseInt(data.match(/MemTotal: *(\d+)/)[1], 10) || 1;
-            const nextMemUsed = (nextMemTotal - parseInt(data.match(/MemAvailable: *(\d+)/)[1], 10)) || 0;
+            const parsed = ShellParse.parseMeminfo(data);
+            if (!parsed)
+                return;
+            const nextMemTotal = parsed.total;
+            const nextMemUsed = parsed.used;
             if (!root.nearlyEqual(root.memTotal, nextMemTotal) || !root.nearlyEqual(root.memUsed, nextMemUsed)) {
                 root.memTotal = nextMemTotal;
                 root.memUsed = nextMemUsed;
@@ -289,7 +280,10 @@ Singleton {
         running: !Config.services.gpuType
         command: ["sh", "-c", "if command -v nvidia-smi &>/dev/null && nvidia-smi -L &>/dev/null; then echo NVIDIA; elif ls /sys/class/drm/card*/device/gpu_busy_percent 2>/dev/null | grep -q .; then echo GENERIC; else echo NONE; fi"]
         stdout: StdioCollector {
-            onStreamFinished: root.autoGpuType = text.trim()
+            onStreamFinished: {
+                const detected = text.trim().toUpperCase();
+                root.autoGpuType = (detected === "NVIDIA" || detected === "GENERIC") ? detected : "NONE";
+            }
         }
     }
 
@@ -300,17 +294,19 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: {
                 if (root.gpuType === "GENERIC") {
-                    const percs = text.trim().split("\n").filter(d => d !== "");
-                    const sum = percs.reduce((acc, d) => acc + parseInt(d, 10), 0);
-                    const nextGpuPerc = percs.length > 0 ? sum / percs.length / 100 : 0;
+                    const nextGpuPerc = ShellParse.parseGenericGpuLines(text);
+                    if (nextGpuPerc === null)
+                        return;
                     if (!root.nearlyEqual(root.gpuPerc, nextGpuPerc)) {
                         root.gpuPerc = nextGpuPerc;
                         root.gpuSerial++;
                     }
                 } else if (root.gpuType === "NVIDIA") {
-                    const [usage, temp] = text.trim().split(",");
-                    const nextGpuPerc = parseInt(usage, 10) / 100;
-                    const nextGpuTemp = parseInt(temp, 10);
+                    const parsed = ShellParse.parseNvidiaGpuLine(text);
+                    if (!parsed)
+                        return;
+                    const nextGpuPerc = parsed.perc;
+                    const nextGpuTemp = parsed.temp;
                     if (!root.nearlyEqual(root.gpuPerc, nextGpuPerc) || !root.nearlyEqual(root.gpuTemp, nextGpuTemp)) {
                         root.gpuPerc = nextGpuPerc;
                         root.gpuTemp = nextGpuTemp;

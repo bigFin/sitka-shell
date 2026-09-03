@@ -107,6 +107,8 @@ Item {
         } else if (Config.bar.scrollActions.brightness) {
             // Brightness scroll on bottom half
             const monitor = Brightness.getMonitorForScreen(screen);
+            if (!monitor)
+                return;
             if (angleDelta.y > 0)
                 monitor.setBrightness(monitor.brightness + 0.1);
             else if (angleDelta.y < 0)
@@ -320,7 +322,7 @@ Item {
 
         Layout.alignment: Qt.AlignHCenter
 
-        // Cursed ahh thing to add padding to first and last enabled components
+        // Pad only the first and last enabled entries so the stack breathes at the edges.
         Layout.topMargin: findFirstEnabled() === this ? root.vPadding : 0
         Layout.bottomMargin: findLastEnabled() === this ? root.vPadding : 0
 

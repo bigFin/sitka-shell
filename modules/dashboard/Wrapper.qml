@@ -34,7 +34,6 @@ Item {
             filterLabel: qsTr("Image files")
             filters: Images.validImageExtensions
             onAccepted: path => {
-                console.log("FileDialog accepted path:", path);
                 if (CUtils.copyFile(Qt.resolvedUrl(path), Qt.resolvedUrl(`${Paths.home}/.face`)))
                     Quickshell.execDetached(["notify-send", "-a", "sitka-shell", "-u", "low", "-h", `STRING:image-path:${path}`, "Profile picture changed", `Profile picture changed to ${Paths.shortenHome(path)}`]);
                 else

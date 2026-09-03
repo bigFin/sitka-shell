@@ -45,7 +45,6 @@ Singleton {
     }
 
     function setProfile(newProfile: int): void {
-        console.log("Power: setProfile called with " + profileToString(newProfile) + " | Backend: " + backend);
         
         if (hasPPD) {
             ppdService.profile = newProfile;
@@ -54,7 +53,6 @@ Singleton {
             
             let cmd = (newProfile === powerSaver) ? "pkexec tlp bat" : "pkexec tlp ac";
             
-            console.log("Power: Executing " + cmd);
             tlpProcess.command = ["sh", "-c", cmd];
             tlpProcess.running = true;
             
@@ -75,12 +73,9 @@ Singleton {
     }
 
     Component.onCompleted: {
-        console.log("Power: Singleton completed");
         try {
             ppdService = Qt.createQmlObject('import Quickshell.Services.PowerProfiles; PowerProfiles {}', root, "DynamicPowerProfiles");
-            console.log("Power: PowerProfiles detected");
         } catch (e) {
-            console.log("Power: PowerProfiles module missing, using TLP fallback");
             checkTlpBinary.running = true;
         }
     }
@@ -90,10 +85,8 @@ Singleton {
         command: ["sh", "-c", "command -v tlp || test -x /usr/bin/tlp || test -x /bin/tlp"]
         onExited: exitCode => {
             if (exitCode === 0) {
-                console.log("Power: TLP binary detected");
                 root.hasTLP = true;
             } else {
-                console.log("Power: TLP binary not found, checking host power backend policy");
                 checkNixos.running = true;
             }
         }
@@ -102,17 +95,10 @@ Singleton {
     Process {
         id: checkNixos
         command: ["sh", "-c", ". /etc/os-release 2>/dev/null && test \"${ID:-}\" = nixos"]
-        onExited: exitCode => {
-            if (exitCode === 0)
-                console.log("Power: NixOS detected without a supported power backend");
-            else
-                console.log("Power: No supported power backend detected");
-        }
     }
 
     Process {
         id: tlpProcess
-        onRunningChanged: if (!running) console.log("Power: TLP command finished with exit code: " + tlpProcess.exitCode)
     }
 
     Process {

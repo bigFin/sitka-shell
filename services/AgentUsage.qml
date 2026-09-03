@@ -4,6 +4,7 @@ import qs.config
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import "../utils/scripts/shellParse.js" as ShellParse
 
 Singleton {
     id: root
@@ -109,42 +110,11 @@ Singleton {
     }
 
     function chooseLongestWindow(snapshot: var): var {
-        const primary = snapshot?.primary ?? null;
-        const secondary = snapshot?.secondary ?? null;
-        if (!primary)
-            return secondary;
-        if (!secondary)
-            return primary;
-        return (secondary.windowDurationMins ?? 0) > (primary.windowDurationMins ?? 0) ? secondary : primary;
+        return ShellParse.chooseLongestWindow(snapshot);
     }
 
     function parseCodexRateLimits(result: var): void {
-        const buckets = result?.rateLimitsByLimitId ?? {};
-        let ids = Object.keys(buckets);
-        if (ids.length === 0 && result?.rateLimits) {
-            const fallbackId = result.rateLimits.limitId ?? "codex";
-            buckets[fallbackId] = result.rateLimits;
-            ids = [fallbackId];
-        }
-
-        const quotas = [];
-        for (const id of ids) {
-            const snapshot = buckets[id];
-            const window = chooseLongestWindow(snapshot);
-            if (!window || typeof window.usedPercent !== "number")
-                continue;
-            quotas.push({
-                "id": `codex-${id}`,
-                "provider": "codex",
-                "name": id === "codex" ? "Codex" : (snapshot.limitName || id),
-                "usedPercent": Math.max(0, Math.min(100, window.usedPercent)),
-                "resetsAt": window.resetsAt ? window.resetsAt * 1000 : 0,
-                "resetText": "",
-                "plan": snapshot.planType || ""
-            });
-        }
-
-        quotas.sort((a, b) => a.name === "Codex" ? -1 : (b.name === "Codex" ? 1 : a.name.localeCompare(b.name)));
+        const quotas = ShellParse.extractCodexQuotas(result);
         codexQuotas = quotas;
         codexError = quotas.length > 0 ? "" : qsTr("No weekly Codex quota reported");
         codexLoading = false;
@@ -154,50 +124,11 @@ Singleton {
     }
 
     function stripTerminalCodes(text: string): string {
-        return text.replace(/\u001b\[[0-?]*[ -/]*[@-~]/g, "").replace(/\r/g, "\n").replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, "");
+        return ShellParse.stripTerminalCodes(text);
     }
 
     function parseClaudeUsage(text: string): void {
-        const lines = stripTerminalCodes(text).split("\n");
-        let parsed = null;
-
-        for (let i = 0; i < lines.length; i++) {
-            if (!lines[i].toLowerCase().includes("current week (all models)"))
-                continue;
-
-            let percentage = null;
-            let resetText = "";
-            for (let j = i; j < Math.min(lines.length, i + 8); j++) {
-                if (j > i && /current (?:session|week)|extra usage/i.test(lines[j]))
-                    break;
-
-                const percentageMatch = lines[j].match(/(\d{1,3})%\s*(used|left)/i);
-                if (percentageMatch) {
-                    const value = Number(percentageMatch[1]);
-                    percentage = percentageMatch[2].toLowerCase() === "left" ? 100 - value : value;
-                }
-
-                const resetIndex = lines[j].indexOf("Resets ");
-                if (resetIndex >= 0) {
-                    resetText = lines[j].slice(resetIndex).replace(/\s+\d{1,3}%\s*(?:used|left).*$/i, "").trim();
-                    const duplicateIndex = resetText.indexOf("Resets ", 7);
-                    if (duplicateIndex >= 0)
-                        resetText = resetText.slice(0, duplicateIndex).trim();
-                }
-            }
-
-            if (percentage !== null) {
-                parsed = {
-                    "id": "claude",
-                    "provider": "claude",
-                    "name": "Claude",
-                    "usedPercent": Math.max(0, Math.min(100, percentage)),
-                    "resetsAt": 0,
-                    "resetText": resetText,
-                    "plan": ""
-                };
-            }
-        }
+        const parsed = ShellParse.extractClaudeQuota(text);
 
         claudeLoading = false;
         if (!parsed) {

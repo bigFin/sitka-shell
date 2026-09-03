@@ -78,7 +78,6 @@ Singleton {
     // ═══════════════════════════════════════════════════════════════════════
 
     function enableScreensaver(): void {
-        console.log("ScreensaverService: enableScreensaver called, current state:", stateToString(state));
         
         if (state === ScreensaverService.State.Active) {
             // Save user's papertoy state (enabled and layer)
@@ -110,7 +109,6 @@ Singleton {
     }
 
     function activityDetected(): void {
-        console.log("ScreensaverService: activityDetected, current state:", stateToString(state));
         
         switch (state) {
             case ScreensaverService.State.Screensaver:
@@ -159,7 +157,6 @@ Singleton {
     }
 
     function dpmsOff(): void {
-        console.log("ScreensaverService: dpmsOff called, current state:", stateToString(state));
         
         if (state !== ScreensaverService.State.DpmsOff) {
             stateBeforeDpms = state;
@@ -174,13 +171,11 @@ Singleton {
     }
 
     function dpmsOn(): void {
-        console.log("ScreensaverService: dpmsOn called");
         activityDetected();  // Treat DPMS on as activity
     }
 
     // Called by Lock.qml when lock is requested (manual or auto)
     function lock(): void {
-        console.log("ScreensaverService: lock called, current state:", stateToString(state));
 
         autoLockTimer.stop();
 
@@ -209,7 +204,6 @@ Singleton {
 
     // Called by Lock.qml when unlock succeeds
     function unlock(): void {
-        console.log("ScreensaverService: unlock called");
 
         autoLockTimer.stop();
         screensaverWhileLockedTimer.stop();
@@ -294,7 +288,6 @@ Singleton {
         id: autoLockTimer
         repeat: false
         onTriggered: {
-            console.log("ScreensaverService: autoLockTimer triggered");
             if (root.state === ScreensaverService.State.Screensaver) {
                 root.transitionToLocked(false);
             }
@@ -307,7 +300,6 @@ Singleton {
         interval: root.screensaverWhileLockedTimeout
         repeat: false
         onTriggered: {
-            console.log("ScreensaverService: screensaverWhileLockedTimer triggered");
             if (root.state === ScreensaverService.State.Locked) {
                 // Re-enable papertoy if we temporarily disabled it
                 if (root.papertoyTemporarilyDisabled) {
@@ -363,7 +355,4 @@ Singleton {
         }
     }
 
-    Component.onCompleted: {
-        console.log("ScreensaverService: Initialized");
-    }
 }

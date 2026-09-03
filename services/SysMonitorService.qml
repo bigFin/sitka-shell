@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.services
+import "../utils/scripts/shellParse.js" as ShellParse
 
 Singleton {
     id: root
@@ -116,6 +117,8 @@ for card in /sys/class/drm/card[0-9]*; do
     pciid=\$(basename \$(readlink -f \"$card/device\") 2>/dev/null)
     if [ \"\$driver\" = \"nvidia\" ]; then
         type=\"NVIDIA\"
+    elif [ \"\$(echo \"\$vendor\" | tr '[:upper:]' '[:lower:]')\" = \"0x8086\" ] || [ \"\$driver\" = \"i915\" ] || [ \"\$driver\" = \"xe\" ]; then
+        type=\"INTEL\"
     elif [ -f \"$card/device/gpu_busy_percent\" ]; then
         type=\"GENERIC\"
     else
@@ -233,37 +236,51 @@ done | awk -F'|' '!seen[\$6]++ {print \$0}'
                     };
                     nvidiaStatsProcess.command = ["nvidia-smi", "--query-gpu=utilization.gpu,temperature.gpu,name,memory.used,memory.total", "--format=csv,noheader,nounits", "-i", String(i)];
                     nvidiaStatsProcess.running = true;
-                    // } else if ((gpu.type === "GENERIC" || gpu.type === "UNKNOWN") && gpu.vendor && gpu.vendor.replace(/^0x/i, "").toLowerCase() === "8086") {
-                    //     // Intel GPU detected, use intel_gpu_top
-                    //     console.log("INTEL DETECTED:", JSON.stringify(gpu));
-                    //     intelGpuTopProcess._callback = function (text) {
-                    //         console.log("[intelGpuTopProcess._callback] called. Text:", text && text.length ? text.slice(0, 200) : "<empty>");
-                    //         let parsed = parseIntelGpuTop(text);
-                    //         if (parsed.length > 0) {
-                    //             parsed[0].card = gpu.card;
-                    //             parsed[0].busId = gpu.pciid || null;
-                    //             results.push(parsed[0]);
-                    //         }
-                    //         pending--;
-                    //         if (pending === 0) {
-                    //             gpus = results;
-                    //         }
-                    //     };
-                    //     console.log("Starting intel_gpu_top process...");
-                    //     intelGpuTopProcess.running = true;
-                    //     intelGpuTopKillTimer.start();
+                } else if (gpu.type === "INTEL") {
+                    // i915/xe expose no unprivileged sysfs utilization counter
+                    // (gpu_busy_percent is AMDGPU-only); whole-GPU load needs
+                    // intel_gpu_top or perf, so usage stays null by design.
+                    // Temperature reuses the standard hwmon pattern.
+                    let intelTemp = null;
+                    const intelHwmonGlob = "/sys/class/drm/" + gpu.card + "/device/hwmon/hwmon*/temp1_input";
+                    const intelTempPath = findFirstMatchingFile(intelHwmonGlob);
+                    try {
+                        if (intelTempPath)
+                            intelTemp = parseInt(Quickshell.readFile(intelTempPath).trim(), 10) / 1000;
+                    } catch (e) {}
+                    if (isNaN(intelTemp))
+                        intelTemp = null;
+                    results.push({
+                        vendor: "Intel",
+                        name: gpu.name || "Intel GPU",
+                        usage: null,
+                        temperature: intelTemp,
+                        memoryUsed: null,
+                        memoryTotal: null,
+                        card: gpu.card
+                    });
+                    pending--;
+                    if (pending === 0) {
+                        gpus = results;
+                        gpuSerial++;
+                        gpuUpdating = false;
+                    }
                 } else if (gpu.type === "GENERIC") {
                     let usage = null;
                     let temp = null;
                     try {
                         usage = parseInt(Quickshell.readFile("/sys/class/drm/" + gpu.card + "/device/gpu_busy_percent").trim(), 10);
                     } catch (e) {}
+                    if (isNaN(usage))
+                        usage = null;
                     let hwmonGlob = "/sys/class/drm/" + gpu.card + "/device/hwmon/hwmon*/temp1_input";
                     let tempPath = findFirstMatchingFile(hwmonGlob);
                     try {
                         if (tempPath)
                             temp = parseInt(Quickshell.readFile(tempPath).trim(), 10) / 1000;
                     } catch (e) {}
+                    if (isNaN(temp))
+                        temp = null;
                     results.push({
                         vendor: "GENERIC",
                         name: gpu.name || "Generic GPU",
@@ -391,7 +408,7 @@ done | awk -F'|' '!seen[\$6]++ {print \$0}'
     }
 
     function updateSystemStats(): void {
-        if (!systemActive || systemUpdating)
+        if (!systemActive || systemUpdating || IdleService.isIdle)
             return;
         systemUpdating = true;
         systemPollCount++;
@@ -468,23 +485,7 @@ done | awk -F'|' '!seen[\$6]++ {print \$0}'
     }
 
     function calculateCpuUsage(currentStats, lastStats) {
-        if (!lastStats || !currentStats || currentStats.length < 4) {
-            return 0;
-        }
-
-        const currentTotal = currentStats.reduce((sum, val) => sum + val, 0);
-        const lastTotal = lastStats.reduce((sum, val) => sum + val, 0);
-
-        const totalDiff = currentTotal - lastTotal;
-        if (totalDiff <= 0)
-            return 0;
-
-        const currentIdle = currentStats[3];
-        const lastIdle = lastStats[3];
-        const idleDiff = currentIdle - lastIdle;
-
-        const usedDiff = totalDiff - idleDiff;
-        return Math.max(0, Math.min(100, (usedDiff / totalDiff) * 100));
+        return ShellParse.calculateCpuUsage(currentStats, lastStats);
     }
 
     function parseUnifiedStats(text, source: string): bool {
@@ -725,7 +726,7 @@ done | awk -F'|' '!seen[\$6]++ {print \$0}'
     Timer {
         id: systemUpdateTimer
         interval: root.systemUpdateInterval
-        running: root.systemActive
+        running: root.systemActive && !IdleService.isIdle
         repeat: true
         triggeredOnStart: true
         onTriggered: root.updateSystemStats()
@@ -734,12 +735,8 @@ done | awk -F'|' '!seen[\$6]++ {print \$0}'
     Connections {
         target: IdleService
         function onIdleChanged(idle) {
-            if (idle) {
-                // console.log("SysMonitorService: System idle, pausing monitoring");
-            } else {
-                // console.log("SysMonitorService: System active, resuming monitoring");
+            if (!idle)
                 root.updateAllStats();
-            }
         }
     }
 
@@ -973,11 +970,7 @@ printf "}\\n"`
     function debug() {
         SysMonitorService.addRef();
         SysMonitorService.updateAllStats();
-        // console.log("GPUS:", JSON.stringify(SysMonitorService.gpus));
     }
 
-    // Component.onCompleted: {
-    // Qt.callLater(debug)
-    // }
 
 }

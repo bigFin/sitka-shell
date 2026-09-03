@@ -54,20 +54,17 @@ Scope {
 
         // ScreensaverService requests lock
         function onLockRequested(): void {
-            console.log("Lock: lockRequested received");
             lock.locked = true;
         }
 
         // ScreensaverService requests unlock (after successful auth)
         function onUnlockRequested(): void {
-            console.log("Lock: unlockRequested received");
             lock.unlock();
         }
 
         // Activity detected while in LockedScreensaver state
         // Need to bring lock UI to foreground
         function onShowLockUI(): void {
-            console.log("Lock: showLockUI received");
             lockSurface.ensureInputFocus();
         }
     }

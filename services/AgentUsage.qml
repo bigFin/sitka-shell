@@ -29,8 +29,9 @@ Singleton {
 
     property int nextCodexRequestId: 1
     property int codexInitializeRequestId: 0
+    property double codexInitializeSentMs: 0
     property int codexRateLimitRequestId: 0
-    property bool codexInitialized: false
+    property double codexRateLimitSentMs: 0
     property int activeViewCount: 0
     readonly property bool pollingActive: activeViewCount > 0
 
@@ -62,7 +63,15 @@ Singleton {
         codexError = "";
         if (!codexProcess.running) {
             codexProcess.running = true;
-        } else if (codexInitialized && codexRateLimitRequestId === 0) {
+        } else if (!codexInitialized) {
+            if (ShellParse.isRequestStale(Date.now(), codexInitializeSentMs, 120000)) {
+                codexInitializeRequestId = 0;
+                codexInitializeSentMs = 0;
+                initializeCodex();
+            }
+        } else {
+            if (ShellParse.isRequestStale(Date.now(), codexRateLimitSentMs, 120000))
+                codexRateLimitRequestId = 0;
             requestCodexRateLimits();
         }
     }
@@ -87,6 +96,7 @@ Singleton {
 
     function initializeCodex(): void {
         codexInitializeRequestId = nextCodexRequestId++;
+        codexInitializeSentMs = Date.now();
         sendCodex({
             "id": codexInitializeRequestId,
             "method": "initialize",
@@ -103,6 +113,7 @@ Singleton {
         if (!codexInitialized || codexRateLimitRequestId !== 0)
             return;
         codexRateLimitRequestId = nextCodexRequestId++;
+        codexRateLimitSentMs = Date.now();
         sendCodex({
             "id": codexRateLimitRequestId,
             "method": "account/rateLimits/read"
@@ -193,7 +204,9 @@ Singleton {
         onExited: {
             root.codexInitialized = false;
             root.codexInitializeRequestId = 0;
+            root.codexInitializeSentMs = 0;
             root.codexRateLimitRequestId = 0;
+            root.codexRateLimitSentMs = 0;
             root.codexLoading = false;
             if (root.codexQuotas.length === 0)
                 root.codexError = qsTr("Codex CLI unavailable");

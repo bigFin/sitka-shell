@@ -22,7 +22,7 @@ vm.runInThisContext(src + `;globalThis.__shellParse = {
     extractClaudeQuota, parseDdcDetectBlock, parseMeminfo,
     parseNvidiaGpuLine, parseGenericGpuLines, nearlyEqual,
     formatKib, calculateCpuUsage, coalesceWindowEvents,
-    buildProcessRows, shouldWarnOverflow, cleanWindowText
+    buildProcessRows, shouldWarnOverflow, cleanWindowText, isRequestStale
 }`, { filename: "shellParse.js" });
 const api = globalThis.__shellParse;
 delete globalThis.__shellParse;
@@ -268,5 +268,13 @@ describe("cleanWindowText", () => {
         assert.equal(api.cleanWindowText(EMOJI + "Firefox"), EMOJI + "Firefox");
         assert.equal(api.cleanWindowText(" Leading space"), " Leading space");
         assert.equal(api.cleanWindowText(""), "");
+    });
+});
+
+describe("isRequestStale", () => {
+    it("flags requests older than the timeout", () => {
+        assert.equal(api.isRequestStale(121000, 0, 120000), true);
+        assert.equal(api.isRequestStale(60000, 0, 120000), false);
+        assert.equal(api.isRequestStale(120000, 0, 120000), false);
     });
 });

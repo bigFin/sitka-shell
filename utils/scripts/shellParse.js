@@ -269,3 +269,7 @@ function cleanWindowText(value) {
     }
     return value.slice(i);
 }
+
+function isRequestStale(nowMs, sentMs, timeoutMs) {
+    return nowMs - sentMs > timeoutMs;
+}

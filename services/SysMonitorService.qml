@@ -833,18 +833,16 @@ if want processes; then
     *)      SORT_OPT="--sort=-pcpu" ;;
     esac
 
-    tmp_ps=$(mktemp)
-    ps -eo pid,ppid,pcpu,pmem,rss,comm,cmd --no-headers $SORT_OPT | head -n "$max_procs" > "$tmp_ps" || true
-    pfirst=1
-    while IFS=' ' read -r pid ppid cpu memp memk comm rest; do
-    [ -z "$pid" ] && continue
-    cmd=$(printf "%s" "$rest" | json_escape)
-    [ $pfirst -eq 1 ] || printf ","
-    printf '{"pid":%s,"ppid":%s,"cpu":%s,"memoryPercent":%s,"memoryKB":%s,"command":"%s","fullCommand":"%s"}' \\
-           "$pid" "$ppid" "$cpu" "$memp" "$memk" "$comm" "$cmd"
-    pfirst=0
-    done < "$tmp_ps"
-    rm -f "$tmp_ps"
+    ps -eo pid,ppid,pcpu,pmem,rss,comm,cmd --no-headers \$SORT_OPT | head -n \"\$max_procs\" | awk '
+BEGIN { first = 1 }
+{
+    pid=\$1; ppid=\$2; cpu=\$3; memp=\$4; memk=\$5; comm=\$6
+    rest = \$0; sub(/^[[:space:]]*([^[:space:]]+[[:space:]]+){6}/, \"\", rest)
+    gsub(/\\\\/, \"\\\\\\\\\", rest); gsub(/\"/, \"\\\\\\\"\", rest)
+    if (!first) printf \",\"
+    first = 0
+    printf \"{\\\"pid\\\":%s,\\\"ppid\\\":%s,\\\"cpu\\\":%s,\\\"memoryPercent\\\":%s,\\\"memoryKB\\\":%s,\\\"command\\\":\\\"%s\\\",\\\"fullCommand\\\":\\\"%s\\\"}\", pid, ppid, cpu, memp, memk, comm, rest
+}' || true
     printf ']'
 fi
 

@@ -22,7 +22,7 @@ vm.runInThisContext(src + `;globalThis.__shellParse = {
     extractClaudeQuota, parseDdcDetectBlock, parseMeminfo,
     parseNvidiaGpuLine, parseGenericGpuLines, nearlyEqual,
     formatKib, calculateCpuUsage, coalesceWindowEvents,
-    buildProcessRows, shouldWarnOverflow
+    buildProcessRows, shouldWarnOverflow, cleanWindowText
 }`, { filename: "shellParse.js" });
 const api = globalThis.__shellParse;
 delete globalThis.__shellParse;
@@ -247,5 +247,26 @@ describe("shouldWarnOverflow", () => {
         assert.equal(api.shouldWarnOverflow(1500, 0), true);
         assert.equal(api.shouldWarnOverflow(500, 0), false);
         assert.equal(api.shouldWarnOverflow(1000, 0), false);
+    });
+});
+
+describe("cleanWindowText", () => {
+    const BEL = String.fromCharCode(7);
+    const RLM = String.fromCharCode(0x200F);
+    const BOM = String.fromCharCode(0xFEFF);
+    const CJK = String.fromCharCode(0x4E2D);
+    const EMOJI = String.fromCodePoint(0x1F525);
+
+    it("strips leading control and bidi formatting", () => {
+        assert.equal(api.cleanWindowText(BEL + "Title"), "Title");
+        assert.equal(api.cleanWindowText(RLM + "Title"), "Title");
+        assert.equal(api.cleanWindowText(BOM + "Title"), "Title");
+    });
+
+    it("preserves legitimate leading text and spaces", () => {
+        assert.equal(api.cleanWindowText(CJK + "Neovim"), CJK + "Neovim");
+        assert.equal(api.cleanWindowText(EMOJI + "Firefox"), EMOJI + "Firefox");
+        assert.equal(api.cleanWindowText(" Leading space"), " Leading space");
+        assert.equal(api.cleanWindowText(""), "");
     });
 });

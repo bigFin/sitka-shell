@@ -12,6 +12,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import "."
+import "../utils/scripts/shellParse.js" as ShellParse
 
 Singleton {
     id: root
@@ -239,6 +240,6 @@ Singleton {
     }
 
     function cleanWindowText(value: string): string {
-        return value ? value.replace(/^[^\x20-\x7E]+/, "") : "";
+        return ShellParse.cleanWindowText(value);
     }
 }

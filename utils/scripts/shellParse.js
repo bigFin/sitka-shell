@@ -250,3 +250,22 @@ function buildProcessRows(processes) {
 function shouldWarnOverflow(nowMs, lastWarnMs) {
     return nowMs - lastWarnMs > 1000;
 }
+
+function cleanWindowText(value) {
+    if (!value)
+        return "";
+    // Strip leading control/format characters (C0/C1, bidi isolates and
+    // overrides, BOM) while preserving legitimate leading text such as
+    // CJK characters or emoji. Built from code points so this file stays
+    // pure ASCII.
+    const formats = [0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E, 0x2066, 0x2067, 0x2068, 0x2069, 0xFEFF];
+    let i = 0;
+    while (i < value.length) {
+        const c = value.charCodeAt(i);
+        const control = c < 0x20 || (c >= 0x7F && c <= 0x9F);
+        if (!control && formats.indexOf(c) < 0)
+            break;
+        i++;
+    }
+    return value.slice(i);
+}

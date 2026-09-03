@@ -3,8 +3,7 @@ pragma Singleton
 import Quickshell
 
 Singleton {
-    // Literally just here to shorten accessing stuff :woe:
-    // Also kinda so I can keep accessing it with `Appearance.xxx` instead of `Config.appearance.xxx`
+    // Shorthand aliases so components read `Appearance.xxx` instead of `Config.appearance.xxx`.
     readonly property AppearanceConfig.Rounding rounding: Config.appearance.rounding
     readonly property AppearanceConfig.Spacing spacing: Config.appearance.spacing
     readonly property AppearanceConfig.Padding padding: Config.appearance.padding

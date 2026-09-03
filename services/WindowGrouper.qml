@@ -219,18 +219,8 @@ Singleton {
         }
         groupPool = pool;
 
-        // console.log("WindowGrouper: Pool initialized");
     }
 
     function debugDump() {
-        // console.log("WindowGrouper Debug:");
-        // console.log("  Active Groups:", activeGroupCount);
-        // console.log("  Group Version:", groupVersion);
-        for (let i = 0; i < maxGroups; i++) {
-            const g = groupPool[i];
-            if (g.valid) {
-                // console.log(`  Group ${i}: ${g.appId} (${g.count} windows) ws=${g.workspaceId}`);
-            }
-        }
     }
 }

@@ -76,18 +76,8 @@ Singleton {
     property bool niriAvailable: false
 
     Component.onCompleted: {
-        // console.log("NiriService: Component.onCompleted - initializing service");
         checkNiriAvailability();
 
-        // console.log("Paths.home:", Paths.home);
-        // console.log("Paths.pictures:", Paths.pictures);
-        // console.log("Paths.data:", Paths.data);
-        // console.log("Paths.state:", Paths.state);
-        // console.log("Paths.cache:", Paths.cache);
-        // console.log("Paths.config:", Paths.config);
-        // console.log("Paths.imagecache:", Paths.imagecache);
-        // console.log("Paths.wallsdir:", Paths.wallsdir);
-        // console.log("Paths.libdir:", Paths.libdir);
     }
 
     // Check if niri is available
@@ -97,11 +87,8 @@ Singleton {
         onExited: exitCode => {
             root.niriAvailable = exitCode === 0;
             if (root.niriAvailable) {
-                // console.log("NiriService: niri found, starting event stream and loading initial data");
                 eventStreamProcess.running = true;
                 root.loadInitialWorkspaceData();
-            } else {
-                // console.log("NiriService: niri not found, workspace features disabled");
             }
         }
     }
@@ -119,7 +106,6 @@ Singleton {
             onStreamFinished: {
                 if (text && text.trim()) {
                     try {
-                        // console.log("NiriService: Loaded initial workspace data");
                         const workspaces = JSON.parse(text.trim());
                         WMStateMachine.enqueue(WMStateMachine.evtWorkspacesChanged, {
                             workspaces: workspaces
@@ -166,7 +152,6 @@ Singleton {
                         } : windowsData;
                         if (payload && payload.windows) {
                             WMStateMachine.enqueue(WMStateMachine.evtWindowsChanged, payload);
-                            // console.log("NiriService: Loaded", payload.windows.length, "initial windows");
                         }
                     } catch (e) {
                         console.warn("NiriService: Failed to parse initial windows data:", e);
@@ -190,7 +175,6 @@ Singleton {
                             WMStateMachine.enqueue(WMStateMachine.evtWindowFocused, {
                                 id: focusedData.id
                             });
-                            // console.log("NiriService: Loaded initial focused window:", focusedData.id);
                         }
                     } catch (e) {
                         console.warn("NiriService: Failed to parse initial focused window data:", e);
@@ -201,7 +185,6 @@ Singleton {
     }
 
     function loadInitialWorkspaceData() {
-        // console.log("NiriService: Loading initial workspace data...");
         initialDataQuery.running = true;
         initialWindowsQuery.running = true;
         initialFocusedWindowQuery.running = true;
@@ -292,7 +275,6 @@ Singleton {
 
     function handleOutputsChanged(data) {
         outputs = data;
-        // console.log("NiriService: Updated outputs:", Object.keys(outputs));
     }
 
     function handleOverviewChanged(data) {

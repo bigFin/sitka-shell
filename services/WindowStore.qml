@@ -257,18 +257,8 @@ Singleton {
         }
         windowBuffer = winBuffer;
 
-        // console.log("WindowStore: Buffers initialized");
     }
 
-    // ===== DEBUG =====
     function debugDump() {
-        // console.log("WindowStore Debug Dump:");
-        // console.log("  Version:", version);
-        // console.log("  Workspace Version:", workspaceVersion);
-        // console.log("  Collection Version:", collectionVersion);
-        // console.log("  Active Workspaces:", activeWorkspaceCount);
-        // console.log("  Active Windows:", activeWindowCount);
-        // console.log("  Focused Workspace Slot:", focusedWorkspaceSlot);
-        // console.log("  Focused Window Slot:", focusedWindowSlot);
     }
 }

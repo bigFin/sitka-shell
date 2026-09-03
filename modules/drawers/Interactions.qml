@@ -106,7 +106,6 @@ CustomMouseArea {
                 bar.isHovered = false;
             }
         }
-        // console.log("Bar hovered!")
 
         // Show/hide bar on drag
         if (pressed && dragStart.x < bar.implicitWidth) {

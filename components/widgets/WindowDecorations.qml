@@ -47,7 +47,6 @@ RowLayout {
 
         icon: root.isFloating ? "grid_view" : "picture_in_picture"
         function onClicked(): void {
-            // console.log("Toggling floating for", root.client?.id);
             WMService.toggleWindowFloating(root.client);
         }
     }

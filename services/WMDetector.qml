@@ -18,7 +18,6 @@ Singleton {
                 if (text.trim().length > 0) {
                     root.isHyprland = true
                     root.detected = true
-                    // console.log("WMDetector: Hyprland detected")
                 } else {
                     checkNiri.running = true
                 }
@@ -35,7 +34,6 @@ Singleton {
                 if (text.trim().length > 0) {
                     root.isNiri = true
                     root.detected = true
-                    // console.log("WMDetector: Niri detected")
                 } else {
                     console.error("WMDetector: No compatible WM detected (Niri/Hyprland)")
                 }

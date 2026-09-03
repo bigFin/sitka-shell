@@ -162,7 +162,7 @@ Singleton {
 
     Timer {
         running: root.storageActive && !IdleService.isIdle
-        interval: 3000
+        interval: 15000
         repeat: true
         triggeredOnStart: true
         onTriggered: root.pollStorage()

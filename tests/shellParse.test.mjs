@@ -22,7 +22,8 @@ vm.runInThisContext(src + `;globalThis.__shellParse = {
     extractClaudeQuota, parseDdcDetectBlock, parseMeminfo,
     parseNvidiaGpuLine, parseGenericGpuLines, nearlyEqual,
     formatKib, calculateCpuUsage, coalesceWindowEvents,
-    buildProcessRows, shouldWarnOverflow, cleanWindowText, isRequestStale
+    buildProcessRows, shouldWarnOverflow, cleanWindowText, isRequestStale,
+    getLuminance, clamp01
 }`, { filename: "shellParse.js" });
 const api = globalThis.__shellParse;
 delete globalThis.__shellParse;
@@ -276,5 +277,24 @@ describe("isRequestStale", () => {
         assert.equal(api.isRequestStale(121000, 0, 120000), true);
         assert.equal(api.isRequestStale(60000, 0, 120000), false);
         assert.equal(api.isRequestStale(120000, 0, 120000), false);
+    });
+});
+
+describe("getLuminance", () => {
+    it("returns 0 for black and perceptual weights otherwise", () => {
+        assert.equal(api.getLuminance({ r: 0, g: 0, b: 0 }), 0);
+        assert.equal(api.getLuminance({ r: 1, g: 1, b: 1 }), 1);
+        const red = api.getLuminance({ r: 1, g: 0, b: 0 });
+        const green = api.getLuminance({ r: 0, g: 1, b: 0 });
+        const blue = api.getLuminance({ r: 0, g: 0, b: 1 });
+        assert.ok(green > red && red > blue);
+    });
+});
+
+describe("clamp01", () => {
+    it("clamps outside values and passes through inside ones", () => {
+        assert.equal(api.clamp01(-0.5), 0);
+        assert.equal(api.clamp01(1.5), 1);
+        assert.equal(api.clamp01(0.42), 0.42);
     });
 });

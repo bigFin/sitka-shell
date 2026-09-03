@@ -7,6 +7,7 @@ import Sitka
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import "../utils/scripts/shellParse.js" as ShellParse
 
 Singleton {
     id: root
@@ -26,13 +27,11 @@ Singleton {
     property real wallLuminance
 
     function getLuminance(c: color): real {
-        if (c.r == 0 && c.g == 0 && c.b == 0)
-            return 0;
-        return Math.sqrt(0.299 * (c.r ** 2) + 0.587 * (c.g ** 2) + 0.114 * (c.b ** 2));
+        return ShellParse.getLuminance(c);
     }
 
     function clamp01(v: real): real {
-        return Math.max(0, Math.min(1, v));
+        return ShellParse.clamp01(v);
     }
 
     function alterColour(c: color, a: real, layer: int): color {

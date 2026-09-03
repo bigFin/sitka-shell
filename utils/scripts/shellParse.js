@@ -273,3 +273,13 @@ function cleanWindowText(value) {
 function isRequestStale(nowMs, sentMs, timeoutMs) {
     return nowMs - sentMs > timeoutMs;
 }
+
+function getLuminance(c) {
+    if (c.r == 0 && c.g == 0 && c.b == 0)
+        return 0;
+    return Math.sqrt(0.299 * Math.pow(c.r, 2) + 0.587 * Math.pow(c.g, 2) + 0.114 * Math.pow(c.b, 2));
+}
+
+function clamp01(v) {
+    return Math.max(0, Math.min(1, v));
+}

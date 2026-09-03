@@ -175,7 +175,13 @@ MouseArea {
         running: true
         command: ["hyprctl", "-j", "getoption", "general:border_size"]
         stdout: StdioCollector {
-            onStreamFinished: root.borderWidth = JSON.parse(text).int
+            onStreamFinished: {
+                try {
+                    const parsed = JSON.parse(text);
+                    if (Number.isFinite(parsed?.int))
+                        root.borderWidth = parsed.int;
+                } catch (e) {}
+            }
         }
     }
 
@@ -183,7 +189,13 @@ MouseArea {
         running: true
         command: ["hyprctl", "-j", "getoption", "decoration:rounding"]
         stdout: StdioCollector {
-            onStreamFinished: root.rounding = JSON.parse(text).int
+            onStreamFinished: {
+                try {
+                    const parsed = JSON.parse(text);
+                    if (Number.isFinite(parsed?.int))
+                        root.rounding = parsed.int;
+                } catch (e) {}
+            }
         }
     }
 

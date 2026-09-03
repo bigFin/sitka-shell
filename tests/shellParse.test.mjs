@@ -284,6 +284,7 @@ describe("getLuminance", () => {
     it("returns 0 for black and perceptual weights otherwise", () => {
         assert.equal(api.getLuminance({ r: 0, g: 0, b: 0 }), 0);
         assert.ok(api.nearlyEqual(api.getLuminance({ r: 1, g: 1, b: 1 }), 1));
+        const red = api.getLuminance({ r: 1, g: 0, b: 0 });
         const green = api.getLuminance({ r: 0, g: 1, b: 0 });
         const blue = api.getLuminance({ r: 0, g: 0, b: 1 });
         assert.ok(green > red && red > blue);

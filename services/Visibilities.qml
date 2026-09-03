@@ -45,10 +45,11 @@ Singleton {
     }
 
     function load(screen: ShellScreen, visibilities: PersistentProperties): void {
+        // Name-keyed only: no reader looks screens up by object identity,
+        // and object keys would leak across monitor replugs.
         const key = screenKey(screen);
         if (!key)
             return;
-        screens.set(screen, visibilities);
         screens.set(key, visibilities);
     }
 

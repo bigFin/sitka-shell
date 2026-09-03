@@ -7,51 +7,6 @@ import Quickshell.Io
 Scope {
     id: root
 
-    property bool launcherInterrupted
-
-    // CustomShortcut {
-    //     name: "controlCenter"
-    //     description: "Open control center"
-    //     onPressed: WindowFactory.create()
-    // }
-
-    // CustomShortcut {
-    //     name: "showall"
-    //     description: "Toggle launcher, dashboard and osd"
-    //     onPressed: {
-    //         const v = Visibilities.getForActive();
-    //         v.launcher = v.dashboard = v.osd = v.utilities = !(v.launcher || v.dashboard || v.osd || v.utilities);
-    //     }
-    // }
-
-    // CustomShortcut {
-    //     name: "session"
-    //     description: "Toggle session menu"
-    //     onPressed: {
-    //         const visibilities = Visibilities.getForActive();
-    //         visibilities.session = !visibilities.session;
-    //     }
-    // }
-
-    // CustomShortcut {
-    //     name: "launcher"
-    //     description: "Toggle launcher"
-    //     onPressed: root.launcherInterrupted = false
-    //     onReleased: {
-    //         if (!root.launcherInterrupted) {
-    //             const visibilities = Visibilities.getForActive();
-    //             visibilities.launcher = !visibilities.launcher;
-    //         }
-    //         root.launcherInterrupted = false;
-    //     }
-    // }
-
-    // CustomShortcut {
-    //     name: "launcherInterrupt"
-    //     description: "Interrupt launcher keybind"
-    //     onPressed: root.launcherInterrupted = true
-    // }
-
     IpcHandler {
         target: "drawers"
 

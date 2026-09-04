@@ -12,7 +12,7 @@ Singleton {
 
     property real cpuPerc
     property real cpuTemp
-    readonly property string gpuType: Config.services.gpuType.toUpperCase() || autoGpuType
+    readonly property string gpuType: (Config.services.gpuType || "").toUpperCase() || autoGpuType
     property string autoGpuType: "NONE"
     property real gpuPerc
     property real gpuTemp

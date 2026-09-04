@@ -42,11 +42,10 @@ Item {
         }
     }
 
-    // TODO add a way to dismiss with keyboard.
-    // Keys.onEscapePressed: function () {
-    //     root.expanded = false;
-    //     root.isvisible = false;
-    // }
+    Keys.onEscapePressed: {
+        root.visibilities.dashboard = false;
+        root.expanded = false;
+    }
 
     // Timer to control temporary visibility
     Timer {
@@ -94,6 +93,8 @@ Item {
 
         function onDashboardChanged(): void {
             root.syncDrawerStats();
+            if (root.visibilities.dashboard)
+                root.forceActiveFocus();
         }
     }
 

@@ -142,7 +142,7 @@ Row {
 
         InfoLine {
             icon: "select_window_2"
-            text: SysInfo.wm
+            text: SysInfo.wm || ""
             colour: Colours.palette.m3secondary
         }
 

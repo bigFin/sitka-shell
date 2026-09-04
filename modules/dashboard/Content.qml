@@ -6,8 +6,6 @@ import Quickshell
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
-//later additions
-import qs.components
 import qs.components.widgets
 import qs.services
 
@@ -54,7 +52,7 @@ Item {
             Flickable {
                 id: view
 
-                readonly property int currentIndex: root.state.currentTab
+                readonly property int currentIndex: Math.max(0, Math.min(root.state.currentTab, row.children.length - 1))
                 readonly property Item currentItem: row.children[currentIndex]
 
                 // anchors.fill: parent
@@ -89,19 +87,6 @@ Item {
                         contentX = Qt.binding(() => currentItem.x);
                 }
 
-                MouseArea {
-                    anchors.fill: parent
-                    acceptedButtons: Qt.LeftButton
-                    hoverEnabled: true
-                    cursorShape: pressed || view.dragging ? Qt.ClosedHandCursor : Qt.ArrowCursor
-                    // Prevent this MouseArea from interfering with Flickable's own drag
-                    // propagateComposedEvents: true
-                    // onPressed: mouse => mouse.accepted = true
-                    // onReleased: mouse => mouse.accepted = false
-                    // onClicked: mouse => mouse.accepted = false
-                    // onDoubleClicked: mouse => mouse.accepted = false
-                    // onWheel: wheel => wheel.accepted = false
-                }
 
                 RowLayout {
                     id: row

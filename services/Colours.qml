@@ -61,7 +61,9 @@ Singleton {
         return Qt.hsla(c.hslHue, c.hslSaturation, 0.1, 1);
     }
 
-    readonly property string themeName: Config.general.theme || "EverforestDark"
+    property string themeOverride: ""
+    readonly property list<string> knownThemes: ["EverforestDark", "EverforestLight", "RosePine", "HighTest"]
+    readonly property string themeName: themeOverride || Config.general.theme || "EverforestDark"
 
     readonly property var paletteSource: {
         if (themeName === "EverforestLight")
@@ -104,6 +106,30 @@ Singleton {
                 if (Wallpapers.current == current)
                     root.wallLuminance = l;
             });
+        }
+    }
+
+    IpcHandler {
+        target: "theme"
+
+        function list(): string {
+            return root.knownThemes.join("\n");
+        }
+
+        function get(): string {
+            return root.themeName;
+        }
+
+        function set(name: string): string {
+            if (!root.knownThemes.includes(name))
+                return `Unknown theme: ${name}\nAvailable: ${root.knownThemes.join(", ")}`;
+            root.themeOverride = name;
+            return `Theme set to ${name} (runtime only; set general.theme to persist)`;
+        }
+
+        function reset(): string {
+            root.themeOverride = "";
+            return `Theme reset to ${root.themeName}`;
         }
     }
 

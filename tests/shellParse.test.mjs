@@ -24,7 +24,8 @@ vm.runInThisContext(src + `;globalThis.__shellParse = {
     formatKib, calculateCpuUsage, coalesceWindowEvents,
     buildProcessRows, shouldWarnOverflow, cleanWindowText, isRequestStale,
     getLuminance, clamp01, parseNmcliNetworks,
-    getProcessIcon, formatCpuUsage, formatMemoryUsage, formatSystemMemory
+    getProcessIcon, formatCpuUsage, formatMemoryUsage, formatSystemMemory,
+    sameSnapshot, sameWorkspaceList, sameOccupancy
 }`, { filename: "shellParse.js" });
 const api = globalThis.__shellParse;
 delete globalThis.__shellParse;
@@ -357,5 +358,40 @@ describe("formatSystemMemory", () => {
     it("renders megabytes whole and gigabytes with decimals", () => {
         assert.equal(api.formatSystemMemory(2048), "2 MB");
         assert.equal(api.formatSystemMemory(3 * 1024 * 1024), "3.0 GB");
+    });
+});
+
+describe("sameWorkspaceList", () => {
+    const ws = id => ({ id, idx: 1, name: "code", output: "DP-1", is_active: true, is_focused: true, windowCount: 2 });
+
+    it("compares field by field in order", () => {
+        assert.equal(api.sameWorkspaceList([ws(1)], [ws(1)]), true);
+        assert.equal(api.sameWorkspaceList([ws(1)], [ws(2)]), false);
+        assert.equal(api.sameWorkspaceList([ws(1)], []), false);
+        assert.equal(api.sameWorkspaceList([ws(1)], [{ ...ws(1), windowCount: 3 }]), false);
+    });
+});
+
+describe("sameOccupancy", () => {
+    it("compares occupancy maps regardless of insertion order", () => {
+        assert.equal(api.sameOccupancy({ 1: true, 2: false }, { 2: false, 1: true }), true);
+        assert.equal(api.sameOccupancy({ 1: true }, { 1: false }), false);
+        assert.equal(api.sameOccupancy({ 1: true }, {}), false);
+    });
+});
+
+describe("sameSnapshot", () => {
+    const snap = () => ({
+        focusedWorkspaceId: "1",
+        focusedWorkspaceIndex: 0,
+        focusedMonitorName: "DP-1",
+        allWorkspaces: [{ id: 1, idx: 1, name: "code", output: "DP-1", is_active: true, is_focused: true, windowCount: 2 }],
+        workspaceHasWindows: { 1: true }
+    });
+
+    it("detects focus, list, and occupancy changes", () => {
+        assert.equal(api.sameSnapshot(snap(), snap()), true);
+        assert.equal(api.sameSnapshot({ ...snap(), focusedWorkspaceId: "2" }, snap()), false);
+        assert.equal(api.sameSnapshot({ ...snap(), workspaceHasWindows: {} }, snap()), false);
     });
 });

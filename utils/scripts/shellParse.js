@@ -348,3 +348,34 @@ function formatSystemMemory(memoryKB) {
     else
         return (mem / (1024 * 1024)).toFixed(1) + " GB";
 }
+
+function sameWorkspaceList(a, b) {
+    if (a.length !== b.length)
+        return false;
+
+    for (let i = 0; i < a.length; i++) {
+        const left = a[i];
+        const right = b[i];
+        if (left.id !== right.id || left.idx !== right.idx || left.name !== right.name || left.output !== right.output || left.is_active !== right.is_active || left.is_focused !== right.is_focused || left.windowCount !== right.windowCount)
+            return false;
+    }
+    return true;
+}
+
+function sameOccupancy(a, b) {
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+    if (aKeys.length !== bKeys.length)
+        return false;
+
+    for (let i = 0; i < aKeys.length; i++) {
+        const key = aKeys[i];
+        if (a[key] !== b[key])
+            return false;
+    }
+    return true;
+}
+
+function sameSnapshot(a, b) {
+    return a.focusedWorkspaceId === b.focusedWorkspaceId && a.focusedWorkspaceIndex === b.focusedWorkspaceIndex && a.focusedMonitorName === b.focusedMonitorName && sameWorkspaceList(a.allWorkspaces, b.allWorkspaces) && sameOccupancy(a.workspaceHasWindows, b.workspaceHasWindows);
+}

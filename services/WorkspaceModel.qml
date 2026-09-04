@@ -12,6 +12,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import "."
+import "../utils/scripts/shellParse.js" as ShellParse
 
 Singleton {
     id: root
@@ -129,34 +130,15 @@ Singleton {
     }
 
     function sameSnapshot(a: var, b: var): bool {
-        return a.focusedWorkspaceId === b.focusedWorkspaceId && a.focusedWorkspaceIndex === b.focusedWorkspaceIndex && a.focusedMonitorName === b.focusedMonitorName && sameWorkspaceList(a.allWorkspaces, b.allWorkspaces) && sameOccupancy(a.workspaceHasWindows, b.workspaceHasWindows);
+        return ShellParse.sameSnapshot(a, b);
     }
 
     function sameWorkspaceList(a: var, b: var): bool {
-        if (a.length !== b.length)
-            return false;
-
-        for (let i = 0; i < a.length; i++) {
-            const left = a[i];
-            const right = b[i];
-            if (left.id !== right.id || left.idx !== right.idx || left.name !== right.name || left.output !== right.output || left.is_active !== right.is_active || left.is_focused !== right.is_focused || left.windowCount !== right.windowCount)
-                return false;
-        }
-        return true;
+        return ShellParse.sameWorkspaceList(a, b);
     }
 
     function sameOccupancy(a: var, b: var): bool {
-        const aKeys = Object.keys(a);
-        const bKeys = Object.keys(b);
-        if (aKeys.length !== bKeys.length)
-            return false;
-
-        for (let i = 0; i < aKeys.length; i++) {
-            const key = aKeys[i];
-            if (a[key] !== b[key])
-                return false;
-        }
-        return true;
+        return ShellParse.sameOccupancy(a, b);
     }
 
     function getWorkspacesForOutput(outputName: string): var {

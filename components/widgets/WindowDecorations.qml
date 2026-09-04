@@ -18,8 +18,7 @@ RowLayout {
     spacing: Config.appearance.padding.small / 2
 
     Loader {
-        active: root.isFloating
-        asynchronous: true
+        active: root.isFloating && !WMService.isNiri
         visible: active
 
         sourceComponent: StyledRadialButton {
@@ -31,7 +30,7 @@ RowLayout {
 
             icon: "push_pin"
             function onClicked(): void {
-                // TODO Add a way to pin in Niri.
+                // Niri has no sticky-pin concept; hidden there (see Loader).
                 const addr = root.client?.address || root.client?.id
                 WMService.dispatch(`pin address:0x${addr}`);
             }

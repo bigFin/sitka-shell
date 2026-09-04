@@ -133,8 +133,7 @@ ColumnLayout {
             }
 
             Loader {
-                active: isFloating
-                asynchronous: true
+                active: isFloating && !WMService.isNiri
                 Layout.fillWidth: active
                 visible: active
                 // Layout.leftMargin: active ? 0 : -parent.spacing * 2
@@ -146,8 +145,7 @@ ColumnLayout {
                     text: root.client?.pinned ? qsTr("Unpin") : qsTr("Pin")
                     icon: root.client?.pinned ? "push_pin" : "push_pin"
 
-                    // TODO Add a way to pin stuff in Niri
-
+                    // Niri has no sticky-pin concept; hidden there (see Loader).
                     function onClicked(): void {
                         // Use address if available
                         const addr = root.client?.address

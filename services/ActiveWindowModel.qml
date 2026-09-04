@@ -167,23 +167,7 @@ Singleton {
     }
 
     function clientFromStoreWindow(win: var): var {
-        return {
-            id: win.id,
-            workspace_id: win.workspaceId,
-            pid: win.pid,
-            app_id: win.appId,
-            initialClass: win.appId,
-            initialTitle: win.title,
-            title: win.title,
-            is_focused: win.isFocused,
-            is_floating: win.isFloating,
-            is_urgent: win.isUrgent,
-            layout: {
-                pos_in_scrolling_layout: [win.layoutCol, win.layoutRow],
-                tile_pos_in_workspace_view: win.tilePosX >= 0 && win.tilePosY >= 0 ? [win.tilePosX, win.tilePosY] : null,
-                window_size: [win.width, win.height]
-            }
-        };
+        return ShellParse.clientFromStoreWindow(win);
     }
 
     function detailKeyFromStoreWindow(win: var): string {
@@ -191,27 +175,7 @@ Singleton {
     }
 
     function detailKeyFromClient(win: var): string {
-        if (!win)
-            return "";
-        const layout = win.layout || {};
-        const pos = layout.pos_in_scrolling_layout || [];
-        const tilePos = layout.tile_pos_in_workspace_view || [];
-        const size = layout.window_size || [];
-        return [
-            win.id ?? "",
-            win.workspace_id ?? "",
-            win.pid ?? "",
-            win.app_id ?? win.class ?? "",
-            win.title ?? "",
-            win.is_floating ?? win.floating ?? false,
-            win.is_urgent ?? false,
-            pos[0] ?? "",
-            pos[1] ?? "",
-            tilePos[0] ?? "",
-            tilePos[1] ?? "",
-            size[0] ?? "",
-            size[1] ?? ""
-        ].join("|");
+        return ShellParse.detailKeyFromClient(win);
     }
 
     function normaliseId(value: var): string {

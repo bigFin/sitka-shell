@@ -26,7 +26,8 @@ vm.runInThisContext(src + `;globalThis.__shellParse = {
     getLuminance, clamp01, parseNmcliNetworks,
     getProcessIcon, formatCpuUsage, formatMemoryUsage, formatSystemMemory,
     sameSnapshot, sameWorkspaceList, sameOccupancy,
-    sameFocusIdentity, sameWindowInfo, detailKeyFromStoreWindow
+    sameFocusIdentity, sameWindowInfo, detailKeyFromStoreWindow,
+    detailKeyFromClient, clientFromStoreWindow
 }`, { filename: "shellParse.js" });
 const api = globalThis.__shellParse;
 delete globalThis.__shellParse;
@@ -425,5 +426,31 @@ describe("detailKeyFromStoreWindow", () => {
             tilePosX: -1, tilePosY: -1, width: 800, height: 600
         });
         assert.equal(key, "7|2|100|foot|t|false|false|0|1|-1|-1|800|600");
+    });
+});
+
+describe("detailKeyFromClient", () => {
+    it("falls back across Hypr and Niri field shapes", () => {
+        assert.equal(api.detailKeyFromClient(null), "");
+        const key = api.detailKeyFromClient({
+            id: "0xabc", workspace_id: 3, pid: 9, class: "foot",
+            title: "t", floating: true,
+            layout: { pos_in_scrolling_layout: [1, 0], window_size: [800, 600] }
+        });
+        assert.equal(key, "0xabc|3|9|foot|t|true|false|1|0|||800|600");
+    });
+});
+
+describe("clientFromStoreWindow", () => {
+    it("projects store fields and nulls negative tile positions", () => {
+        const client = api.clientFromStoreWindow({
+            id: 7, workspaceId: 2, pid: 1, appId: "foot", title: "t",
+            isFocused: true, isFloating: false, isUrgent: false,
+            layoutCol: 0, layoutRow: 1, tilePosX: -1, tilePosY: -1,
+            width: 800, height: 600
+        });
+        assert.equal(client.workspace_id, 2);
+        assert.equal(client.layout.tile_pos_in_workspace_view, null);
+        assert.deepEqual(client.layout.window_size, [800, 600]);
     });
 });

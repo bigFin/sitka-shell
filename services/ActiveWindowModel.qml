@@ -159,16 +159,11 @@ Singleton {
     }
 
     function sameInfo(a: var, b: var): bool {
-        return a.hasWindow === b.hasWindow
-            && a.id === b.id
-            && a.appId === b.appId
-            && a.title === b.title
-            && a.rawTitle === b.rawTitle
-            && a.detailKey === b.detailKey;
+        return ShellParse.sameWindowInfo(a, b);
     }
 
     function sameFocusIdentity(a: var, b: var): bool {
-        return a.hasWindow === b.hasWindow && a.id === b.id;
+        return ShellParse.sameFocusIdentity(a, b);
     }
 
     function clientFromStoreWindow(win: var): var {
@@ -192,21 +187,7 @@ Singleton {
     }
 
     function detailKeyFromStoreWindow(win: var): string {
-        return [
-            win.id,
-            win.workspaceId,
-            win.pid,
-            win.appId,
-            win.title,
-            win.isFloating,
-            win.isUrgent,
-            win.layoutCol,
-            win.layoutRow,
-            win.tilePosX,
-            win.tilePosY,
-            win.width,
-            win.height
-        ].join("|");
+        return ShellParse.detailKeyFromStoreWindow(win);
     }
 
     function detailKeyFromClient(win: var): string {

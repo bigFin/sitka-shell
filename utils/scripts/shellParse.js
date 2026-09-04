@@ -379,3 +379,34 @@ function sameOccupancy(a, b) {
 function sameSnapshot(a, b) {
     return a.focusedWorkspaceId === b.focusedWorkspaceId && a.focusedWorkspaceIndex === b.focusedWorkspaceIndex && a.focusedMonitorName === b.focusedMonitorName && sameWorkspaceList(a.allWorkspaces, b.allWorkspaces) && sameOccupancy(a.workspaceHasWindows, b.workspaceHasWindows);
 }
+
+function sameFocusIdentity(a, b) {
+    return a.hasWindow === b.hasWindow && a.id === b.id;
+}
+
+function sameWindowInfo(a, b) {
+    return a.hasWindow === b.hasWindow
+        && a.id === b.id
+        && a.appId === b.appId
+        && a.title === b.title
+        && a.rawTitle === b.rawTitle
+        && a.detailKey === b.detailKey;
+}
+
+function detailKeyFromStoreWindow(win) {
+    return [
+        win.id,
+        win.workspaceId,
+        win.pid,
+        win.appId,
+        win.title,
+        win.isFloating,
+        win.isUrgent,
+        win.layoutCol,
+        win.layoutRow,
+        win.tilePosX,
+        win.tilePosY,
+        win.width,
+        win.height
+    ].join("|");
+}

@@ -25,7 +25,8 @@ vm.runInThisContext(src + `;globalThis.__shellParse = {
     buildProcessRows, shouldWarnOverflow, cleanWindowText, isRequestStale,
     getLuminance, clamp01, parseNmcliNetworks,
     getProcessIcon, formatCpuUsage, formatMemoryUsage, formatSystemMemory,
-    sameSnapshot, sameWorkspaceList, sameOccupancy
+    sameSnapshot, sameWorkspaceList, sameOccupancy,
+    sameFocusIdentity, sameWindowInfo, detailKeyFromStoreWindow
 }`, { filename: "shellParse.js" });
 const api = globalThis.__shellParse;
 delete globalThis.__shellParse;
@@ -393,5 +394,36 @@ describe("sameSnapshot", () => {
         assert.equal(api.sameSnapshot(snap(), snap()), true);
         assert.equal(api.sameSnapshot({ ...snap(), focusedWorkspaceId: "2" }, snap()), false);
         assert.equal(api.sameSnapshot({ ...snap(), workspaceHasWindows: {} }, snap()), false);
+    });
+});
+
+describe("sameFocusIdentity", () => {
+    it("ignores detail-only changes", () => {
+        const a = { hasWindow: true, id: "1", title: "old" };
+        assert.equal(api.sameFocusIdentity(a, { ...a }), true);
+        assert.equal(api.sameFocusIdentity(a, { ...a, title: "new" }), true);
+        assert.equal(api.sameFocusIdentity(a, { ...a, id: "2" }), false);
+        assert.equal(api.sameFocusIdentity(a, { hasWindow: false, id: "1" }), false);
+    });
+});
+
+describe("sameWindowInfo", () => {
+    const info = () => ({ hasWindow: true, id: "1", appId: "foot", title: "t", rawTitle: "t", detailKey: "k" });
+
+    it("catches any display-relevant change", () => {
+        assert.equal(api.sameWindowInfo(info(), info()), true);
+        assert.equal(api.sameWindowInfo(info(), { ...info(), title: "other" }), false);
+        assert.equal(api.sameWindowInfo(info(), { ...info(), detailKey: "other" }), false);
+    });
+});
+
+describe("detailKeyFromStoreWindow", () => {
+    it("joins identifying fields in stable order", () => {
+        const key = api.detailKeyFromStoreWindow({
+            id: 7, workspaceId: 2, pid: 100, appId: "foot", title: "t",
+            isFloating: false, isUrgent: false, layoutCol: 0, layoutRow: 1,
+            tilePosX: -1, tilePosY: -1, width: 800, height: 600
+        });
+        assert.equal(key, "7|2|100|foot|t|false|false|0|1|-1|-1|800|600");
     });
 });

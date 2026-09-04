@@ -108,5 +108,13 @@
             // Additional command-line arguments for papertoy
             "args": []
         }
+    },
+    "paths": {
+        // Rotate decoration images by pointing these at directories.
+        // Empty keeps the single sessionGif/mediaGif images.
+        "sessionGifDir": "",
+        "mediaGifDir": "",
+        // Seconds between swaps; 0 disables cycling.
+        "decorationCycleSeconds": 0
     }
 }

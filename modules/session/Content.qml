@@ -7,6 +7,7 @@ import "../../config"
 import qs.utils
 import Quickshell
 import QtQuick
+import qs.components.images
 
 Column {
     id: root
@@ -87,16 +88,17 @@ Column {
             }
         }
         
-        // Fallback to configured GIF
-        Image {
+        // Fallback to configured GIF, rotating through sessionGifDir when set
+        CyclingImage {
             id: customGif
             anchors.fill: parent
             visible: !sessionDecoration.useSitkaTree
-            
+
             sourceSize.width: width
             sourceSize.height: height
-            asynchronous: true
-            source: sessionDecoration.useSitkaTree ? "" : Paths.absolutePath(Config.paths.sessionGif)
+            dir: Config.paths.sessionGifDir
+            cycleSeconds: Config.paths.decorationCycleSeconds
+            fallbackSource: sessionDecoration.useSitkaTree ? "" : Paths.absolutePath(Config.paths.sessionGif)
         }
     }
 

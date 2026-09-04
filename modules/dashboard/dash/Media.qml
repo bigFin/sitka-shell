@@ -7,6 +7,7 @@ import qs.utils
 import Sitka
 import QtQuick
 import QtQuick.Shapes
+import qs.components.images
 
 Item {
     id: root
@@ -242,13 +243,15 @@ Item {
             }
         }
         
-        // Fallback to configured image
-        Image {
+        // Fallback to configured image, rotating through mediaGifDir when set
+        CyclingImage {
             id: customImage
             anchors.fill: parent
             visible: !mediaDecoration.useSitkaTree
-            
-            source: mediaDecoration.useSitkaTree ? "" : Paths.absolutePath(Config.paths.mediaGif)
+
+            fallbackSource: mediaDecoration.useSitkaTree ? "" : Paths.absolutePath(Config.paths.mediaGif)
+            dir: Config.paths.mediaGifDir
+            cycleSeconds: Config.paths.decorationCycleSeconds
             asynchronous: true
             fillMode: Image.PreserveAspectFit
         }

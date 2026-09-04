@@ -65,7 +65,7 @@ Item {
             id: bar
 
             required property int modelData
-            property real value: Math.max(0, Math.min(1, Cava.values[side.isRight ? modelData : side.count - modelData - 1]))
+            property real value: Math.max(0, Math.min(1, Cava.values[side.isRight ? modelData : side.count - modelData - 1] ?? 0))
 
             clip: true
 

@@ -37,6 +37,21 @@ MouseArea {
     property real sh: Math.abs(sy - ey)
 
     property list<var> clients: {
+        if (WMService.isNiri) {
+            // Compositor-neutral path: pixel rects from the shared WMService
+            // API, adapted to the Hypr at/size shape consumed below.
+            // Floating windows hit-test first, mirroring Hypr ordering.
+            return WMService.getWindowsInScreen(screen.x, screen.y, screen.width, screen.height, root.borderWidth, 0).map(r => {
+                        const floating = r.window?.is_floating ?? false;
+                        return {
+                            floating: floating,
+                            lastIpcObject: {
+                                at: [r.screenX + screen.x, r.screenY + screen.y],
+                                size: [r.screenW, r.screenH]
+                            }
+                        };
+                    }).sort((a, b) => b.floating - a.floating);
+        }
         const ws = Hypr.activeToplevel?.workspace?.id ?? Hypr.activeWsId;
         return Hypr.toplevels.values.filter(c => c.workspace?.id === ws).sort((a, b) => {
             // Pinned first, then fullscreen, then floating, then any other

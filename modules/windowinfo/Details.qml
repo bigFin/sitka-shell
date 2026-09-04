@@ -68,7 +68,6 @@ ColumnLayout {
         color: Colours.palette.m3tertiary
     }
 
-    // TODO REFERENCE
     Detail {
         icon: "workspaces"
         // text: qsTr("Workspace: %1 (%2)").arg(root.client?.workspace.name ?? -1).arg(root.client?.workspace_id ?? -1)
@@ -96,11 +95,6 @@ ColumnLayout {
         }
     }
 
-    // Detail {
-    //     icon: "page_header"
-    //     text: qsTr("Initial title: %1").arg(root.client?.initialTitle ?? "unknown")
-    //     color: Colours.palette.m3tertiary
-    // }
 
     Detail {
         icon: "category"

@@ -70,7 +70,7 @@ StyledRect {
             if (Math.abs(root.x) < Config.notifs.sizes.width * Config.notifs.clearThreshold)
                 root.x = 0;
             else
-                root.modelData.notification.dismiss(); // TODO: change back to popup when notif dock impled
+                root.modelData.popup = false;
         }
         onPositionChanged: event => {
             if (pressed) {

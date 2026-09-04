@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import Quickshell.Io
+import Sitka
 import QtQuick
 
 // CyclingImage shows a static fallback image, or rotates through every

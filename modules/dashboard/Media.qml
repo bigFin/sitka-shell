@@ -89,7 +89,7 @@ Item {
             id: visualiserBar
 
             required property int modelData
-            readonly property real value: Math.max(1e-3, Math.min(1, Cava.values[modelData]))
+            readonly property real value: Math.max(1e-3, Math.min(1, Cava.values[modelData] ?? 0))
 
             readonly property real angle: modelData * 2 * Math.PI / Config.services.visualiserBars
             readonly property real magnitude: value * Config.dashboard.sizes.mediaVisualiserSize

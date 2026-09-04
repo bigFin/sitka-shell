@@ -132,8 +132,8 @@ ColumnLayout {
                     const hours = [];
                     const hour = new Date().getHours();
 
-                    const today = forecast[0].hourly;
-                    const arr = [...today, ...forecast[1].hourly];
+                    const today = forecast[0]?.hourly ?? [];
+                    const arr = [...today, ...(forecast[1]?.hourly ?? [])];
                     for (let i = 0; i < arr.length; i++) {
                         const time = parseInt(arr[i].time, 10) / 100;
 
@@ -160,9 +160,10 @@ ColumnLayout {
                     StyledText {
                         Layout.fillWidth: true
                         text: {
-                            if (!forecastHour.modelData)
+                            const rawTime = forecastHour.modelData?.time;
+                            const hour = rawTime === undefined || rawTime === null ? NaN : parseInt(rawTime, 10) / 100;
+                            if (isNaN(hour))
                                 return "00 AM";
-                            const hour = parseInt(forecastHour.modelData.time, 10) / 100;
                             return hour > 12 ? `${(hour - 12).toString().padStart(2, "0")} PM` : `${hour.toString().padStart(2, "0")} AM`;
                         }
                         color: Colours.palette.m3outline

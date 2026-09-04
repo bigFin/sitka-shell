@@ -28,7 +28,7 @@ Item {
     Loader {
         anchors.fill: parent
 
-        active: !root.source
+        active: false // Fallback prompt stays off: many users wallpaper via the compositor
         asynchronous: true
 
         sourceComponent: StyledRect {

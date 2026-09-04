@@ -17,7 +17,7 @@ Singleton {
     property string uptime
     readonly property string user: Quickshell.env("USER")
     readonly property string wm: Quickshell.env("XDG_CURRENT_DESKTOP") || Quickshell.env("XDG_SESSION_DESKTOP")
-    readonly property string shell: Quickshell.env("SHELL").split("/").pop()
+    readonly property string shell: (Quickshell.env("SHELL") || "").split("/").pop()
 
     FileView {
         id: osRelease
@@ -53,7 +53,9 @@ Singleton {
 
         path: "/proc/uptime"
         onLoaded: {
-            const up = parseInt(text().split(" ")[0] ?? 0);
+            const up = parseInt(text().split(" ")[0]);
+            if (isNaN(up))
+                return;
 
             const days = Math.floor(up / 86400);
             const hours = Math.floor((up % 86400) / 3600);

@@ -309,3 +309,42 @@ function parseNmcliNetworks(text) {
 
     return rows;
 }
+
+function getProcessIcon(command) {
+    const cmd = command.toLowerCase();
+    if (cmd.includes("firefox") || cmd.includes("chrome") || cmd.includes("browser"))
+        return "web";
+    if (cmd.includes("code") || cmd.includes("editor") || cmd.includes("vim"))
+        return "code";
+    if (cmd.includes("terminal") || cmd.includes("bash") || cmd.includes("zsh"))
+        return "terminal";
+    if (cmd.includes("music") || cmd.includes("audio") || cmd.includes("spotify"))
+        return "music_note";
+    if (cmd.includes("video") || cmd.includes("vlc") || cmd.includes("mpv"))
+        return "play_circle";
+    if (cmd.includes("systemd") || cmd.includes("kernel") || cmd.includes("kthread"))
+        return "settings";
+    return "memory";
+}
+
+function formatCpuUsage(cpu) {
+    return (cpu || 0).toFixed(1) + "%";
+}
+
+function formatMemoryUsage(memoryKB) {
+    const mem = memoryKB || 0;
+    if (mem < 1024)
+        return mem.toFixed(0) + " KB";
+    else if (mem < 1024 * 1024)
+        return (mem / 1024).toFixed(1) + " MB";
+    else
+        return (mem / (1024 * 1024)).toFixed(1) + " GB";
+}
+
+function formatSystemMemory(memoryKB) {
+    const mem = memoryKB || 0;
+    if (mem < 1024 * 1024)
+        return (mem / 1024).toFixed(0) + " MB";
+    else
+        return (mem / (1024 * 1024)).toFixed(1) + " GB";
+}

@@ -23,7 +23,8 @@ vm.runInThisContext(src + `;globalThis.__shellParse = {
     parseNvidiaGpuLine, parseGenericGpuLines, nearlyEqual,
     formatKib, calculateCpuUsage, coalesceWindowEvents,
     buildProcessRows, shouldWarnOverflow, cleanWindowText, isRequestStale,
-    getLuminance, clamp01, parseNmcliNetworks
+    getLuminance, clamp01, parseNmcliNetworks,
+    getProcessIcon, formatCpuUsage, formatMemoryUsage, formatSystemMemory
 }`, { filename: "shellParse.js" });
 const api = globalThis.__shellParse;
 delete globalThis.__shellParse;
@@ -325,5 +326,36 @@ describe("parseNmcliNetworks", () => {
         const rows = api.parseNmcliNetworks("no:xx:yy:Net:AA:--");
         assert.equal(rows[0].strength, 0);
         assert.equal(rows[0].frequency, 0);
+    });
+});
+
+describe("getProcessIcon", () => {
+    it("maps well-known commands and falls back to memory", () => {
+        assert.equal(api.getProcessIcon("firefox"), "web");
+        assert.equal(api.getProcessIcon("Code"), "code");
+        assert.equal(api.getProcessIcon("foot"), "memory");
+        assert.equal(api.getProcessIcon("systemd-journald"), "settings");
+    });
+});
+
+describe("formatCpuUsage", () => {
+    it("renders one decimal with a percent sign", () => {
+        assert.equal(api.formatCpuUsage(12.34), "12.3%");
+        assert.equal(api.formatCpuUsage(null), "0.0%");
+    });
+});
+
+describe("formatMemoryUsage", () => {
+    it("picks units at exact boundaries", () => {
+        assert.equal(api.formatMemoryUsage(512), "512 KB");
+        assert.equal(api.formatMemoryUsage(2048), "2.0 MB");
+        assert.equal(api.formatMemoryUsage(2 * 1024 * 1024), "2.0 GB");
+    });
+});
+
+describe("formatSystemMemory", () => {
+    it("renders megabytes whole and gigabytes with decimals", () => {
+        assert.equal(api.formatSystemMemory(2048), "2 MB");
+        assert.equal(api.formatSystemMemory(3 * 1024 * 1024), "3.0 GB");
     });
 });

@@ -178,7 +178,7 @@ Singleton {
 
     Timer {
         running: root.sensorActive && !IdleService.isIdle
-        interval: 3000
+        interval: 10000
         repeat: true
         triggeredOnStart: true
         onTriggered: root.pollSensors()

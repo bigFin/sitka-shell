@@ -14,7 +14,10 @@ import qs.services
 
 ShellRoot {
     Scope {
-        Component.onCompleted: StateStats.ensureLoaded()
+        Component.onCompleted: {
+            StateStats.ensureLoaded();
+            GameMode.ensureLoaded();
+        }
     }
 
     Background {}

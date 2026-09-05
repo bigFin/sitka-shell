@@ -2,6 +2,7 @@ pragma Singleton
 
 import Quickshell
 import Quickshell.Io
+import QtQuick
 
 // GameMode - low-distraction toggle for gaming sessions.
 //
@@ -34,6 +35,8 @@ Singleton {
             root.apply();
         else
             root.restore();
+    }
+    function ensureLoaded(): void {
     }
 
     function apply(): void {

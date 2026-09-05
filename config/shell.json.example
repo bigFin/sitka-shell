@@ -79,8 +79,7 @@
         
         // Bar entries - order and enable/disable components
         // Available entries: "workspaces", "spacer", "activeWindow", "tray",
-        // "clock", "statusIcons", "power", "controlcenter", "papertoy", "idleInhibitor", "logoToggle"
-        // Note: "logoToggle" shows the OS logo and toggles bar pinned state
+        // "clock", "statusIcons", "power", "controlcenter", "papertoy", "idleInhibitor", "gameMode", "logoToggle"
         // Tactical default: workspaces, tray, clock, status. Flip any flag to bring extras back.
         "entries": [
             { "id": "workspaces", "enabled": true },

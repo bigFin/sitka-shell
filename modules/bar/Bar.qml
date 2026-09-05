@@ -269,6 +269,12 @@ Item {
                         }
                     }
                     DelegateChoice {
+                        roleValue: "gameMode"
+                        delegate: WrappedLoader {
+                            sourceComponent: GameMode {}
+                        }
+                    }
+                    DelegateChoice {
                         roleValue: "screenRecorder"
                         delegate: WrappedLoader {
                             sourceComponent: ScreenRecorder {}

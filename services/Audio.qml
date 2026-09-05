@@ -7,7 +7,7 @@ import Quickshell.Services.Pipewire
 Singleton {
     id: root
 
-    readonly property var nodes: Pipewire.nodes.values.reduce((acc, node) => {
+    readonly property var nodes: (Pipewire.nodes?.values ?? []).reduce((acc, node) => {
         if (!node)
             return acc;
 

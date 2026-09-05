@@ -25,7 +25,7 @@ Item {
         anchors.right: parent.right
         anchors.top: parent.top
 
-        currentIndex: root.state.currentTab
+        currentIndex: Math.max(0, Math.min(root.state.currentTab, bar.count - 1))
         background: null
 
         onCurrentIndexChanged: root.state.currentTab = currentIndex

@@ -34,7 +34,7 @@ Item {
             MaterialIcon {
                 Layout.alignment: Qt.AlignHCenter
                 animate: true
-                text: Icons.getBluetoothIcon(root.device.icon)
+                text: Icons.getBluetoothIcon(root.device?.icon ?? "")
                 font.pointSize: Config.appearance.font.size.extraLarge * 3
                 font.bold: true
             }
@@ -79,13 +79,15 @@ Item {
                     Toggle {
                         label: qsTr("Connected")
                         checked: root.device?.connected ?? false
-                        toggle.onToggled: root.device.connected = checked
+                        toggle.onToggled: if (root.device) root.device.connected = checked
                     }
 
                     Toggle {
                         label: qsTr("Paired")
                         checked: root.device?.paired ?? false
                         toggle.onToggled: {
+                            if (!root.device)
+                                return;
                             if (root.device.paired)
                                 root.device.forget();
                             else
@@ -96,7 +98,7 @@ Item {
                     Toggle {
                         label: qsTr("Blocked")
                         checked: root.device?.blocked ?? false
-                        toggle.onToggled: root.device.blocked = checked
+                        toggle.onToggled: if (root.device) root.device.blocked = checked
                     }
                 }
             }

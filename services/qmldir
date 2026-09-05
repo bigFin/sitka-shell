@@ -7,6 +7,7 @@ singleton Brightness Brightness.qml
 singleton Cava Cava.qml
 singleton Colours Colours.qml
 singleton DrawerStats DrawerStats.qml
+singleton GameMode GameMode.qml
 singleton Hypr Hypr.qml
 singleton IdleInhibitor IdleInhibitor.qml
 singleton IdleService IdleService.qml

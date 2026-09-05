@@ -6,8 +6,6 @@ import QtQuick.Layouts
 
 ColumnLayout {
     id: root
-    // Layout.fillWidth: true
-    // Layout.fillHeight: true
 
     property var client: ActiveWindowModel.window
 
@@ -47,15 +45,6 @@ ColumnLayout {
         backgroundMarginTop: 0
         expanded: true
 
-        //  toggleWindowOpacity
-        //  expandColumnToAvailable
-        //  centerWindow
-        //  screenshotWindow
-        //  keyboardShortcutsInhibitWindow
-        //  toggleWindowedFullscreen
-        //  toggleFullscreen
-        //  toggleMaximize
-
         RowLayout {
             ColumnLayout {
                 RowLayout {
@@ -81,18 +70,7 @@ ColumnLayout {
                         }
                     }
 
-                    // expandColumnToAvailable - Button 6
-                    // Button {
-                    //     color: Colours.palette.m3secondaryContainer
-                    //     onColor: Colours.palette.m3onSecondaryContainer
-                    //     icon: "view_column"
-                    //     text: qsTr("Expand Column")
-                    //     function onClicked(): void {
-                    //         Niri.expandColumnToAvailable();
-                    //     }
-                    // }
                 }
-                // Center - Button 1
                 Button {
                     color: Colours.palette.m3secondaryContainer
                     onColor: Colours.palette.m3onSecondaryContainer
@@ -127,35 +105,9 @@ ColumnLayout {
                 }
             }
 
-            // // toggleWindowOpacity - Button 5
-            // Button {
-            //     color: Colours.palette.m3secondaryContainer
-            //     onColor: Colours.palette.m3onSecondaryContainer
-            //     icon: "opacity"
-            //     text: qsTr("Toggle Opacity")
-            //     function onClicked(): void {
-            //         Niri.toggleWindowOpacity();
-            //     }
-            // }
         }
     }
 
-    // Rect {
-    //     Layout.row: 1
-    //     Layout.column: 4
-    //     Layout.preferredWidth: resources.implicitWidth
-    //     Layout.fillHeight: true
-    // }
-
-    // Rect {
-    //     Layout.row: 0
-    //     Layout.column: 5
-    //     Layout.rowSpan: 2
-    //     Layout.preferredWidth: media.implicitWidth
-    //     Layout.fillHeight: true
-    // }
-
-    // ***************************************************
 
     component Rect: StyledRect {
         radius: Config.appearance.rounding.small
@@ -198,15 +150,6 @@ ColumnLayout {
                 // anchors.verticalCenter: parent.verticalCenter
                 Layout.alignment: Qt.AlignVCenter
 
-                // opacity: icon.text ? !stateLayer.containsMouse : true
-                // Behavior on opacity {
-                //     PropertyAnimation {w
-                //         property: "opacity"
-                //         duration: Config.appearance.anim.durations.normal
-                //         easing.type: Easing.BezierSpline
-                //         easing.bezierCurve: Config.appearance.anim.curves.standard
-                //     }
-                // }
             }
             StyledText {
                 id: label
@@ -218,16 +161,6 @@ ColumnLayout {
                 // Optionally, set elide if text is too long
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
-                // horizontalAlignment: Text.AlignLeft
-                // opacity: icon.text ? stateLayer.containsMouse : true
-                // Behavior on opacity {
-                //     PropertyAnimation {
-                //         property: "opacity"
-                //         duration: Config.appearance.anim.durations.normal
-                //         easing.type: Easing.BezierSpline
-                //         easing.bezierCurve: Config.appearance.anim.curves.standard
-                //     }
-                // }
             }
         }
 

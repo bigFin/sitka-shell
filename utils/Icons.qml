@@ -135,6 +135,7 @@ Singleton {
     }
 
     function getBluetoothIcon(icon: string): string {
+        icon = icon || "";
         if (icon.includes("headset") || icon.includes("headphones"))
             return "headphones";
         if (icon.includes("audio"))
@@ -155,7 +156,7 @@ Singleton {
     }
 
     function getNotifIcon(summary: string, urgency: int): string {
-        summary = summary.toLowerCase();
+        summary = (summary || "").toLowerCase();
         if (summary.includes("reboot"))
             return "restart_alt";
         if (summary.includes("recording"))
@@ -200,7 +201,7 @@ Singleton {
     }
 
     function getSpecialWsIcon(name: string): string {
-        name = name.toLowerCase().slice("special:".length);
+        name = (name || "").toLowerCase().slice("special:".length);
         if (name === "special")
             return "star";
         if (name === "communication")
@@ -211,6 +212,6 @@ Singleton {
             return "checklist";
         if (name === "sysmon")
             return "monitor_heart";
-        return name[0].toUpperCase();
+        return name[0]?.toUpperCase() ?? "";
     }
 }

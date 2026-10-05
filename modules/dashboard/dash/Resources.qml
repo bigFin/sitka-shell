@@ -1,10 +1,10 @@
 import qs.components
-import qs.components.misc
 import qs.services
 import "../../../config"
 import QtQuick
+import "../../../utils/scripts/dashboardData.js" as DashboardData
 
-Row {
+Column {
     id: root
 
     property bool active: true
@@ -38,70 +38,33 @@ Row {
     }
 
     Resource {
-        icon: "memory"
-        value: SystemUsage.cpuPerc
-        colour: Colours.palette.m3primary
+        label: qsTr("CPU")
+        reading: DashboardData.percent(SystemUsage.cpuPerc, SystemUsage.cpuState)
     }
 
     Resource {
-        icon: "memory_alt"
-        value: SystemUsage.memPerc
-        colour: Colours.palette.m3secondary
+        label: qsTr("Memory")
+        reading: DashboardData.percent(SystemUsage.memPerc, SystemUsage.memoryState)
     }
 
     Resource {
-        icon: "hard_disk"
-        value: SystemUsage.storagePerc
-        colour: Colours.palette.m3tertiary
+        label: qsTr("Storage")
+        reading: DashboardData.percent(SystemUsage.storagePerc, SystemUsage.storageState)
     }
 
-    component Resource: Item {
-        id: res
+    Resource {
+        label: qsTr("Audio")
+        reading: !Audio.sink?.ready || !Audio.sink?.audio ? "—" : Audio.muted ? qsTr("Muted") : Math.round(Audio.volume * 100) + "%"
+    }
 
-        required property string icon
-        required property real value
-        required property color colour
-
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.margins: Config.appearance.padding.large
-        implicitWidth: icon.implicitWidth
-
-        StyledRect {
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.bottom: icon.top
-            anchors.bottomMargin: Config.appearance.spacing.small
-
-            implicitWidth: Config.dashboard.sizes.resourceProgessThickness
-
-            color: Colours.tPalette.m3surfaceContainerHigh
-            radius: Config.appearance.rounding.full
-
-            StyledRect {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                implicitHeight: res.value * parent.height
-
-                color: res.colour
-                radius: Config.appearance.rounding.full
-            }
-        }
-
-        MaterialIcon {
-            id: icon
-
-            anchors.bottom: parent.bottom
-
-            text: res.icon
-            color: res.colour
-        }
-
-        Behavior on value {
-            Anim {
-                duration: Config.appearance.anim.durations.large
-            }
-        }
+    component Resource: StyledText {
+        required property string label
+        required property string reading
+        width: Config.dashboard.sizes.resourceSize - root.padding * 2
+        fontSizeMode: Text.HorizontalFit
+        minimumPointSize: Config.appearance.font.size.small
+        elide: Text.ElideRight
+        text: label + "  " + reading
+        color: Colours.palette.m3onSurface
     }
 }

@@ -83,6 +83,7 @@ GridLayout {
 
         Media {
             id: media
+            active: root.systemUsageActive
         }
     }
 

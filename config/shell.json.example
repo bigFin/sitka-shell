@@ -1,7 +1,7 @@
 {
     "general": {
         // "theme": "EverforestDark"
-        // Available themes: "EverforestDark", "EverforestLight", "RosePine", "HighTest"
+        // Available themes: "EverforestDark", "EverforestLight", "RosePine", "HighTest", "Observatory"
         "theme": "EverforestDark"
     },
     "appearance": {
@@ -93,6 +93,10 @@
             { "id": "controlcenter", "enabled": false },
             { "id": "logoToggle", "enabled": false }
         ]
+    },
+    "dashboard": {
+        // Show a second clock in UTC alongside local time (off by default).
+        "showUtc": false
     },
     "services": {
         "agentUsage": {

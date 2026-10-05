@@ -13,6 +13,7 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Effects
+import "../../utils/scripts/drawerState.js" as DrawerState
 
 Variants {
     model: Quickshell.screens
@@ -21,6 +22,8 @@ Variants {
         id: scope
 
         required property ShellScreen modelData
+        property string screenName: modelData.name
+        Component.onCompleted: screenName = modelData.name
 
         // Aliases for components defined in StyledWindow, needed by sibling components
         property alias visibilities: visibilities
@@ -37,7 +40,7 @@ Variants {
             screen: scope.modelData
             name: "drawers"
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
-            WlrLayershell.keyboardFocus: visibilities.launcher || visibilities.session || visibilities.dashboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+            WlrLayershell.keyboardFocus: visibilities.keyboardOwner !== "" ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
             mask: Region {
                 x: bar.implicitWidth
@@ -178,6 +181,7 @@ Variants {
                             popouts: panels.popouts
 
                             Component.onCompleted: Visibilities.registerBar(scope.modelData, this)
+                            Component.onDestruction: Visibilities.unregisterBar(this)
                         }
                     }
                 }
@@ -195,8 +199,31 @@ Variants {
                 property bool launcher
                 property bool dashboard
                 property bool utilities
+                property string keyboardDrawer: ""
+                property bool changingDrawer: false
+                readonly property var enabledDrawers: ({ launcher: Config.launcher.enabled, session: Config.session.enabled, dashboard: Config.dashboard.enabled })
+                readonly property string keyboardOwner: DrawerState.keyboardOwner(this, enabledDrawers)
+
+                function setDrawer(drawer: string, open: bool, intent: string): void {
+                    DrawerState.setDrawer(this, enabledDrawers, drawer, open, intent, Visibilities.claimKeyboard);
+                }
+
+                onEnabledDrawersChanged: {
+                    for (const drawer of DrawerState.focusDrawers) {
+                        if (!enabledDrawers[drawer])
+                            setDrawer(drawer, false, "explicit");
+                    }
+                }
+
+                onLauncherChanged: DrawerState.changed(this, enabledDrawers, "launcher", Visibilities.claimKeyboard)
+                onSessionChanged: DrawerState.changed(this, enabledDrawers, "session", Visibilities.claimKeyboard)
+                onDashboardChanged: DrawerState.changed(this, enabledDrawers, "dashboard", Visibilities.claimKeyboard)
+                Component.onDestruction: Visibilities.unload(scope.screenName, this)
 
                 Component.onCompleted: {
+                    // Reloaded visibility is not a new explicit input request.
+                    keyboardDrawer = "";
+                    changingDrawer = false;
                     Visibilities.load(scope.modelData, this);
 
                     const savedPinned = Visibilities.getBarPinned(scope.modelData.name);

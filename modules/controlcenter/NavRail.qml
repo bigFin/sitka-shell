@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components
 import qs.services
+import "../../utils/scripts/keyboardActivation.js" as KeyboardActivation
 import "../../config"
 import Quickshell
 import QtQuick
@@ -47,14 +48,30 @@ Item {
             id: menuBtn
 
             Layout.topMargin: Config.appearance.spacing.large
+            activeFocusOnTab: true
+            Accessible.name: root.session.navExpanded ? qsTr("Collapse navigation") : qsTr("Expand navigation")
+            Accessible.role: Accessible.Button
+            Accessible.onPressAction: KeyboardActivation.invoke(null, () => root.session.navExpanded = !root.session.navExpanded)
+            Keys.onReturnPressed: event => KeyboardActivation.invoke(event, () => root.session.navExpanded = !root.session.navExpanded)
+            Keys.onEnterPressed: event => KeyboardActivation.invoke(event, () => root.session.navExpanded = !root.session.navExpanded)
+            Keys.onSpacePressed: event => KeyboardActivation.invoke(event, () => root.session.navExpanded = !root.session.navExpanded)
             implicitWidth: menuIcon.implicitWidth + menuIcon.anchors.leftMargin * 2
             implicitHeight: menuIcon.implicitHeight + Config.appearance.padding.normal * 2
+
+            Rectangle {
+                anchors.fill: parent
+                radius: Config.appearance.rounding.small
+                color: "transparent"
+                border.width: menuBtn.activeFocus ? 2 : 0
+                border.color: Colours.palette.m3primary
+                z: 2
+            }
 
             StateLayer {
                 radius: Config.appearance.rounding.small
 
                 function onClicked(): void {
-                    root.session.navExpanded = !root.session.navExpanded;
+                    KeyboardActivation.invoke(null, () => root.session.navExpanded = !root.session.navExpanded);
                 }
             }
 
@@ -93,6 +110,31 @@ Item {
 
                 color: Colours.palette.m3primaryContainer
                 radius: Config.appearance.rounding.small
+                activeFocusOnTab: true
+                Accessible.name: qsTr("Float window")
+                Accessible.role: Accessible.Button
+                Accessible.onPressAction: activateFloat()
+                Keys.onReturnPressed: event => KeyboardActivation.invoke(event, activateFloat)
+                Keys.onEnterPressed: event => KeyboardActivation.invoke(event, activateFloat)
+                Keys.onSpacePressed: event => KeyboardActivation.invoke(event, activateFloat)
+
+                function activateFloat(): void {
+                    root.session.root.close();
+                    WindowFactory.create(null, {
+                        screen: root.screen,
+                        active: root.session.active,
+                        navExpanded: root.session.navExpanded
+                    });
+                }
+
+                Rectangle {
+                    anchors.fill: parent
+                    radius: parent.radius
+                    color: "transparent"
+                    border.width: parent.activeFocus ? 2 : 0
+                    border.color: Colours.palette.m3primary
+                    z: 2
+                }
 
                 StateLayer {
                     id: normalWinState
@@ -100,12 +142,7 @@ Item {
                     color: Colours.palette.m3onPrimaryContainer
 
                     function onClicked(): void {
-                        root.session.root.close();
-                        WindowFactory.create(null, {
-                            screen: root.screen,
-                            active: root.session.active,
-                            navExpanded: root.session.navExpanded
-                        });
+                        KeyboardActivation.invoke(null, activateFloat);
                     }
                 }
 
@@ -175,6 +212,19 @@ Item {
         required property string label
         readonly property bool active: root.session.active === label
 
+        activeFocusOnTab: true
+        Accessible.name: qsTr(label)
+        Accessible.role: Accessible.RadioButton
+        Accessible.checked: active
+        Accessible.onPressAction: activate()
+        Keys.onReturnPressed: event => KeyboardActivation.invoke(event, activate)
+        Keys.onEnterPressed: event => KeyboardActivation.invoke(event, activate)
+        Keys.onSpacePressed: event => KeyboardActivation.invoke(event, activate)
+
+        function activate(): void {
+            root.session.active = label;
+        }
+
         implicitWidth: background.implicitWidth
         implicitHeight: background.implicitHeight + smallLabel.implicitHeight + smallLabel.anchors.topMargin
 
@@ -204,6 +254,15 @@ Item {
             }
         }
 
+        Rectangle {
+            anchors.fill: background
+            radius: background.radius
+            color: "transparent"
+            border.width: item.activeFocus ? 2 : 0
+            border.color: Colours.palette.m3primary
+            z: 2
+        }
+
         StyledRect {
             id: background
 
@@ -217,7 +276,7 @@ Item {
                 color: item.active ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
 
                 function onClicked(): void {
-                    root.session.active = item.label;
+                    KeyboardActivation.invoke(null, item.activate);
                 }
             }
 

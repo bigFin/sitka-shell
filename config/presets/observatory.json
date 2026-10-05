@@ -1,0 +1,10 @@
+{
+  "general": {
+    "theme": "Observatory"
+  },
+  "appearance": {
+    "transparency": {
+      "mode": "opaque"
+    }
+  }
+}

@@ -5,6 +5,7 @@ import qs.components.effects
 import qs.services
 import "../../config"
 import qs.utils
+import "../../utils/scripts/keyboardActivation.js" as KeyboardActivation
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Notifications
@@ -315,18 +316,37 @@ StyledRect {
             Item {
                 id: expandBtn
 
+                activeFocusOnTab: true
+                Accessible.name: root.expanded ? qsTr("Collapse notification") : qsTr("Expand notification")
+                Accessible.role: Accessible.Button
+                Accessible.onPressAction: KeyboardActivation.invoke(null, toggleExpanded)
+                Keys.onReturnPressed: event => KeyboardActivation.invoke(event, toggleExpanded)
+                Keys.onEnterPressed: event => KeyboardActivation.invoke(event, toggleExpanded)
+                Keys.onSpacePressed: event => KeyboardActivation.invoke(event, toggleExpanded)
+
+                function toggleExpanded(): void { root.expanded = !root.expanded; }
+
                 anchors.right: parent.right
                 anchors.top: parent.top
 
                 implicitWidth: expandIcon.height
                 implicitHeight: expandIcon.height
 
+                Rectangle {
+                    anchors.fill: parent
+                    radius: Config.appearance.rounding.full
+                    color: "transparent"
+                    border.width: expandBtn.activeFocus ? 2 : 0
+                    border.color: Colours.palette.m3primary
+                    z: 2
+                }
+
                 StateLayer {
                     radius: Config.appearance.rounding.full
                     color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
 
                     function onClicked() {
-                        root.expanded = !root.expanded;
+                        KeyboardActivation.invoke(null, expandBtn.toggleExpanded);
                     }
                 }
 
@@ -444,7 +464,25 @@ StyledRect {
         required property var modelData
 
         radius: Config.appearance.rounding.full
+        activeFocusOnTab: root.expanded
+        enabled: root.expanded
+        Accessible.name: action.modelData.text
+        Accessible.role: Accessible.Button
+        Accessible.onPressAction: KeyboardActivation.invoke(null, action.activate)
+        Keys.onReturnPressed: event => KeyboardActivation.invoke(event, action.activate)
+        Keys.onEnterPressed: event => KeyboardActivation.invoke(event, action.activate)
+        Keys.onSpacePressed: event => KeyboardActivation.invoke(event, action.activate)
+
+        function activate(): void { action.modelData.invoke(); }
         color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.tPalette.m3surfaceContainerHigh
+
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
+            color: "transparent"
+            border.width: action.activeFocus ? 2 : 0
+            border.color: Colours.palette.m3primary
+        }
 
         Layout.preferredWidth: actionText.width + Config.appearance.padding.normal * 2
         Layout.preferredHeight: actionText.height + Config.appearance.padding.small * 2

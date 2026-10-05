@@ -8,9 +8,17 @@ import QtQuick
 Column {
     id: root
 
-    property color colour: Colours.palette.m3tertiary
+    property color colour: Colours.themeName === "Observatory" ? Colours.palette.m3primary : Colours.palette.m3tertiary
 
     spacing: Config.appearance.spacing.small
+
+    Rectangle {
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: text.implicitWidth
+        height: 1
+        visible: Colours.themeName === "Observatory"
+        color: Colours.palette.m3outline
+    }
 
     Loader {
         anchors.horizontalCenter: parent.horizontalCenter

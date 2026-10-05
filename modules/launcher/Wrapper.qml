@@ -3,8 +3,10 @@ import "../../config"
 import Quickshell
 import QtQuick
 
-Item {
+FocusScope {
     id: root
+
+    focus: visibilities.keyboardOwner === "launcher"
 
     required property PersistentProperties visibilities
     required property var panels

@@ -16,6 +16,8 @@ import QtQuick.Shapes
 Item {
     id: root
 
+    property bool active: true
+
     required property PersistentProperties visibilities
 
     property real playerProgress: {
@@ -46,7 +48,7 @@ Item {
     }
 
     Timer {
-        running: Players.active?.isPlaying ?? false
+        running: root.active && root.visible && (Players.active?.isPlaying ?? false)
         interval: Config.dashboard.mediaUpdateInterval
         triggeredOnStart: true
         repeat: true
@@ -538,6 +540,7 @@ Item {
             sourceComponent: SitkaTree {
                 anchors.centerIn: parent
                 animated: true
+                active: root.active
                 fontSize: 14
                 treeHeight: Math.max(8, Math.floor(parent.height / 18))
                 treeWidth: Math.max(7, Math.floor(parent.width / 14))

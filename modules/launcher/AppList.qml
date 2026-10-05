@@ -32,8 +32,8 @@ StyledListView {
 
     highlight: StyledRect {
         radius: Config.appearance.rounding.small
-        color: Colours.palette.m3onSurface
-        opacity: 0.08
+        color: Colours.palette.m3secondaryContainer
+        opacity: 0.62
     }
 
     state: {

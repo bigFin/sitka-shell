@@ -116,6 +116,17 @@ Item {
         }
     }
 
+    // The Observatory rail edge separates instruments from the desktop without
+    // changing hit targets, entry spacing, or the compositor's exclusive zone.
+    Rectangle {
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        width: 1
+        visible: Colours.themeName === "Observatory"
+        color: Colours.palette.m3outlineVariant
+    }
+
     Flickable {
         id: flickable
 

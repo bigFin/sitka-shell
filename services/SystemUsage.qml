@@ -5,10 +5,41 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import "../utils/scripts/shellParse.js" as ShellParse
+import "../utils/scripts/cpuSampling.js" as CpuSampling
 import qs.services
+import "../utils/scripts/dashboardData.js" as DashboardData
 
 Singleton {
     id: root
+
+    property var cpuState: DashboardData.initial()
+    property var memoryState: DashboardData.initial()
+    property var storageState: DashboardData.initial()
+
+    function updateState(domain: string, outcome: string): void {
+        const key = domain + "State";
+        let next = DashboardData.transition(root[key], outcome, Date.now());
+        // An in-flight read may finish after the last consumer leaves or idle
+        // begins. Keep its value/timestamp, but never clear paused staleness.
+        if (!root[domain + "Active"] || IdleService.isIdle)
+            next = DashboardData.transition(next, "paused", Date.now());
+        root[key] = next;
+    }
+
+    Connections {
+        target: IdleService
+        function onIsIdleChanged(): void {
+            if (IdleService.isIdle) {
+                root.updateState("cpu", "paused");
+                root.updateState("memory", "paused");
+                root.updateState("storage", "paused");
+            }
+        }
+    }
+
+    onCpuActiveChanged: { if (!cpuActive) updateState("cpu", "paused"); }
+    onMemoryActiveChanged: { if (!memoryActive) updateState("memory", "paused"); }
+    onStorageActiveChanged: { if (!storageActive) updateState("storage", "paused"); }
 
     property real cpuPerc
     property real cpuTemp
@@ -25,6 +56,7 @@ Singleton {
 
     property real lastCpuIdle
     property real lastCpuTotal
+    property var cpuSample: null
 
     property int refCount
     property int domainRefCount
@@ -106,11 +138,13 @@ Singleton {
     }
 
     function pollCpu(): void {
+        updateState("cpu", "loading");
         cpuPollCount++;
         stat.reload();
     }
 
     function pollMemory(): void {
+        updateState("memory", "loading");
         memoryPollCount++;
         meminfo.reload();
     }
@@ -118,7 +152,10 @@ Singleton {
     function pollStorage(): void {
         if (storage.running)
             return;
+        updateState("storage", "loading");
         storagePollCount++;
+        storage.streamReady = false;
+        storage.exitReady = false;
         storage.running = true;
     }
 
@@ -146,6 +183,7 @@ Singleton {
 
     Timer {
         running: root.cpuActive && !IdleService.isIdle
+        onRunningChanged: root.cpuSample = null
         interval: 3000
         repeat: true
         triggeredOnStart: true
@@ -188,23 +226,22 @@ Singleton {
         id: stat
 
         path: "/proc/stat"
+        onLoadFailed: root.updateState("cpu", "failure")
         onLoaded: {
-            const data = text().match(/^cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/);
-            if (data) {
-                const stats = data.slice(1).map(n => parseInt(n, 10));
-                const total = stats.reduce((a, b) => a + b, 0);
-                const idle = stats[3] + (stats[4] ?? 0);
-
-                const totalDiff = total - root.lastCpuTotal;
-                const idleDiff = idle - root.lastCpuIdle;
-                const nextCpuPerc = totalDiff > 0 ? (1 - idleDiff / totalDiff) : 0;
-                if (!root.nearlyEqual(root.cpuPerc, nextCpuPerc)) {
-                    root.cpuPerc = nextCpuPerc;
-                    root.cpuSerial++;
-                }
-
-                root.lastCpuTotal = total;
-                root.lastCpuIdle = idle;
+            if (!root.cpuActive || IdleService.isIdle) {
+                root.cpuSample = null;
+                return;
+            }
+            const result = CpuSampling.sample(text(), root.cpuSample, Date.now(), ShellParse.calculateCpuUsage);
+            root.cpuSample = result.previous;
+            root.updateState("cpu", result.usage !== null ? "success" : "failure");
+            if (result.previous) {
+                root.lastCpuTotal = result.previous.stats.reduce((a, b) => a + b, 0);
+                root.lastCpuIdle = result.previous.stats[3];
+            }
+            if (result.usage !== null && !root.nearlyEqual(root.cpuPerc, result.usage)) {
+                root.cpuPerc = result.usage;
+                root.cpuSerial++;
             }
         }
     }
@@ -213,9 +250,11 @@ Singleton {
         id: meminfo
 
         path: "/proc/meminfo"
+        onLoadFailed: root.updateState("memory", "failure")
         onLoaded: {
             const data = text();
             const parsed = ShellParse.parseMeminfo(data);
+            root.updateState("memory", parsed ? "success" : "failure");
             if (!parsed)
                 return;
             const nextMemTotal = parsed.total;
@@ -231,45 +270,77 @@ Singleton {
     Process {
         id: storage
 
+        property bool streamReady: false
+        property bool exitReady: false
+        property bool succeeded: false
+        property string output
+
+        onExited: (exitCode, exitStatus) => {
+            succeeded = exitCode === 0 && exitStatus === 0;
+            exitReady = true;
+            publish();
+        }
+
         command: ["sh", "-c", "df | grep '^/dev/' | awk '{print $1, $3, $4}'"]
         stdout: StdioCollector {
             onStreamFinished: {
-                const deviceMap = new Map();
+                storage.output = text;
+                storage.streamReady = true;
+                storage.publish();
+            }
+        }
 
-                for (const line of text.trim().split("\n")) {
-                    if (line.trim() === "")
+        // Process exit and stream completion can arrive in either order.
+        function publish(): void {
+            if (!streamReady || !exitReady)
+                return;
+            streamReady = false;
+            exitReady = false;
+            if (!succeeded) {
+                root.updateState("storage", "failure");
+                return;
+            }
+            const deviceMap = new Map();
+
+            for (const line of output.trim().split("\n")) {
+                if (line.trim() === "")
+                    continue;
+
+                const parts = line.trim().split(/\s+/);
+                if (parts.length >= 3) {
+                    const device = parts[0];
+                    const used = Number(parts[1]);
+                    const avail = Number(parts[2]);
+
+                    if (!Number.isFinite(used) || !Number.isFinite(avail) || used < 0 || avail < 0)
                         continue;
 
-                    const parts = line.trim().split(/\s+/);
-                    if (parts.length >= 3) {
-                        const device = parts[0];
-                        const used = parseInt(parts[1], 10) || 0;
-                        const avail = parseInt(parts[2], 10) || 0;
-
-                        // Only keep the entry with the largest total space for each device
-                        if (!deviceMap.has(device) || (used + avail) > (deviceMap.get(device).used + deviceMap.get(device).avail)) {
-                            deviceMap.set(device, {
-                                used: used,
-                                avail: avail
-                            });
-                        }
+                    // Only keep the entry with the largest total space for each device
+                    if (!deviceMap.has(device) || (used + avail) > (deviceMap.get(device).used + deviceMap.get(device).avail)) {
+                        deviceMap.set(device, {
+                            used: used,
+                            avail: avail
+                        });
                     }
                 }
+            }
 
-                let totalUsed = 0;
-                let totalAvail = 0;
+            let totalUsed = 0;
+            let totalAvail = 0;
 
-                for (const [device, stats] of deviceMap) {
-                    totalUsed += stats.used;
-                    totalAvail += stats.avail;
-                }
+            for (const [device, stats] of deviceMap) {
+                totalUsed += stats.used;
+                totalAvail += stats.avail;
+            }
 
-                const nextStorageTotal = totalUsed + totalAvail;
-                if (!root.nearlyEqual(root.storageUsed, totalUsed) || !root.nearlyEqual(root.storageTotal, nextStorageTotal)) {
-                    root.storageUsed = totalUsed;
-                    root.storageTotal = nextStorageTotal;
-                    root.storageSerial++;
-                }
+            const nextStorageTotal = totalUsed + totalAvail;
+            root.updateState("storage", nextStorageTotal > 0 ? "success" : "failure");
+            if (nextStorageTotal <= 0)
+                return;
+            if (!root.nearlyEqual(root.storageUsed, totalUsed) || !root.nearlyEqual(root.storageTotal, nextStorageTotal)) {
+                root.storageUsed = totalUsed;
+                root.storageTotal = nextStorageTotal;
+                root.storageSerial++;
             }
         }
     }

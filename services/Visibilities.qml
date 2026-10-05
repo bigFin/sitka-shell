@@ -3,6 +3,7 @@ pragma Singleton
 import qs.services
 import Quickshell
 import QtQuick
+import "../utils/scripts/drawerState.js" as DrawerState
 Singleton {
     id: root
 
@@ -53,6 +54,20 @@ Singleton {
         screens.set(key, visibilities);
     }
 
+    function unload(screenName: string, visibilities: PersistentProperties): void {
+        DrawerState.unregister(screens, screenName, visibilities);
+    }
+
+    function unregisterBar(bar: Item): void {
+        // The ShellScreen may already be invalid during destruction. Remove
+        // only entries belonging to this bar, including its object-key alias.
+        DrawerState.unregisterValue(bars, bar);
+    }
+
+    function claimKeyboard(owner: PersistentProperties): void {
+        DrawerState.claimKeyboard(screens, owner);
+    }
+
     function getForScreen(screenName: string): PersistentProperties {
         return screens.get(screenName) ?? null;
     }
@@ -66,12 +81,7 @@ Singleton {
     }
 
     function getForActive(): PersistentProperties {
-        const active = screens.get(WMService.focusedMonitorName);
-        if (active)
-            return active;
-
-        const all = Array.from(screens.values());
-        return all.length ? all[0] : null;
+        return DrawerState.activeScreen(screens, WMService.focusedMonitorName);
     }
 
     function getBarPinned(screenName: string): var {

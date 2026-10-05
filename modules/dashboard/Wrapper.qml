@@ -16,6 +16,8 @@ Item {
     property bool expanded: false
     property bool isvisible: false
 
+    focus: visibilities.keyboardOwner === "dashboard"
+
     property real buttressSize: (visibilities.dashboard || expanded || isvisible) ? Config.appearance.fillet.large : 0
     Behavior on buttressSize {
         Anim {
@@ -47,6 +49,17 @@ Item {
         root.expanded = false;
     }
 
+    Keys.onPressed: event => {
+        // Unhandled keys bubble from child controls. Their Enter/Space must not
+        // collapse the drawer, and a held key should toggle only once.
+        if (!root.activeFocus || !root.visibilities.dashboard || event.isAutoRepeat)
+            return;
+        if (event.key === Qt.Key_Space || event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+            root.expanded = !root.expanded;
+            event.accepted = true;
+        }
+    }
+
     // Timer to control temporary visibility
     Timer {
         id: flashTimer
@@ -67,7 +80,7 @@ Item {
         function onFocusSerialChanged() {
             DrawerStats.recordDashboardFlashRequest();
 
-            if (root.visibilities.dashboard || root.expanded || !ActiveWindowModel.hasWindow) {
+            if (!Config.dashboard.enabled || root.visibilities.dashboard || root.expanded || !ActiveWindowModel.hasWindow) {
                 DrawerStats.recordDashboardFlashSuppressed();
                 return;
             }
@@ -78,6 +91,7 @@ Item {
             }
 
             DrawerStats.recordDashboardFlashAccepted();
+            // A passive flash is informational; only explicit opening takes focus.
             root.isvisible = true;
             flashTimer.restart();
             root.syncDrawerStats();
@@ -93,8 +107,16 @@ Item {
 
         function onDashboardChanged(): void {
             root.syncDrawerStats();
-            if (root.visibilities.dashboard)
+            if (!root.visibilities.dashboard)
+                root.expanded = false;
+        }
+
+        function onKeyboardOwnerChanged(): void {
+            if (root.visibilities.keyboardOwner === "dashboard") {
+                flashTimer.stop();
+                root.isvisible = false;
                 root.forceActiveFocus();
+            }
         }
     }
 
@@ -117,7 +139,7 @@ Item {
     states: [
         State {
             name: "visible"
-            when: root.isvisible || ((root.visibilities.dashboard && Config.dashboard.enabled) && !root.expanded)
+            when: Config.dashboard.enabled && (root.isvisible || (root.visibilities.dashboard && !root.expanded))
             PropertyChanges {
                 target: root
                 implicitHeight: 45
@@ -170,9 +192,12 @@ Item {
     ]
 
     HyprlandFocusGrab {
-        active: WMDetector.isHyprland && !Config.dashboard.showOnHover && root.visibilities.dashboard && Config.dashboard.enabled
+        active: WMDetector.isHyprland && root.visibilities.keyboardOwner === "dashboard" && Config.dashboard.enabled
         windows: [QsWindow.window]
-        onCleared: root.visibilities.dashboard = false
+        onCleared: {
+            if (root.visibilities.keyboardOwner === "dashboard")
+                root.visibilities.dashboard = false;
+        }
     }
 
     Loader {
@@ -200,6 +225,7 @@ Item {
                 // z: 1000
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
+                    root.visibilities.setDrawer("dashboard", true, "explicit");
                     if (!root.expanded) {
                         root.expanded = true;
                     } else if (root.expanded) {

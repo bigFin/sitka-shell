@@ -83,6 +83,10 @@ Item {
 
             placeholderText: qsTr("Type \"%1\" for commands").arg(Config.launcher.actionPrefix)
 
+            // A click promotes a hover preview (or a revoked monitor) without
+            // intercepting the TextField's own pointer handling.
+            onPressed: root.visibilities.setDrawer("launcher", true, "explicit")
+
             onAccepted: {
                 const currentItem = list.currentList?.currentItem;
                 if (currentItem) {

@@ -101,6 +101,7 @@ Item {
 
                     Pane {
                         sourceComponent: Media {
+                            active: root.expanded && root.state.currentTab === 1
                             visibilities: root.visibilities
                         }
                     }

@@ -21,6 +21,8 @@ Item {
     // Configuration
     property int seed: Math.floor(Math.random() * 10000)
     property bool animated: false
+    // Callers supply panel/tab activity; keep animation state while hidden.
+    property bool active: true
     property real growthProgress: 1.0
     property real swayAmount: 0.0
     
@@ -240,6 +242,7 @@ Item {
     
     SequentialAnimation {
         id: growthAnimation
+        paused: running && (!root.active || !root.visible)
         running: root.animated && root.growthProgress < 1
         loops: 1
         
@@ -255,6 +258,7 @@ Item {
     
     SequentialAnimation {
         id: swayAnimation
+        paused: running && (!root.active || !root.visible)
         running: root.animated
         loops: Animation.Infinite
         

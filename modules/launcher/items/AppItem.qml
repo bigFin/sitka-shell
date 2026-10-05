@@ -14,6 +14,9 @@ Item {
 
     implicitHeight: Config.launcher.sizes.itemHeight
 
+    Accessible.name: modelData?.name ?? ""
+    Accessible.role: Accessible.ListItem
+
     anchors.left: parent?.left
     anchors.right: parent?.right
 

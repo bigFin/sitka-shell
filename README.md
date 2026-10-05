@@ -85,6 +85,12 @@ Run the current checkout instead of the packaged source:
 qs -p .
 ```
 
+Run the dependency-free regression tests (including required configuration files):
+
+```sh
+node --test tests/*.test.mjs
+```
+
 Build the package before submitting changes:
 
 ```sh
@@ -123,7 +129,9 @@ Useful environment overrides:
 
 ### Themes and transparency
 
-Built-in themes are `EverforestDark`, `EverforestLight`, `RosePine`, and `HighTest`.
+Built-in themes are `EverforestDark`, `EverforestLight`, `RosePine`, `HighTest`,
+and `Observatory`. [Observatory](docs/observatory.md) pairs warm instrument colors
+with an original static orbital-chart wallpaper; its preset is opt-in.
 Theme selection is declarative:
 
 ```json

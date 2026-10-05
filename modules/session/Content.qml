@@ -76,6 +76,7 @@ Column {
             sourceComponent: SitkaTree {
                 anchors.centerIn: parent
                 animated: true
+                active: root.visibilities.session
                 fontSize: 14
                 treeHeight: Math.max(8, Math.floor(parent.height / 18))
                 treeWidth: Math.max(7, Math.floor(parent.width / 14))
@@ -91,6 +92,7 @@ Column {
         // Fallback to configured GIF, rotating through sessionGifDir when set
         CyclingImage {
             id: customGif
+            active: root.visibilities.session && !sessionDecoration.useSitkaTree
             anchors.fill: parent
             visible: !sessionDecoration.useSitkaTree
 

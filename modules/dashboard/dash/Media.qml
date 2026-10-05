@@ -12,6 +12,8 @@ import qs.components.images
 Item {
     id: root
 
+    property bool active: true
+
     property real playerProgress: {
         const active = Players.active;
         return active?.length ? active.position / active.length : 0;
@@ -28,7 +30,7 @@ Item {
     }
 
     Timer {
-        running: Players.active?.isPlaying ?? false
+        running: root.active && root.visible && (Players.active?.isPlaying ?? false)
         interval: Config.dashboard.mediaUpdateInterval
         triggeredOnStart: true
         repeat: true
@@ -231,6 +233,7 @@ Item {
             sourceComponent: SitkaTree {
                 anchors.centerIn: parent
                 animated: true
+                active: root.active
                 fontSize: 14
                 treeHeight: Math.max(8, Math.floor(parent.height / 18))
                 treeWidth: Math.max(7, Math.floor(parent.width / 14))
@@ -246,6 +249,7 @@ Item {
         // Fallback to configured image, rotating through mediaGifDir when set
         CyclingImage {
             id: customImage
+            active: root.active && !mediaDecoration.useSitkaTree
             anchors.fill: parent
             visible: !mediaDecoration.useSitkaTree
 

@@ -10,6 +10,7 @@ import QtQuick
 Image {
     id: root
 
+    property bool active: true
     property string dir: ""
     property string fallbackSource: ""
     property int cycleSeconds: 0
@@ -24,7 +25,7 @@ Image {
     }
 
     Timer {
-        running: !!root.dir && root.cycleSeconds > 0 && files.entries.length > 1
+        running: root.active && root.visible && !!root.dir && root.cycleSeconds > 0 && files.entries.length > 1
         interval: Math.max(1, root.cycleSeconds) * 1000
         repeat: true
         onTriggered: root.cycleIndex++

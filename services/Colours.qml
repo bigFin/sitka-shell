@@ -14,7 +14,7 @@ Singleton {
 
     readonly property bool light: currentLight
     property bool currentLight
-    readonly property M3Palette palette: current
+    readonly property M3Palette palette: themeName === "Observatory" ? observatory : current
     readonly property M3TPalette tPalette: M3TPalette {}
     readonly property M3Palette current: M3Palette {}
 
@@ -23,6 +23,7 @@ Singleton {
     readonly property EverforestDarkPalette everforestDark: EverforestDarkPalette {}
     readonly property RosePinePalette rosepine: RosePinePalette {}
     readonly property HighTestPalette highTest: HighTestPalette {}
+    readonly property M3Palette observatory: ObservatoryPalette {}
     readonly property Transparency transparency: Transparency {}
     property real wallLuminance
 
@@ -62,7 +63,7 @@ Singleton {
     }
 
     property string themeOverride: ""
-    readonly property list<string> knownThemes: ["EverforestDark", "EverforestLight", "RosePine", "HighTest"]
+    readonly property list<string> knownThemes: ["EverforestDark", "EverforestLight", "RosePine", "HighTest", "Observatory"]
     readonly property string themeName: themeOverride || Config.general.theme || "EverforestDark"
 
     readonly property var paletteSource: {
@@ -290,6 +291,100 @@ Singleton {
         property color sapphire: "#BDC2FF"
         property color blue: "#C7BFFF"
         property color lavender: "#EAB5ED"
+    }
+
+    // Keep a separate complete palette: switching back must not leave Observatory
+    // container/fixed/terminal colors in the legacy themes' partially mapped palette.
+    component ObservatoryPalette: M3Palette {
+        m3primary_paletteKeyColor: "#e7b76f"
+        m3secondary_paletteKeyColor: "#8fc1b5"
+        m3tertiary_paletteKeyColor: "#bdb0df"
+        m3neutral_paletteKeyColor: "#829896"
+        m3neutral_variant_paletteKeyColor: "#8b9f9d"
+        m3background: "#18282d"
+        m3onBackground: "#e4dbc4"
+        m3surface: "#18282d"
+        m3surfaceDim: "#142226"
+        m3surfaceBright: "#3b5055"
+        m3surfaceContainerLowest: "#101d21"
+        m3surfaceContainerLow: "#1d3035"
+        m3surfaceContainer: "#24383d"
+        m3surfaceContainerHigh: "#2b4146"
+        m3surfaceContainerHighest: "#334a4f"
+        m3onSurface: "#e4dbc4"
+        m3surfaceVariant: "#334a4f"
+        m3onSurfaceVariant: "#bccac4"
+        m3inverseSurface: "#e4dbc4"
+        m3inverseOnSurface: "#24383d"
+        m3outline: "#829896"
+        m3outlineVariant: "#526b6e"
+        m3shadow: "#000000"
+        m3scrim: "#000000"
+        m3surfaceTint: "#e7b76f"
+        m3primary: "#e7b76f"
+        m3onPrimary: "#30230e"
+        m3primaryContainer: "#594323"
+        m3onPrimaryContainer: "#f5dfb9"
+        m3inversePrimary: "#765321"
+        m3secondary: "#8fc1b5"
+        m3onSecondary: "#142f2a"
+        m3secondaryContainer: "#2d5048"
+        m3onSecondaryContainer: "#c9e9df"
+        m3tertiary: "#bdb0df"
+        m3onTertiary: "#29223c"
+        m3tertiaryContainer: "#49405f"
+        m3onTertiaryContainer: "#e8def8"
+        m3error: "#efaaa0"
+        m3onError: "#481e1a"
+        m3errorContainer: "#69342e"
+        m3onErrorContainer: "#ffdad4"
+        m3primaryFixed: "#f5dfb9"
+        m3primaryFixedDim: "#e7b76f"
+        m3onPrimaryFixed: "#30230e"
+        m3onPrimaryFixedVariant: "#513b1d"
+        m3secondaryFixed: "#c9e9df"
+        m3secondaryFixedDim: "#8fc1b5"
+        m3onSecondaryFixed: "#142f2a"
+        m3onSecondaryFixedVariant: "#24483f"
+        m3tertiaryFixed: "#e8def8"
+        m3tertiaryFixedDim: "#bdb0df"
+        m3onTertiaryFixed: "#29223c"
+        m3onTertiaryFixedVariant: "#423652"
+        term0: "#24383d"
+        term1: "#efaaa0"
+        term2: "#b1c89b"
+        term3: "#e7b76f"
+        term4: "#9bb6d5"
+        term5: "#bdb0df"
+        term6: "#8fc1b5"
+        term7: "#e4dbc4"
+        term8: "#829896"
+        term9: "#f6bfb6"
+        term10: "#c7dcaf"
+        term11: "#f5d49f"
+        term12: "#b9cee5"
+        term13: "#d2c5ed"
+        term14: "#b2dbcf"
+        term15: "#f6efdf"
+        archBlue: "#8fbdd2"
+        success: "#8fc1b5"
+        warning: "#e7b76f"
+        info: "#8fbdd2"
+        error: "#efaaa0"
+        rosewater: "#e4c9bb"
+        flamingo: "#e4b7b0"
+        pink: "#d5abc6"
+        mauve: "#bdb0df"
+        red: "#efaaa0"
+        maroon: "#d99a94"
+        peach: "#e9b18c"
+        yellow: "#e7c987"
+        green: "#b1c89b"
+        teal: "#8fc1b5"
+        sky: "#a5ced2"
+        sapphire: "#8fbdd2"
+        blue: "#9bb6d5"
+        lavender: "#c6bce3"
     }
 
     component EverforestLightPalette: QtObject {

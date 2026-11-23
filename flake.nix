@@ -78,7 +78,7 @@
       in
         pkgs.mkShell.override {stdenv = shell.stdenv;} {
           inputsFrom = [shell shell.plugin shell.extras];
-          packages = with pkgs; [material-symbols iosevka qt6.qtdeclarative];
+          packages = with pkgs; [material-symbols iosevka qt6.qtdeclarative git nodejs pre-commit];
           QML_IMPORT_PATH = qmlImportPath;
           QML2_IMPORT_PATH = qmlImportPath;
           SITKA_LIB_DIR = "${shell.extras}/lib";

@@ -1,0 +1,10 @@
+# Opt in with `nix develop -c pre-commit install`; check the whole tree
+# without installing anything with `nix develop -c pre-commit run --all-files`.
+repos:
+  - repo: local
+    hooks:
+      - id: source-size
+        name: Check first-party source line limits
+        entry: node scripts/size/check.mjs
+        language: system
+        types: [file]

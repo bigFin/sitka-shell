@@ -13,6 +13,12 @@ For focused fixes:
 5. Describe user-visible changes, compatibility impact, and validation in the
    pull request.
 
+Run `nix develop -c pre-commit run --all-files` to check source file sizes, or
+opt in to checking staged changes with `nix develop -c pre-commit install`.
+New first-party source files are limited to 500 physical lines. Existing files
+over that limit may shrink but not grow; split them into focused components or
+helpers as you work on them.
+
 The Node suite always runs the dependency-free regressions. It also runs isolated
 Qt keyboard/idle checks when Qt 6 `qmltestrunner` is on `PATH`; otherwise those
 two checks report a skip. Set `QMLTESTRUNNER` to an executable path and, if needed,

@@ -30,6 +30,12 @@ qt_add_qml_module(sitka
         desktopdatabase.hpp desktopdatabase.cpp
 )
 
+qt_add_shaders(sitka sitka_surface_material
+    PREFIX "/sitka/shaders"
+    BASE "shaders"
+    FILES shaders/dither-surface.frag
+)
+
 qt_query_qml_module(sitka
     URI module_uri
     VERSION module_version

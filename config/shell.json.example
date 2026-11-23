@@ -1,10 +1,13 @@
 {
     "general": {
         // "theme": "EverforestDark"
-        // Available themes: "EverforestDark", "EverforestLight", "RosePine", "HighTest", "Observatory"
+        // Available themes: "EverforestDark", "EverforestLight", "RosePine", "HighTest", "Observatory", "SunWorkstation"
         "theme": "EverforestDark"
     },
     "appearance": {
+        // Static ordered texture on surface fills only. Text, icons and artwork are not filtered.
+        // The Sun Workstation preset opts in; other presets remain flat by default.
+        "dithering": { "enabled": false, "intensity": 0.35, "pixelSize": 1 },
         // Corner style: 0=radius, 1=chamfer, 2=fillet
         "filletStyle": 1,
         "font": {

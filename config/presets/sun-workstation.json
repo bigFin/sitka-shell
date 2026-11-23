@@ -1,0 +1,7 @@
+{
+  "general": { "theme": "SunWorkstation" },
+  "appearance": {
+    "transparency": { "mode": "opaque" },
+    "dithering": { "enabled": true, "intensity": 0.32, "pixelSize": 1 }
+  }
+}

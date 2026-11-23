@@ -76,6 +76,7 @@ Variants {
 
             StyledRect {
                 anchors.fill: parent
+                dithered: false // A dimming scrim, not a themed surface.
                 opacity: visibilities.session && Config.session.enabled ? 1 : 0
                 color: Qt.alpha(Colours.palette.m3scrim, Colours.transparency.scrim)
 

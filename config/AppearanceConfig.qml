@@ -7,6 +7,13 @@ JsonObject {
     property FontStuff font: FontStuff {}
     property Anim anim: Anim {}
     property Transparency transparency: Transparency {}
+    property Dithering dithering: Dithering {}
+
+    component Dithering: JsonObject {
+        property bool enabled: false
+        property real intensity: 0.35
+        property real pixelSize: 1
+    }
 
     component Rounding: JsonObject {
         property real scale: 0

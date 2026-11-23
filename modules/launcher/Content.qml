@@ -84,6 +84,7 @@ Item {
             topPadding: Config.appearance.padding.larger
             bottomPadding: Config.appearance.padding.larger
 
+            placeholderTextColor: Colours.launcherSecondaryText
             placeholderText: qsTr("Type \"%1\" for commands").arg(Config.launcher.actionPrefix)
 
             // A click promotes a hover preview (or a revoked monitor) without

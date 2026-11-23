@@ -22,6 +22,7 @@ TextField {
 
     cursorDelegate: StyledRect {
         id: cursor
+        dithered: false
 
         property bool disableBlink
 

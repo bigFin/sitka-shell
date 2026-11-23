@@ -101,11 +101,11 @@ import QtQuick
 QtObject { property var appearance: ({padding: {smaller: 2, small: 4, normal: 8, large: 12, larger: 16}, spacing: {small: 4, normal: 8, large: 12}, rounding: {small: 4, normal: 8, full: 24}, fillet: {small: 2}, font: {size: {small: 10, smaller: 10, large: 14}, family: {sans: "monospace"}}, anim: {durations: {small: 0, normal: 0, expressiveFastSpatial: 0, expressiveDefaultSpatial: 0}, curves: {standard: [0,0,1,1,1,1], standardDecel: [0,0,1,1,1,1], expressiveFastSpatial: [0,0,1,1,1,1], expressiveDefaultSpatial: [0,0,1,1,1,1]}}}); property var launcher: ({actionPrefix: ":", vimKeybinds: false}) }`);
     write('doubles/Colours.qml', `pragma Singleton
 import QtQuick
-QtObject { property var palette: ({m3primary: "cyan", m3onPrimary: "white", m3primaryContainer: "navy", m3onPrimaryContainer: "white", m3secondaryContainer: "grey", m3onSecondaryContainer: "white", m3onSurface: "white", m3outline: "grey"}) }`);
+QtObject { readonly property color launcherSecondaryText: palette.m3outline; property var palette: ({m3primary: "cyan", m3onPrimary: "white", m3primaryContainer: "navy", m3onPrimaryContainer: "white", m3secondaryContainer: "grey", m3onSecondaryContainer: "white", m3onSurface: "white", m3outline: "grey"}) }`);
     write('doubles/WindowFactory.qml', `pragma Singleton
 import QtQuick
 QtObject { property int calls: 0; property var lastOptions; function create(parent, options) { calls++; lastOptions = options; } }`);
-    write('StyledRect.qml', 'import QtQuick\nRectangle { property int filletSize: 4 }');
+    write('StyledRect.qml', 'import QtQuick\nRectangle { property int filletSize: 4; property bool dithered: true }');
     write('StyledClippingRect.qml', 'import QtQuick\nRectangle { clip: true }');
     write('StyledText.qml', 'import QtQuick\nText {}');
     write('MaterialIcon.qml', 'import QtQuick\nText { property real fill: 0; property bool animate }');

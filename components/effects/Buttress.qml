@@ -16,6 +16,7 @@ Shape {
     // Size is used by parent to determine max width, but here we just render to 'width'
     property real size: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
     property color color: Colours.tPalette.m3surface
+    property bool dithered: true
     
     // Geometry
     // width is set by parent animation
@@ -25,10 +26,18 @@ Shape {
     // Optimizations
     preferredRendererType: Shape.CurveRenderer
 
+    DitherSurface {
+        id: dither
+        anchors.fill: parent
+        active: root.dithered
+        color: root.color
+        triangle: root.orientation
+    }
+
     ShapePath {
         strokeWidth: 0
         strokeColor: "transparent"
-        fillColor: root.color
+        fillColor: dither.rendering ? "transparent" : root.color
 
         // Start Point
         startX: (root.orientation === 0 || root.orientation === 2) ? root.width : 0

@@ -1,4 +1,6 @@
 module qs.services
+internal M3Palette M3Palette.qml
+internal SunWorkstationPalette SunWorkstationPalette.qml
 singleton Audio Audio.qml
 singleton ActiveWindowModel ActiveWindowModel.qml
 singleton AgentUsage AgentUsage.qml

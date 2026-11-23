@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 
 const read = path => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const colours = read('services/Colours.qml');
+const roles = [...read('services/M3Palette.qml').matchAll(/property color (\w+):/g)].map(m => m[1]).sort();
 const component = name => {
     const match = colours.match(new RegExp(`component ${name}: \\w+ \\{([\\s\\S]*?)\\n    \\}`));
     assert.ok(match, `${name} component exists`);
@@ -23,8 +24,7 @@ const contrast = (a, b) => {
 
 // Read the shipped QML values rather than maintaining a second test palette.
 test('Observatory explicitly supplies every M3, terminal and compatibility role', () => {
-    const roles = [...component('M3Palette').matchAll(/property color (\w+):/g)].map(m => m[1]);
-    assert.deepEqual(Object.keys(palette).sort(), roles.sort());
+    assert.deepEqual(Object.keys(palette).sort(), roles);
     assert.equal(Object.keys(palette).length, [...component('ObservatoryPalette').matchAll(/(\w+):/g)].length);
 });
 
@@ -64,12 +64,23 @@ test('Observatory status accents and outlines remain legible on instrument panel
 
 test('Observatory is opt-in and does not mutate the legacy palette', () => {
     assert.match(colours, /knownThemes: \[[^\]]*"Observatory"/);
-    assert.match(colours, /readonly property M3Palette palette: themeName === "Observatory" \? observatory : current/);
+    assert.match(colours, /readonly property M3Palette palette:[^\n]*themeName === "Observatory" \? observatory : current/);
     assert.match(colours, /readonly property M3Palette observatory: ObservatoryPalette \{\}/);
     assert.match(colours, /Config.general.theme \|\| "EverforestDark"/);
     assert.doesNotMatch(colours, /current\.\w+\s*=\s*observatory/);
     const preset = JSON.parse(read('config/presets/observatory.json'));
     assert.deepEqual(preset, { general: { theme: 'Observatory' }, appearance: { transparency: { mode: 'opaque' } } });
+});
+
+test('SunWorkstation supplies every role and is an opt-in light palette in the theme IPC', () => {
+    const sun = read('services/SunWorkstationPalette.qml');
+    const assignments = [...sun.matchAll(/^\s*(\w+): "(#[\da-f]{6})"$/gm)];
+    assert.deepEqual(assignments.map(m => m[1]).sort(), roles);
+    assert.match(colours, /knownThemes: \[[^\]]*"SunWorkstation"/);
+    assert.match(colours, /readonly property M3Palette sunWorkstation: SunWorkstationPalette \{\}/);
+    assert.match(colours, /palette: themeName === "SunWorkstation" \? sunWorkstation :/);
+    assert.match(colours, /light: themeName === "SunWorkstation" \|\| currentLight/);
+    assert.doesNotMatch(colours, /current\.\w+\s*=\s*sunWorkstation/);
 });
 
 test('Observatory wallpaper is self-contained static vector artwork', () => {

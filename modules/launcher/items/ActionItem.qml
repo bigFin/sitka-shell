@@ -58,7 +58,7 @@ Item {
 
                 text: root.modelData?.desc ?? ""
                 font.pointSize: Config.appearance.font.size.small
-                color: Colours.palette.m3outline
+                color: Colours.launcherSecondaryText
 
                 elide: Text.ElideRight
                 width: root.width - icon.width - Config.appearance.rounding.normal * 2

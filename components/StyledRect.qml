@@ -6,6 +6,8 @@ Item {
     id: root
     
     property color color: "transparent"
+    property bool dithered: true
+    property real ditherRelief: 0
     readonly property real effectiveFilletSize: Math.max(
         0,
         Math.min(filletSize, width / 2, height / 2)
@@ -39,12 +41,39 @@ Item {
     Behavior on color {
         CAnim {}
     }
+
+    // Render only the fill. External children and the original border remain
+    // outside the effect, and no offscreen layer is needed.
+    DitherSurface {
+        id: dither
+        anchors.fill: parent
+        active: root.dithered
+        relief: root.ditherRelief
+        color: root.color
+        readonly property bool fillets: root.enableFillets && root.filletStyle >= 0
+        composedFill: fillets
+
+        function style(enabled: bool, value: int): int {
+            if (!enabled)
+                return root.fillDisabledFillets ? -1 : -2;
+            // CornerPiece's legacy style 0 uses its independent radius (0).
+            return value === 0 ? -1 : value;
+        }
+
+        cornerSizes: fillets
+            ? Qt.vector4d(root.effectiveFilletSize, root.effectiveFilletSize, root.effectiveFilletSize, root.effectiveFilletSize)
+            : Qt.vector4d(fallbackRect.topLeftRadius, fallbackRect.topRightRadius, fallbackRect.bottomLeftRadius, fallbackRect.bottomRightRadius)
+        cornerStyles: fillets
+            ? Qt.vector4d(style(root.topLeftFillet, root.topLeftFilletStyle), style(root.topRightFillet, root.topRightFilletStyle),
+                          style(root.bottomLeftFillet, root.bottomLeftFilletStyle), style(root.bottomRightFillet, root.bottomRightFilletStyle))
+            : Qt.vector4d(0, 0, 0, 0)
+    }
     
     // Standard rounded rectangle (fallback)
     Rectangle {
         id: fallbackRect
         anchors.fill: parent
-        color: root.color
+        color: dither.rendering ? "transparent" : root.color
         radius: root.radius
         visible: !root.enableFillets || root.filletStyle < 0
     }
@@ -52,7 +81,7 @@ Item {
     // Fillet implementation using composed shapes
     Item {
         anchors.fill: parent
-        visible: root.enableFillets && root.filletStyle >= 0
+        visible: !dither.rendering && root.enableFillets && root.filletStyle >= 0
         
         // Center cross (vertical and horizontal bars)
         Rectangle {

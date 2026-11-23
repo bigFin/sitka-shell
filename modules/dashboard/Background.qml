@@ -1,7 +1,4 @@
-import qs.components
-import qs.services
-import "../../config"
-import qs.components.effects // For Buttress
+import qs.components.effects
 import QtQuick
 
 Item {
@@ -19,29 +16,13 @@ Item {
     height: wrapper.height
     visible: height > 0
 
-    // Main Background Rectangle
-    StyledRect {
+    DrawerPlate {
         id: mainRect
         anchors.fill: parent
-        
-        // Match the original background properties
-        color: Colours.tPalette.m3surface
-        
-        // Apply large fillets for main containers
-        filletSize: Config.appearance && Config.appearance.fillet ? Config.appearance.fillet.large : 6
-        
+
+        dockAtTop: true
         // Keep top corners filleted whenever buttresses are not fully present.
-        // This prevents tiny square flash artifacts during collapse transitions.
-        topLeftFillet: !root.buttressesVisible
-        topRightFillet: !root.buttressesVisible
-        topLeftFilletStyle: 1
-        topRightFilletStyle: 1
-        
-        // Bottom corners: Chamfer (Subtractive)
-        bottomLeftFillet: true
-        bottomRightFillet: true
-        bottomLeftFilletStyle: 1
-        bottomRightFilletStyle: 1
+        topButtressesVisible: root.buttressesVisible
     }
     
     // Left Buttress (Additive)

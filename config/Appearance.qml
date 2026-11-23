@@ -10,4 +10,5 @@ Singleton {
     readonly property AppearanceConfig.FontStuff font: Config.appearance.font
     readonly property AppearanceConfig.Anim anim: Config.appearance.anim
     readonly property AppearanceConfig.Transparency transparency: Config.appearance.transparency
+    readonly property AppearanceConfig.Dithering dithering: Config.appearance.dithering
 }

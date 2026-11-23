@@ -1,4 +1,6 @@
 module qs.components.effects
+DitherSurface 1.0 DitherSurface.qml
+DrawerPlate 1.0 DrawerPlate.qml
 Buttress 1.0 Buttress.qml
 CalloutLine 1.0 CalloutLine.qml
 ColouredIcon 1.0 ColouredIcon.qml

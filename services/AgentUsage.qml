@@ -28,10 +28,8 @@ Singleton {
     property double lastUpdatedMs: 0
 
     property int nextCodexRequestId: 1
-    property int codexInitializeRequestId: 0
-    property double codexInitializeSentMs: 0
-    property int codexRateLimitRequestId: 0
-    property double codexRateLimitSentMs: 0
+    property bool codexInitialized: false
+    property var codexPending: null // Only one request (handshake or quota read) is outstanding.
     property int activeViewCount: 0
     readonly property bool pollingActive: activeViewCount > 0
 
@@ -61,19 +59,10 @@ Singleton {
         }
         codexLoading = true;
         codexError = "";
-        if (!codexProcess.running) {
+        if (!codexProcess.running)
             codexProcess.running = true;
-        } else if (!codexInitialized) {
-            if (ShellParse.isRequestStale(Date.now(), codexInitializeSentMs, 120000)) {
-                codexInitializeRequestId = 0;
-                codexInitializeSentMs = 0;
-                initializeCodex();
-            }
-        } else {
-            if (ShellParse.isRequestStale(Date.now(), codexRateLimitSentMs, 120000))
-                codexRateLimitRequestId = 0;
-            requestCodexRateLimits();
-        }
+        else
+            requestCodex();
     }
 
     function refreshClaude(): void {
@@ -94,29 +83,14 @@ Singleton {
         codexProcess.write(JSON.stringify(message) + "\n");
     }
 
-    function initializeCodex(): void {
-        codexInitializeRequestId = nextCodexRequestId++;
-        codexInitializeSentMs = Date.now();
-        sendCodex({
-            "id": codexInitializeRequestId,
-            "method": "initialize",
-            "params": {
-                "clientInfo": {
-                    "name": "sitka-shell",
-                    "version": "1"
-                }
-            }
-        });
-    }
-
-    function requestCodexRateLimits(): void {
-        if (!codexInitialized || codexRateLimitRequestId !== 0)
+    function requestCodex(): void {
+        const now = Date.now();
+        if (codexPending && !ShellParse.isRequestStale(now, codexPending.sentMs, 120000))
             return;
-        codexRateLimitRequestId = nextCodexRequestId++;
-        codexRateLimitSentMs = Date.now();
-        sendCodex({
-            "id": codexRateLimitRequestId,
-            "method": "account/rateLimits/read"
+        const id = nextCodexRequestId++;
+        codexPending = { id: id, sentMs: now };
+        sendCodex(codexInitialized ? { id: id, method: "account/rateLimits/read" } : {
+            id: id, method: "initialize", params: { clientInfo: { name: "sitka-shell", version: "1" } }
         });
     }
 
@@ -200,13 +174,13 @@ Singleton {
         command: ["codex", "-s", "read-only", "-a", "untrusted", "app-server"]
         stdinEnabled: true
 
-        onStarted: root.initializeCodex()
-        onExited: {
+        onStarted: root.requestCodex()
+        // A failed exec has no exited signal; both failure and normal exit clear running.
+        onRunningChanged: {
+            if (running)
+                return;
             root.codexInitialized = false;
-            root.codexInitializeRequestId = 0;
-            root.codexInitializeSentMs = 0;
-            root.codexRateLimitRequestId = 0;
-            root.codexRateLimitSentMs = 0;
+            root.codexPending = null;
             root.codexLoading = false;
             if (root.codexQuotas.length === 0)
                 root.codexError = qsTr("Codex CLI unavailable");
@@ -221,26 +195,19 @@ Singleton {
                     return;
                 }
 
-                if (message.id === root.codexInitializeRequestId) {
-                    root.codexInitializeRequestId = 0;
-                    if (message.error) {
-                        root.codexLoading = false;
-                        root.codexError = message.error.message || qsTr("Codex initialization failed");
-                        return;
-                    }
-                    root.codexInitialized = true;
-                    root.sendCodex({"method": "initialized"});
-                    root.requestCodexRateLimits();
+                if (!root.codexPending || message?.id !== root.codexPending.id)
+                    return;
+                root.codexPending = null;
+                if (message.error) {
+                    root.codexLoading = false;
+                    root.codexError = message.error.message || (root.codexInitialized ? qsTr("Codex quota request failed") : qsTr("Codex initialization failed"));
                     return;
                 }
-
-                if (message.id === root.codexRateLimitRequestId) {
-                    root.codexRateLimitRequestId = 0;
-                    if (message.error) {
-                        root.codexLoading = false;
-                        root.codexError = message.error.message || qsTr("Codex quota request failed");
-                        return;
-                    }
+                if (!root.codexInitialized) {
+                    root.codexInitialized = true;
+                    root.sendCodex({"method": "initialized"});
+                    root.requestCodex();
+                } else {
                     root.parseCodexRateLimits(message.result);
                 }
             }

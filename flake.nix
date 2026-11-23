@@ -72,7 +72,7 @@
       default = let
         shell = self.packages.${pkgs.stdenv.hostPlatform.system}.sitka-shell;
         qmlImportPath = pkgs.lib.concatStringsSep ":" [
-          "${shell.plugin}/lib/qt6/qml"
+          "${shell.plugin}/${pkgs.qt6.qtbase.qtQmlPrefix}"
           "${pkgs.qt6.qtdeclarative}/${pkgs.qt6.qtbase.qtQmlPrefix}"
         ];
       in

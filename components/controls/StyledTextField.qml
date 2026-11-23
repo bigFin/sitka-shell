@@ -9,6 +9,8 @@ import QtQuick.Controls
 TextField {
     id: root
 
+    property bool animateCursorOpacity: true
+
     color: Colours.palette.m3onSurface
     placeholderTextColor: Colours.palette.m3outline
     font.family: Config.appearance.font.family.sans
@@ -60,6 +62,8 @@ TextField {
         }
 
         Behavior on opacity {
+            enabled: root.animateCursorOpacity
+
             Anim {
                 duration: Config.appearance.anim.durations.small
             }

@@ -45,6 +45,7 @@ RowLayout {
         Layout.topMargin: root.padding
         Layout.bottomMargin: root.padding
         Layout.leftMargin: root.padding * 2
+        animateReadings: root.active
 
         value1: Math.min(1, SystemUsage.gpuTemp / 90)
         value2: SystemUsage.gpuPerc
@@ -62,6 +63,7 @@ RowLayout {
         Layout.bottomMargin: root.padding
 
         primary: true
+        animateReadings: root.active
 
         value1: Math.min(1, SystemUsage.cpuTemp / 90)
         value2: SystemUsage.cpuPerc
@@ -78,6 +80,7 @@ RowLayout {
         Layout.topMargin: root.padding
         Layout.bottomMargin: root.padding
         Layout.rightMargin: root.padding * 3
+        animateReadings: root.active
 
         value1: SystemUsage.memPerc
         value2: SystemUsage.storagePerc
@@ -104,6 +107,7 @@ RowLayout {
         required property string sublabel2
         required property string label1
         required property string label2
+        required property bool animateReadings
 
         property bool primary
         readonly property real primaryMult: primary ? 1.2 : 1
@@ -221,10 +225,12 @@ RowLayout {
         }
 
         Behavior on value1 {
+            enabled: res.animateReadings
             Anim {}
         }
 
         Behavior on value2 {
+            enabled: res.animateReadings
             Anim {}
         }
 

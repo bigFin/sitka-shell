@@ -73,6 +73,9 @@ Item {
         StyledTextField {
             id: search
 
+            // Keep the blink without repainting the drawer throughout a fade.
+            animateCursorOpacity: false
+
             anchors.left: searchIcon.right
             anchors.right: clearIcon.left
             anchors.leftMargin: Config.appearance.spacing.small

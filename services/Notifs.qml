@@ -28,7 +28,8 @@ Singleton {
             notif.tracked = true;
 
             root.list.push(notifComp.createObject(root, {
-                popup: true,
+                // Keep the arrival-time decision so muted notifications never replay.
+                popup: !root.dnd,
                 notification: notif
             }));
         }

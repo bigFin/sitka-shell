@@ -60,6 +60,16 @@ test('QtQuick affordance focus and activation harness', {
     write('keyboardActivation.js', fs.readFileSync(new URL('../utils/scripts/keyboardActivation.js', import.meta.url)));
     write('tst_affordanceKeyboard.qml', fs.readFileSync(new URL('./qt/tst_affordanceKeyboard.qml', import.meta.url)));
     write('tst_launcherFocus.qml', fs.readFileSync(new URL('./qt/tst_launcherFocus.qml', import.meta.url)));
+    write('tst_bluetoothRename.qml', fs.readFileSync(new URL('./qt/tst_bluetoothRename.qml', import.meta.url)));
+    const isolatedImports = source => source.replace(/^import (?:qs\.\S+|"(?:\.\.\/)+config")\n/gm, '').replace('import QtQuick\n', 'import QtQuick\nimport "doubles"\n');
+    const bluetoothSource = file => fs.readFileSync(new URL(`../modules/controlcenter/bluetooth/${file}.qml`, import.meta.url), 'utf8');
+    write('RenameEditor.qml', isolatedImports(bluetoothSource('RenameEditor')));
+    // Exercise the shipped call-site bindings without loading a Bluetooth service.
+    for (const page of ['Details', 'Settings']) {
+      const rows = [...bluetoothSource(page).matchAll(/^( *)RenameEditor \{\n[\s\S]*?^\1\}/gm)];
+      assert.equal(rows.length, 1);
+      write(`${page}Rename.qml`, `import QtQuick\nimport QtQuick.Layouts\nimport "doubles"\nColumnLayout {\n id: root; required property var session; property var device: session.bt.active\n${rows[0][0]}\n}`);
+    }
     write('drawerState.js', fs.readFileSync(new URL('../utils/scripts/drawerState.js', import.meta.url)));
     const launcher = fs.readFileSync(new URL('../modules/launcher/Content.qml', import.meta.url), 'utf8');
     const start = launcher.indexOf('StyledTextField {');
@@ -88,19 +98,20 @@ FocusScope {
     write('doubles/qmldir', 'singleton Config 1.0 Config.qml\nsingleton Colours 1.0 Colours.qml\nsingleton WindowFactory 1.0 WindowFactory.qml\n');
     write('doubles/Config.qml', `pragma Singleton
 import QtQuick
-QtObject { property var appearance: ({padding: {small: 4, normal: 8, large: 12, larger: 16}, spacing: {small: 4, normal: 8, large: 12}, rounding: {small: 4, normal: 8, full: 24}, font: {size: {small: 10, smaller: 10, large: 14}, family: {sans: "monospace"}}, anim: {durations: {small: 0, expressiveDefaultSpatial: 0}, curves: {expressiveDefaultSpatial: [0,0,1,1,1,1]}}}); property var launcher: ({actionPrefix: ":", vimKeybinds: false}) }`);
+QtObject { property var appearance: ({padding: {smaller: 2, small: 4, normal: 8, large: 12, larger: 16}, spacing: {small: 4, normal: 8, large: 12}, rounding: {small: 4, normal: 8, full: 24}, fillet: {small: 2}, font: {size: {small: 10, smaller: 10, large: 14}, family: {sans: "monospace"}}, anim: {durations: {small: 0, normal: 0, expressiveFastSpatial: 0, expressiveDefaultSpatial: 0}, curves: {standard: [0,0,1,1,1,1], standardDecel: [0,0,1,1,1,1], expressiveFastSpatial: [0,0,1,1,1,1], expressiveDefaultSpatial: [0,0,1,1,1,1]}}}); property var launcher: ({actionPrefix: ":", vimKeybinds: false}) }`);
     write('doubles/Colours.qml', `pragma Singleton
 import QtQuick
-QtObject { property var palette: ({m3primary: "cyan", m3primaryContainer: "navy", m3onPrimaryContainer: "white", m3secondaryContainer: "grey", m3onSecondaryContainer: "white", m3onSurface: "white", m3outline: "grey"}) }`);
+QtObject { property var palette: ({m3primary: "cyan", m3onPrimary: "white", m3primaryContainer: "navy", m3onPrimaryContainer: "white", m3secondaryContainer: "grey", m3onSecondaryContainer: "white", m3onSurface: "white", m3outline: "grey"}) }`);
     write('doubles/WindowFactory.qml', `pragma Singleton
 import QtQuick
 QtObject { property int calls: 0; property var lastOptions; function create(parent, options) { calls++; lastOptions = options; } }`);
-    write('StyledRect.qml', 'import QtQuick\nRectangle {}');
+    write('StyledRect.qml', 'import QtQuick\nRectangle { property int filletSize: 4 }');
+    write('StyledClippingRect.qml', 'import QtQuick\nRectangle { clip: true }');
     write('StyledText.qml', 'import QtQuick\nText {}');
-    write('MaterialIcon.qml', 'import QtQuick\nText { property real fill: 0 }');
+    write('MaterialIcon.qml', 'import QtQuick\nText { property real fill: 0; property bool animate }');
     write('Anim.qml', 'import QtQuick\nNumberAnimation { duration: 0 }');
     write('CAnim.qml', 'import QtQuick\nColorAnimation { duration: 0 }');
-    write('StateLayer.qml', 'import QtQuick\nItem { property real radius: 0; property color color: "transparent" }');
+    write('StateLayer.qml', isolatedImports(fs.readFileSync(new URL('../components/StateLayer.qml', import.meta.url), 'utf8')));
     const runnerArgs = ['-input', dir];
     for (const importPath of (process.env.QML_IMPORT_PATH || '').split(path.delimiter).filter(Boolean))
       runnerArgs.unshift('-import', importPath);

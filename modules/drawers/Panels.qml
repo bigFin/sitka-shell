@@ -27,6 +27,7 @@ Item {
     anchors.fill: parent
     anchors.margins: Config.border.thickness
     anchors.leftMargin: bar.implicitWidth
+    anchors.topMargin: bar.topInset
 
     Osd.Wrapper {
         id: osd
@@ -88,7 +89,7 @@ Item {
             if (isDetached)
                 return (root.height - nonAnimHeight) / 2;
 
-            const off = currentCenter - Config.border.thickness - nonAnimHeight / 2;
+            const off = currentCenter - root.y - nonAnimHeight / 2;
             const diff = root.height - Math.floor(off + nonAnimHeight);
             if (diff < 0)
                 return off + diff;

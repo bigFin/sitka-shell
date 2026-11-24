@@ -19,6 +19,7 @@ Scope {
 
     ExclusionZone {
         anchors.top: true
+        WlrLayershell.exclusiveZone: root.bar.topInset
     }
 
     ExclusionZone {

@@ -55,6 +55,9 @@
         }
     },
     "bar": {
+        // "top" opts into a fixed 32px launcher/workspaces/clock strip. The
+        // entries, pin and reveal settings below still belong to the sidebar.
+        "layout": "sidebar",
         // Bar reveal behavior:
         // - "corner": click corner trigger to show bar (default, no window shoving)
         // - "hover": show bar when mouse is near left edge  

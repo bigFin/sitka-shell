@@ -25,7 +25,7 @@ CustomMouseArea {
     cursorShape: draggingBar && pressed ? Qt.ClosedHandCursor : Qt.ArrowCursor
 
     function withinPanelHeight(panel: Item, x: real, y: real): bool {
-        const panelY = Config.border.thickness + panel.y;
+        const panelY = panels.y + panel.y;
         return y >= panelY - Config.border.rounding && y <= panelY + panel.height + Config.border.rounding;
     }
 
@@ -43,7 +43,7 @@ CustomMouseArea {
     }
 
     function inTopPanel(panel: Item, x: real, y: real): bool {
-        return y < Config.border.thickness + panel.y + panel.height && withinPanelWidth(panel, x, y);
+        return y < panels.y + panel.y + panel.height && withinPanelWidth(panel, x, y);
     }
 
     function inBottomPanel(panel: Item, x: real, y: real): bool {
@@ -51,7 +51,7 @@ CustomMouseArea {
     }
 
     function onWheel(event: WheelEvent): void {
-        if (event.x < bar.implicitWidth) {
+        if (!bar.topLayout && event.x < bar.implicitWidth) {
             bar.handleWheel(event.y, event.angleDelta);
         }
     }
@@ -61,7 +61,7 @@ CustomMouseArea {
 
     onPressed: event => {
         dragStart = Qt.point(event.x, event.y);
-        draggingBar = dragStart.x < bar.implicitWidth;
+        draggingBar = !bar.topLayout && dragStart.x < bar.implicitWidth;
     }
 
     onReleased: event => {
@@ -98,7 +98,7 @@ CustomMouseArea {
         const y = event.y;
 
         // Show bar in non-exclusive mode on hover (only when revealMode is "hover")
-        if (!visibilities.bar && Config.bar.revealMode === "hover") {
+        if (!bar.topLayout && !visibilities.bar && Config.bar.revealMode === "hover") {
             if (x < Math.max(bar.implicitWidth, Config.bar.hoverThreshold)) {
                 bar.isHovered = true;
             } else {
@@ -107,7 +107,7 @@ CustomMouseArea {
         }
 
         // Show/hide bar on drag
-        if (pressed && dragStart.x < bar.implicitWidth) {
+        if (pressed && draggingBar) {
             const dragX = x - dragStart.x;
             if (dragX > Config.bar.dragThreshold)
                 visibilities.bar = true;

@@ -15,6 +15,8 @@ Item {
 
     readonly property int padding: Math.max(Config.appearance.padding.smaller, Config.border.thickness)
     readonly property int contentWidth: Config.bar.sizes.innerWidth + padding * 2
+    readonly property bool topLayout: Config.bar.layout === "top"
+    readonly property int topInset: topLayout ? 32 : Config.border.thickness
     // In overlay mode, exclusive zone stays minimal so windows don't get shoved
     readonly property int exclusiveZone: Config.bar.overlayMode 
         ? Config.border.thickness 
@@ -23,9 +25,8 @@ Item {
     // - "always" mode: always visible (barPinned defaults to true)
     // - "hover" mode: visible when pinned, manually toggled, or hovered near edge
     // - "corner" mode: visible when pinned or manually toggled (via corner trigger click)
-    readonly property bool shouldBeVisible: Config.bar.revealMode === "always" 
-        ? true 
-        : (visibilities.barPinned || visibilities.bar || (Config.bar.revealMode === "hover" && isHovered))
+    readonly property bool shouldBeVisible: !topLayout && (Config.bar.revealMode === "always"
+        || visibilities.barPinned || visibilities.bar || (Config.bar.revealMode === "hover" && isHovered))
     property bool isHovered
 
     function checkPopout(y: real): void {
@@ -63,6 +64,7 @@ Item {
         Transition {
             from: "visible"
             to: ""
+            enabled: !root.topLayout
 
             Anim {
                 target: root
@@ -79,7 +81,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
 
-        active: true // Keep loaded to prevent destruction errors
+        active: !root.topLayout // Keep the sidebar loaded across its own reveal transitions.
         visible: root.shouldBeVisible || root.visible
 
         sourceComponent: Bar {

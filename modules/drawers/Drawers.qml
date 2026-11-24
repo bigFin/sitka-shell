@@ -43,10 +43,10 @@ Variants {
             WlrLayershell.keyboardFocus: visibilities.keyboardOwner !== "" ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
             mask: Region {
-                x: bar.implicitWidth
-                y: Config.border.thickness
-                width: win.width - bar.implicitWidth - Config.border.thickness
-                height: win.height - Config.border.thickness * 2
+                x: panels.x
+                y: panels.y
+                width: panels.width
+                height: panels.height
                 intersection: Intersection.Xor
 
                 regions: regions.instances
@@ -65,8 +65,8 @@ Variants {
                 Region {
                     required property Item modelData
 
-                    x: modelData.x + bar.implicitWidth
-                    y: modelData.y + Config.border.thickness
+                    x: modelData.x + panels.x
+                    y: modelData.y + panels.y
                     width: modelData.width
                     height: modelData.height
                     intersection: Intersection.Subtract
@@ -123,6 +123,7 @@ Variants {
                         anchors.fill: parent
                         anchors.margins: Config.border.thickness
                         anchors.leftMargin: bar.implicitWidth
+                        anchors.topMargin: bar.topInset
 
                         Launcher.Background {
                             wrapper: panels.launcher
@@ -183,6 +184,18 @@ Variants {
 
                             Component.onCompleted: Visibilities.registerBar(scope.modelData, this)
                             Component.onDestruction: Visibilities.unregisterBar(this)
+                        }
+                    }
+
+                    Loader {
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: bar.topInset
+                        active: bar.topLayout
+                        sourceComponent: TopBar {
+                            screen: scope.modelData
+                            visibilities: scope.visibilities
                         }
                     }
                 }
@@ -249,7 +262,7 @@ Variants {
         CornerTrigger {
             targetScreen: scope.modelData
             visibilities: scope.visibilities
-            barVisible: scope.bar.shouldBeVisible
+            barVisible: scope.bar.topLayout || scope.bar.shouldBeVisible
         }
 
         // Bottom-right corner trigger for utilities panel

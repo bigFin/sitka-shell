@@ -2,6 +2,7 @@ import Quickshell.Io
 
 JsonObject {
     // Legacy options (for backwards compatibility)
+    property string layout: "sidebar"  // "sidebar" | "top"; only "top" replaces the rail
     property bool persistent: false  // Bar starts hidden by default (use corner trigger to show)
     property bool showOnHover: false  // Deprecated: use revealMode instead
     property int dragThreshold: 20

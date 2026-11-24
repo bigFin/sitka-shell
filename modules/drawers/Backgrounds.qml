@@ -18,14 +18,15 @@ Item {
     anchors.fill: parent
     anchors.margins: Config.border.thickness
     anchors.leftMargin: bar.implicitWidth
+    anchors.topMargin: bar.topInset
 
     StyledRect {
         // A collapsed bar still reserves the frame thickness, but has no face to paint.
         visible: Config.border.showStroke || root.bar.visible
         x: -bar.implicitWidth
-        y: -Config.border.thickness
+        y: -root.y
         width: bar.implicitWidth
-        height: root.height + Config.border.thickness * 2
+        height: root.height + root.y + Config.border.thickness
         color: Colours.tPalette.m3surface
     }
 

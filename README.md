@@ -116,6 +116,12 @@ Workspace labels support `"symbol"` (the default), `"number"`, `"name"`, and
 `"both"` through `bar.workspaces.displayMode`. Names come from the active
 window-manager backend and fall back to the workspace number when unavailable.
 
+For the horizontal bar, set `bar.layout` to `"top"`. Enable CPU or RAM readings
+independently with `bar.telemetry.showCpu` and `bar.telemetry.showMemory`.
+Both default to `false`. A dash means no reading yet; `stale` marks the last
+known value. When the readings would crowd the clock or workspace buttons,
+the bar hides them and stops requesting their samples.
+
 To hide the line around the screen, merge `"border": { "showStroke": false }`
 into your `shell.json`. Set `showStroke` to `true` to restore it (the default).
 Saving the file updates the running shell without a restart. This hides only

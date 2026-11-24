@@ -20,6 +20,7 @@ JsonObject {
     property Tray tray: Tray {}
     property Status status: Status {}
     property Clock clock: Clock {}
+    property Telemetry telemetry: Telemetry {}
     property Sizes sizes: Sizes {}
 
     property list<var> entries: [
@@ -132,6 +133,11 @@ JsonObject {
 
     component Clock: JsonObject {
         property bool showIcon: true
+    }
+
+    component Telemetry: JsonObject {
+        property bool showCpu: false
+        property bool showMemory: false
     }
 
     component Sizes: JsonObject {

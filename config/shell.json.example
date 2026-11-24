@@ -58,6 +58,8 @@
         // "top" opts into a fixed 32px launcher/workspaces/clock strip. The
         // entries, pin and reveal settings below still belong to the sidebar.
         "layout": "sidebar",
+        // Top layout only. Readings yield to workspace buttons and the clock.
+        "telemetry": { "showCpu": false, "showMemory": false },
         // Bar reveal behavior:
         // - "corner": click corner trigger to show bar (default, no window shoving)
         // - "hover": show bar when mouse is near left edge  

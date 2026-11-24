@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components
 import qs.services
 import "../../config"
+import "../../utils/scripts/dashboardData.js" as DashboardData
 import Quickshell
 import QtQuick
 
@@ -46,7 +47,7 @@ StyledRect {
         anchors.leftMargin: 4
         anchors.top: parent.top
         height: parent.height
-        width: Math.max(0, Math.min(count * 30, clock.x - x - 8))
+        width: Math.max(0, Math.min(count * 30, rightGroup.x - x - 8))
         orientation: ListView.Horizontal
         boundsBehavior: Flickable.StopAtBounds
         clip: true
@@ -66,15 +67,53 @@ StyledRect {
         }
     }
 
-    StyledText {
-        id: clock
+    Row {
+        id: rightGroup
         anchors.right: parent.right
         anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
-        text: Time.format((root.width >= 480 ? "ddd  " : "") + (Config.services.useTwelveHourClock ? "h:mm AP" : "HH:mm"))
-        font.family: Config.appearance.font.family.mono
-        font.pointSize: 10
+        spacing: 12
+
+        // Use the full workspace strip and widest stale readings as the fit
+        // budget, never the current sample or the already-clipped strip width.
+        readonly property real requestedWidth: (Config.bar.telemetry.showCpu ? metrics.advanceWidth("CPU 100% stale") + spacing : 0)
+            + (Config.bar.telemetry.showMemory ? metrics.advanceWidth("RAM 100% stale") + spacing : 0)
+        readonly property bool canShow: root.visible && root.height > 0 && !!root.Window.window?.visible
+            && root.width >= anchors.rightMargin + clock.width + Math.ceil(requestedWidth) + 8 + strip.x + strip.count * 30
+
+        FontMetrics { id: metrics; font: clock.font }
+
+        Loader {
+            active: rightGroup.canShow && Config.bar.telemetry.showCpu
+            visible: active
+            sourceComponent: Reading {
+                domain: "cpu"
+                text: "CPU " + DashboardData.percent(SystemUsage.cpuPerc, SystemUsage.cpuState)
+            }
+        }
+        Loader {
+            active: rightGroup.canShow && Config.bar.telemetry.showMemory
+            visible: active
+            sourceComponent: Reading {
+                domain: "memory"
+                text: "RAM " + DashboardData.percent(SystemUsage.memPerc, SystemUsage.memoryState)
+            }
+        }
+        StyledText {
+            id: clock
+            text: Time.format((root.width >= 480 ? "ddd  " : "") + (Config.services.useTwelveHourClock ? "h:mm AP" : "HH:mm"))
+            font.family: Config.appearance.font.family.mono
+            font.pointSize: 10
+            color: Colours.palette.m3onSurface
+        }
+    }
+
+    component Reading: StyledText {
+        required property string domain
+        font: clock.font
         color: Colours.palette.m3onSurface
+        Component.onCompleted: SystemUsage.addRef(domain)
+        Component.onDestruction: SystemUsage.removeRef(domain)
     }
 
     component Keycap: MouseArea {

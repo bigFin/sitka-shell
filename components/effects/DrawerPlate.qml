@@ -15,11 +15,10 @@ StyledRect {
     property bool topButtressesVisible: false
     readonly property real lipY: dockAtTop ? height - 1.5 : 1.5
     readonly property real shoulder: Math.max(2, effectiveFilletSize)
-    readonly property bool ceramic: Colours.themeName === "SunWorkstation"
-    readonly property bool trimVisible: ceramic && visible && width >= 100 && height >= 20
+    readonly property bool trimVisible: Colours.sunMaterial && visible && width >= 100 && height >= 20
 
     color: Colours.tPalette.m3surface
-    ditherRelief: ceramic ? (dockAtTop ? -1 : 1) : 0
+    ditherRelief: Colours.sunMaterial ? (dockAtTop ? -1 : 1) : 0
     filletSize: Config.appearance.fillet.large
     topLeftFillet: !dockAtTop || !topButtressesVisible
     topRightFillet: topLeftFillet

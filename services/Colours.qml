@@ -14,8 +14,9 @@ Singleton {
 
     readonly property bool light: themeName === "SunWorkstation" || currentLight
     property bool currentLight
-    readonly property M3Palette palette: themeName === "SunWorkstation" ? sunWorkstation : themeName === "Observatory" ? observatory : current
-    readonly property color launcherSecondaryText: themeName === "SunWorkstation" ? palette.m3onSurfaceVariant : palette.m3outline
+    readonly property bool sunMaterial: themeName === "SunWorkstation" || themeName === "SunGraphite"
+    readonly property M3Palette palette: themeName === "SunWorkstation" ? sunWorkstation : themeName === "SunGraphite" ? sunGraphite : themeName === "Observatory" ? observatory : current
+    readonly property color launcherSecondaryText: sunMaterial ? palette.m3onSurfaceVariant : palette.m3outline
     readonly property M3TPalette tPalette: M3TPalette {}
     readonly property M3Palette current: M3Palette {}
 
@@ -26,6 +27,7 @@ Singleton {
     readonly property HighTestPalette highTest: HighTestPalette {}
     readonly property M3Palette observatory: ObservatoryPalette {}
     readonly property M3Palette sunWorkstation: SunWorkstationPalette {}
+    readonly property M3Palette sunGraphite: SunGraphitePalette {}
     readonly property Transparency transparency: Transparency {}
     property real wallLuminance
 
@@ -65,7 +67,7 @@ Singleton {
     }
 
     property string themeOverride: ""
-    readonly property list<string> knownThemes: ["EverforestDark", "EverforestLight", "RosePine", "HighTest", "Observatory", "SunWorkstation"]
+    readonly property list<string> knownThemes: ["EverforestDark", "EverforestLight", "RosePine", "HighTest", "Observatory", "SunWorkstation", "SunGraphite"]
     readonly property string themeName: themeOverride || Config.general.theme || "EverforestDark"
 
     readonly property var paletteSource: {

@@ -130,11 +130,17 @@ Useful environment overrides:
 ### Themes and transparency
 
 Built-in themes are `EverforestDark`, `EverforestLight`, `RosePine`, `HighTest`,
-`Observatory`, and `SunWorkstation`. [Observatory](docs/observatory.md) pairs warm
-instrument colors with an original static orbital-chart wallpaper. The opt-in
-[Sun Workstation preset](config/presets/sun-workstation.json) pairs a light ceramic
-surface with a violet launcher selection and short drawer shadows. Merge its
-`general` and `appearance` settings into your `shell.json` to use it. Set
+`Observatory`, `SunWorkstation`, and `SunGraphite`. [Observatory](docs/observatory.md)
+pairs warm instrument colors with an original static orbital-chart wallpaper.
+
+The Sun workstation presets share opaque beveled drawers, ordered dither, and short
+directional shadows. Choose a finish:
+
+- [Sun Workstation](config/presets/sun-workstation.json) is the original light ceramic with violet selection.
+- [Sun Graphite](config/presets/sun-graphite.json) pairs blue-grey charcoal and bone-grey text with an Everforest green (`#a7c080`) cursor and selection stripe.
+
+Merge the chosen preset’s `general` and `appearance` keys into your `shell.json`;
+leave your other settings in place. Set
 `appearance.dithering.enabled` to `false` to keep the palette without the texture.
 Dithering is off by default and affects only fills, never artwork or foregrounds.
 Theme selection is declarative:

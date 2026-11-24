@@ -83,6 +83,36 @@ test('SunWorkstation supplies every role and is an opt-in light palette in the t
     assert.doesNotMatch(colours, /current\.\w+\s*=\s*sunWorkstation/);
 });
 
+test('SunGraphite supplies every role, its own dark palette and the Everforest green accent', () => {
+    const graphite = Object.fromEntries([...read('services/SunGraphitePalette.qml').matchAll(/^\s*(\w+): "(#[\da-f]{6})"$/gm)].map(m => [m[1], m[2]]));
+    assert.deepEqual(Object.keys(graphite).sort(), roles);
+    assert.match(colours, /knownThemes: \[[^\]]*"SunGraphite"/);
+    assert.match(colours, /readonly property M3Palette sunGraphite: SunGraphitePalette \{\}/);
+    assert.match(colours, /palette:[^\n]*themeName === "SunGraphite" \? sunGraphite :/);
+    assert.doesNotMatch(colours, /current\.\w+\s*=\s*sunGraphite/);
+    assert.equal(graphite.m3primary, '#a7c080');
+    assert.match(component('EverforestDarkPalette'), /property color green: "#a7c080"/);
+    // The selected row is still hovered by StateLayer. Check the bright dither
+    // tone under its 8% ink overlay; allow one code value for Qt composition.
+    const channels = hex => hex.slice(1).match(/../g).map(c => parseInt(c, 16));
+    const ink = channels(graphite.m3onSurface);
+    const intensity = JSON.parse(read('config/presets/sun-graphite.json')).appearance.dithering.intensity;
+    const brightStep = Math.round(255 * 0.12 * intensity);
+    const hovered = channels(graphite.m3primaryContainer).map((c, i) =>
+        Math.min(255, Math.round((c + brightStep) * 0.92 + ink[i] * 0.08) + 1));
+    const hoveredLuminance = luminance('#' + Buffer.from(hovered).toString('hex'));
+    assert.ok((luminance(graphite.m3onSurfaceVariant) + 0.05) / (hoveredLuminance + 0.05) >= 4.5, 'selected + hovered detail');
+    for (const [ink, backs, minimum] of [
+        ['m3onSurface', ['m3surface', 'm3surfaceBright', 'm3primaryContainer'], 4.5],
+        ['m3onSurfaceVariant', ['m3surface', 'm3surfaceContainer', 'm3primaryContainer'], 4.5],
+        ['m3primary', ['m3primaryContainer', 'm3surfaceContainer', 'm3surface'], 3],
+        ...['Primary', 'Secondary', 'Tertiary', 'Error'].flatMap(a => ['', 'Container'].map(s => [`m3on${a}${s}`, [`m3${a.toLowerCase()}${s}`], 4.5]))
+    ]) for (const back of backs) {
+        const [lo, hi] = [ink, back].map(role => luminance(graphite[role])).sort((a, b) => a - b);
+        assert.ok((hi + 0.05) / (lo + 0.05) >= minimum, `${ink} on ${back}`);
+    }
+});
+
 test('Observatory wallpaper is self-contained static vector artwork', () => {
     const svg = read('assets/wallpapers/observatory.svg');
     assert.match(svg, /viewBox="0 0 3840 2160"/);

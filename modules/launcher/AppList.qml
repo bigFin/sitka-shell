@@ -31,11 +31,9 @@ StyledListView {
     highlightResizeDuration: 0
 
     highlight: StyledRect {
-        id: selection
-        readonly property bool ceramic: Colours.themeName === "SunWorkstation"
         radius: Config.appearance.rounding.small
-        color: ceramic ? Colours.palette.m3primaryContainer : Colours.palette.m3secondaryContainer
-        opacity: ceramic ? 1 : 0.62
+        color: Colours.sunMaterial ? Colours.palette.m3primaryContainer : Colours.palette.m3secondaryContainer
+        opacity: Colours.sunMaterial ? 1 : 0.62
 
         Rectangle {
             anchors.left: parent.left
@@ -44,7 +42,7 @@ StyledListView {
             width: 2
             height: parent.height - 8
             color: Colours.palette.m3primary
-            visible: selection.ceramic
+            visible: Colours.sunMaterial
         }
     }
 

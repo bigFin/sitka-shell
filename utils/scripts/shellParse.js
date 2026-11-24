@@ -274,10 +274,6 @@ function cleanWindowText(value) {
     return value.slice(i);
 }
 
-function isRequestStale(nowMs, sentMs, timeoutMs) {
-    return nowMs - sentMs > timeoutMs;
-}
-
 function getLuminance(c) {
     if (c.r == 0 && c.g == 0 && c.b == 0)
         return 0;

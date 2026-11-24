@@ -246,8 +246,10 @@ registered for D-Bus activation at startup. If Hokum owns notifications, it
 handles popups and history, and Sitka's DND toggle and `notifs clear` IPC command
 control Hokum over session D-Bus without any configuration.
 
-Coding-agent quotas are shown in the dashboard's **Usage** tab. Opening that
-tab refreshes immediately, then every minute while it remains visible.
+If no top bar is polling Codex, opening the dashboard's **Usage** tab requests
+the enabled Codex quota immediately, then polls every minute. Otherwise the
+tab shares the bar's reading and polling schedule. Claude, if enabled, is
+requested when the tab opens and polled only while it is visible.
 Provider visibility is configured under `services.agentUsage`. The primary
 Codex weekly limit is enabled by default; Claude and additional Codex model
 buckets are opt-in:

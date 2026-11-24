@@ -30,8 +30,9 @@ Singleton {
     property double lastUpdatedMs: 0
 
     property int nextCodexRequestId: 1
+    property int codexRequestTimeoutMs: 120000
     property bool codexInitialized: false
-    property var codexPending: null // Only one request (handshake or quota read) is outstanding.
+    property int codexPendingId: 0 // Only one request (handshake or quota read) is outstanding.
     property int activeViewCount: 0
     property int codexViewCount: 0
     readonly property bool codexWanted: Config.services.agentUsage.showCodex && (activeViewCount > 0 || codexViewCount > 0)
@@ -98,11 +99,10 @@ Singleton {
             codexLoading = false;
             return;
         }
-        const now = Date.now();
-        if (codexPending && !ShellParse.isRequestStale(now, codexPending.sentMs, 120000))
+        if (codexPendingId !== 0)
             return;
         const id = nextCodexRequestId++;
-        codexPending = { id: id, sentMs: now };
+        codexPendingId = id;
         sendCodex(codexInitialized ? { id: id, method: "account/rateLimits/read" } : {
             id: id, method: "initialize", params: { clientInfo: { name: "sitka-shell", version: "1" } }
         });
@@ -178,6 +178,18 @@ Singleton {
         onTriggered: root.refresh()
     }
 
+    // A live app-server can stop replying. Retire the request at its deadline,
+    // not at the next poll; a late reply must not make the dial current again.
+    Timer {
+        interval: root.codexRequestTimeoutMs
+        running: root.codexPendingId !== 0
+        onTriggered: {
+            root.codexPendingId = 0;
+            root.codexLoading = false;
+            root.codexError = qsTr("Codex request timed out");
+        }
+    }
+
     Process {
         id: codexProcess
 
@@ -190,7 +202,7 @@ Singleton {
             if (running)
                 return;
             root.codexInitialized = false;
-            root.codexPending = null;
+            root.codexPendingId = 0;
             root.codexLoading = false;
             root.codexError = qsTr("Codex CLI unavailable");
         }
@@ -204,9 +216,9 @@ Singleton {
                     return;
                 }
 
-                if (!root.codexPending || message?.id !== root.codexPending.id)
+                if (root.codexPendingId === 0 || message?.id !== root.codexPendingId)
                     return;
-                root.codexPending = null;
+                root.codexPendingId = 0;
                 if (message.error) {
                     root.codexLoading = false;
                     root.codexError = message.error.message || (root.codexInitialized ? qsTr("Codex quota request failed") : qsTr("Codex initialization failed"));

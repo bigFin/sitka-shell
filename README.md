@@ -138,6 +138,7 @@ Useful environment overrides:
 | `SITKA_CONFIG_DIR` | Override the configuration directory |
 | `SITKA_WALLPAPERS_DIR` | Override the wallpaper directory |
 | `SITKA_LIB_DIR` | Locate Sitka helper libraries |
+| `SITKA_HOKUM` | Use Hokum for notifications; set to its executable |
 
 ### Themes and transparency
 
@@ -227,6 +228,12 @@ expect the corresponding system services or tools to exist:
 - `lm-sensors` and supported GPU tools for hardware metrics
 - Material Symbols and a Nerd Font for icons and glyphs
 - Codex CLI for Codex quota data; Claude Code plus `script`/`timeout` for Claude quota data
+
+Sitka serves notifications by default. To use Hokum instead, start Hokum in
+your session and launch Sitka with `SITKA_HOKUM=hokum` (or the absolute path to
+its executable). Hokum owns notification popups and history; Sitka's DND toggle
+and `notifs clear` IPC command talk to Hokum. Unset the variable and restart
+Sitka to restore its built-in notification server.
 
 Coding-agent quotas are shown in the dashboard's **Usage** tab. Opening that
 tab refreshes immediately, then every minute while it remains visible.

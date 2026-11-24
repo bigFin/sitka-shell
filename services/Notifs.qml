@@ -14,25 +14,64 @@ Singleton {
     readonly property list<Notif> popups: list.filter(n => n.popup)
     property bool dnd: false
 
-    NotificationServer {
-        id: server
+    readonly property string hokum: Quickshell.env("SITKA_HOKUM") || ""
+    property bool syncingFromHokum: false
 
-        keepOnReload: false
-        actionsSupported: true
-        bodyHyperlinksSupported: true
-        bodyImagesSupported: true
-        bodyMarkupSupported: true
-        imageSupported: true
+    // Only the built-in backend may claim org.freedesktop.Notifications.
+    LazyLoader {
+        active: root.hokum === ""
+        component: NotificationServer {
+            keepOnReload: false
+            actionsSupported: true
+            bodyHyperlinksSupported: true
+            bodyImagesSupported: true
+            bodyMarkupSupported: true
+            imageSupported: true
 
-        onNotification: notif => {
-            notif.tracked = true;
+            onNotification: notif => {
+                notif.tracked = true;
 
-            root.list.push(notifComp.createObject(root, {
-                // Keep the arrival-time decision so muted notifications never replay.
-                popup: !root.dnd,
-                notification: notif
-            }));
+                root.list.push(notifComp.createObject(root, {
+                    // Keep the arrival-time decision so muted notifications never replay.
+                    popup: !root.dnd,
+                    notification: notif
+                }));
+            }
         }
+    }
+
+    onDndChanged: {
+        if (hokum !== "" && !syncingFromHokum)
+            Quickshell.execDetached([hokum, "dnd", dnd ? "on" : "off"]);
+    }
+
+    Process {
+        id: hokumDnd
+        command: [root.hokum, "dnd", "--json", "--watch"]
+        running: root.hokum !== ""
+
+        stdout: SplitParser {
+            onRead: data => {
+                try {
+                    const state = JSON.parse(data);
+                    if (typeof state.dnd !== "boolean")
+                        return;
+                    root.syncingFromHokum = true;
+                    root.dnd = state.dnd;
+                    root.syncingFromHokum = false;
+                } catch (error) {
+                    console.warn("Hokum DND:", error);
+                }
+            }
+        }
+
+        onExited: reconnect.start()
+    }
+
+    Timer {
+        id: reconnect
+        interval: 1000
+        onTriggered: hokumDnd.running = true
     }
 
     // CustomShortcut {
@@ -48,6 +87,10 @@ Singleton {
         target: "notifs"
 
         function clear(): void {
+            if (root.hokum !== "") {
+                Quickshell.execDetached([root.hokum, "dismiss", "--all"]);
+                return;
+            }
             for (const notif of root.list)
                 notif.popup = false;
         }

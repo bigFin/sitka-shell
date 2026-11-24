@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -33,9 +33,9 @@ function runSession(args, env) {
     });
 }
 
-test('DND keeps notifications in history without showing or replaying muted popups', {
-    skip: !qs || !session || !busctl ? 'requires Quickshell, dbus-run-session and busctl' : false,
-}, async () => {
+const skip = !qs || !session || !busctl ? 'requires Quickshell, dbus-run-session and busctl' : false;
+
+async function withFixture(check) {
     const dir = mkdtempSync(join(tmpdir(), 'sn-'));
     try {
         for (const sub of ['services', 'config', 'run', 'home'])
@@ -58,7 +58,26 @@ QtObject { property QtObject notifs: QtObject {
     <allow send_destination="*"/><allow receive_sender="*"/><allow own="*"/>
   </policy>
 </busconfig>`);
-        write('shell.qml', `import QtQuick
+        await check(dir, write);
+    } finally {
+        rmSync(dir, { recursive: true, force: true });
+    }
+}
+
+async function runShell(dir, overrides = {}) {
+    const { status, signal, log } = await runSession(
+        [`--config-file=${join(dir, 'dbus.conf')}`, '--', qs, '--no-color', '-p', dir], {
+            PATH: process.env.PATH, LANG: 'C.UTF-8', HOME: join(dir, 'home'), XDG_RUNTIME_DIR: join(dir, 'run'),
+            DBUS_SYSTEM_BUS_ADDRESS: `unix:path=${join(dir, 'disabled-system-bus')}`,
+            QT_QPA_PLATFORM: 'offscreen', QT_QUICK_BACKEND: 'software', QT_QPA_PLATFORMTHEME: 'generic',
+            ...overrides,
+        });
+    assert.equal(status, 0, `${signal ?? ''}\n${log}`);
+    return log;
+}
+
+test('DND keeps notifications in history without showing or replaying muted popups', { skip }, async () => withFixture(async (dir, write) => {
+    write('shell.qml', `import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.services
@@ -99,22 +118,60 @@ ShellRoot {
     Component.onCompleted: Notifs.dnd = false;
     Timer { running: true; interval: 4000; onTriggered: Qt.quit() }
 }`);
-        const { status, signal, log } = await runSession(
-            [`--config-file=${join(dir, 'dbus.conf')}`, '--', qs, '--no-color', '-p', dir], {
-                PATH: process.env.PATH, LANG: 'C.UTF-8', HOME: join(dir, 'home'), XDG_RUNTIME_DIR: join(dir, 'run'),
-                DBUS_SYSTEM_BUS_ADDRESS: `unix:path=${join(dir, 'disabled-system-bus')}`,
-                QT_QPA_PLATFORM: 'offscreen', QT_QUICK_BACKEND: 'software', QT_QPA_PLATFORMTHEME: 'generic',
-            });
-        assert.equal(status, 0, `${signal ?? ''}\n${log}`);
-        const states = Array.from(log.matchAll(/NOTIFS_STATE (\[[^\r\n]+\])/g), match => JSON.parse(match[1]));
-        assert.equal(states.length, 4, log);
-        assert.deepEqual(states, [
-            ['before', ['before'], ['before']],
-            ['muted', ['before', 'muted'], ['before']],
-            ['unmuted', ['before', 'muted'], ['before']],
-            ['after', ['before', 'muted', 'after'], ['before', 'after']],
-        ]);
-    } finally {
-        rmSync(dir, { recursive: true, force: true });
+    const log = await runShell(dir);
+    const states = Array.from(log.matchAll(/NOTIFS_STATE (\[[^\r\n]+\])/g), match => JSON.parse(match[1]));
+    assert.equal(states.length, 4, log);
+    assert.deepEqual(states, [
+        ['before', ['before'], ['before']],
+        ['muted', ['before', 'muted'], ['before']],
+        ['unmuted', ['before', 'muted'], ['before']],
+        ['after', ['before', 'muted', 'after'], ['before', 'after']],
+    ]);
+}));
+
+test('Hokum mode leaves the notification bus free and forwards Sitka actions', { skip }, async () => withFixture(async (dir, write) => {
+    // This stand-in only implements the Hokum CLI contract. It never opens a window.
+    write('hokum', `#!/bin/sh
+case "$*" in
+    'dnd --json --watch') printf '%s\\n' '{"dnd":true}'; exec sleep 5 ;;
+    *) printf '%s\\n' "$*" >> "$HOME/actions" ;;
+esac
+`);
+    chmodSync(join(dir, 'hokum'), 0o700);
+    write('shell.qml', `import QtQuick
+import Quickshell
+import Quickshell.Io
+import qs.services
+ShellRoot {
+    Connections {
+        target: Notifs
+        function onDndChanged(): void {
+            if (Notifs.dnd) {
+                console.log("HOKUM_DND_SYNCED");
+                actions.running = true;
+            }
+        }
     }
-});
+    Process {
+        id: actions
+        command: ["sh", "-ec", ${JSON.stringify(`
+            ${JSON.stringify(busctl)} --address="$DBUS_SESSION_BUS_ADDRESS" call org.freedesktop.DBus \\
+                /org/freedesktop/DBus org.freedesktop.DBus NameHasOwner s org.freedesktop.Notifications
+            ${JSON.stringify(qs)} -p ${JSON.stringify(dir)} ipc call notifs clear
+        `)}]
+        stdout: SplitParser { onRead: data => console.log("OWNER", data) }
+        onExited: code => {
+            if (code !== 0) Qt.exit(code);
+            else Notifs.dnd = false;
+        }
+    }
+    Component.onCompleted: console.log("DND", Notifs.dnd)
+    Timer { running: true; interval: 1200; onTriggered: Qt.quit() }
+}`);
+    const log = await runShell(dir, { SITKA_HOKUM: join(dir, 'hokum') });
+    assert.match(log, /HOKUM_DND_SYNCED/);
+    assert.match(log, /OWNER b false/);
+    assert.deepEqual(readFileSync(join(dir, 'home', 'actions'), 'utf8').trim().split('\n').sort(), [
+        'dismiss --all', 'dnd off',
+    ]);
+}));

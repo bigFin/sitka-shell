@@ -1,4 +1,4 @@
-find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Concurrent Multimedia ShaderTools)
+find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Concurrent Multimedia ShaderTools DBus)
 
 if(QT_KNOWN_POLICY_QTP0001)
     qt_policy(SET QTP0001 NEW)

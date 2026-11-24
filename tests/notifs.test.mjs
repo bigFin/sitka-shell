@@ -1,15 +1,18 @@
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
-import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { spawn, spawnSync } from 'node:child_process';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 
 const executable = name => (process.env.PATH || '').split(':').filter(Boolean)
     .map(dir => join(dir, name)).find(existsSync);
 const qs = process.env.QUICKSHELL || executable('quickshell');
 const session = executable('dbus-run-session');
+const python = executable('python3');
+const dbusNext = python && spawnSync(python, ['-c', 'import dbus_next']).status === 0;
 const busctl = executable('busctl');
 
 function runSession(args, env) {
@@ -33,12 +36,15 @@ function runSession(args, env) {
     });
 }
 
-const skip = !qs || !session || !busctl ? 'requires Quickshell, dbus-run-session and busctl' : false;
+const qmlImportPath = process.env.QML_IMPORT_PATH;
+const skip = !qs || !session || !busctl || !qmlImportPath
+    ? 'requires Quickshell, dbus-run-session, busctl and the built Sitka QML plugin' : false;
+const externalSkip = skip || (!dbusNext ? 'requires Python dbus-next' : false);
 
 async function withFixture(check) {
     const dir = mkdtempSync(join(tmpdir(), 'sn-'));
     try {
-        for (const sub of ['services', 'config', 'run', 'home'])
+        for (const sub of ['services', 'config', 'run', 'home', 'activation'])
             mkdirSync(join(dir, sub), { mode: 0o700 });
         const write = (path, text) => writeFileSync(join(dir, path), text);
         for (const name of ['Notifs', 'Time'])
@@ -51,9 +57,10 @@ QtObject { property QtObject notifs: QtObject {
     property bool expire: false
     property int defaultExpireTimeout: 10000
 } }`);
-        // A private bus with no activation directories. The client cannot notify the live desktop.
+        // A private bus with only fixture activation services; never use the live desktop bus.
         write('dbus.conf', `<busconfig>
   <type>session</type><auth>EXTERNAL</auth><listen>unix:abstract=sitka-${randomUUID()}</listen>
+  <servicedir>${join(dir, 'activation')}</servicedir>
   <policy context="default">
     <allow send_destination="*"/><allow receive_sender="*"/><allow own="*"/>
   </policy>
@@ -64,13 +71,14 @@ QtObject { property QtObject notifs: QtObject {
     }
 }
 
-async function runShell(dir, overrides = {}) {
+async function runShell(dir, start = []) {
+    const shell = [qs, '--no-color', '-p', dir];
     const { status, signal, log } = await runSession(
-        [`--config-file=${join(dir, 'dbus.conf')}`, '--', qs, '--no-color', '-p', dir], {
+        [`--config-file=${join(dir, 'dbus.conf')}`, '--', ...start, ...shell], {
             PATH: process.env.PATH, LANG: 'C.UTF-8', HOME: join(dir, 'home'), XDG_RUNTIME_DIR: join(dir, 'run'),
             DBUS_SYSTEM_BUS_ADDRESS: `unix:path=${join(dir, 'disabled-system-bus')}`,
             QT_QPA_PLATFORM: 'offscreen', QT_QUICK_BACKEND: 'software', QT_QPA_PLATFORMTHEME: 'generic',
-            ...overrides,
+            QML_IMPORT_PATH: qmlImportPath, QML2_IMPORT_PATH: qmlImportPath,
         });
     assert.equal(status, 0, `${signal ?? ''}\n${log}`);
     return log;
@@ -106,16 +114,16 @@ ShellRoot {
         onExited: (code, status) => {
             if (code !== 0) return;
             root.snapshot(root.summaries[root.step]);
-            if (root.step === 0) Notifs.dnd = true;
+            if (root.step === 0) Notifs.setDnd(true);
             if (root.step === 1) {
-                Notifs.dnd = false;
+                Notifs.setDnd(false);
                 root.snapshot('unmuted');
             }
             root.step += 1;
             if (root.step === root.summaries.length) Qt.quit();
         }
     }
-    Component.onCompleted: Notifs.dnd = false;
+    Component.onCompleted: Notifs.setDnd(false);
     Timer { running: true; interval: 4000; onTriggered: Qt.quit() }
 }`);
     const log = await runShell(dir);
@@ -129,49 +137,77 @@ ShellRoot {
     ]);
 }));
 
-test('Hokum mode leaves the notification bus free and forwards Sitka actions', { skip }, async () => withFixture(async (dir, write) => {
-    // This stand-in only implements the Hokum CLI contract. It never opens a window.
-    write('hokum', `#!/bin/sh
-case "$*" in
-    'dnd --json --watch') printf '%s\\n' '{"dnd":true}'; exec sleep 5 ;;
-    *) printf '%s\\n' "$*" >> "$HOME/actions" ;;
-esac
+const daemon = fileURLToPath(new URL('./notification-daemon.py', import.meta.url));
+
+test('Sitka activates Hokum, controls DND and dismiss-all, and follows its new owner', { skip: externalSkip }, async () => withFixture(async (dir, write) => {
+    write('activation/org.freedesktop.Notifications.service', `[D-BUS Service]
+Name=org.freedesktop.Notifications
+Exec=${python} ${daemon} hokum
 `);
-    chmodSync(join(dir, 'hokum'), 0o700);
     write('shell.qml', `import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.services
 ShellRoot {
-    Connections {
-        target: Notifs
-        function onDndChanged(): void {
-            if (Notifs.dnd) {
-                console.log("HOKUM_DND_SYNCED");
-                actions.running = true;
+    id: root
+    property int step: 0
+    Timer {
+        interval: 20; running: true; repeat: true
+        onTriggered: {
+            if (root.step === 0 && Notifs.dndAvailable && Notifs.dnd) {
+                console.log("HOKUM_INITIAL_DND");
+                root.step++;
+                external.running = true;
+            } else if (root.step === 1 && Notifs.dndAvailable && !Notifs.dnd) {
+                console.log("HOKUM_EXTERNAL_DND");
+                root.step++;
+                Notifs.setDnd(true);
+            } else if (root.step === 2 && Notifs.dndAvailable && Notifs.dnd) {
+                console.log("HOKUM_CHANGED_DND");
+                root.step++;
+                dismiss.running = true;
+            } else if (root.step === 3 && !Notifs.dndAvailable) {
+                console.log("HOKUM_OWNER_GONE");
+                root.step++;
+            } else if (root.step === 4 && Notifs.dndAvailable && Notifs.dnd) {
+                console.log("HOKUM_NEW_OWNER_DND");
+                Qt.quit();
             }
         }
     }
     Process {
-        id: actions
-        command: ["sh", "-ec", ${JSON.stringify(`
-            ${JSON.stringify(busctl)} --address="$DBUS_SESSION_BUS_ADDRESS" call org.freedesktop.DBus \\
-                /org/freedesktop/DBus org.freedesktop.DBus NameHasOwner s org.freedesktop.Notifications
-            ${JSON.stringify(qs)} -p ${JSON.stringify(dir)} ipc call notifs clear
-        `)}]
-        stdout: SplitParser { onRead: data => console.log("OWNER", data) }
-        onExited: code => {
-            if (code !== 0) Qt.exit(code);
-            else Notifs.dnd = false;
-        }
+        id: external
+        command: ['touch', ${JSON.stringify(join(dir, 'home', 'flip-dnd'))}]
     }
-    Component.onCompleted: console.log("DND", Notifs.dnd)
-    Timer { running: true; interval: 1200; onTriggered: Qt.quit() }
+    Process {
+        id: dismiss
+        command: [${JSON.stringify(qs)}, '-p', ${JSON.stringify(dir)}, 'ipc', 'call', 'notifs', 'clear']
+        onExited: code => { if (code !== 0) Qt.exit(code); }
+    }
+    Timer { running: true; interval: 4000; onTriggered: Qt.quit() }
 }`);
-    const log = await runShell(dir, { SITKA_HOKUM: join(dir, 'hokum') });
-    assert.match(log, /HOKUM_DND_SYNCED/);
-    assert.match(log, /OWNER b false/);
-    assert.deepEqual(readFileSync(join(dir, 'home', 'actions'), 'utf8').trim().split('\n').sort(), [
-        'dismiss --all', 'dnd off',
-    ]);
+    const log = await runShell(dir);
+    assert.match(log, /HOKUM_INITIAL_DND[\s\S]*HOKUM_EXTERNAL_DND[\s\S]*HOKUM_CHANGED_DND[\s\S]*HOKUM_OWNER_GONE[\s\S]*HOKUM_NEW_OWNER_DND/);
+}));
+
+test('Sitka leaves an already-running third-party daemon in charge', { skip: externalSkip }, async () => withFixture(async (dir, write) => {
+    write('shell.qml', `import QtQuick
+import Quickshell
+import qs.services
+ShellRoot {
+    Component.onCompleted: console.log("DND_AVAILABLE", Notifs.dndAvailable)
+    Timer { running: true; interval: 150; onTriggered: {
+        console.log("DND_AVAILABLE", Notifs.dndAvailable);
+        Qt.quit();
+    } }
+}`);
+    const log = await runShell(dir, ['sh', '-ec', `
+        "$1" "$2" other &
+        pid=$!
+        trap 'kill "$pid"' EXIT
+        shift 2
+        while [ ! -e "$HOME/ready" ]; do sleep 0.02; done
+        "$@"
+    `, 'notification-fixture', python, daemon]);
+    assert.equal(Array.from(log.matchAll(/DND_AVAILABLE (\w+)/g), match => match[1]).join(' '), 'false false', log);
 }));

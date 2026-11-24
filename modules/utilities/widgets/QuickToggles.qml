@@ -87,11 +87,12 @@ ColumnLayout {
         // Do Not Disturb toggle
         QuickToggle {
             Layout.fillWidth: true
+            visible: Notifs.dndAvailable
             label: qsTr("DND")
             icon: Notifs.dnd ? "do_not_disturb_on" : "do_not_disturb_off"
             active: Notifs.dnd
             subtitle: Notifs.dnd ? qsTr("Notifications muted") : qsTr("Off")
-            onClicked: Notifs.dnd = !Notifs.dnd
+            onClicked: Notifs.setDnd(!Notifs.dnd)
         }
 
         // Mute toggle

@@ -28,6 +28,7 @@ qt_add_qml_module(sitka
         audioprovider.hpp audioprovider.cpp
         cavaprovider.hpp cavaprovider.cpp
         desktopdatabase.hpp desktopdatabase.cpp
+        notificationbackend.hpp notificationbackend.cpp
 )
 
 qt_add_shaders(sitka sitka_surface_material
@@ -54,6 +55,6 @@ install(FILES "${module_qmldir}" DESTINATION "${module_dir}")
 install(FILES "${module_typeinfo}" DESTINATION "${module_dir}")
 
 target_link_libraries(sitka PRIVATE
-    Qt::Core Qt::Qml Qt::Gui Qt::Concurrent Qt::Multimedia
+    Qt::Core Qt::Qml Qt::Gui Qt::Concurrent Qt::Multimedia Qt::DBus
     PkgConfig::Qalculate PkgConfig::Pipewire PkgConfig::Aubio Cava::Cava
 )

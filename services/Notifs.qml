@@ -6,20 +6,28 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Notifications
 import QtQuick
+import Sitka
 
 Singleton {
     id: root
 
     readonly property list<Notif> list: []
     readonly property list<Notif> popups: list.filter(n => n.popup)
-    property bool dnd: false
+    readonly property bool dnd: backend.builtIn ? localDnd : backend.doNotDisturb
+    readonly property bool dndAvailable: backend.builtIn || backend.hokumAvailable
+    property bool localDnd: false
 
-    readonly property string hokum: Quickshell.env("SITKA_HOKUM") || ""
-    property bool syncingFromHokum: false
+    function setDnd(enabled: bool): void {
+        if (backend.builtIn)
+            localDnd = enabled;
+        else
+            backend.setDoNotDisturb(enabled);
+    }
 
-    // Only the built-in backend may claim org.freedesktop.Notifications.
+    NotificationBackend { id: backend }
+
     LazyLoader {
-        active: root.hokum === ""
+        active: backend.builtIn
         component: NotificationServer {
             keepOnReload: false
             actionsSupported: true
@@ -40,55 +48,12 @@ Singleton {
         }
     }
 
-    onDndChanged: {
-        if (hokum !== "" && !syncingFromHokum)
-            Quickshell.execDetached([hokum, "dnd", dnd ? "on" : "off"]);
-    }
-
-    Process {
-        id: hokumDnd
-        command: [root.hokum, "dnd", "--json", "--watch"]
-        running: root.hokum !== ""
-
-        stdout: SplitParser {
-            onRead: data => {
-                try {
-                    const state = JSON.parse(data);
-                    if (typeof state.dnd !== "boolean")
-                        return;
-                    root.syncingFromHokum = true;
-                    root.dnd = state.dnd;
-                    root.syncingFromHokum = false;
-                } catch (error) {
-                    console.warn("Hokum DND:", error);
-                }
-            }
-        }
-
-        onExited: reconnect.start()
-    }
-
-    Timer {
-        id: reconnect
-        interval: 1000
-        onTriggered: hokumDnd.running = true
-    }
-
-    // CustomShortcut {
-    //     name: "clearNotifs"
-    //     description: "Clear all notifications"
-    //     onPressed: {
-    //         for (const notif of root.list)
-    //             notif.popup = false;
-    //     }
-    // }
-
     IpcHandler {
         target: "notifs"
 
         function clear(): void {
-            if (root.hokum !== "") {
-                Quickshell.execDetached([root.hokum, "dismiss", "--all"]);
+            if (!backend.builtIn) {
+                backend.dismissAll();
                 return;
             }
             for (const notif of root.list)

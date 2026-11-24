@@ -4,7 +4,6 @@ import qs.services
 import qs.components.effects
 import "../../../config"
 import qs.utils
-import Sitka
 import QtQuick
 import QtQuick.Shapes
 import qs.components.images
@@ -35,10 +34,6 @@ Item {
         triggeredOnStart: true
         repeat: true
         onTriggered: Players.active?.positionChanged()
-    }
-
-    ServiceRef {
-        service: BeatTracker
     }
 
     Shape {

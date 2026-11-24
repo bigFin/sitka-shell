@@ -56,11 +56,10 @@ Item {
     }
 
     ServiceRef {
-        service: Cava.provider
+        service: root.active && root.visible ? Cava.provider : null
     }
-
     ServiceRef {
-        service: BeatTracker
+        service: root.active && beatImage.visible && beatImage.playing ? BeatTracker : null
     }
 
     Shape {
@@ -555,6 +554,7 @@ Item {
 
         // Fallback to configured animated image
         AnimatedImage {
+            id: beatImage
             anchors.centerIn: parent
             visible: !bongocat.useSitkaTree
 

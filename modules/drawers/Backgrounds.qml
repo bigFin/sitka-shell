@@ -28,6 +28,9 @@ Item {
         width: bar.implicitWidth
         height: root.height + root.y + Config.border.thickness
         color: Colours.tPalette.m3surface
+        // Round only the exposed face; a collapsed rail keeps the original frame.
+        topRightFilletStyle: root.bar.visible ? 2 : filletStyle
+        bottomRightFilletStyle: topRightFilletStyle
     }
 
     Osd.Background {

@@ -19,6 +19,7 @@ Item {
         anchors.fill: parent
 
         dockAtTop: false
+        dockOverhang: bottomLeftButtress.visible ? bottomLeftButtress.width : 0
     }
     
     // Bottom-left Buttress

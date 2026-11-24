@@ -20,6 +20,8 @@ Item {
     anchors.leftMargin: bar.implicitWidth
 
     StyledRect {
+        // A collapsed bar still reserves the frame thickness, but has no face to paint.
+        visible: Config.border.showStroke || root.bar.visible
         x: -bar.implicitWidth
         y: -Config.border.thickness
         width: bar.implicitWidth

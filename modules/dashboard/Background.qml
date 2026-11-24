@@ -21,6 +21,7 @@ Item {
         anchors.fill: parent
 
         dockAtTop: true
+        dockOverhang: root.buttressesVisible ? leftButtress.width : (enableFillets ? -effectiveFilletSize : 0)
         // Keep top corners filleted whenever buttresses are not fully present.
         topButtressesVisible: root.buttressesVisible
     }

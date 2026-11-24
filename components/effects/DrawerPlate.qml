@@ -12,6 +12,7 @@ StyledRect {
     id: root
 
     required property bool dockAtTop
+    required property real dockOverhang
     property bool topButtressesVisible: false
     readonly property real lipY: dockAtTop ? height - 1.5 : 1.5
     readonly property real shoulder: Math.max(2, effectiveFilletSize)
@@ -28,6 +29,17 @@ StyledRect {
     bottomRightFillet: dockAtTop
     bottomLeftFilletStyle: 1
     bottomRightFilletStyle: 1
+
+    // The frame used to fill the reserved strip between the plate and the
+    // screen. Keep only the dock's footprint there when the frame is hidden.
+    Rectangle {
+        visible: !Config.border.showStroke && root.height > 0
+        x: -root.dockOverhang
+        y: root.dockAtTop ? -height : root.height
+        width: Math.max(0, root.width + 2 * root.dockOverhang)
+        height: Config.border.thickness
+        color: root.color
+    }
 
     // Keep the shadow behind the fill, and never capture the drawer contents
     // into an offscreen texture. Closed drawers and other themes pay no cost.

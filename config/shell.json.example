@@ -4,6 +4,10 @@
         // Available themes: "EverforestDark", "EverforestLight", "RosePine", "HighTest", "Observatory", "SunWorkstation", "SunGraphite"
         "theme": "EverforestDark"
     },
+    "border": {
+        // Set to false to hide only the line around the screen; true keeps it visible.
+        "showStroke": true
+    },
     "appearance": {
         // Static ordered texture on surface fills only. Text, icons and artwork are not filtered.
         // The Sun Workstation and Sun Graphite presets opt in; other presets remain flat by default.

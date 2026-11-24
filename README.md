@@ -116,6 +116,12 @@ Workspace labels support `"symbol"` (the default), `"number"`, `"name"`, and
 `"both"` through `bar.workspaces.displayMode`. Names come from the active
 window-manager backend and fall back to the workspace number when unavailable.
 
+To hide the line around the screen, merge `"border": { "showStroke": false }`
+into your `shell.json`. Set `showStroke` to `true` to restore it (the default).
+Saving the file updates the running shell without a restart. This hides only
+that line: the bar and HUD still curve into the edge, and their spacing and
+input areas stay the same.
+
 The repository intentionally ignores `config/shell.json` and
 `config/shell.json.backup` so local preferences do not become source files.
 

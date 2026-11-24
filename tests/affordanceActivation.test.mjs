@@ -101,17 +101,38 @@ import QtQuick
 QtObject { property var appearance: ({padding: {smaller: 2, small: 4, normal: 8, large: 12, larger: 16}, spacing: {small: 4, normal: 8, large: 12}, rounding: {small: 4, normal: 8, full: 24}, fillet: {small: 2}, font: {size: {small: 10, smaller: 10, large: 14}, family: {sans: "monospace"}}, anim: {durations: {small: 0, normal: 0, expressiveFastSpatial: 0, expressiveDefaultSpatial: 0}, curves: {standard: [0,0,1,1,1,1], standardDecel: [0,0,1,1,1,1], expressiveFastSpatial: [0,0,1,1,1,1], expressiveDefaultSpatial: [0,0,1,1,1,1]}}}); property var launcher: ({actionPrefix: ":", vimKeybinds: false}) }`);
     write('doubles/Colours.qml', `pragma Singleton
 import QtQuick
-QtObject { readonly property color launcherSecondaryText: palette.m3outline; property var palette: ({m3primary: "cyan", m3onPrimary: "white", m3primaryContainer: "navy", m3onPrimaryContainer: "white", m3secondaryContainer: "grey", m3onSecondaryContainer: "white", m3onSurface: "white", m3outline: "grey"}) }`);
+QtObject { readonly property color launcherSecondaryText: palette.m3outline; readonly property var tPalette: palette; property var palette: ({m3primary: "cyan", m3onPrimary: "white", m3primaryContainer: "navy", m3onPrimaryContainer: "white", m3secondaryContainer: "grey", m3onSecondaryContainer: "white", m3onSurface: "white", m3outline: "grey", m3error: "red", m3secondary: "teal", m3onSurfaceVariant: "grey", m3surfaceContainerHigh: "black"}) }`);
     write('doubles/WindowFactory.qml', `pragma Singleton
 import QtQuick
 QtObject { property int calls: 0; property var lastOptions; function create(parent, options) { calls++; lastOptions = options; } }`);
     write('StyledRect.qml', 'import QtQuick\nRectangle { property int filletSize: 4; property bool dithered: true }');
     write('StyledClippingRect.qml', 'import QtQuick\nRectangle { clip: true }');
-    write('StyledText.qml', 'import QtQuick\nText {}');
+    write('StyledText.qml', 'import QtQuick\nText { property bool animate }');
     write('MaterialIcon.qml', 'import QtQuick\nText { property real fill: 0; property bool animate }');
     write('Anim.qml', 'import QtQuick\nNumberAnimation { duration: 0 }');
     write('CAnim.qml', 'import QtQuick\nColorAnimation { duration: 0 }');
     write('StateLayer.qml', isolatedImports(fs.readFileSync(new URL('../components/StateLayer.qml', import.meta.url), 'utf8')));
+    write('tst_wallpaperKeyboard.qml', fs.readFileSync(new URL('./qt/tst_wallpaperKeyboard.qml', import.meta.url)));
+    write('BackgroundPane.qml', isolatedImports(fs.readFileSync(new URL('../modules/controlcenter/BackgroundPane.qml', import.meta.url), 'utf8'))
+      .replace(/^import (?:Quickshell(?:\.\w+)?|Sitka)\n/gm, '')
+      .replace('../../utils/scripts/keyboardActivation.js', 'keyboardActivation.js')
+      .replace('required property FileSystemEntry modelData', 'required property var modelData'));
+    write('StyledFlickable.qml', 'import QtQuick\nFlickable {}');
+    write('FileDialog.qml', 'import QtQuick\nItem { property string title; property string filterLabel; property var filters; signal accepted(string path); function open() {} }');
+    // Both repeaters use their shipped bindings and event handlers. Only the file sources and service are fake.
+    const entry = group => `({relativePath: "${group} wallpaper.ppm", path: Qt.resolvedUrl("${group} wallpaper.ppm").toString()})`;
+    write('default wallpaper.ppm', 'P3\n1 1\n255\n1 2 3\n');
+    write('doubles/user wallpaper.ppm', 'P3\n1 1\n255\n1 2 3\n');
+    write('FileSystemModel.qml', `import QtQuick\nQtObject { enum Filter { Images }\n property string path; property int filter; property bool recursive; property var entries: [${entry('default')}] }`);
+    for (const [name, props] of Object.entries({
+      Paths: 'property string config: ""; function shortenHome(path) { return path; }',
+      Images: 'property var validImageExtensions: []',
+      Papertoy: 'property bool enabled: false; property string currentShaderPath: ""',
+      Wallpapers: `property var list: [${entry('user')}]; property int calls; property string last; function setWallpaper(path) { last = path; calls++; }`,
+    })) {
+      fs.appendFileSync(path.join(dir, 'doubles/qmldir'), `singleton ${name} 1.0 ${name}.qml\n`);
+      write(`doubles/${name}.qml`, `pragma Singleton\nimport QtQuick\nQtObject { ${props} }`);
+    }
     const runnerArgs = ['-input', dir];
     for (const importPath of (process.env.QML_IMPORT_PATH || '').split(path.delimiter).filter(Boolean))
       runnerArgs.unshift('-import', importPath);

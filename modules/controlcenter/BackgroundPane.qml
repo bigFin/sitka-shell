@@ -4,6 +4,7 @@ import qs.components.filedialog
 import qs.services
 import "../../config"
 import qs.utils
+import "../../utils/scripts/keyboardActivation.js" as KeyboardActivation
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
@@ -20,7 +21,76 @@ Item {
         recursive: true
     }
 
+    Component {
+        id: wallpaperTile
+
+        Item {
+            id: tile
+            required property FileSystemEntry modelData
+
+            width: contentCol.width - 2 * contentCol.padding
+            height: 150
+            activeFocusOnTab: true
+            Accessible.role: Accessible.Button
+            Accessible.name: qsTr("Set wallpaper: %1").arg(modelData.relativePath)
+            Accessible.onPressAction: activate()
+            Keys.onReturnPressed: event => KeyboardActivation.invoke(event, activate)
+            Keys.onEnterPressed: event => KeyboardActivation.invoke(event, activate)
+            Keys.onSpacePressed: event => KeyboardActivation.invoke(event, activate)
+
+            function activate(): void {
+                Wallpapers.setWallpaper(modelData.path);
+            }
+
+            onActiveFocusChanged: {
+                if (!activeFocus)
+                    return;
+                scroll.cancelFlick();
+                const top = mapToItem(scroll.contentItem, 0, 0).y;
+                if (top < scroll.contentY)
+                    scroll.contentY = top;
+                else if (top + height > scroll.contentY + scroll.height)
+                    scroll.contentY = Math.min(top, top + height - scroll.height);
+            }
+
+            Item {
+                anchors.fill: parent
+                anchors.margins: 2
+                clip: true
+
+                Image {
+                    anchors.fill: parent
+                    source: tile.modelData.path
+                    fillMode: Image.PreserveAspectCrop
+                }
+
+                StateLayer {
+                    radius: Config.appearance.rounding.normal
+                    function onClicked(): void { tile.activate(); }
+                }
+
+                // Two tones keep the indicator distinct on both dark and light photos.
+                Rectangle {
+                    anchors.fill: parent
+                    visible: tile.activeFocus
+                    color: "transparent"
+                    border.color: "black"
+                    border.width: 2
+
+                    Rectangle {
+                        anchors.fill: parent
+                        anchors.margins: parent.border.width
+                        color: "transparent"
+                        border.color: "white"
+                        border.width: 2
+                    }
+                }
+            }
+        }
+    }
+
     StyledFlickable {
+        id: scroll
         anchors.fill: parent
         contentHeight: contentCol.height
         clip: true
@@ -232,34 +302,7 @@ Item {
 
             Repeater {
                 model: root.defaultWallpapersModel.entries
-
-                delegate: Item {
-                    width: parent.width
-                    height: 150
-                    
-                    anchors.horizontalCenter: parent.horizontalCenter
-
-                    StyledRect {
-                        anchors.fill: parent
-                        anchors.margins: 2 
-                        color: "transparent"
-                        radius: Config.appearance.rounding.normal
-                        clip: true
-
-                        Image {
-                            anchors.fill: parent
-                            source: modelData.path
-                            fillMode: Image.PreserveAspectCrop
-                        }
-
-                        StateLayer {
-                            radius: parent.radius
-                            onClicked: {
-                                Wallpapers.setWallpaper(modelData.path);
-                            }
-                        }
-                    }
-                }
+                delegate: wallpaperTile
             }
 
             StyledText {
@@ -272,32 +315,7 @@ Item {
 
             Repeater {
                 model: Wallpapers.list
-
-                delegate: Item {
-                    width: parent.width
-                    height: 150
-
-                    StyledRect {
-                        anchors.fill: parent
-                        anchors.margins: 2
-                        color: "transparent"
-                        radius: Config.appearance.rounding.normal
-                        clip: true
-
-                        Image {
-                            anchors.fill: parent
-                            source: modelData.path
-                            fillMode: Image.PreserveAspectCrop
-                        }
-
-                        StateLayer {
-                            radius: parent.radius
-                            onClicked: {
-                                Wallpapers.setWallpaper(modelData.path);
-                            }
-                        }
-                    }
-                }
+                delegate: wallpaperTile
             }
         }
     }

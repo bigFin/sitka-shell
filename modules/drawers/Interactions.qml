@@ -167,15 +167,12 @@ CustomMouseArea {
                 visibilities.setDrawer("dashboard", false, "explicit");
         }
 
-        // Show utilities on hover
-        const showUtilities = inBottomPanel(panels.utilities, x, y);
-
-        // Always update visibility based on hover if not in shortcut mode
-        if (!utilitiesShortcutActive) {
-            visibilities.utilities = showUtilities;
-        } else if (showUtilities) {
-            // If hovering over utilities area while in shortcut mode, transition to hover control
-            utilitiesShortcutActive = false;
+        // Hover takes over an explicitly opened Utilities panel; it never opens one.
+        if (visibilities.utilities) {
+            if (inBottomPanel(panels.utilities, x, y))
+                utilitiesShortcutActive = false;
+            else if (!utilitiesShortcutActive)
+                visibilities.utilities = false;
         }
 
         // Show popouts on hover

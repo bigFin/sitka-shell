@@ -5,6 +5,7 @@ import qs.services
 import "../../config"
 import "../../utils/scripts/dashboardData.js" as DashboardData
 import Quickshell
+import Quickshell.Services.UPower
 import QtQuick
 
 StyledRect {
@@ -78,8 +79,9 @@ StyledRect {
         // budget, never the current sample or the already-clipped strip width.
         readonly property real requestedWidth: (Config.bar.telemetry.showCpu ? metrics.advanceWidth("CPU 100% stale") + spacing : 0)
             + (Config.bar.telemetry.showMemory ? metrics.advanceWidth("RAM 100% stale") + spacing : 0)
+        readonly property real room: root.width - anchors.rightMargin - clock.width - 8 - strip.x - strip.count * 30
         readonly property bool canShow: root.visible && root.height > 0 && !!root.Window.window?.visible
-            && root.width >= anchors.rightMargin + clock.width + Math.ceil(requestedWidth) + 8 + strip.x + strip.count * 30
+            && room >= Math.ceil(requestedWidth)
 
         FontMetrics { id: metrics; font: clock.font }
 
@@ -97,6 +99,25 @@ StyledRect {
             sourceComponent: Reading {
                 domain: "memory"
                 text: "RAM " + DashboardData.percent(SystemUsage.memPerc, SystemUsage.memoryState)
+            }
+        }
+        Loader {
+            id: battery
+            // Never evict CPU/RAM or reserve space for a nonexistent battery.
+            readonly property real room: rightGroup.room - Math.ceil(rightGroup.requestedWidth) - rightGroup.spacing
+            active: Config.bar.telemetry.showBattery && rightGroup.canShow && room >= Math.ceil(metrics.advanceWidth("BAT 100% charge"))
+            visible: !!item && item.text !== ""
+            sourceComponent: StyledText {
+                objectName: "batteryReading"
+                font: clock.font
+                color: Colours.palette.m3onSurface
+                text: {
+                    const dev = UPower.displayDevice;
+                    if (!dev?.ready || !dev.isLaptopBattery || !dev.isPresent)
+                        return "";
+                    const reading = DashboardData.battery(dev, UPowerDeviceState);
+                    return reading.rate && Math.ceil(metrics.advanceWidth(reading.rate)) <= battery.room ? reading.rate : reading.label;
+                }
             }
         }
         StyledText {

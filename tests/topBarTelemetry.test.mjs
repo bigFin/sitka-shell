@@ -12,13 +12,16 @@ test('top bar: independent optional readings, geometry and per-view leases', { s
     t.after(() => rmSync(dir, { recursive: true, force: true }));
     const write = (name, text) => writeFileSync(join(dir, name), text);
     // Keep the real bar, config defaults and formatter; isolate the shell backends.
-    write('TopBar.qml', read('modules/bar/TopBar.qml').replace(/^import (qs\.\S+|"\.\.\/\.\.\/config"|Quickshell)$/gm, '')
+    write('TopBar.qml', read('modules/bar/TopBar.qml').replace(/^import (qs\.\S+|"\.\.\/\.\.\/config"|Quickshell|Quickshell\.Services\.UPower)$/gm, '')
         .replace('../../utils/scripts/dashboardData.js', 'dashboardData.js').replace(/required property (ShellScreen|PersistentProperties) /g, 'required property var '));
     write('dashboardData.js', read('utils/scripts/dashboardData.js'));
     write('BarConfig.qml', read('config/BarConfig.qml').replace('import Quickshell.Io', 'import QtQuick').replaceAll('JsonObject', 'QtObject'));
     write('StyledText.qml', 'import QtQuick\nText {}');
     write('StyledRect.qml', 'import QtQuick\nRectangle { property bool enableFillets; property real ditherRelief }');
     const doubles = {
+        Probe: 'property int deviceStarts: 0',
+        UPower: `Component.onCompleted: Probe.deviceStarts++; property QtObject displayDevice: QtObject { property bool ready; property bool isLaptopBattery; property bool isPresent; property int state; property real percentage; property real changeRate }`,
+        UPowerDeviceState: 'enum State { Unknown, Charging, Discharging, Empty, FullyCharged, PendingCharge, PendingDischarge }',
         Config: 'property BarConfig bar: BarConfig {}; property var launcher: ({enabled:true}); property var services: ({useTwelveHourClock:false}); property var appearance: ({font:{family:{mono:"monospace"}}})',
         Colours: 'property var palette: ({m3onSurface:"white",m3primary:"green",m3onPrimary:"black",m3outline:"gray",m3surfaceContainerHigh:"gray"}); property var tPalette: ({m3surface:"black",m3surfaceContainer:"gray"})',
         WorkspaceModel: 'function getWorkspacesForOutput(name) { return [{is_active:true},{is_active:false},{is_active:false}] }',
@@ -34,6 +37,8 @@ test('top bar: independent optional readings, geometry and per-view leases', { s
     write('tst_topBarTelemetry.qml', read('tests/qt/tst_topBarTelemetry.qml'));
     const env = { ...process.env, QT_QPA_PLATFORM: 'offscreen', QT_QPA_PLATFORMTHEME: 'generic', QT_QUICK_BACKEND: 'software' };
     delete env.WAYLAND_DISPLAY; delete env.DISPLAY;
+    env.XDG_RUNTIME_DIR = env.XDG_CACHE_HOME = env.XDG_CONFIG_HOME = dir;
+    env.DBUS_SYSTEM_BUS_ADDRESS = env.DBUS_SESSION_BUS_ADDRESS = 'unix:path=' + join(dir, 'no-bus');
     const result = spawnSync(qt, ['-input', dir], {env, encoding:'utf8', timeout:20000});
     const log = result.stdout + result.stderr;
     assert.ifError(result.error);

@@ -26,6 +26,65 @@ TestCase {
         tryCompare(SystemUsage, "cpuRefs", cpu);
         tryCompare(SystemUsage, "memoryRefs", memory);
     }
+    function test_battery() {
+        const first = createTemporaryObject(bar, testCase);
+        compare(Config.bar.telemetry.showBattery, false);
+        compare(findChild(first, "batteryReading"), null);
+        compare(Probe.deviceStarts, 0);
+        Config.bar.telemetry.showBattery = true;
+        const reading = findChild(first, "batteryReading");
+        verify(reading);
+        const dev = UPower.displayDevice;
+        verify(!reading.visible);
+        dev.ready = true;
+        dev.isPresent = true;
+        verify(!reading.visible); // Desktop or peripheral, not a system battery.
+        dev.isLaptopBattery = true;
+        verify(label(first, "BAT —")); // Unknown state and default numeric fields.
+        dev.state = UPowerDeviceState.Empty;
+        verify(label(first, "BAT 0% empty"));
+        dev.state = UPowerDeviceState.Charging;
+        verify(label(first, "BAT — charge")); // Optional Percentage also defaults to 0 in Quickshell.
+        dev.percentage = 0.73;
+        dev.changeRate = 11.7;
+        dev.state = UPowerDeviceState.Charging;
+        verify(label(first, "BAT 73% +11.7W"));
+        dev.state = UPowerDeviceState.Discharging;
+        verify(label(first, "BAT 73% −11.7W"));
+        dev.changeRate = 0; // UPower cannot distinguish an unsupported rate from zero.
+        verify(label(first, "BAT 73% drain"));
+        dev.percentage = NaN;
+        verify(label(first, "BAT — drain"));
+        dev.percentage = 1;
+        dev.state = UPowerDeviceState.FullyCharged;
+        verify(label(first, "BAT 100% full"));
+        const other = createTemporaryObject(bar, testCase);
+        verify(label(other, "BAT 100% full"));
+        compare(Probe.deviceStarts, 1);
+        counts(0, 0); // Neither screen leases polled CPU or RAM domains.
+        first.width = 238;
+        tryVerify(() => !findChild(first, "batteryReading"));
+        verify(label(first, "12:00"));
+        compare(first.children.find(child => child.count === 3).width, 90);
+        first.width = 900;
+        verify(label(first, "BAT 100% full"));
+        other.visible = false;
+        tryVerify(() => !findChild(other, "batteryReading"));
+        dev.isPresent = false;
+        verify(!label(first, "BAT 100% full"));
+        // Absence shouldn't change CPU placement or the clock/workspace fit.
+        Config.bar.telemetry.showCpu = true;
+        first.width = 410;
+        counts(1, 0);
+        verify(label(first, "CPU —"));
+        compare(first.children.find(child => child.count === 3).width, 90);
+        dev.isPresent = true;
+        counts(1, 0);
+        tryVerify(() => !findChild(first, "batteryReading"));
+        Config.bar.telemetry.showCpu = false;
+        Config.bar.telemetry.showBattery = false;
+        tryVerify(() => !findChild(first, "batteryReading"));
+    }
     function test_lifecycle() {
         const first = createTemporaryObject(bar, testCase);
         verify(first);

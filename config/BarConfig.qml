@@ -138,6 +138,7 @@ JsonObject {
     component Telemetry: JsonObject {
         property bool showCpu: false
         property bool showMemory: false
+        property bool showBattery: false
     }
 
     component Sizes: JsonObject {

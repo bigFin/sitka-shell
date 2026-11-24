@@ -116,11 +116,14 @@ Workspace labels support `"symbol"` (the default), `"number"`, `"name"`, and
 `"both"` through `bar.workspaces.displayMode`. Names come from the active
 window-manager backend and fall back to the workspace number when unavailable.
 
-For the horizontal bar, set `bar.layout` to `"top"`. Enable CPU or RAM readings
-independently with `bar.telemetry.showCpu` and `bar.telemetry.showMemory`.
-Both default to `false`. A dash means no reading yet; `stale` marks the last
-known value. When the readings would crowd the clock or workspace buttons,
-the bar hides them and stops requesting their samples.
+For the horizontal bar, set `bar.layout` to `"top"`. Enable readings independently
+with `bar.telemetry.showCpu`, `bar.telemetry.showMemory`, or `bar.telemetry.showBattery`
+(all default to `false`). A dash means no reading; `stale` marks a previous CPU
+or RAM sample. The battery shows charge and, when available, watts flowing in
+(`+`) or out (`−`). Without a usable rate or room for it, the label shows the
+state instead, e.g. `BAT 73% drain` or `BAT 100% full`. It uses UPower updates,
+not a bar timer, and disappears when no system battery is present. The clock
+and workspace buttons take priority; hidden readings do not request samples.
 
 To hide the line around the screen, merge `"border": { "showStroke": false }`
 into your `shell.json`. Set `showStroke` to `true` to restore it (the default).

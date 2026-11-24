@@ -148,9 +148,10 @@ Singleton {
     onGroupingRespectsLayoutChanged: invalidateAll()
 
     Connections {
-        target: WindowStore
+        // Group the committed collection, not the earlier raw compositor event.
+        target: WindowCollectionModel
 
-        function onVersionChanged(): void {
+        function onCollectionSerialChanged(): void {
             root.invalidateAll();
         }
     }

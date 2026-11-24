@@ -84,6 +84,8 @@ Item {
             topPadding: Config.appearance.padding.larger
             bottomPadding: Config.appearance.padding.larger
 
+            // EverforestLight keeps the legacy dark container; use its variant ink when opaque.
+            color: Colours.themeName === "EverforestLight" && !Colours.transparency.enabled ? Colours.palette.m3onSurfaceVariant : Colours.palette.m3onSurface
             placeholderTextColor: Colours.launcherSecondaryText
             placeholderText: qsTr("Type \"%1\" for commands").arg(Config.launcher.actionPrefix)
 

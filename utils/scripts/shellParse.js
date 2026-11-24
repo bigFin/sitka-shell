@@ -39,15 +39,19 @@ function extractCodexQuotas(result) {
     const quotas = [];
     for (const id of ids) {
         const snapshot = buckets[id];
-        const window = chooseLongestWindow(snapshot);
-        if (!window || typeof window.usedPercent !== "number")
+        // The default Codex row is weekly; primary/secondary are slots, not periods.
+        // Additional model rows keep their own longest reported window.
+        const window = id === "codex"
+            ? [snapshot?.primary, snapshot?.secondary].find(w => w?.windowDurationMins === 7 * 24 * 60 && Number.isFinite(w.usedPercent))
+            : chooseLongestWindow(snapshot);
+        if (!window || !Number.isFinite(window.usedPercent))
             continue;
         quotas.push({
             "id": "codex-" + id,
             "provider": "codex",
             "name": id === "codex" ? "Codex" : (snapshot.limitName || id),
             "usedPercent": Math.max(0, Math.min(100, window.usedPercent)),
-            "resetsAt": window.resetsAt ? window.resetsAt * 1000 : 0,
+            "resetsAt": Number.isFinite(window.resetsAt) ? window.resetsAt * 1000 : null,
             "resetText": "",
             "plan": snapshot.planType || ""
         });

@@ -26,6 +26,83 @@ TestCase {
         tryCompare(SystemUsage, "cpuRefs", cpu);
         tryCompare(SystemUsage, "memoryRefs", memory);
     }
+    function test_codexWeekly() {
+        const first = createTemporaryObject(bar, testCase);
+        compare(Config.bar.telemetry.showCodexWeekly, false);
+        compare(AgentUsage.codexRefs, 0);
+        Config.bar.telemetry.showCodexWeekly = true;
+        const meter = label(first, "Codex —");
+        verify(meter);
+        const dial = meter.children.find(child => child.usedPercent !== undefined);
+        verify(dial);
+        compare(dial.usedPercent, -1);
+        compare(meter.Accessible.name, "Codex weekly usage unavailable");
+        tryCompare(AgentUsage, "codexRefs", 1);
+        AgentUsage.codexWeeklyQuota = ({usedPercent: 0, resetsAt: null});
+        verify(label(first, "Codex 0% used"));
+        compare(dial.usedPercent, 0);
+        AgentUsage.codexWeeklyQuota = ({usedPercent: 43.25, resetsAt: null});
+        verify(label(first, "Codex 43.25% used"));
+        compare(dial.usedPercent, 43.25);
+        compare(meter.Accessible.name, "Codex weekly: 43.25% used");
+        AgentUsage.codexWeeklyQuota = ({usedPercent: 89.9});
+        compare(dial.sweepInk, dial.ink);
+        AgentUsage.codexWeeklyQuota = ({usedPercent: 90});
+        compare(dial.sweepInk, Qt.color(Colours.palette.m3error));
+        AgentUsage.codexError = "request failed";
+        verify(label(first, "Codex —"));
+        compare(dial.usedPercent, -1);
+        Config.bar.telemetry.showCodexWeekly = false;
+        tryCompare(AgentUsage, "codexRefs", 0);
+        verify(!label(first, "Codex —"));
+        AgentUsage.codexError = "";
+        AgentUsage.codexWeeklyQuota = null;
+    }
+    function test_weeklyFit() {
+        Config.bar.telemetry.showCpu = Config.bar.telemetry.showMemory = Config.bar.telemetry.showBattery = true;
+        const first = createTemporaryObject(bar, testCase);
+        const dev = UPower.displayDevice;
+        dev.ready = dev.isPresent = dev.isLaptopBattery = true;
+        dev.state = UPowerDeviceState.Discharging;
+        dev.percentage = 0.73;
+        dev.changeRate = 11.7;
+        const strip = first.children.find(child => child.count === 3);
+        const reset = new Date(2030, 0, 2, 9, 15);
+        AgentUsage.codexWeeklyQuota = ({usedPercent: 100, resetsAt: reset.getTime()});
+        const compact = "Codex 100% used";
+        const detail = compact + " · resets " + Qt.formatDateTime(reset, "ddd HH:mm");
+        Config.bar.telemetry.showCodexWeekly = true;
+        first.width = 1250;
+        tryVerify(() => !!label(first, detail));
+        let sawCompact = false, sawBatteryOnly = false;
+        for (let w = 1000; w >= 450; w -= 20) {
+            first.width = w;
+            first.children.find(child => child.forceLayout && child.spacing === 12).forceLayout();
+            compare(strip.width, 90);
+            const bat = label(first, "73% −11.7W");
+            const weekly = label(first, compact) || label(first, detail);
+            if (weekly) {
+                verify(bat);
+                verify(strip.x + strip.width + 8 <= bat.mapToItem(first, 0, 0).x);
+                const batteryEnd = bat.mapToItem(first, bat.width, 0).x;
+                const quotaStart = weekly.mapToItem(first, 0, 0).x;
+                verify(batteryEnd < quotaStart, `width ${w}: battery ends ${batteryEnd}, quota starts ${quotaStart}`);
+                if (weekly.text === compact) sawCompact = true;
+            } else if (bat) {
+                sawBatteryOnly = true;
+                counts(1, 1);
+                compare(AgentUsage.codexRefs, 0);
+            }
+        }
+        verify(sawCompact && sawBatteryOnly, "drop reset, then weekly, before existing telemetry");
+        first.width = 1250;
+        tryCompare(AgentUsage, "codexRefs", 1);
+        first.visible = false;
+        tryCompare(AgentUsage, "codexRefs", 0);
+        Config.bar.telemetry.showCpu = Config.bar.telemetry.showMemory = Config.bar.telemetry.showBattery = false;
+        Config.bar.telemetry.showCodexWeekly = false;
+        AgentUsage.codexWeeklyQuota = null;
+    }
     function test_battery() {
         const first = createTemporaryObject(bar, testCase);
         compare(Config.bar.telemetry.showBattery, false);
@@ -34,32 +111,50 @@ TestCase {
         Config.bar.telemetry.showBattery = true;
         const reading = findChild(first, "batteryReading");
         verify(reading);
+        const gauge = reading.children.find(child => child.charging !== undefined);
+        verify(gauge);
         const dev = UPower.displayDevice;
         verify(!reading.visible);
         dev.ready = true;
         dev.isPresent = true;
         verify(!reading.visible); // Desktop or peripheral, not a system battery.
         dev.isLaptopBattery = true;
-        verify(label(first, "BAT —")); // Unknown state and default numeric fields.
+        verify(label(first, "—")); // Unknown state and default numeric fields.
         dev.state = UPowerDeviceState.Empty;
-        verify(label(first, "BAT 0% empty"));
+        verify(label(first, "0% empty"));
+        compare(gauge.level, 0);
         dev.state = UPowerDeviceState.Charging;
-        verify(label(first, "BAT — charge")); // Optional Percentage also defaults to 0 in Quickshell.
+        verify(label(first, "— charge")); // Optional Percentage also defaults to 0 in Quickshell.
+        compare(gauge.level, -1);
+        compare(gauge.charging, true);
         dev.percentage = 0.73;
         dev.changeRate = 11.7;
         dev.state = UPowerDeviceState.Charging;
-        verify(label(first, "BAT 73% +11.7W"));
+        verify(label(first, "73% +11.7W"));
         dev.state = UPowerDeviceState.Discharging;
-        verify(label(first, "BAT 73% −11.7W"));
+        verify(label(first, "73% −11.7W"));
+        compare(gauge.level, 0.73);
+        compare(gauge.charging, false);
+        compare(reading.Accessible.name, "Battery: 73% drain, 73% −11.7W");
+        dev.percentage = 0.201;
+        compare(gauge.fillInk, gauge.ink);
+        dev.percentage = 0.20;
+        compare(gauge.fillInk, Qt.color(Colours.palette.m3error));
+        for (const state of [UPowerDeviceState.Charging, UPowerDeviceState.PendingDischarge, UPowerDeviceState.Unknown]) {
+            dev.state = state;
+            compare(gauge.fillInk, gauge.ink);
+        }
+        dev.state = UPowerDeviceState.Discharging;
+        dev.percentage = 0.73;
         dev.changeRate = 0; // UPower cannot distinguish an unsupported rate from zero.
-        verify(label(first, "BAT 73% drain"));
+        verify(label(first, "73% drain"));
         dev.percentage = NaN;
-        verify(label(first, "BAT — drain"));
+        verify(label(first, "— drain"));
         dev.percentage = 1;
         dev.state = UPowerDeviceState.FullyCharged;
-        verify(label(first, "BAT 100% full"));
+        verify(label(first, "100% full"));
         const other = createTemporaryObject(bar, testCase);
-        verify(label(other, "BAT 100% full"));
+        verify(label(other, "100% full"));
         compare(Probe.deviceStarts, 1);
         counts(0, 0); // Neither screen leases polled CPU or RAM domains.
         first.width = 238;
@@ -67,11 +162,11 @@ TestCase {
         verify(label(first, "12:00"));
         compare(first.children.find(child => child.count === 3).width, 90);
         first.width = 900;
-        verify(label(first, "BAT 100% full"));
+        verify(label(first, "100% full"));
         other.visible = false;
         tryVerify(() => !findChild(other, "batteryReading"));
         dev.isPresent = false;
-        verify(!label(first, "BAT 100% full"));
+        verify(!label(first, "100% full"));
         // Absence shouldn't change CPU placement or the clock/workspace fit.
         Config.bar.telemetry.showCpu = true;
         first.width = 410;

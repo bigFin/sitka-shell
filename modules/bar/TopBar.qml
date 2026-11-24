@@ -105,19 +105,59 @@ StyledRect {
             id: battery
             // Never evict CPU/RAM or reserve space for a nonexistent battery.
             readonly property real room: rightGroup.room - Math.ceil(rightGroup.requestedWidth) - rightGroup.spacing
-            active: Config.bar.telemetry.showBattery && rightGroup.canShow && room >= Math.ceil(metrics.advanceWidth("BAT 100% charge"))
-            visible: !!item && item.text !== ""
-            sourceComponent: StyledText {
+            readonly property int artwork: 36
+            active: Config.bar.telemetry.showBattery && rightGroup.canShow && room >= artwork + 4 + Math.ceil(metrics.advanceWidth("100% charge"))
+            visible: !!item && item.present
+            sourceComponent: Instrument {
+                id: cell
                 objectName: "batteryReading"
-                font: clock.font
-                color: Colours.palette.m3onSurface
-                text: {
-                    const dev = UPower.displayDevice;
-                    if (!dev?.ready || !dev.isLaptopBattery || !dev.isPresent)
-                        return "";
-                    const reading = DashboardData.battery(dev, UPowerDeviceState);
-                    return reading.rate && Math.ceil(metrics.advanceWidth(reading.rate)) <= battery.room ? reading.rate : reading.label;
+                readonly property var dev: UPower.displayDevice
+                readonly property bool present: !!dev?.ready && dev.isLaptopBattery && dev.isPresent
+                readonly property var reading: present ? DashboardData.battery(dev, UPowerDeviceState) : null
+                artwork: battery.artwork
+                text: !reading ? "" : reading.rate && artwork + 4 + Math.ceil(metrics.advanceWidth(reading.rate)) <= battery.room ? reading.rate : reading.label
+                Accessible.name: reading ? qsTr("Battery: %1").arg(reading.label) + (reading.rate ? ", " + reading.rate : "") : ""
+                BatteryGauge {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: cell.artwork
+                    level: cell.reading?.level ?? -1
+                    charging: cell.reading?.charging ?? false
+                    ink: Colours.palette.m3onSurface
+                    fillInk: cell.dev?.state === UPowerDeviceState.Discharging && level > 0 && level <= 0.20 ? Colours.palette.m3error : ink
                 }
+            }
+        }
+        Loader {
+            id: weekly
+            // Budget the full CPU/RAM labels and the battery's chosen reading
+            // first. Neither acquisition nor layout depends on the quota sample.
+            readonly property real room: rightGroup.room - Math.ceil(rightGroup.requestedWidth) - rightGroup.spacing
+                - (battery.visible ? battery.width + rightGroup.spacing : 0)
+            readonly property int artwork: 27
+            readonly property string usedFormat: qsTr("Codex %1% used")
+            readonly property string unavailable: qsTr("Codex —")
+            active: Config.bar.telemetry.showCodexWeekly && rightGroup.canShow
+                && room >= artwork + 4 + Math.ceil(Math.max(metrics.advanceWidth(usedFormat.arg(100)), metrics.advanceWidth(unavailable)))
+            visible: active
+            sourceComponent: Instrument {
+                id: counter
+                artwork: weekly.artwork
+                readonly property var quota: AgentUsage.codexError ? null : AgentUsage.codexWeeklyQuota
+                readonly property string reset: quota?.resetsAt > 0 ? Qt.formatDateTime(new Date(quota.resetsAt), "ddd HH:mm") : ""
+                readonly property string compact: quota ? weekly.usedFormat.arg(String(quota.usedPercent)) : weekly.unavailable
+                readonly property string detail: reset ? qsTr("%1 · resets %2").arg(compact).arg(reset) : compact
+                readonly property real textRoom: weekly.room - artwork - 4
+                text: !quota || metrics.advanceWidth(detail) <= textRoom ? detail : metrics.advanceWidth(compact) <= textRoom ? compact : weekly.usedFormat.arg(Math.round(quota.usedPercent))
+                Accessible.name: quota ? qsTr("Codex weekly: %1% used").arg(String(quota.usedPercent)) + (reset ? qsTr(", resets %1").arg(reset) : "") : qsTr("Codex weekly usage unavailable")
+                WeeklyDial {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: counter.artwork
+                    usedPercent: counter.quota?.usedPercent ?? -1
+                    ink: Colours.palette.m3onSurface
+                    sweepInk: usedPercent >= 90 ? Colours.palette.m3error : ink
+                }
+                Component.onCompleted: AgentUsage.addCodexView()
+                Component.onDestruction: AgentUsage.removeCodexView()
             }
         }
         StyledText {
@@ -126,6 +166,23 @@ StyledRect {
             font.family: Config.appearance.font.family.mono
             font.pointSize: 10
             color: Colours.palette.m3onSurface
+        }
+    }
+
+    component Instrument: Item {
+        required property int artwork
+        required property string text
+        implicitWidth: artwork + 4 + Math.ceil(caption.implicitWidth)
+        implicitHeight: Math.max(18, caption.implicitHeight)
+        Accessible.role: Accessible.StaticText
+        StyledText {
+            id: caption
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            text: parent.text
+            font: clock.font
+            color: Colours.palette.m3onSurface
+            Accessible.ignored: true
         }
     }
 

@@ -59,7 +59,7 @@
         // entries, pin and reveal settings below still belong to the sidebar.
         "layout": "sidebar",
         // Top layout only. Readings yield to workspace buttons and the clock.
-        "telemetry": { "showCpu": false, "showMemory": false, "showBattery": false },
+        "telemetry": { "showCpu": false, "showMemory": false, "showBattery": false, "showCodexWeekly": false },
         // Bar reveal behavior:
         // - "corner": click corner trigger to show bar (default, no window shoving)
         // - "hover": show bar when mouse is near left edge  

@@ -119,11 +119,21 @@ window-manager backend and fall back to the workspace number when unavailable.
 For the horizontal bar, set `bar.layout` to `"top"`. Enable readings independently
 with `bar.telemetry.showCpu`, `bar.telemetry.showMemory`, or `bar.telemetry.showBattery`
 (all default to `false`). A dash means no reading; `stale` marks a previous CPU
-or RAM sample. The battery shows charge and, when available, watts flowing in
+or RAM sample. Dots inside the battery show its charge; they use warning ink
+at 20% or below while discharging. A plus at the terminal means charging.
+The label gives the percentage and, when available, watts flowing in
 (`+`) or out (`−`). Without a usable rate or room for it, the label shows the
-state instead, e.g. `BAT 73% drain` or `BAT 100% full`. It uses UPower updates,
+state instead, e.g. `73% drain` or `100% full`. It uses UPower updates,
 not a bar timer, and disappears when no system battery is present. The clock
 and workspace buttons take priority; hidden readings do not request samples.
+
+Set `bar.telemetry.showCodexWeekly` to `true` to show the percentage **used**
+in the default seven-day Codex limit. Dots follow the needle clockwise from the
+left and use warning ink at 90% used or higher. A needle at the start means
+zero; a dash without a needle means unknown. The dial shares the dashboard’s
+Codex session and respects `services.agentUsage.showCodex`; it does not start
+Claude. A reported reset appears in local time when it fits.
+As space narrows, the reset and then the weekly reading yield to the other readings.
 
 To hide the line around the screen, merge `"border": { "showStroke": false }`
 into your `shell.json`. Set `showStroke` to `true` to restore it (the default).

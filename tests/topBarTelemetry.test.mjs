@@ -15,15 +15,19 @@ test('top bar: independent optional readings, geometry and per-view leases', { s
     write('TopBar.qml', read('modules/bar/TopBar.qml').replace(/^import (qs\.\S+|"\.\.\/\.\.\/config"|Quickshell|Quickshell\.Services\.UPower)$/gm, '')
         .replace('../../utils/scripts/dashboardData.js', 'dashboardData.js').replace(/required property (ShellScreen|PersistentProperties) /g, 'required property var '));
     write('dashboardData.js', read('utils/scripts/dashboardData.js'));
+    for (const type of ['WeeklyDial', 'BatteryGauge']) write(`${type}.qml`, read(`modules/bar/${type}.qml`));
     write('BarConfig.qml', read('config/BarConfig.qml').replace('import Quickshell.Io', 'import QtQuick').replaceAll('JsonObject', 'QtObject'));
     write('StyledText.qml', 'import QtQuick\nText {}');
     write('StyledRect.qml', 'import QtQuick\nRectangle { property bool enableFillets; property real ditherRelief }');
     const doubles = {
         Probe: 'property int deviceStarts: 0',
+        AgentUsage: `property var codexWeeklyQuota: null; property string codexError; property int codexRefs: 0
+            function addCodexView() { codexRefs++ }
+            function removeCodexView() { codexRefs-- }`,
         UPower: `Component.onCompleted: Probe.deviceStarts++; property QtObject displayDevice: QtObject { property bool ready; property bool isLaptopBattery; property bool isPresent; property int state; property real percentage; property real changeRate }`,
         UPowerDeviceState: 'enum State { Unknown, Charging, Discharging, Empty, FullyCharged, PendingCharge, PendingDischarge }',
         Config: 'property BarConfig bar: BarConfig {}; property var launcher: ({enabled:true}); property var services: ({useTwelveHourClock:false}); property var appearance: ({font:{family:{mono:"monospace"}}})',
-        Colours: 'property var palette: ({m3onSurface:"white",m3primary:"green",m3onPrimary:"black",m3outline:"gray",m3surfaceContainerHigh:"gray"}); property var tPalette: ({m3surface:"black",m3surfaceContainer:"gray"})',
+        Colours: 'property var palette: ({m3onSurface:"white",m3error:"salmon",m3primary:"green",m3onPrimary:"black",m3outline:"gray",m3surfaceContainerHigh:"gray"}); property var tPalette: ({m3surface:"black",m3surfaceContainer:"gray"})',
         WorkspaceModel: 'function getWorkspacesForOutput(name) { return [{is_active:true},{is_active:false},{is_active:false}] }',
         Time: 'function format(fmt) { return fmt.includes("ddd") ? "Mon  12:00" : "12:00" }',
         SystemUsage: `property int cpuRefs; property int memoryRefs; property real cpuPerc: 0; property real memPerc: 0.75

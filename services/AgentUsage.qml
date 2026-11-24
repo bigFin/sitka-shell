@@ -19,6 +19,8 @@ Singleton {
     }
 
     property var providers: []
+    // Additional model limits (or Claude) can be present without the default Codex week.
+    readonly property var codexWeeklyQuota: providers.find(quota => quota.id === "codex-codex") ?? null
     property var codexQuotas: []
     property var claudeQuota: null
     property bool codexLoading: false
@@ -31,24 +33,32 @@ Singleton {
     property bool codexInitialized: false
     property var codexPending: null // Only one request (handshake or quota read) is outstanding.
     property int activeViewCount: 0
-    readonly property bool pollingActive: activeViewCount > 0
+    property int codexViewCount: 0
+    readonly property bool codexWanted: Config.services.agentUsage.showCodex && (activeViewCount > 0 || codexViewCount > 0)
+    readonly property bool claudeWanted: Config.services.agentUsage.showClaude && activeViewCount > 0
+    readonly property bool pollingActive: codexWanted || claudeWanted
+
+    onCodexWantedChanged: if (codexWanted) refreshCodex()
+    onClaudeWantedChanged: if (claudeWanted) refreshClaude()
 
     function refresh(): void {
-        if (Config.services.agentUsage.showCodex)
+        if (codexWanted)
             refreshCodex();
-        if (Config.services.agentUsage.showClaude)
+        if (claudeWanted)
             refreshClaude();
     }
 
     function addView(): void {
         activeViewCount++;
-        if (activeViewCount === 1)
-            refresh();
     }
 
     function removeView(): void {
         activeViewCount = Math.max(0, activeViewCount - 1);
     }
+
+    // Top bars share the dashboard's Codex session, but never request Claude.
+    function addCodexView(): void { codexViewCount++; }
+    function removeCodexView(): void { codexViewCount = Math.max(0, codexViewCount - 1); }
 
     function refreshCodex(): void {
         if (!Config.services.agentUsage.showCodex) {
@@ -58,7 +68,7 @@ Singleton {
             return;
         }
         codexLoading = true;
-        codexError = "";
+        // Only a successful read makes a cached value current again.
         if (!codexProcess.running)
             codexProcess.running = true;
         else
@@ -84,6 +94,10 @@ Singleton {
     }
 
     function requestCodex(): void {
+        if (!codexWanted) {
+            codexLoading = false;
+            return;
+        }
         const now = Date.now();
         if (codexPending && !ShellParse.isRequestStale(now, codexPending.sentMs, 120000))
             return;
@@ -146,8 +160,6 @@ Singleton {
 
         function onShowCodexChanged(): void {
             root.rebuildProviders();
-            if (target.showCodex && root.pollingActive)
-                root.refreshCodex();
         }
 
         function onShowAdditionalCodexLimitsChanged(): void {
@@ -156,8 +168,6 @@ Singleton {
 
         function onShowClaudeChanged(): void {
             root.rebuildProviders();
-            if (target.showClaude && root.pollingActive)
-                root.refreshClaude();
         }
     }
 
@@ -182,8 +192,7 @@ Singleton {
             root.codexInitialized = false;
             root.codexPending = null;
             root.codexLoading = false;
-            if (root.codexQuotas.length === 0)
-                root.codexError = qsTr("Codex CLI unavailable");
+            root.codexError = qsTr("Codex CLI unavailable");
         }
 
         stdout: SplitParser {

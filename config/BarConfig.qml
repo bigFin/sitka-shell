@@ -139,6 +139,7 @@ JsonObject {
         property bool showCpu: false
         property bool showMemory: false
         property bool showBattery: false
+        property bool showCodexWeekly: false
     }
 
     component Sizes: JsonObject {

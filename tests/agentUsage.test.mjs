@@ -6,13 +6,16 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
 const qs = process.env.QUICKSHELL || process.env.PATH.split(':').map(dir => join(dir, 'quickshell')).find(existsSync);
-for (const scenario of ['handshake and reuse', 'retry rejected handshake', 'CLI unavailable']) {
+for (const scenario of ['handshake and reuse', 'retry rejected handshake', 'CLI unavailable', 'weekly zero then only a model limit', 'shared bar and dashboard demand', 'failed read and disconnected CLI']) {
     test(`Codex quota session: ${scenario}`, {
         skip: !qs && 'Quickshell is required for the service integration test',
     }, () => {
         const dir = mkdtempSync(join(tmpdir(), 'q-'));
         const rejectFirst = scenario === 'retry rejected handshake';
         const unavailable = scenario === 'CLI unavailable';
+        const weekly = scenario === 'weekly zero then only a model limit';
+        const shared = scenario === 'shared bar and dashboard demand';
+        const failed = scenario === 'failed read and disconnected CLI';
         try {
             for (const sub of ['services', 'utils/scripts', 'config', 'bin', 'run'])
                 mkdirSync(join(dir, sub), { recursive: true, mode: 0o700 });
@@ -23,7 +26,7 @@ for (const scenario of ['handshake and reuse', 'retry rejected handshake', 'CLI 
             writeFileSync(join(dir, 'config/Config.qml'), `pragma Singleton
 import QtQml
 QtObject { property QtObject services: QtObject { property QtObject agentUsage: QtObject {
-    property bool showCodex: true; property bool showAdditionalCodexLimits: false; property bool showClaude: false
+    property bool showCodex: true; property bool showAdditionalCodexLimits: ${weekly}; property bool showClaude: ${shared}
 } } }`);
             // Isolate both ends of the pipe: use the shipped QML Process, never real credentials or a CLI on the host.
             writeFileSync(join(dir, 'bin/codex'), `#!${unavailable ? join(dir, 'not-installed') : process.execPath}
@@ -39,18 +42,47 @@ createInterface({ input: process.stdin }).on('line', line => {
         rejected = true; response.error = { message: 'try again' };
     } else if (method === 'initialize') response.result = {};
     else if (method === 'account/rateLimits/read') {
-        response.result = { rateLimits: { primary: { usedPercent: ++reads } } };
+        ++reads;
+        const week = { usedPercent: ${weekly} ? 0 : reads, windowDurationMins: 10080 };
+        response.result = { rateLimits: { primary: week } };
+        if (${failed} && reads === 2) response.error = { message: 'fixture read failed' };
+        if (${failed} && reads === 3) process.exit(1);
+        if (${weekly} && reads > 1) response.result.rateLimitsByLimitId = {
+            spark: { secondary: { usedPercent: 85, windowDurationMins: 10080 } }
+        };
     } else process.exit(2);
     setTimeout(() => console.log(JSON.stringify(response)), 60);
 });`, { mode: 0o700 });
-            writeFileSync(join(dir, 'shell.qml'), `import QtQuick
+            // Record an attempted Claude command without resolving any real CLI.
+            writeFileSync(join(dir, 'bin/timeout'), `#!${process.execPath}\nrequire('node:fs').appendFileSync(process.env.TRACE, 'claude\\n');`, { mode: 0o700 });
+            writeFileSync(join(dir, 'shell.qml'), shared ? readFileSync(new URL('qt/agentUsageDemand.qml', import.meta.url)) : `import QtQuick
 import Quickshell
 import qs.services
 ShellRoot {
+    id: root
+    property bool sawWeeklyZero: false
+    property bool awaitingRetry: false
     Component.onCompleted: AgentUsage.addView()
     Timer {
         running: true; interval: 10; repeat: true
         onTriggered: {
+            ${failed ? `if (root.awaitingRetry && !AgentUsage.codexLoading && AgentUsage.codexError === "Codex CLI unavailable") {
+                console.log("QUOTA_OK"); Qt.quit(); return;
+            }
+            if (AgentUsage.codexError === "fixture read failed" && !root.awaitingRetry) {
+                AgentUsage.refresh(); // A pending retry is not fresh data.
+                if (AgentUsage.codexError !== "fixture read failed") { Qt.quit(); return; }
+                root.awaitingRetry = true;
+            } else if (!root.awaitingRetry && !AgentUsage.codexLoading && AgentUsage.codexWeeklyQuota) AgentUsage.refresh();
+            return;` : ''}
+            ${weekly ? `if (!AgentUsage.loading) {
+                const quota = AgentUsage.codexWeeklyQuota;
+                if (quota?.usedPercent === 0 && quota.resetsAt === null)
+                    root.sawWeeklyZero = true;
+                else if (root.sawWeeklyZero && quota === null && AgentUsage.providers[0]?.id === "codex-spark") {
+                    console.log("QUOTA_OK"); Qt.quit(); return;
+                }
+            }` : ''}
             if (!AgentUsage.loading && (${unavailable ? 'AgentUsage.codexError.length > 0' : 'AgentUsage.providers[0]?.usedPercent === 2'})) {
                 console.log("QUOTA_OK"); Qt.quit(); return;
             }
@@ -70,7 +102,8 @@ ShellRoot {
             assert.match(log, /QUOTA_OK/, log);
             assert.deepEqual(readFileSync(trace, 'utf8').trim().split('\n').filter(Boolean), unavailable ? [] : [
                 ...(rejectFirst ? ['initialize'] : []), 'initialize', 'initialized',
-                'account/rateLimits/read', 'account/rateLimits/read',
+                'account/rateLimits/read', ...(shared ? ['claude'] : []), 'account/rateLimits/read',
+                ...(failed ? ['account/rateLimits/read'] : []),
             ]);
         } finally { rmSync(dir, { recursive: true, force: true }); }
     });

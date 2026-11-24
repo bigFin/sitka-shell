@@ -112,7 +112,44 @@ describe("chooseLongestWindow", () => {
 });
 
 describe("extractCodexQuotas", () => {
-    it("keeps the longest window per limit id", () => {
+    for (const slot of ["primary", "secondary"]) {
+        it(`selects the explicit Codex week in ${slot}, even beside a longer window`, () => {
+            const other = slot === "primary" ? "secondary" : "primary";
+            const quotas = api.extractCodexQuotas({ rateLimits: {
+                [slot]: { windowDurationMins: 10080, usedPercent: 0 },
+                [other]: { windowDurationMins: 43200, usedPercent: 87, resetsAt: 1700000000 }
+            } });
+            assert.deepEqual(quotas, [{ id: "codex-codex", provider: "codex", name: "Codex",
+                usedPercent: 0, resetsAt: null, resetText: "", plan: "" }]);
+        });
+    }
+
+    for (const [label, window] of [
+        ["short", { windowDurationMins: 300, usedPercent: 5 }],
+        ["missing duration", { usedPercent: 5, resetsAt: 1700000000 }],
+        ["null duration", { windowDurationMins: null, usedPercent: 5 }],
+        ["missing usage", { windowDurationMins: 10080 }]
+    ]) {
+        it(`does not manufacture a weekly quota from ${label}`, () => {
+            assert.deepEqual(api.extractCodexQuotas({ rateLimits: { secondary: window } }), []);
+        });
+    }
+
+    it("keeps additional model limits separate, even with a legacy snapshot present", () => {
+        const weekly = { windowDurationMins: 10080, usedPercent: 90 };
+        const quotas = api.extractCodexQuotas({
+            rateLimits: { primary: weekly },
+            rateLimitsByLimitId: {
+                codex: { primary: { windowDurationMins: 300, usedPercent: 4 } },
+                spark: { limitName: "Spark", secondary: weekly }
+            }
+        });
+        assert.deepEqual(quotas.map(q => q.id), ["codex-spark"]);
+        assert.deepEqual(api.extractCodexQuotas({ rateLimits: { limitId: "spark", primary: weekly } })
+            .map(q => q.id), ["codex-spark"]);
+    });
+
+    it("converts the selected weekly reset from seconds to milliseconds", () => {
         const quotas = api.extractCodexQuotas({
             rateLimitsByLimitId: {
                 codex: {

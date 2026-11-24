@@ -248,14 +248,14 @@ Item {
 
                         Image {
                             anchors.fill: parent
-                            source: modelData.filePath
+                            source: modelData.path
                             fillMode: Image.PreserveAspectCrop
                         }
 
                         StateLayer {
                             radius: parent.radius
                             onClicked: {
-                                Wallpapers.setWallpaper(modelData.filePath);
+                                Wallpapers.setWallpaper(modelData.path);
                             }
                         }
                     }

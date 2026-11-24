@@ -7,6 +7,13 @@ ShellRoot {
     id: root
     property int phase: 0
     property double issuedAt: 0
+    Connections {
+        target: AgentUsage
+        function onCodexWeeklyQuotaChanged(): void {
+            if (AgentUsage.codexWeeklyQuota?.usedPercent === 99)
+                console.log("STALE_QUOTA"); // Catch even a transient late value between timer ticks.
+        }
+    }
     function instrument(item) {
         if (item.visible && item.text?.startsWith("Codex ")) return item;
         for (const child of item.children) {

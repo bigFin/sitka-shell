@@ -32,6 +32,7 @@ Singleton {
     property int nextCodexRequestId: 1
     property int codexRequestTimeoutMs: 120000
     property bool codexInitialized: false
+    property bool codexRetiring: false
     property int codexPendingId: 0 // Only one request (handshake or quota read) is outstanding.
     property int activeViewCount: 0
     property int codexViewCount: 0
@@ -70,7 +71,8 @@ Singleton {
         }
         codexLoading = true;
         // Only a successful read makes a cached value current again.
-        if (!codexProcess.running)
+        // Process queues a start if the expired session has not exited yet.
+        if (codexRetiring || !codexProcess.running)
             codexProcess.running = true;
         else
             requestCodex();
@@ -184,6 +186,11 @@ Singleton {
         interval: root.codexRequestTimeoutMs
         running: root.codexPendingId !== 0
         onTriggered: {
+            if (!root.codexInitialized) {
+                // initialize is once per connection, even if its reply never reached us.
+                root.codexRetiring = true;
+                codexProcess.signal(9); // SIGKILL our private app-server.
+            }
             root.codexPendingId = 0;
             root.codexLoading = false;
             root.codexError = qsTr("Codex request timed out");
@@ -203,6 +210,10 @@ Singleton {
                 return;
             root.codexInitialized = false;
             root.codexPendingId = 0;
+            if (root.codexRetiring) {
+                root.codexRetiring = false;
+                return; // Preserve the timeout error and any refresh queued during shutdown.
+            }
             root.codexLoading = false;
             root.codexError = qsTr("Codex CLI unavailable");
         }

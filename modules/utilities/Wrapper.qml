@@ -49,5 +49,11 @@ Item {
 
     Content {
         id: content
+
+        onAppActivated: {
+            // Leave the pointer panel open, but let the activated app receive keys.
+            if (root.visibilities.keyboardOwner === "utilities")
+                root.visibilities.keyboardDrawer = "";
+        }
     }
 }

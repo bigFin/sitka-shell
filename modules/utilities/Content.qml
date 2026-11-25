@@ -11,6 +11,8 @@ import QtQuick.Layouts
 StyledRect {
     id: root
 
+    signal appActivated()
+
     implicitWidth: 320
     implicitHeight: content.implicitHeight + Config.appearance.padding.large * 2
     radius: Config.appearance.rounding.large
@@ -28,6 +30,7 @@ StyledRect {
         // App Dock at top
         Widgets.AppDock {
             Layout.fillWidth: true
+            onAppActivated: root.appActivated()
         }
 
         // Separator

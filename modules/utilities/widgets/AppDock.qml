@@ -13,6 +13,8 @@ import QtQuick.Layouts
 ColumnLayout {
     id: root
 
+    signal appActivated()
+
     spacing: Config.appearance.spacing.small
 
     // Helper to find desktop entry by ID
@@ -90,6 +92,7 @@ ColumnLayout {
                 onClicked: {
                     // Focus the first window of this app
                     if (modelData.windows.length > 0) {
+                        root.appActivated()
                         WMService.focusWindow(modelData.windows[0].id)
                     }
                 }
@@ -117,6 +120,7 @@ ColumnLayout {
                     // Launch the app
                     const entry = root.findEntryById(modelData)
                     if (entry && entry.command) {
+                        root.appActivated()
                         Quickshell.execDetached(["app2unit", "--", ...entry.command])
                     }
                 }

@@ -6,7 +6,7 @@ import vm from 'node:vm';
 const source = path => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
 const logic = vm.createContext({});
 vm.runInContext(source('utils/scripts/drawerState.js').replace(/^\.pragma library\s*/, ''), logic);
-const enabled = { launcher: true, session: true, dashboard: true };
+const enabled = { launcher: true, session: true, dashboard: true, utilities: true };
 function state() {
     const s = { keyboardDrawer: '', changingDrawer: false };
     // Mirror Drawers.qml's derived property used by the shipped IPC handler.
@@ -14,7 +14,7 @@ function state() {
         enumerable: true,
         get: () => logic.keyboardOwner(s, enabled)
     });
-    for (const drawer of ['launcher', 'session', 'dashboard']) {
+    for (const drawer of Object.keys(enabled)) {
         let visible = false;
         Object.defineProperty(s, drawer, {
             enumerable: true,
@@ -68,6 +68,18 @@ test('legacy explicit clicks arbitrate simultaneous surfaces and screen ownershi
     logic.setDrawer(first, enabled, 'dashboard', true, 'explicit');
     assert.equal(first.session, false);
     assert.equal(logic.keyboardOwner(first, enabled), 'dashboard');
+});
+
+test('a Utilities corner click takes keyboard ownership; dismissal releases it', () => {
+    const s = state();
+    s.utilities = true; // The corner opens via a visibility assignment.
+    assert.equal(s.keyboardOwner, 'utilities');
+    s.utilities = false;
+    assert.equal(s.keyboardOwner, '');
+    s.utilities = true;
+    s.launcher = true;
+    assert.equal(s.utilities, false);
+    assert.equal(s.keyboardOwner, 'launcher');
 });
 
 test('disabled panels neither open nor retain exclusive focus', () => {

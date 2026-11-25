@@ -2,6 +2,7 @@ import Quickshell.Io
 
 JsonObject {
     property string theme: "EverforestDark"
+    property bool utilitiesCorner: true
     property Apps apps: Apps {}
 
     component Apps: JsonObject {

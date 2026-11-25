@@ -2,7 +2,9 @@
     "general": {
         // "theme": "EverforestDark"
         // Available themes: "EverforestDark", "EverforestLight", "RosePine", "HighTest", "Observatory", "SunWorkstation", "SunGraphite"
-        "theme": "EverforestDark"
+        "theme": "EverforestDark",
+        // Disable just the bottom-right hotspot. The sidebar button and IPC still work.
+        "utilitiesCorner": true
     },
     "border": {
         // Set to false to hide only the line around the screen; true keeps it visible.

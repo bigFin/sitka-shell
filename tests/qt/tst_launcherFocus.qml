@@ -15,9 +15,10 @@ TestCase {
         property bool launcher: false
         property bool session: false
         property bool dashboard: false
+        property bool utilities: false
         property string keyboardDrawer: ""
         property bool changingDrawer: false
-        readonly property var enabledDrawers: ({launcher: true, session: true, dashboard: true})
+        readonly property var enabledDrawers: ({launcher: true, session: true, dashboard: true, utilities: true})
         readonly property string keyboardOwner: DrawerState.keyboardOwner(this, enabledDrawers)
         function claim(owner) { DrawerState.claimKeyboard(testCase.screens, owner); }
         function setDrawer(name, open, intent) { DrawerState.setDrawer(this, enabledDrawers, name, open, intent, claim); }

@@ -1,11 +1,14 @@
 import qs.components
 import "../../config"
+import Quickshell
 import QtQuick
 
 Item {
     id: root
 
-    required property bool visibility
+    required property PersistentProperties visibilities
+    focus: visibilities.keyboardOwner === "utilities"
+    Keys.onEscapePressed: visibilities.utilities = false
 
     visible: height > 0
     implicitHeight: 0
@@ -13,7 +16,7 @@ Item {
 
     states: State {
         name: "visible"
-        when: root.visibility
+        when: root.visibilities.utilities
 
         PropertyChanges {
             root.implicitHeight: content.implicitHeight

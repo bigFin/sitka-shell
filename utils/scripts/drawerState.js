@@ -1,7 +1,7 @@
 .pragma library
 
 // One explicit input owner per screen. Passive reveals never replace that owner.
-var focusDrawers = ["launcher", "session", "dashboard"];
+var focusDrawers = ["launcher", "session", "dashboard", "utilities"];
 
 function setDrawer(state, enabled, drawer, open, intent, acquire) {
     if (focusDrawers.indexOf(drawer) < 0)

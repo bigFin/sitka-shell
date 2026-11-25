@@ -215,7 +215,7 @@ Variants {
                 property bool utilities
                 property string keyboardDrawer: ""
                 property bool changingDrawer: false
-                readonly property var enabledDrawers: ({ launcher: Config.launcher.enabled, session: Config.session.enabled, dashboard: Config.dashboard.enabled })
+                readonly property var enabledDrawers: ({ launcher: Config.launcher.enabled, session: Config.session.enabled, dashboard: Config.dashboard.enabled, utilities: true })
                 readonly property string keyboardOwner: DrawerState.keyboardOwner(this, enabledDrawers)
 
                 function setDrawer(drawer: string, open: bool, intent: string): void {
@@ -232,6 +232,7 @@ Variants {
                 onLauncherChanged: DrawerState.changed(this, enabledDrawers, "launcher", Visibilities.claimKeyboard)
                 onSessionChanged: DrawerState.changed(this, enabledDrawers, "session", Visibilities.claimKeyboard)
                 onDashboardChanged: DrawerState.changed(this, enabledDrawers, "dashboard", Visibilities.claimKeyboard)
+                onUtilitiesChanged: DrawerState.changed(this, enabledDrawers, "utilities", Visibilities.claimKeyboard)
                 Component.onDestruction: Visibilities.unload(scope.screenName, this)
 
                 Component.onCompleted: {
@@ -266,9 +267,12 @@ Variants {
         }
 
         // Bottom-right corner trigger for utilities panel
-        Utilities.CornerTrigger {
-            targetScreen: scope.modelData
-            visibilities: scope.visibilities
+        LazyLoader {
+            active: Config.general.utilitiesCorner
+            Utilities.CornerTrigger {
+                targetScreen: scope.modelData
+                visibilities: scope.visibilities
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ Scope {
                 const visibilities = Visibilities.getForActive();
                 if (!visibilities)
                     return;
-                if (["launcher", "session", "dashboard"].includes(drawer))
+                if (["launcher", "session", "dashboard", "utilities"].includes(drawer))
                     visibilities.setDrawer(drawer, !(visibilities[drawer] && visibilities.keyboardOwner === drawer), "explicit");
                 else
                     visibilities[drawer] = !visibilities[drawer];
